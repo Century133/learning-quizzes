@@ -67,9 +67,11 @@ main{flex:1;display:flex;flex-direction:column;justify-content:center;
  font-size:.95rem;font-weight:500}
 .verdict .g{font-size:1.15rem}
 .why{margin:10px 0 0;color:var(--muted);font-size:.95rem;line-height:1.6}
-/* the sticky footer floats over the end of the text, so anything we scroll to has to
-   reserve room for it or the last line lands underneath the buttons */
-.verdict,.why{scroll-margin-bottom:104px}
+/* The verdict and its explanation sit in their own block with room underneath. Without
+   that padding the page cannot scroll far enough to lift the last line clear of the
+   sticky footer — the document simply ends there, and the explanation stays half-hidden
+   behind the buttons however hard you scroll. */
+.fb{padding-bottom:96px}
 .topic{margin:8px 0 0;font-size:.78rem;color:var(--muted);letter-spacing:.06em;
  text-transform:uppercase}
 
