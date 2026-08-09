@@ -1,13 +1,5 @@
 [
  {
-  "id": "test-render",
-  "title": "Test — the look",
-  "subtitle": "Pilot render check",
-  "book": "Test",
-  "url": "q/test-render.html",
-  "total": 3
- },
- {
   "id": "psp-3-6",
   "title": "3.6 How to Feel Better: Coping With Negative Emotions",
   "subtitle": "Chapter 3 · Social Affect",

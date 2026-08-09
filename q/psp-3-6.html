@@ -366,10 +366,19 @@ function question(){
          explanation are below the fold on every question worth reading. Bring them up —
          being told "Correct" is the point of answering, and he should not have to
          discover it by scrolling. */
-      requestAnimationFrame(()=>{
+      // setTimeout, not requestAnimationFrame: rAF never fires in a hidden tab, so a quiz
+      // opened in a background tab and answered later would never scroll.
+      setTimeout(()=>{
         const el = $('#quizview').querySelector('.fb');
-        if(el) el.scrollIntoView({block:'end', behavior:'smooth'});
-      });
+        if(!el) return;
+        el.scrollIntoView({block:'end', behavior:'smooth'});
+        // A smooth scroll can be throttled to a standstill (hidden tab, reduced motion).
+        // Land it outright if it did not arrive — being shown the verdict is not optional.
+        setTimeout(()=>{
+          if(el.getBoundingClientRect().bottom > innerHeight + 4)
+            el.scrollIntoView({block:'end'});
+        }, 450);
+      }, 0);
     };
   });
 
