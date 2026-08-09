@@ -7,9 +7,11 @@
 <meta name="theme-color" content="#131314">
 <title>3.6 How to Feel Better: Coping With Negative Emotions</title>
 <style>
-:root{--bg:#131314;--surface:#1e1f20;--surface-hi:#2a2b2d;--text:#e3e3e3;
+:root{--bg:#131314;--surface:#1e1f20;--surface-hi:#26282a;--text:#e3e3e3;
 --muted:#9aa0a6;--line:#3c4043;--accent:#8ab4f8;--right:#81c995;--wrong:#f28b82;
---radius:16px;--maxw:760px;--qsize:1.75rem;--font:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;}
+--radius:14px;--maxw:660px;--qsize:1.5rem;--osize:1rem;
+--opad:14px 18px;--ogap:10px;--qgap:24px;--barh:50px;
+--font:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;}
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
@@ -17,140 +19,170 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
  min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
 a{color:var(--accent)}
-.wrap{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.wrap{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 22px}
 
 /* ---- top bar: title, tabs, progress. Nothing else lives up here. ---- */
 header{position:sticky;top:0;z-index:5;background:var(--bg);
  border-bottom:1px solid var(--line)}
-.bar{display:flex;align-items:center;gap:16px;height:56px}
-.title{font-size:.95rem;font-weight:500;letter-spacing:.01em;white-space:nowrap;
- overflow:hidden;text-overflow:ellipsis;flex:1}
-.count{font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
-.tabs{display:flex;gap:4px}
-.tab{background:none;border:0;color:var(--muted);font:inherit;font-size:.85rem;
- padding:6px 14px;border-radius:999px;cursor:pointer}
+.bar{display:flex;align-items:center;gap:14px;height:var(--barh)}
+.title{font-size:.9rem;font-weight:500;white-space:nowrap;overflow:hidden;
+ text-overflow:ellipsis;flex:1}
+.count{font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.tabs{display:flex;gap:2px}
+.tab{background:none;border:0;color:var(--muted);font:inherit;font-size:.82rem;
+ padding:5px 12px;border-radius:999px;cursor:pointer}
 .tab[aria-selected="true"]{background:var(--surface-hi);color:var(--text)}
 .rail{height:2px;background:var(--line)}
 .rail>i{display:block;height:100%;background:var(--accent);width:0;
  transition:width .25s ease}
 
-main{flex:1;display:flex;flex-direction:column;justify-content:center;
- padding:40px 0 24px}
-.q{font-size:var(--qsize);line-height:1.35;font-weight:400;margin:0 0 32px;
+main{flex:1;display:flex;flex-direction:column;justify-content:center;padding:34px 0 18px}
+
+/* ---- the question ---- */
+.qhead{display:flex;align-items:flex-start;gap:10px}
+.qhead .qcol{flex:1;min-width:0}
+.topic{margin:0 0 6px;font-size:.72rem;color:var(--muted);letter-spacing:.07em;
+ text-transform:uppercase}
+.q{font-size:var(--qsize);line-height:1.35;font-weight:400;margin:0;
  letter-spacing:-.01em}
+.tools{display:flex;align-items:center;gap:14px;margin:14px 0 var(--qgap)}
+.link{background:none;border:0;padding:0;color:var(--muted);font:inherit;
+ font-size:.85rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.link:hover{color:var(--text)}
+.hinttext{margin:0 0 var(--qgap);color:var(--muted);font-size:.9rem;
+ border-left:2px solid var(--line);padding-left:12px}
 
 /* ---- options ---- */
-.opts{display:flex;flex-direction:column;gap:12px}
-.opt{display:flex;gap:14px;align-items:flex-start;width:100%;text-align:left;
- background:var(--surface);border:1px solid transparent;border-radius:var(--radius);
- padding:18px 20px;color:var(--text);font:inherit;cursor:pointer;
- transition:background .12s ease,border-color .12s ease}
+.opts{display:flex;flex-direction:column;gap:var(--ogap)}
+.opt{display:block;width:100%;text-align:left;background:var(--surface);
+ border:1px solid transparent;border-radius:var(--radius);padding:var(--opad);
+ color:var(--text);font:inherit;font-size:var(--osize);cursor:pointer;
+ transition:background .16s ease,border-color .16s ease,opacity .16s ease}
 .opt:hover:not(:disabled){background:var(--surface-hi)}
 .opt:disabled{cursor:default}
-.opt .k{color:var(--muted);min-width:1.2em;font-variant-numeric:tabular-nums}
-.opt .t{flex:1}
-.opt .mark{font-size:1.1rem;line-height:1.4;opacity:0;min-width:1.1em;text-align:right}
+.line{display:flex;gap:12px;align-items:flex-start;line-height:1.5}
+.line .k{color:var(--muted);min-width:1.25em}
+.line .t{flex:1}
+.line .mark{font-size:1.05rem;line-height:1.45;min-width:1.05em;text-align:right;opacity:0}
 
-/* GRAYSCALE-SAFE STATES.
-   Three signals, never colour alone: a glyph, a word (in .verdict), and luminance —
-   the right answer goes BRIGHT with a solid border, a wrong pick goes DIM with a dashed
-   one. Turn the display to grayscale and all of it still reads. */
+/* GRAYSCALE-SAFE STATES — three signals, never colour alone: the ✓/✕ glyph, the WORD in
+   .lab, and luminance (bright solid border vs dimmed dashed). Turn the display to
+   grayscale and every state still reads. */
 .opt.is-right{background:var(--surface-hi);border-color:var(--right);
  box-shadow:inset 0 0 0 1px var(--right)}
 .opt.is-right .mark{opacity:1;color:var(--right)}
 .opt.is-wrong{background:transparent;border-style:dashed;border-color:var(--wrong);
- opacity:.72}
+ opacity:.8}
 .opt.is-wrong .mark{opacity:1;color:var(--wrong)}
-.opt.is-muted{opacity:.45}
+.opt.is-muted{opacity:.42}
 
-.verdict{display:flex;align-items:center;gap:10px;margin:26px 0 0;
- font-size:.95rem;font-weight:500}
-.verdict .g{font-size:1.15rem}
-.why{margin:10px 0 0;color:var(--muted);font-size:.95rem;line-height:1.6}
-/* The verdict and its explanation sit in their own block with room underneath. Without
-   that padding the page cannot scroll far enough to lift the last line clear of the
-   sticky footer — the document simply ends there, and the explanation stays half-hidden
-   behind the buttons however hard you scroll. */
-.fb{padding-bottom:96px}
-.topic{margin:8px 0 0;font-size:.78rem;color:var(--muted);letter-spacing:.06em;
- text-transform:uppercase}
+/* THE FEEDBACK LIVES INSIDE THE CARD, as Gemini's does — that is what he asked for, and it
+   is also why nothing has to scroll: the explanation appears where he is already looking.
+   The 0fr→1fr grid trick animates an unknown height with no JS measuring. If a browser
+   refuses to animate it, the row still ends at 1fr, so the text is visible either way. */
+.rat{display:grid;grid-template-rows:1fr;opacity:1}
+.rat>.ratin{overflow:hidden;min-height:0}
+.opt.fresh .rat{animation:reveal .3s ease}
+@keyframes reveal{from{grid-template-rows:0fr;opacity:0}to{grid-template-rows:1fr;opacity:1}}
+.lab{display:flex;align-items:center;gap:8px;font-size:.9rem;font-weight:600;
+ margin:12px 0 0;padding-left:calc(1.25em + 12px)}
+.opt.is-right .lab{color:var(--right)}
+.opt.is-wrong .lab{color:var(--wrong)}
+.why{margin:5px 0 0;padding-left:calc(1.25em + 12px);color:var(--muted);
+ font-size:.9rem;line-height:1.55}
+
+.opt.enter,.qhead.enter,.tools.enter{animation:fadein .24s ease both}
+@keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* ---- the ⋮ menu ---- */
+.more{position:relative;flex:0 0 auto}
+.dots{background:none;border:0;color:var(--muted);font-size:1.15rem;line-height:1;
+ padding:4px 8px;border-radius:999px;cursor:pointer}
+.dots:hover{background:var(--surface);color:var(--text)}
+.menu{position:absolute;right:0;top:32px;background:var(--surface-hi);
+ border:1px solid var(--line);border-radius:10px;padding:5px;min-width:170px;z-index:6;
+ box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.menu button{display:block;width:100%;text-align:left;background:none;border:0;
+ color:var(--text);font:inherit;font-size:.88rem;padding:8px 10px;border-radius:7px;
+ cursor:pointer;white-space:nowrap}
+.menu button:hover{background:var(--surface)}
 
 /* ---- bottom bar ---- */
-footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg) 28%);
- padding:16px 0 24px}
-.acts{display:flex;gap:12px;align-items:center}
+footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg) 30%);
+ padding:14px 0 20px}
+.acts{display:flex;gap:10px;align-items:center}
 .spacer{flex:1}
-button.pill{font:inherit;font-size:.95rem;border-radius:999px;padding:12px 26px;
+button.pill{font:inherit;font-size:.92rem;border-radius:999px;padding:11px 24px;
  cursor:pointer;border:1px solid var(--line);background:none;color:var(--text)}
-button.pill:disabled{opacity:.35;cursor:default}
+button.pill:disabled{opacity:.32;cursor:default}
 button.pill.primary{background:var(--accent);color:#0b0b0c;border-color:var(--accent);
  font-weight:500}
 button.pill.ghost{border-color:transparent;color:var(--muted)}
 
 /* ---- end card ---- */
-.score{font-size:3.5rem;font-weight:400;letter-spacing:-.03em;margin:0}
-.score small{font-size:1rem;color:var(--muted);font-weight:400;letter-spacing:0}
-.sub{color:var(--muted);margin:6px 0 30px}
-.chart{display:flex;height:12px;border-radius:999px;overflow:hidden;
- background:var(--line);margin:0 0 10px}
+.score{font-size:3.1rem;font-weight:400;letter-spacing:-.03em;margin:0}
+.score small{font-size:.95rem;color:var(--muted);font-weight:400;letter-spacing:0}
+.sub{color:var(--muted);margin:5px 0 26px;font-size:.92rem}
+.chart{display:flex;height:11px;border-radius:999px;overflow:hidden;
+ background:var(--line);margin:0 0 9px}
 .chart i{display:block;height:100%}
 .chart i.r{background:var(--right)}
-/* the wrong slice is hatched as well as coloured, so the split reads in grayscale */
+/* hatched as well as coloured, so the split reads with the colour off */
 .chart i.w{background:var(--wrong);
  background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,
  rgba(0,0,0,.45) 3px,rgba(0,0,0,.45) 6px)}
-.legend{display:flex;gap:18px;color:var(--muted);font-size:.85rem;margin:0 0 34px}
+.legend{display:flex;gap:16px;color:var(--muted);font-size:.84rem;margin:0 0 30px}
 .legend b{color:var(--text);font-weight:500}
-.topics{margin:0 0 34px}
-.topics h3,.rev h3{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;
- color:var(--muted);font-weight:500;margin:0 0 14px}
-.trow{display:grid;grid-template-columns:1fr auto;gap:6px 14px;align-items:center;
- padding:9px 0;border-top:1px solid var(--line)}
-.trow .n{font-variant-numeric:tabular-nums;color:var(--muted);font-size:.9rem}
-.tbar{grid-column:1/-1;height:4px;background:var(--line);border-radius:999px;
+.topics{margin:0 0 30px}
+.topics h3,.rev h3{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;
+ color:var(--muted);font-weight:500;margin:0 0 12px}
+.trow{display:grid;grid-template-columns:1fr auto;gap:5px 14px;align-items:center;
+ padding:8px 0;border-top:1px solid var(--line)}
+.trow .n{font-variant-numeric:tabular-nums;color:var(--muted);font-size:.88rem}
+.tbar{grid-column:1/-1;height:3px;background:var(--line);border-radius:999px;
  overflow:hidden}
 .tbar i{display:block;height:100%;background:var(--text)}
 
 /* ---- review list ---- */
-.rev{padding:8px 0 40px}
-.item{border-top:1px solid var(--line);padding:22px 0}
-.item .qq{font-size:1.05rem;margin:0 0 14px}
-.line{display:flex;gap:10px;align-items:flex-start;padding:3px 0;font-size:.95rem}
-.line .g{min-width:1.2em}
-.line.mine{color:var(--muted)}
-.line.ok{color:var(--text)}
-.tag{display:inline-block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;
+.rev{padding:6px 0 36px}
+.item{border-top:1px solid var(--line);padding:20px 0}
+.item .qq{font-size:1rem;margin:0 0 12px}
+.rline{display:flex;gap:10px;align-items:flex-start;padding:3px 0;font-size:.92rem}
+.rline .g{min-width:1.2em}
+.rline.mine{color:var(--muted)}
+.tag{display:inline-block;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;
  color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 9px;
- margin:0 0 10px}
+ margin:0 0 9px}
 
 /* ---- study sheet ---- */
-.sheet{padding:8px 0 60px;font-size:1rem}
-.sheet h2{font-size:1.35rem;font-weight:500;margin:36px 0 12px;letter-spacing:-.01em}
-.sheet h3{font-size:1.05rem;font-weight:500;margin:26px 0 8px}
-.sheet h4,.sheet h5{font-size:.95rem;font-weight:500;margin:20px 0 6px;color:var(--muted)}
-.sheet p{margin:0 0 12px}
-.sheet ul,.sheet ol{margin:0 0 14px;padding-left:22px}
-.sheet li{margin:0 0 6px}
+.sheet{padding:6px 0 56px;font-size:.98rem}
+.sheet h2{font-size:1.25rem;font-weight:500;margin:32px 0 10px;letter-spacing:-.01em}
+.sheet h3{font-size:1.02rem;font-weight:500;margin:24px 0 7px}
+.sheet h4,.sheet h5{font-size:.92rem;font-weight:500;margin:18px 0 5px;color:var(--muted)}
+.sheet p{margin:0 0 11px}
+.sheet ul,.sheet ol{margin:0 0 13px;padding-left:21px}
+.sheet li{margin:0 0 5px}
 .sheet strong{font-weight:600}
-.sheet hr{border:0;border-top:1px solid var(--line);margin:28px 0}
+.sheet hr{border:0;border-top:1px solid var(--line);margin:26px 0}
 .sheet code{background:var(--surface);padding:1px 6px;border-radius:6px;font-size:.9em}
 
-.hist{color:var(--muted);font-size:.85rem;margin:26px 0 0}
+.hist{color:var(--muted);font-size:.84rem;margin:22px 0 0}
 .hist span{white-space:nowrap}
-.note{color:var(--muted);font-size:.85rem;margin:18px 0 0}
+.note{color:var(--muted);font-size:.84rem;margin:16px 0 0}
 .hide{display:none !important}
 
 @media (max-width:640px){
-  .wrap{padding:0 18px}
-  .q{font-size:1.35rem;margin-bottom:24px}
-  main{padding:26px 0 16px}
-  .opt{padding:15px 16px}
-  .score{font-size:2.75rem}
-  .bar{height:52px;gap:10px}
-  .tab{padding:6px 11px}
-  button.pill{padding:12px 20px}
+  .wrap{padding:0 16px}
+  .q{font-size:1.22rem}
+  main{padding:22px 0 14px}
+  .score{font-size:2.5rem}
+  .bar{gap:8px}
+  .tab{padding:5px 10px}
+  button.pill{padding:11px 18px}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none !important}}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important}
+}
 
 </style>
 </head>
@@ -271,18 +303,20 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "psp-3-6", "title": "3.6 How to Feel Better: Coping With Negative Emotions", "subtitle": "Chapter 3 · Social Affect", "book": "PSP", "hash": "64414bef989051c4", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "In Wegner's study on thought suppression, participants were instructed to avoid thinking about a white bear for five minutes. What did the results suggest about the effectiveness of this strategy for managing mental content?", "options": ["Participants successfully cleared their minds, provided they used a physical distractor like a bell.", "The prohibited thought frequently recurred despite the participants' efforts to avoid it.", "The strategy worked for participants with high self-esteem but failed for those with anxiety.", "Suppression was effective in the short term but led to a complete loss of focus after the five-minute mark."], "correct": 1, "hint": "Consider what happens when you are forced to 'look' for a thought in order to ensure you aren't thinking it.", "topic": "Thought suppression"}, {"q": "Pennebaker and Beall (1986) found that students who wrote about traumatic life events had higher blood pressure immediately after writing. What was the long-term health outcome for these students compared to those who wrote about trivial topics?", "options": ["They developed a reliance on journaling that masked the recurrence of physical symptoms.", "Their physical health remained unchanged, though they reported feeling more socially connected.", "They visited the student health center significantly less often for illnesses over the next six months.", "They reported higher levels of chronic stress and more frequent physical pain during the follow-up period."], "correct": 2, "hint": "Reflect on whether the immediate emotional discomfort of opening up led to a lasting health deficit or a benefit.", "topic": "Emotional expression"}, {"q": "Mischel’s longitudinal research followed children who were able to wait for a second marshmallow or cookie at age four or five. How did these 'self-regulators' differ from their peers as young adults?", "options": ["They were more likely to follow strict career paths but reported lower overall life satisfaction.", "They showed a preference for immediate rewards in financial contexts to compensate for early deprivation.", "They achieved higher SAT scores and were rated as more socially adept by their friends.", "They were more prone to anxiety because they were constantly calculating future rewards."], "correct": 2, "hint": "Look for outcomes that suggest long-term cognitive and social advantages rather than just professional rigidity.", "topic": "Delayed gratification"}, {"q": "Muraven, Tice, and Baumeister (1998) asked participants to control their emotions while watching a distressing movie and then measured their performance on a handgrip exerciser. What did the decrease in handgrip strength suggest?", "options": ["Negative emotions cause immediate physical muscle weakness regardless of regulation efforts.", "Self-control functions like a muscle that becomes fatigued after it is heavily used.", "Watching media content makes people less motivated to perform physical tasks.", "Participants who expressed their emotions became too overstimulated to exert physical force."], "correct": 1, "hint": "Think about why a mental task (emotion regulation) would affect a physical task (handgrip strength).", "topic": "Resource depletion"}, {"q": "Taylor and colleagues (2004) found that Korean students were less likely to seek social support compared to American students. What was the primary reason cited by the Korean participants for avoiding help?", "options": ["A lack of established social networks compared to the more individualistic American students.", "The preference for physical exercise and entertainment over interpersonal communication.", "The concern that seeking help would disrupt group harmony or cause them to 'lose face.'", "A general cultural belief that social support is ineffective for managing internal stress."], "correct": 2, "hint": "Focus on how collectivist values prioritize the stability of the group over the needs of the individual.", "topic": "Cultural differences in social support"}, {"q": "Brickman and colleagues (1978) compared the happiness levels of lottery winners to those of a control group. What does their finding imply about the relationship between wealth and well-being?", "options": ["Financial windfalls lead to long-term social isolation, which cancels out the benefits of the money.", "People habituate to positive changes and eventually return to their baseline level of happiness.", "A significant increase in wealth provides a permanent buffer against everyday stressors.", "Winning the lottery makes people more sensitive to small daily pleasures."], "correct": 1, "hint": "Consider how you feel after eating your second chocolate bar compared to the first.", "topic": "Hedonic adaptation"}, {"q": "Glass, Reim, and Singer (1971) conducted a study where participants were exposed to loud noises. What was the critical factor that reduced the stress experienced by the participants?", "options": ["The gradual desensitization to the sound after multiple exposures.", "The use of relaxation techniques taught by the experimenter before the noise began.", "The belief that they had the ability to stop the noise, even if they never used it.", "The presence of a supportive partner during the experiment."], "correct": 2, "hint": "Consider whether it was the action of stopping the noise or the option to stop it that mattered.", "topic": "Perceived control"}, {"q": "Peterson and colleagues (1998) analyzed the optimism levels of college students from the 1930s. What long-term implication did they find for those who had a more positive outlook?", "options": ["They reached their peak income levels earlier in life but retired with less savings.", "They were less likely to have died of all causes, including accidental and violent deaths, 50 years later.", "They were more likely to be married but reported lower levels of marital satisfaction.", "They reported fewer negative life events, suggesting that optimism prevents misfortune."], "correct": 1, "hint": "Think about the most extreme health metric you could track over a 50-year period.", "topic": "Optimism and health"}, {"q": "Wilson and colleagues (2000) found that people's predictions about how a major event would make them feel became more accurate when they were asked to do what?", "options": ["Recall a past event that was similar to the one they were predicting.", "Visualize the worst-case scenario to better prepare for emotional disappointment.", "Think about all the regular daily activities they would still be doing in the future.", "Record their current mood to use as a baseline for future comparisons."], "correct": 2, "hint": "Consider the error of focusing too narrowly on a single change while ignoring the rest of your life.", "topic": "Affective forecasting"}, {"q": "Research on self-regulation, such as the study by Tice and colleagues (2007), suggests that which of the following can help restore cognitive resources after they have been depleted?", "options": ["Engaging in competitive sports to boost adrenaline levels.", "Suppressing all thoughts of the previous task to clear the mental slate.", "Repeating a simple, repetitive task to rest the 'muscle' of self-control.", "Watching a funny video clip to induce a positive mood."], "correct": 3, "hint": "Think about what 'happy' activity might serve as a quick recharge for a tired mind.", "topic": "Resource restoration"}], "notebook": "https://notebooklm.google.com/notebook/791cd0ef-e949-4fd0-9fec-8a610efda32c/artifact/71aa7cdf-b770-429c-96f6-212f009b1f79", "root": "../index.html", "tab": "quiz"}</script>
+<script id="quiz-data" type="application/json">{"id": "psp-3-6", "title": "3.6 How to Feel Better: Coping With Negative Emotions", "subtitle": "Chapter 3 · Social Affect", "book": "PSP", "hash": "64414bef989051c4", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "In Wegner's study on thought suppression, participants were instructed to avoid thinking about a white bear for five minutes. What did the results suggest about the effectiveness of this strategy for managing mental content?", "options": ["Participants successfully cleared their minds, provided they used a physical distractor like a bell.", "The prohibited thought frequently recurred despite the participants' efforts to avoid it.", "The strategy worked for participants with high self-esteem but failed for those with anxiety.", "Suppression was effective in the short term but led to a complete loss of focus after the five-minute mark."], "rationales": ["While a bell was used to record failures, it did not facilitate success; rather, the 'white bear' continued to pop into consciousness.", "The study demonstrated the paradoxical effect of suppression, where trying to ignore a thought requires active monitoring, which keeps the concept accessible in the mind.", "The study identified a general cognitive limitation in thought suppression that applied regardless of individual personality traits.", "The failure to suppress occurred immediately and repeatedly during the initial instructions, not just as a delayed reaction."], "correct": 1, "hint": "Consider what happens when you are forced to 'look' for a thought in order to ensure you aren't thinking it.", "topic": "Thought suppression"}, {"q": "Pennebaker and Beall (1986) found that students who wrote about traumatic life events had higher blood pressure immediately after writing. What was the long-term health outcome for these students compared to those who wrote about trivial topics?", "options": ["They developed a reliance on journaling that masked the recurrence of physical symptoms.", "Their physical health remained unchanged, though they reported feeling more socially connected.", "They visited the student health center significantly less often for illnesses over the next six months.", "They reported higher levels of chronic stress and more frequent physical pain during the follow-up period."], "rationales": ["The data showed a genuine reduction in illness frequency, not merely a change in reporting or coping habits.", "The study measured objective health indicators, like health center visits, and found a significant improvement in physical wellness specifically.", "Confronting and expressing negative experiences, while briefly distressing, appears to provide physiological benefits and boost immune functioning over time.", "This aligns with common intuition that dwelling on trauma is harmful, but the research actually showed improved health outcomes and less physical pain."], "correct": 2, "hint": "Reflect on whether the immediate emotional discomfort of opening up led to a lasting health deficit or a benefit.", "topic": "Emotional expression"}, {"q": "Mischel’s longitudinal research followed children who were able to wait for a second marshmallow or cookie at age four or five. How did these 'self-regulators' differ from their peers as young adults?", "options": ["They were more likely to follow strict career paths but reported lower overall life satisfaction.", "They showed a preference for immediate rewards in financial contexts to compensate for early deprivation.", "They achieved higher SAT scores and were rated as more socially adept by their friends.", "They were more prone to anxiety because they were constantly calculating future rewards."], "rationales": ["The research suggests that self-regulation skills actually improve the ability to handle stress and frustration, leading to better overall outcomes.", "Self-regulation is described as a stable skill that tends to persist, leading to continued success in avoiding impulsive behaviors later in life.", "Early ability to delay gratification is a strong predictor of later cognitive control, academic success, and social competence.", "The study found that these individuals actually coped with stress and frustration better than those who could not resist the initial temptation."], "correct": 2, "hint": "Look for outcomes that suggest long-term cognitive and social advantages rather than just professional rigidity.", "topic": "Delayed gratification"}, {"q": "Muraven, Tice, and Baumeister (1998) asked participants to control their emotions while watching a distressing movie and then measured their performance on a handgrip exerciser. What did the decrease in handgrip strength suggest?", "options": ["Negative emotions cause immediate physical muscle weakness regardless of regulation efforts.", "Self-control functions like a muscle that becomes fatigued after it is heavily used.", "Watching media content makes people less motivated to perform physical tasks.", "Participants who expressed their emotions became too overstimulated to exert physical force."], "rationales": ["The control group, who also saw the movie but didn't have to regulate their emotions, did not show the same decrease in physical strength.", "Regulating emotions consumes a limited pool of cognitive resources, leaving less energy available for subsequent tasks requiring self-discipline or physical effort.", "The difference between the instruction groups proves the effect was caused by the effort of regulation, not the simple act of watching a movie.", "The study showed that both increasing and decreasing emotional responses led to depletion, whereas no emotional control did not."], "correct": 1, "hint": "Think about why a mental task (emotion regulation) would affect a physical task (handgrip strength).", "topic": "Resource depletion"}, {"q": "Taylor and colleagues (2004) found that Korean students were less likely to seek social support compared to American students. What was the primary reason cited by the Korean participants for avoiding help?", "options": ["A lack of established social networks compared to the more individualistic American students.", "The preference for physical exercise and entertainment over interpersonal communication.", "The concern that seeking help would disrupt group harmony or cause them to 'lose face.'", "A general cultural belief that social support is ineffective for managing internal stress."], "rationales": ["Both groups had social networks, but the cultural norms regarding how and when to use those networks for personal aid differed significantly.", "While Americans used exercise more, the study highlighted that Koreans specifically avoided support due to social concerns like criticism and group harmony.", "In collectivist cultures, the risk of straining relationships or appearing self-concerned often outweighs the individual benefit of social support.", "The study focused on the social costs and consequences of help-seeking rather than a disbelief in the efficacy of support itself."], "correct": 2, "hint": "Focus on how collectivist values prioritize the stability of the group over the needs of the individual.", "topic": "Cultural differences in social support"}, {"q": "Brickman and colleagues (1978) compared the happiness levels of lottery winners to those of a control group. What does their finding imply about the relationship between wealth and well-being?", "options": ["Financial windfalls lead to long-term social isolation, which cancels out the benefits of the money.", "People habituate to positive changes and eventually return to their baseline level of happiness.", "A significant increase in wealth provides a permanent buffer against everyday stressors.", "Winning the lottery makes people more sensitive to small daily pleasures."], "rationales": ["While social factors may change, the primary psychological reason for the plateau in happiness was hedonic adaptation.", "The initial surge of pleasure from winning is fleeting because individuals adapt to their new status and their social comparison groups shift.", "The study found that lottery winners were not significantly happier than the control group after the initial excitement wore off.", "Actually, the study suggested that winners might find ordinary pleasures less enjoyable by comparison to their big win."], "correct": 1, "hint": "Consider how you feel after eating your second chocolate bar compared to the first.", "topic": "Hedonic adaptation"}, {"q": "Glass, Reim, and Singer (1971) conducted a study where participants were exposed to loud noises. What was the critical factor that reduced the stress experienced by the participants?", "options": ["The gradual desensitization to the sound after multiple exposures.", "The use of relaxation techniques taught by the experimenter before the noise began.", "The belief that they had the ability to stop the noise, even if they never used it.", "The presence of a supportive partner during the experiment."], "rationales": ["The focus of the study was not on habituation to the stimulus, but on the psychological impact of having an 'escape' option.", "The study measured the impact of an environmental control mechanism (a button) rather than internal coping strategies.", "Perceived control over a stressor is often more important for reducing stress than the actual use of that control.", "While social support is a buffer, this specific study isolated 'perceived control' as the independent variable."], "correct": 2, "hint": "Consider whether it was the action of stopping the noise or the option to stop it that mattered.", "topic": "Perceived control"}, {"q": "Peterson and colleagues (1998) analyzed the optimism levels of college students from the 1930s. What long-term implication did they find for those who had a more positive outlook?", "options": ["They reached their peak income levels earlier in life but retired with less savings.", "They were less likely to have died of all causes, including accidental and violent deaths, 50 years later.", "They were more likely to be married but reported lower levels of marital satisfaction.", "They reported fewer negative life events, suggesting that optimism prevents misfortune."], "rationales": ["While other studies mention income, the Peterson study specifically focused on the long-term prediction of health and mortality.", "Optimism in early adulthood correlates with better health maintenance and lower mortality rates over a lifetime.", "The study primarily linked college optimism to physical longevity and mortality data rather than marital quality.", "Optimism doesn't prevent bad events, but it changes how people respond to them, which leads to better health outcomes."], "correct": 1, "hint": "Think about the most extreme health metric you could track over a 50-year period.", "topic": "Optimism and health"}, {"q": "Wilson and colleagues (2000) found that people's predictions about how a major event would make them feel became more accurate when they were asked to do what?", "options": ["Recall a past event that was similar to the one they were predicting.", "Visualize the worst-case scenario to better prepare for emotional disappointment.", "Think about all the regular daily activities they would still be doing in the future.", "Record their current mood to use as a baseline for future comparisons."], "rationales": ["While comparison helps, the study specifically highlighted the role of focusing on 'non-event' daily life to temper extreme predictions.", "This describes 'defensive pessimism,' but it was not the technique used in the Wilson study to improve predictive accuracy.", "This helps overcome 'focalism,' where people focus too much on a single event and forget that daily routines (work, chores, socializing) moderate their mood.", "Accuracy improved by broadening the future perspective to include mundane details, not just by focusing on the present baseline."], "correct": 2, "hint": "Consider the error of focusing too narrowly on a single change while ignoring the rest of your life.", "topic": "Affective forecasting"}, {"q": "Research on self-regulation, such as the study by Tice and colleagues (2007), suggests that which of the following can help restore cognitive resources after they have been depleted?", "options": ["Engaging in competitive sports to boost adrenaline levels.", "Suppressing all thoughts of the previous task to clear the mental slate.", "Repeating a simple, repetitive task to rest the 'muscle' of self-control.", "Watching a funny video clip to induce a positive mood."], "rationales": ["Adrenaline is not cited as the restorative factor; rather, it is the shift to a positive emotional state.", "Suppression is a high-effort task that leads to further depletion, not restoration.", "Repetitive tasks that require focus might actually continue the depletion rather than restoring resources.", "Positive affect acts as an 'antidote' that can replenish the energy needed for self-regulation after it has been exhausted."], "correct": 3, "hint": "Think about what 'happy' activity might serve as a quick recharge for a tired mind.", "topic": "Resource restoration"}], "notebook": "https://notebooklm.google.com/notebook/791cd0ef-e949-4fd0-9fec-8a610efda32c/artifact/71aa7cdf-b770-429c-96f6-212f009b1f79", "root": "../index.html", "tab": "quiz"}</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
 const $ = s => document.querySelector(s);
+const esc = t => { const d=document.createElement('div'); d.textContent = t==null?'':t; return d.innerHTML; };
+const G_OK = '✓', G_NO = '✕';
 
 /* ---- saved state -------------------------------------------------------------
-   Everything lives in localStorage under the page id. `hash` is the fingerprint of
-   the question set: a Redo regenerates the quiz, and when that happens the old
-   answers describe questions that no longer exist, so the attempt is retired into
-   history rather than shown against the new ones. */
-function blank(){ return {hash:D.hash, i:0, answers:{}, done:false, at:null, history:[]}; }
+   Everything lives in localStorage under the page id. `hash` fingerprints the question
+   set: a Redo regenerates the quiz, and when that happens the old answers describe
+   questions that no longer exist, so the attempt is retired into history rather than
+   shown against the new ones. */
+function blank(){ return {hash:D.hash, i:0, answers:{}, skipped:{}, done:false, at:null, history:[]}; }
 function load(){
   try{
     const s = JSON.parse(localStorage.getItem(KEY) || 'null');
@@ -290,28 +324,30 @@ function load(){
     if(s.hash !== D.hash){
       const b = blank();
       b.history = (s.history||[]).slice();
-      if(s.done) b.history.push({at:s.at, score:score(s), total:Object.keys(s.answers||{}).length, stale:true});
+      if(s.done) b.history.push({at:s.at, score:score(s), total:active(s).length, stale:true});
       b.rebuilt = true;
       return b;
     }
     if(!s.history) s.history = [];
+    if(!s.skipped) s.skipped = {};
     return s;
   }catch(e){ return blank(); }
 }
 function save(){
-  S.meta = {title:D.title, subtitle:D.subtitle, book:D.book, total:D.questions.length,
-            url:location.pathname, at:S.at, done:S.done, score:score(S)};
+  S.meta = {title:D.title, subtitle:D.subtitle, book:D.book, total:active(S).length,
+            at:S.at, done:S.done, score:score(S)};
   try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
 }
+/* Skipped questions leave the run entirely — out of the count, out of the denominator,
+   out of the topic breakdown. Anything less makes "8 / 10" a lie about a quiz of nine. */
+function active(s){ return D.questions.map((_,i)=>i).filter(i => !(s.skipped||{})[i]); }
 function score(s){
-  return D.questions.reduce((n,q,i)=> n + ((s.answers||{})[i] === q.correct ? 1 : 0), 0);
+  return active(s).reduce((n,i)=> n + ((s.answers||{})[i] === D.questions[i].correct ? 1 : 0), 0);
 }
 let S = load();
+let lastShown = -1;
 
 /* ---- rendering ---------------------------------------------------------------- */
-const G_OK = '✓', G_NO = '✕';
-const esc = t => { const d=document.createElement('div'); d.textContent = t==null?'':t; return d.innerHTML; };
-
 function setTab(name){
   D.tab = name;
   document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===name));
@@ -323,83 +359,111 @@ function setTab(name){
 
 function draw(){
   if(D.tab!=='quiz') return;
-  if(S.done && !S.reviewing){ return end(); }
-  if(S.reviewing){ return review(); }
+  if(S.reviewing) return review();
+  if(S.done) return end();
+  const act = active(S);
+  if(!act.length) return end();
+  if(act.indexOf(S.i) < 0) S.i = act[0];
   question();
 }
 
-function question(){
+function question(fresh){
   const i = S.i, q = D.questions[i], picked = S.answers[i];
   const answered = picked !== undefined;
-  $('#count').textContent = (i+1) + ' / ' + D.questions.length;
-  $('#rail').style.width = ((i + (answered?1:0)) / D.questions.length * 100) + '%';
+  const act = active(S);
+  const pos = act.indexOf(i);
+  const isNew = i !== lastShown;
+  lastShown = i;
 
-  let h = '';
+  $('#count').textContent = (pos+1) + ' / ' + act.length;
+  $('#rail').style.width = ((pos + (answered?1:0)) / act.length * 100) + '%';
+
+  const en = isNew ? ' enter' : '';
+  let h = '<div class="qhead' + en + '"><div class="qcol">';
   if(q.topic) h += '<p class="topic">' + esc(q.topic) + '</p>';
-  h += '<h1 class="q">' + esc(q.q) + '</h1><div class="opts">';
+  h += '<h1 class="q">' + esc(q.q) + '</h1></div>';
+  h += '<div class="more"><button class="dots" id="dots" aria-label="More">⋮</button></div></div>';
+
+  h += '<div class="tools' + en + '">';
+  if(!answered && q.hint) h += '<button class="link" id="hintbtn">Hint</button>';
+  h += '</div>';
+  if(S.hintOpen && !answered && q.hint) h += '<p class="hinttext">' + esc(q.hint) + '</p>';
+
+  h += '<div class="opts">';
   q.options.forEach((o,k)=>{
-    let cls = 'opt';
-    let mark = '';
+    let cls = 'opt' + en, mark = '', lab = '', why = '';
     if(answered){
-      if(k === q.correct){ cls += ' is-right'; mark = G_OK; }
-      else if(k === picked){ cls += ' is-wrong'; mark = G_NO; }
+      if(k === q.correct){ cls += ' is-right'; mark = G_OK; lab = 'Right answer'; }
+      else if(k === picked){ cls += ' is-wrong'; mark = G_NO; lab = 'Not quite'; }
       else cls += ' is-muted';
+      if(lab && fresh) cls += ' fresh';
+      why = q.rationales ? (q.rationales[k]||'') : '';
     }
     h += '<button class="'+cls+'" data-k="'+k+'"'+(answered?' disabled':'')+'>'
-       + '<span class="k">'+D.letters[k]+'.</span><span class="t">'+esc(o)+'</span>'
-       + '<span class="mark">'+mark+'</span></button>';
+       + '<span class="line"><span class="k">'+D.letters[k]+'.</span>'
+       + '<span class="t">'+esc(o)+'</span>'
+       + '<span class="mark">'+mark+'</span></span>';
+    if(lab){
+      h += '<span class="rat"><span class="ratin">'
+         + '<span class="lab"><span class="g">'+mark+'</span>'+lab+'</span>'
+         + (why ? '<span class="why" style="display:block">'+esc(why)+'</span>' : '')
+         + '</span></span>';
+    }
+    h += '</button>';
   });
   h += '</div>';
-  if(answered){
-    const right = picked === q.correct;
-    h += '<div class="fb"><p class="verdict"><span class="g">'+(right?G_OK:G_NO)+'</span>'
-       + '<span>'+(right?'Correct':'Incorrect')+'</span></p>';
-    if(!right) h += '<p class="why"><strong>Answer:</strong> '+D.letters[q.correct]+'. '+esc(q.options[q.correct])+'</p>';
-    if(q.hint) h += '<p class="why">'+esc(q.hint)+'</p>';
-    h += '</div>';
-  }
+
   $('#quizview').innerHTML = h;
   $('#quizview').querySelectorAll('.opt').forEach(b=>{
-    b.onclick = ()=>{
-      S.answers[i] = +b.dataset.k; save(); question();
-      /* The question plus four options fills the screen, so the verdict and the
-         explanation are below the fold on every question worth reading. Bring them up —
-         being told "Correct" is the point of answering, and he should not have to
-         discover it by scrolling. */
-      // setTimeout, not requestAnimationFrame: rAF never fires in a hidden tab, so a quiz
-      // opened in a background tab and answered later would never scroll.
-      setTimeout(()=>{
-        const el = $('#quizview').querySelector('.fb');
-        if(!el) return;
-        el.scrollIntoView({block:'end', behavior:'smooth'});
-        // A smooth scroll can be throttled to a standstill (hidden tab, reduced motion).
-        // Land it outright if it did not arrive — being shown the verdict is not optional.
-        setTimeout(()=>{
-          if(el.getBoundingClientRect().bottom > innerHeight + 4)
-            el.scrollIntoView({block:'end'});
-        }, 450);
-      }, 0);
-    };
+    b.onclick = ()=>{ S.answers[i] = +b.dataset.k; S.hintOpen = false; save(); question(true); };
   });
+  const hb = $('#hintbtn');
+  if(hb) hb.onclick = ()=>{ S.hintOpen = true; question(); };
+  $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
 
-  $('#back').disabled = i === 0;
+  $('#back').classList.remove('hide');
+  $('#next').classList.remove('hide');
+  $('#review').classList.add('hide');
+  $('#retake').classList.add('hide');
+  $('#back').disabled = pos === 0;
   $('#next').disabled = !answered;
-  $('#next').textContent = (i === D.questions.length-1) ? 'Finish' : 'Next';
+  $('#next').textContent = (pos === act.length-1) ? 'Finish' : 'Next';
   $('#footer').classList.remove('hide');
 }
 
+/* One question can be dropped from the run, the way the notebook lets him delete one —
+   except nothing is deleted in NotebookLM, so a rebuild brings it back and the end card
+   can put it back at any time. */
+function openMenu(){
+  const host = $('.more');
+  if(host.querySelector('.menu')) return closeMenu();
+  const m = document.createElement('div');
+  m.className = 'menu';
+  m.innerHTML = '<button id="skipq">Skip this question</button>';
+  host.appendChild(m);
+  m.querySelector('#skipq').onclick = ()=>{
+    if(active(S).length <= 1) return closeMenu();   // never skip the last one standing
+    S.skipped[S.i] = true;
+    delete S.answers[S.i];
+    save(); closeMenu(); draw();
+  };
+  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
+}
+function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(); }
+
 function end(){
-  const n = score(S), t = D.questions.length, pct = Math.round(n/t*100);
+  const act = active(S), n = score(S), t = act.length;
+  const pct = t ? Math.round(n/t*100) : 0;
   let h = '<p class="score">'+n+' <small>/ '+t+'</small></p>'
         + '<p class="sub">'+pct+'% · '+when(S.at)+'</p>'
-        + '<div class="chart"><i class="r" style="width:'+(n/t*100)+'%"></i>'
-        + '<i class="w" style="width:'+((t-n)/t*100)+'%"></i></div>'
+        + '<div class="chart"><i class="r" style="width:'+(t?n/t*100:0)+'%"></i>'
+        + '<i class="w" style="width:'+(t?(t-n)/t*100:0)+'%"></i></div>'
         + '<p class="legend"><span>'+G_OK+' <b>'+n+'</b> correct</span>'
         + '<span>'+G_NO+' <b>'+(t-n)+'</b> wrong</span></p>';
 
   const by = {};
-  D.questions.forEach((q,i)=>{
-    const k = q.topic || '';
+  act.forEach(i=>{
+    const q = D.questions[i], k = q.topic || '';
     if(!k) return;
     by[k] = by[k] || {n:0,t:0};
     by[k].t++;
@@ -419,11 +483,16 @@ function end(){
     h += '<p class="hist">Earlier attempts: ' + S.history.slice().reverse()
         .map(a=>'<span>'+a.score+'/'+a.total+' on '+when(a.at)+'</span>').join(' · ') + '</p>';
   }
+  const nskip = Object.keys(S.skipped||{}).length;
+  if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
+              + '<button class="link" id="unskip">put them back</button></p>';
   if(S.rebuilt) h += '<p class="note">These questions were rebuilt since your last attempt.</p>';
   h += '<p class="note"><a href="'+D.root+'">All my quizzes</a>'
      + (D.notebook ? ' · <a href="'+D.notebook+'">Open in Gemini Notebook</a>' : '') + '</p>';
 
   $('#quizview').innerHTML = h;
+  const u = $('#unskip');
+  if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
   $('#count').textContent = n + ' / ' + t;
   $('#rail').style.width = '100%';
   $('#footer').classList.remove('hide');
@@ -432,21 +501,23 @@ function end(){
   $('#review').classList.remove('hide');
   $('#review').textContent = 'Review quiz';
   $('#retake').classList.remove('hide');
+  lastShown = -1;
 }
 
 function review(){
   let h = '<div class="rev"><h3>Every question</h3>';
-  D.questions.forEach((q,i)=>{
-    const picked = S.answers[i], right = picked === q.correct;
+  active(S).forEach((i,n)=>{
+    const q = D.questions[i], picked = S.answers[i], right = picked === q.correct;
     h += '<div class="item">';
     if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
-    h += '<p class="qq">'+(i+1)+'. '+esc(q.q)+'</p>'
-       + '<p class="line ok"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
+    h += '<p class="qq">'+(n+1)+'. '+esc(q.q)+'</p>'
+       + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
     if(!right){
-      h += '<p class="line mine"><span class="g">'+G_NO+'</span><span>You chose: '
+      h += '<p class="rline mine"><span class="g">'+G_NO+'</span><span>You chose: '
          + (picked===undefined ? 'nothing' : esc(q.options[picked])) + '</span></p>';
     }
-    if(q.hint) h += '<p class="why">'+esc(q.hint)+'</p>';
+    const why = q.rationales ? q.rationales[q.correct] : '';
+    if(why) h += '<p class="why" style="padding-left:0">'+esc(why)+'</p>';
     h += '</div>';
   });
   h += '</div>';
@@ -468,36 +539,37 @@ function when(iso){
 }
 
 /* ---- controls ------------------------------------------------------------------ */
-$('#next').onclick = ()=>{
-  if(S.i < D.questions.length-1){ S.i++; save(); question(); window.scrollTo(0,0); }
-  else { S.done = true; S.at = new Date().toISOString(); save(); end(); window.scrollTo(0,0); }
-};
-$('#back').onclick = ()=>{ if(S.i>0){ S.i--; save(); question(); window.scrollTo(0,0); } };
+function step(dir){
+  const act = active(S), pos = act.indexOf(S.i);
+  if(dir > 0 && pos === act.length-1){
+    S.done = true; S.at = new Date().toISOString(); save(); end(); window.scrollTo(0,0); return;
+  }
+  const nx = act[pos + dir];
+  if(nx === undefined) return;
+  S.i = nx; S.hintOpen = false; save(); question(); window.scrollTo(0,0);
+}
+$('#next').onclick = ()=> step(1);
+$('#back').onclick = ()=> step(-1);
 $('#review').onclick = ()=>{ S.reviewing = !S.reviewing; draw(); };
 $('#retake').onclick = ()=>{
-  if(S.done) S.history.push({at:S.at, score:score(S), total:D.questions.length});
+  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length});
   const hist = S.history;
   S = blank(); S.history = hist;
-  save();
-  $('#back').classList.remove('hide');
-  $('#next').classList.remove('hide');
-  $('#review').classList.add('hide');
-  $('#retake').classList.add('hide');
-  question();
+  lastShown = -1;
+  save(); draw();
 };
 document.querySelectorAll('.tab').forEach(b=> b.onclick = ()=> setTab(b.dataset.tab));
 
 document.addEventListener('keydown', e=>{
   if(D.tab!=='quiz' || S.done || S.reviewing) return;
   const q = D.questions[S.i];
-  if(e.key === 'Enter' || e.key === 'ArrowRight'){ if(!$('#next').disabled) $('#next').click(); return; }
-  if(e.key === 'ArrowLeft'){ if(!$('#back').disabled) $('#back').click(); return; }
+  if(e.key === 'Enter' || e.key === 'ArrowRight'){ if(!$('#next').disabled) step(1); return; }
+  if(e.key === 'ArrowLeft'){ if(!$('#back').disabled) step(-1); return; }
   let k = -1;
   if(/^[1-9]$/.test(e.key)) k = +e.key - 1;
   else if(/^[a-hA-H]$/.test(e.key)) k = D.letters.indexOf(e.key.toUpperCase());
   if(k >= 0 && k < q.options.length && S.answers[S.i] === undefined){
-    // click the real button rather than repeating its handler — one path for answering,
-    // so the scroll-to-the-verdict can never apply to the mouse and not the keyboard
+    // click the real button rather than repeating its handler — one path for answering
     const btn = $('#quizview').querySelector('.opt[data-k="' + k + '"]');
     if(btn) btn.click();
   }
