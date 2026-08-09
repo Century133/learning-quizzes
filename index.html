@@ -162,17 +162,33 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
  color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 9px;
  margin:0 0 9px}
 
-/* ---- study sheet ---- */
-.sheet{padding:6px 0 56px;font-size:.98rem}
-.sheet h2{font-size:1.25rem;font-weight:500;margin:32px 0 10px;letter-spacing:-.01em}
-.sheet h3{font-size:1.02rem;font-weight:500;margin:24px 0 7px}
-.sheet h4,.sheet h5{font-size:.92rem;font-weight:500;margin:18px 0 5px;color:var(--muted)}
-.sheet p{margin:0 0 11px}
-.sheet ul,.sheet ol{margin:0 0 13px;padding-left:21px}
-.sheet li{margin:0 0 5px}
+/* ---- study sheet ----
+   THREE DISTINCT LEVELS, because two of them used to look the same: he could not tell the
+   topic from the "Key terms" heading under it. Topic = large, over a rule. Key terms /
+   Names and studies = a small uppercase label, the same treatment the quiz gives its topic
+   tag. Entries = a numbered list with the term in bold, which is the shape of his own
+   Notion notes, so his shorthand sits beside this instead of clashing with it. */
+.sheet{padding:2px 0 56px;font-size:.95rem}
+.sheet h2{font-size:1.3rem;font-weight:600;margin:34px 0 10px;letter-spacing:-.01em}
+.sheet h3{font-size:1.15rem;font-weight:600;margin:34px 0 4px;letter-spacing:-.01em;
+ padding-top:18px;border-top:1px solid var(--line)}
+.sheet h3:first-child{margin-top:0;padding-top:0;border-top:0}
+.sheet h4,.sheet h5{font-size:.7rem;font-weight:600;margin:18px 0 8px;color:var(--muted);
+ letter-spacing:.09em;text-transform:uppercase}
+.sheet p{margin:0 0 10px;color:var(--muted)}
+.sheet h3+p{color:var(--text);margin-bottom:4px}
+.sheet ul,.sheet ol{margin:0 0 4px;padding-left:24px}
+.sheet ol{list-style:decimal}
+.sheet ol ol{list-style:lower-alpha;margin:4px 0 6px}
+.sheet ul ul,.sheet ol ul{margin:4px 0 6px}
+.sheet li{margin:0 0 6px;padding-left:2px}
+.sheet li::marker{color:var(--muted)}
+.sheet li>strong:first-child{color:var(--text)}
 .sheet strong{font-weight:600}
 .sheet hr{border:0;border-top:1px solid var(--line);margin:26px 0}
 .sheet code{background:var(--surface);padding:1px 6px;border-radius:6px;font-size:.9em}
+.sheettools{display:flex;justify-content:flex-end;padding:10px 0 4px}
+.copied{color:var(--right)}
 
 .hist{color:var(--muted);font-size:.84rem;margin:22px 0 0}
 .hist span{white-space:nowrap}

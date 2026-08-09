@@ -164,17 +164,33 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
  color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 9px;
  margin:0 0 9px}
 
-/* ---- study sheet ---- */
-.sheet{padding:6px 0 56px;font-size:.98rem}
-.sheet h2{font-size:1.25rem;font-weight:500;margin:32px 0 10px;letter-spacing:-.01em}
-.sheet h3{font-size:1.02rem;font-weight:500;margin:24px 0 7px}
-.sheet h4,.sheet h5{font-size:.92rem;font-weight:500;margin:18px 0 5px;color:var(--muted)}
-.sheet p{margin:0 0 11px}
-.sheet ul,.sheet ol{margin:0 0 13px;padding-left:21px}
-.sheet li{margin:0 0 5px}
+/* ---- study sheet ----
+   THREE DISTINCT LEVELS, because two of them used to look the same: he could not tell the
+   topic from the "Key terms" heading under it. Topic = large, over a rule. Key terms /
+   Names and studies = a small uppercase label, the same treatment the quiz gives its topic
+   tag. Entries = a numbered list with the term in bold, which is the shape of his own
+   Notion notes, so his shorthand sits beside this instead of clashing with it. */
+.sheet{padding:2px 0 56px;font-size:.95rem}
+.sheet h2{font-size:1.3rem;font-weight:600;margin:34px 0 10px;letter-spacing:-.01em}
+.sheet h3{font-size:1.15rem;font-weight:600;margin:34px 0 4px;letter-spacing:-.01em;
+ padding-top:18px;border-top:1px solid var(--line)}
+.sheet h3:first-child{margin-top:0;padding-top:0;border-top:0}
+.sheet h4,.sheet h5{font-size:.7rem;font-weight:600;margin:18px 0 8px;color:var(--muted);
+ letter-spacing:.09em;text-transform:uppercase}
+.sheet p{margin:0 0 10px;color:var(--muted)}
+.sheet h3+p{color:var(--text);margin-bottom:4px}
+.sheet ul,.sheet ol{margin:0 0 4px;padding-left:24px}
+.sheet ol{list-style:decimal}
+.sheet ol ol{list-style:lower-alpha;margin:4px 0 6px}
+.sheet ul ul,.sheet ol ul{margin:4px 0 6px}
+.sheet li{margin:0 0 6px;padding-left:2px}
+.sheet li::marker{color:var(--muted)}
+.sheet li>strong:first-child{color:var(--text)}
 .sheet strong{font-weight:600}
 .sheet hr{border:0;border-top:1px solid var(--line);margin:26px 0}
 .sheet code{background:var(--surface);padding:1px 6px;border-radius:6px;font-size:.9em}
+.sheettools{display:flex;justify-content:flex-end;padding:10px 0 4px}
+.copied{color:var(--right)}
 
 .hist{color:var(--muted);font-size:.84rem;margin:22px 0 0}
 .hist span{white-space:nowrap}
@@ -208,99 +224,159 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 
 <main class="wrap">
   <div id="quizview"></div>
-  <div id="sheetview" class="sheet hide"><h3>Thought suppression</h3>
-<p>Attempting to ignore or deny negative affect frequently leads to a paradoxical increase in those very thoughts.</p>
-<p><strong>Key terms</strong></p>
-<ul>
-<li>Thought suppression: The act of attempting to push negative feelings or thoughts out of consciousness to avoid dealing with them.</li>
-<li>Distracting behaviors: Activities such as going for a run or watching TV that people use to avoid facing troubles directly.</li>
-</ul>
-<p><strong>Names and studies</strong></p>
-<ul>
-<li>Wegner et al. — Instructed participants to avoid thinking of a white bear, then found the thought kept popping into mind despite suppression attempts.</li>
-</ul>
+  <div id="sheetview" class="sheet hide">
+    <div class="sheettools"><button class="link" id="copysheet">Copy</button></div>
+    <h3>Thought suppression</h3>
+<p>Attempting to ignore negative affect is an ineffective approach because suppressed thoughts eventually return to conscious awareness.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Thought suppression</strong> — attempting to avoid or deny negative affect by pushing it out of conscious awareness.</li>
+<ol>
+<li>putting an exam out of one’s mind instead of preparing for it</li>
+</ol>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Wegner et al. (1987)</strong> — instructed participants to avoid thinking of a white bear, finding the thought repeatedly popped into mind.</li>
+<li><strong>Gross &amp; Levenson (1997)</strong> — found suppression fails long-term because recalling the event to suppress it causes emotions to return when energy is low.</li>
+<li><strong>Baumeister (1991)</strong> — speculated that maladaptive behaviors like drug abuse or binge eating are used to escape self-awareness.</li>
+</ol>
 <h3>Emotional expression</h3>
-<p>Confronting troubles by letting negative thoughts and feelings out is a healthy alternative to bottling up emotions.</p>
-<p><strong>Key terms</strong></p>
-<ul>
-<li>Opening up: The process of talking or writing about emotions or reactions to negative events to provide mental and physical health benefits.</li>
-</ul>
-<p><strong>Names and studies</strong></p>
-<ul>
-<li>Pennebaker and Beall — Assigned students to write about trauma or trivial topics, then those writing about trauma visited the health center less for illnesses during the following 6 months.</li>
-<li>Petrie et al. — Tracked the immune function of patients writing about emotional states, then found that daily writing increased immune system functioning.</li>
-<li>Uysal and Lu — Investigated the link between self-expression and pain, then found that self-expression was associated with experiencing less physical pain.</li>
-</ul>
+<p>Communicating feelings through talking or writing is a healthy alternative to bottling them up and provides physical health benefits.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Self-expression</strong> — talking or writing about emotions and reactions to negative events to ourselves or others.</li>
+<ol>
+<li>physical pain reduction — a positive outcome of self-expression.</li>
+</ol>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Pennebaker &amp; Beall (1986)</strong> — assigned students to write about trauma, finding they had fewer health center visits over a 6-month period.</li>
+<li><strong>Petrie et al. (2004)</strong> — showed that daily writing about emotional states increased immune system functioning.</li>
+<li><strong>Uysal &amp; Lu (2011)</strong> — found that self-expression was associated with experiencing less physical pain.</li>
+</ol>
 <h3>Delayed gratification</h3>
-<p>Self-regulation involves the capacity to override immediate impulses to seek larger rewards at a later time.</p>
-<p><strong>Key terms</strong></p>
-<ul>
-<li>Self-regulation: The process of setting goals and using our cognitive and affective capacities to reach those goals.</li>
-</ul>
-<p><strong>Names and studies</strong></p>
-<ul>
-<li>Mischel et al. — Offered children one snack immediately or two if they could wait, then found those who waited had better SAT scores and social skills later in life.</li>
-</ul>
+<p>Self-regulation involves using cognitive capacities to override immediate impulses to reach long-term goals.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Self-regulation</strong> — the process of setting goals and using cognitive and affective capacities to reach them.</li>
+<li><strong>Delayed gratification</strong> — overriding the impulse for immediate rewards to obtain greater rewards later.</li>
+<li><strong>Serotonin</strong> — a neurotransmitter where low levels are linked to impulsiveness and a preference for small immediate rewards.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Mischel et al. (1989)</strong> — found children who waited for two marshmallows had better SAT scores and social skills later in life.</li>
+</ol>
 <h3>Resource depletion</h3>
-<p>Exerting self-control functions like a muscle that becomes tired and less effective when it is used too much.</p>
-<p><strong>Key terms</strong></p>
-<ul>
-<li>Emotion regulation: The process of either increasing or decreasing our emotional responses.</li>
-</ul>
-<p><strong>Names and studies</strong></p>
-<ul>
-<li>Muraven, Tice, and Baumeister — Tasked participants with regulating emotions during a movie, then found reduced hand-grip strength, showing self-control is a finite resource.</li>
-</ul>
+<p>The effort required to regulate emotional responses consumes finite resources, leading to reduced performance on subsequent tasks.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Emotion regulation</strong> — the effortful task of increasing or decreasing one&#x27;s emotional responses.</li>
+<li><strong>Regulatory depletion</strong> — a state where the effort to control emotions consumes capacity, leaving less for other tasks.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Muraven, Tice, &amp; Baumeister (1998)</strong> — used a muscle metaphor to show that participants regulating emotions during a movie had less hand-grip strength.</li>
+<li><strong>Vohs &amp; Heatherton (2000)</strong> — found that resisting tempting snacks led to poorer performance on subsequent energy-demanding tasks.</li>
+</ol>
 <h3>Cultural differences in social support</h3>
-<p>Western and Eastern cultures utilize social networks differently due to varying perceptions of independence and group harmony.</p>
-<p><strong>Key terms</strong></p>
-<ul>
-<li>Social support: The perception of having positive social relationships with others who are available to help deal with stressors.</li>
-</ul>
-<p><strong>Names and studies</strong></p>
-<ul>
-<li>Taylor et al. — Compared coping strategies, then found Americans were significantly more likely to use social support while Koreans avoided it to preserve group harmony.</li>
-</ul>
+<p>Cultural values influence how individuals seek assistance, with Westerners using it for goals and Easterners avoiding it for harmony.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Social support</strong> — the perception or reality that one is cared for and has assistance available from others.</li>
+<ol>
+<li>Direct effects — occur when others provide specific advice, financial help, or help in determining how to deal with a stressor.</li>
+<li>Emotional effects — occur from knowing that others are available if they are needed.</li>
+</ol>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Taylor et al. (2004)</strong> — found American students use social support (57.1%) more than Koreans (39.3%) who worry about disrupting group harmony.</li>
+<li><strong>Koopman et al. (1998)</strong> — found women with higher social support experienced less depression when adjusting to a cancer diagnosis.</li>
+<li><strong>Ashton et al. (2005)</strong> — demonstrated that social support provides a buffering effect for physical health symptoms in AIDS patients.</li>
+</ol>
 <h3>Hedonic adaptation</h3>
-<p>Individuals tend to habituate to new circumstances, leading their happiness levels to return to a stable baseline over time.</p>
-<p><strong>Names and studies</strong></p>
-<ul>
-<li>Brickman, Coates, and Janoff-Bulman — Interviewed lottery winners and paralyzed accident victims, then found winners were not happier than controls and victims were less unhappy than expected.</li>
-</ul>
+<p>Individuals habituate to major life changes and return to a moderate level of well-being through resilience.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Hedonic adaptation</strong> — the process of returning to a moderate level of happiness after a positive or negative event.</li>
+<li><strong>Habituation</strong> — the process of becoming accustomed to positive outcomes so their emotional effect wears off over time.</li>
+<li><strong>Resilience</strong> — the ability to bring coping skills into play when negative events occur to restore happiness levels.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Brickman, Coates, &amp; Janoff-Bulman (1978)</strong> — showed that $50,000 lottery winners were not significantly happier than non-winners over time.</li>
+<li><strong>Small et al. (2001)</strong> — found that people enjoy a second chocolate bar less than the first due to adaptation.</li>
+<li><strong>Twenge et al. (2003)</strong> — reviewed well-being studies and found that couples without children report higher happiness than those with children.</li>
+</ol>
 <h3>Perceived control</h3>
-<p>The belief that one can influence or stop potential stressors significantly reduces the physical and mental impact of stress.</p>
-<p><strong>Key terms</strong></p>
-<ul>
-<li>Self-efficacy: The belief in our ability to carry out actions that produce desired outcomes.</li>
-<li>Hardiness: An individual-difference measure characterized by being positive about stressful events and taking direct action to learn from them.</li>
-</ul>
-<p><strong>Names and studies</strong></p>
-<ul>
-<li>Glass, Reim, and Singer — Told participants they could stop a loud noise during a study, then found those who believed they had control experienced less stress.</li>
-</ul>
+<p>The belief that one can influence environmental stressors leads to constructive responses and significantly lower levels of stress.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Perceived control</strong> — the belief that one can influence or stop potential stressors in their environment.</li>
+<li><strong>Self-efficacy</strong> — the belief in one&#x27;s ability to carry out actions that produce desired outcomes.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Glass, Reim, &amp; Singer (1971)</strong> — found that participants who believed they could stop a loud noise experienced less stress even if they never did.</li>
+<li><strong>Rodin (1986)</strong> — demonstrated that nursing home patients who could choose their own daily activities experienced less stress.</li>
+</ol>
 <h3>Optimism and health</h3>
-<p>General expectations of positive outcomes are linked to improved recovery from illness and increased longevity.</p>
-<p><strong>Key terms</strong></p>
-<ul>
-<li>Optimism: A general tendency to expect positive outcomes in the future.</li>
-</ul>
-<p><strong>Names and studies</strong></p>
-<ul>
-<li>Peterson et al. — Followed college students for 50 years, then found those with positive outlooks were less likely to die, particularly from accidental or violent deaths.</li>
-<li>Levy and Myers — Studied attitudes of older adults, then found those with positive views of aging lived an average of almost eight years longer.</li>
-</ul>
+<p>Maintaining an optimistic outlook and a hardy attitude contributes to physical recovery and increased longevity.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Optimism</strong> — a general tendency to expect positive outcomes in the future.</li>
+<li><strong>Hardiness</strong> — an individual-difference measure involving a positive attitude toward stressors and a tendency to take direct action.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Peterson et al. (1998)</strong> — found that college optimism levels predicted fewer accidental or violent deaths over the subsequent 50 years.</li>
+<li><strong>Levy &amp; Myers (2005)</strong> — found that older adults with positive perceptions of aging lived an average of 8 years longer than those with negative views.</li>
+<li><strong>Antoni et al. (2001)</strong> — showed that training cancer patients in optimism decreased their fatigue and enhanced their positive outlook.</li>
+</ol>
 <h3>Affective forecasting</h3>
-<p>Affective forecasting reveals a significant &quot;durability bias&quot; where individuals overestimate the long-term impact of life events on their happiness.</p>
-<p><strong>Names and studies</strong></p>
-<ul>
-<li>Wilson et al. — Asked participants to focus on regular future activities before making predictions, then found their predictions about the influence of events were less extreme.</li>
-</ul>
+<p>Human predictions regarding future emotional states are consistently inaccurate as people overestimate the intensity and duration of reactions.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Affective forecasting</strong> — the process of predicting one&#x27;s future emotional states and their duration.</li>
+<li><strong>Focalism</strong> — a bias where people focus only on one specific event and ignore regular activities that influence happiness.</li>
+<li><strong>Durability bias — the tendency to overestimate how long emotional reactions to future events will last.</strong></li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Wilson &amp; Gilbert (2005)</strong> — found that people generally overestimate their emotional reactions to future events.</li>
+<li><strong>Wilson et al. (2000)</strong> — demonstrated that focusing on regular daily activities makes predictions about the influence of future events less extreme.</li>
+<li><strong>Argyle (1999)</strong> — estimated that external factors like wealth and health account for only 15% to 20% of total well-being scores.</li>
+</ol>
 <h3>Resource restoration</h3>
-<p>Negative effects of self-regulatory depletion can be offset by positive affect and restorative activities.</p>
-<p><strong>Names and studies</strong></p>
-<ul>
-<li>Tice et al. — Provided participants with funny video clips after a self-regulation task, then found that positive affect restored self-regulatory strength for subsequent tasks.</li>
-</ul></div>
+<p>Self-regulation capacity can be increased through practice and replenished through the experience of positive affect.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Self-regulation training</strong> — the practice of performing difficult tasks to improve overall self-control capacity.</li>
+<ol>
+<li>maintaining good posture or avoiding swearing</li>
+</ol>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Baumeister et al. (2006)</strong> — showed that students who practiced difficult tasks like exercising later performed better on laboratory self-regulation tests.</li>
+<li><strong>Tice et al. (2007)</strong> — found that people who watched a funny video clip were better at subsequent self-regulation tasks.</li>
+</ol>
+<h3>Health behaviors and emotion regulation</h3>
+<p>Maintaining health requires using cognitive resources and emotion regulation to avoid dangerous but temporarily pleasurable behaviors.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Binge drinking</strong> — the act of having five or more drinks in one sitting, leading to severe negative health consequences.</li>
+<li><strong>Physical inactivity</strong> — a lack of regular exercise that, combined with poor diet, represents a major threat to health.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Fryar et al. (2009)</strong> — reported that more than 60% of children try smoking before age 18, with over half failing to quit.</li>
+<li><strong>Hillman et al. (2008)</strong> — showed that regular physical exercise has positive influences on cognitive processes and academic performance.</li>
+<li><strong>Miller et al. (2007)</strong> — found that binge-drinking students are more likely to engage in other risky behaviors like drug use or suicide attempts.</li>
+</ol>
+  </div>
 </main>
 
 <footer id="footer" class="wrap hide">
@@ -315,7 +391,7 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "psp-3-6", "title": "3.6 How to Feel Better: Coping With Negative Emotions", "subtitle": "Chapter 3 · Social Affect", "book": "PSP", "hash": "64414bef989051c4", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "In Wegner's study on thought suppression, participants were instructed to avoid thinking about a white bear for five minutes. What did the results suggest about the effectiveness of this strategy for managing mental content?", "options": ["Participants successfully cleared their minds, provided they used a physical distractor like a bell.", "The prohibited thought frequently recurred despite the participants' efforts to avoid it.", "The strategy worked for participants with high self-esteem but failed for those with anxiety.", "Suppression was effective in the short term but led to a complete loss of focus after the five-minute mark."], "rationales": ["While a bell was used to record failures, it did not facilitate success; rather, the 'white bear' continued to pop into consciousness.", "The study demonstrated the paradoxical effect of suppression, where trying to ignore a thought requires active monitoring, which keeps the concept accessible in the mind.", "The study identified a general cognitive limitation in thought suppression that applied regardless of individual personality traits.", "The failure to suppress occurred immediately and repeatedly during the initial instructions, not just as a delayed reaction."], "correct": 1, "hint": "Consider what happens when you are forced to 'look' for a thought in order to ensure you aren't thinking it.", "topic": "Thought suppression"}, {"q": "Pennebaker and Beall (1986) found that students who wrote about traumatic life events had higher blood pressure immediately after writing. What was the long-term health outcome for these students compared to those who wrote about trivial topics?", "options": ["They developed a reliance on journaling that masked the recurrence of physical symptoms.", "Their physical health remained unchanged, though they reported feeling more socially connected.", "They visited the student health center significantly less often for illnesses over the next six months.", "They reported higher levels of chronic stress and more frequent physical pain during the follow-up period."], "rationales": ["The data showed a genuine reduction in illness frequency, not merely a change in reporting or coping habits.", "The study measured objective health indicators, like health center visits, and found a significant improvement in physical wellness specifically.", "Confronting and expressing negative experiences, while briefly distressing, appears to provide physiological benefits and boost immune functioning over time.", "This aligns with common intuition that dwelling on trauma is harmful, but the research actually showed improved health outcomes and less physical pain."], "correct": 2, "hint": "Reflect on whether the immediate emotional discomfort of opening up led to a lasting health deficit or a benefit.", "topic": "Emotional expression"}, {"q": "Mischel’s longitudinal research followed children who were able to wait for a second marshmallow or cookie at age four or five. How did these 'self-regulators' differ from their peers as young adults?", "options": ["They were more likely to follow strict career paths but reported lower overall life satisfaction.", "They showed a preference for immediate rewards in financial contexts to compensate for early deprivation.", "They achieved higher SAT scores and were rated as more socially adept by their friends.", "They were more prone to anxiety because they were constantly calculating future rewards."], "rationales": ["The research suggests that self-regulation skills actually improve the ability to handle stress and frustration, leading to better overall outcomes.", "Self-regulation is described as a stable skill that tends to persist, leading to continued success in avoiding impulsive behaviors later in life.", "Early ability to delay gratification is a strong predictor of later cognitive control, academic success, and social competence.", "The study found that these individuals actually coped with stress and frustration better than those who could not resist the initial temptation."], "correct": 2, "hint": "Look for outcomes that suggest long-term cognitive and social advantages rather than just professional rigidity.", "topic": "Delayed gratification"}, {"q": "Muraven, Tice, and Baumeister (1998) asked participants to control their emotions while watching a distressing movie and then measured their performance on a handgrip exerciser. What did the decrease in handgrip strength suggest?", "options": ["Negative emotions cause immediate physical muscle weakness regardless of regulation efforts.", "Self-control functions like a muscle that becomes fatigued after it is heavily used.", "Watching media content makes people less motivated to perform physical tasks.", "Participants who expressed their emotions became too overstimulated to exert physical force."], "rationales": ["The control group, who also saw the movie but didn't have to regulate their emotions, did not show the same decrease in physical strength.", "Regulating emotions consumes a limited pool of cognitive resources, leaving less energy available for subsequent tasks requiring self-discipline or physical effort.", "The difference between the instruction groups proves the effect was caused by the effort of regulation, not the simple act of watching a movie.", "The study showed that both increasing and decreasing emotional responses led to depletion, whereas no emotional control did not."], "correct": 1, "hint": "Think about why a mental task (emotion regulation) would affect a physical task (handgrip strength).", "topic": "Resource depletion"}, {"q": "Taylor and colleagues (2004) found that Korean students were less likely to seek social support compared to American students. What was the primary reason cited by the Korean participants for avoiding help?", "options": ["A lack of established social networks compared to the more individualistic American students.", "The preference for physical exercise and entertainment over interpersonal communication.", "The concern that seeking help would disrupt group harmony or cause them to 'lose face.'", "A general cultural belief that social support is ineffective for managing internal stress."], "rationales": ["Both groups had social networks, but the cultural norms regarding how and when to use those networks for personal aid differed significantly.", "While Americans used exercise more, the study highlighted that Koreans specifically avoided support due to social concerns like criticism and group harmony.", "In collectivist cultures, the risk of straining relationships or appearing self-concerned often outweighs the individual benefit of social support.", "The study focused on the social costs and consequences of help-seeking rather than a disbelief in the efficacy of support itself."], "correct": 2, "hint": "Focus on how collectivist values prioritize the stability of the group over the needs of the individual.", "topic": "Cultural differences in social support"}, {"q": "Brickman and colleagues (1978) compared the happiness levels of lottery winners to those of a control group. What does their finding imply about the relationship between wealth and well-being?", "options": ["Financial windfalls lead to long-term social isolation, which cancels out the benefits of the money.", "People habituate to positive changes and eventually return to their baseline level of happiness.", "A significant increase in wealth provides a permanent buffer against everyday stressors.", "Winning the lottery makes people more sensitive to small daily pleasures."], "rationales": ["While social factors may change, the primary psychological reason for the plateau in happiness was hedonic adaptation.", "The initial surge of pleasure from winning is fleeting because individuals adapt to their new status and their social comparison groups shift.", "The study found that lottery winners were not significantly happier than the control group after the initial excitement wore off.", "Actually, the study suggested that winners might find ordinary pleasures less enjoyable by comparison to their big win."], "correct": 1, "hint": "Consider how you feel after eating your second chocolate bar compared to the first.", "topic": "Hedonic adaptation"}, {"q": "Glass, Reim, and Singer (1971) conducted a study where participants were exposed to loud noises. What was the critical factor that reduced the stress experienced by the participants?", "options": ["The gradual desensitization to the sound after multiple exposures.", "The use of relaxation techniques taught by the experimenter before the noise began.", "The belief that they had the ability to stop the noise, even if they never used it.", "The presence of a supportive partner during the experiment."], "rationales": ["The focus of the study was not on habituation to the stimulus, but on the psychological impact of having an 'escape' option.", "The study measured the impact of an environmental control mechanism (a button) rather than internal coping strategies.", "Perceived control over a stressor is often more important for reducing stress than the actual use of that control.", "While social support is a buffer, this specific study isolated 'perceived control' as the independent variable."], "correct": 2, "hint": "Consider whether it was the action of stopping the noise or the option to stop it that mattered.", "topic": "Perceived control"}, {"q": "Peterson and colleagues (1998) analyzed the optimism levels of college students from the 1930s. What long-term implication did they find for those who had a more positive outlook?", "options": ["They reached their peak income levels earlier in life but retired with less savings.", "They were less likely to have died of all causes, including accidental and violent deaths, 50 years later.", "They were more likely to be married but reported lower levels of marital satisfaction.", "They reported fewer negative life events, suggesting that optimism prevents misfortune."], "rationales": ["While other studies mention income, the Peterson study specifically focused on the long-term prediction of health and mortality.", "Optimism in early adulthood correlates with better health maintenance and lower mortality rates over a lifetime.", "The study primarily linked college optimism to physical longevity and mortality data rather than marital quality.", "Optimism doesn't prevent bad events, but it changes how people respond to them, which leads to better health outcomes."], "correct": 1, "hint": "Think about the most extreme health metric you could track over a 50-year period.", "topic": "Optimism and health"}, {"q": "Wilson and colleagues (2000) found that people's predictions about how a major event would make them feel became more accurate when they were asked to do what?", "options": ["Recall a past event that was similar to the one they were predicting.", "Visualize the worst-case scenario to better prepare for emotional disappointment.", "Think about all the regular daily activities they would still be doing in the future.", "Record their current mood to use as a baseline for future comparisons."], "rationales": ["While comparison helps, the study specifically highlighted the role of focusing on 'non-event' daily life to temper extreme predictions.", "This describes 'defensive pessimism,' but it was not the technique used in the Wilson study to improve predictive accuracy.", "This helps overcome 'focalism,' where people focus too much on a single event and forget that daily routines (work, chores, socializing) moderate their mood.", "Accuracy improved by broadening the future perspective to include mundane details, not just by focusing on the present baseline."], "correct": 2, "hint": "Consider the error of focusing too narrowly on a single change while ignoring the rest of your life.", "topic": "Affective forecasting"}, {"q": "Research on self-regulation, such as the study by Tice and colleagues (2007), suggests that which of the following can help restore cognitive resources after they have been depleted?", "options": ["Engaging in competitive sports to boost adrenaline levels.", "Suppressing all thoughts of the previous task to clear the mental slate.", "Repeating a simple, repetitive task to rest the 'muscle' of self-control.", "Watching a funny video clip to induce a positive mood."], "rationales": ["Adrenaline is not cited as the restorative factor; rather, it is the shift to a positive emotional state.", "Suppression is a high-effort task that leads to further depletion, not restoration.", "Repetitive tasks that require focus might actually continue the depletion rather than restoring resources.", "Positive affect acts as an 'antidote' that can replenish the energy needed for self-regulation after it has been exhausted."], "correct": 3, "hint": "Think about what 'happy' activity might serve as a quick recharge for a tired mind.", "topic": "Resource restoration"}], "notebook": "https://notebooklm.google.com/notebook/791cd0ef-e949-4fd0-9fec-8a610efda32c/artifact/71aa7cdf-b770-429c-96f6-212f009b1f79", "root": "../index.html", "tab": "quiz"}</script>
+<script id="quiz-data" type="application/json">{"id": "psp-3-6", "title": "3.6 How to Feel Better: Coping With Negative Emotions", "subtitle": "Chapter 3 · Social Affect", "book": "PSP", "hash": "64414bef989051c4", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "In Wegner's study on thought suppression, participants were instructed to avoid thinking about a white bear for five minutes. What did the results suggest about the effectiveness of this strategy for managing mental content?", "options": ["Participants successfully cleared their minds, provided they used a physical distractor like a bell.", "The prohibited thought frequently recurred despite the participants' efforts to avoid it.", "The strategy worked for participants with high self-esteem but failed for those with anxiety.", "Suppression was effective in the short term but led to a complete loss of focus after the five-minute mark."], "rationales": ["While a bell was used to record failures, it did not facilitate success; rather, the 'white bear' continued to pop into consciousness.", "The study demonstrated the paradoxical effect of suppression, where trying to ignore a thought requires active monitoring, which keeps the concept accessible in the mind.", "The study identified a general cognitive limitation in thought suppression that applied regardless of individual personality traits.", "The failure to suppress occurred immediately and repeatedly during the initial instructions, not just as a delayed reaction."], "correct": 1, "hint": "Consider what happens when you are forced to 'look' for a thought in order to ensure you aren't thinking it.", "topic": "Thought suppression"}, {"q": "Pennebaker and Beall (1986) found that students who wrote about traumatic life events had higher blood pressure immediately after writing. What was the long-term health outcome for these students compared to those who wrote about trivial topics?", "options": ["They developed a reliance on journaling that masked the recurrence of physical symptoms.", "Their physical health remained unchanged, though they reported feeling more socially connected.", "They visited the student health center significantly less often for illnesses over the next six months.", "They reported higher levels of chronic stress and more frequent physical pain during the follow-up period."], "rationales": ["The data showed a genuine reduction in illness frequency, not merely a change in reporting or coping habits.", "The study measured objective health indicators, like health center visits, and found a significant improvement in physical wellness specifically.", "Confronting and expressing negative experiences, while briefly distressing, appears to provide physiological benefits and boost immune functioning over time.", "This aligns with common intuition that dwelling on trauma is harmful, but the research actually showed improved health outcomes and less physical pain."], "correct": 2, "hint": "Reflect on whether the immediate emotional discomfort of opening up led to a lasting health deficit or a benefit.", "topic": "Emotional expression"}, {"q": "Mischel’s longitudinal research followed children who were able to wait for a second marshmallow or cookie at age four or five. How did these 'self-regulators' differ from their peers as young adults?", "options": ["They were more likely to follow strict career paths but reported lower overall life satisfaction.", "They showed a preference for immediate rewards in financial contexts to compensate for early deprivation.", "They achieved higher SAT scores and were rated as more socially adept by their friends.", "They were more prone to anxiety because they were constantly calculating future rewards."], "rationales": ["The research suggests that self-regulation skills actually improve the ability to handle stress and frustration, leading to better overall outcomes.", "Self-regulation is described as a stable skill that tends to persist, leading to continued success in avoiding impulsive behaviors later in life.", "Early ability to delay gratification is a strong predictor of later cognitive control, academic success, and social competence.", "The study found that these individuals actually coped with stress and frustration better than those who could not resist the initial temptation."], "correct": 2, "hint": "Look for outcomes that suggest long-term cognitive and social advantages rather than just professional rigidity.", "topic": "Delayed gratification"}, {"q": "Muraven, Tice, and Baumeister (1998) asked participants to control their emotions while watching a distressing movie and then measured their performance on a handgrip exerciser. What did the decrease in handgrip strength suggest?", "options": ["Negative emotions cause immediate physical muscle weakness regardless of regulation efforts.", "Self-control functions like a muscle that becomes fatigued after it is heavily used.", "Watching media content makes people less motivated to perform physical tasks.", "Participants who expressed their emotions became too overstimulated to exert physical force."], "rationales": ["The control group, who also saw the movie but didn't have to regulate their emotions, did not show the same decrease in physical strength.", "Regulating emotions consumes a limited pool of cognitive resources, leaving less energy available for subsequent tasks requiring self-discipline or physical effort.", "The difference between the instruction groups proves the effect was caused by the effort of regulation, not the simple act of watching a movie.", "The study showed that both increasing and decreasing emotional responses led to depletion, whereas no emotional control did not."], "correct": 1, "hint": "Think about why a mental task (emotion regulation) would affect a physical task (handgrip strength).", "topic": "Resource depletion"}, {"q": "Taylor and colleagues (2004) found that Korean students were less likely to seek social support compared to American students. What was the primary reason cited by the Korean participants for avoiding help?", "options": ["A lack of established social networks compared to the more individualistic American students.", "The preference for physical exercise and entertainment over interpersonal communication.", "The concern that seeking help would disrupt group harmony or cause them to 'lose face.'", "A general cultural belief that social support is ineffective for managing internal stress."], "rationales": ["Both groups had social networks, but the cultural norms regarding how and when to use those networks for personal aid differed significantly.", "While Americans used exercise more, the study highlighted that Koreans specifically avoided support due to social concerns like criticism and group harmony.", "In collectivist cultures, the risk of straining relationships or appearing self-concerned often outweighs the individual benefit of social support.", "The study focused on the social costs and consequences of help-seeking rather than a disbelief in the efficacy of support itself."], "correct": 2, "hint": "Focus on how collectivist values prioritize the stability of the group over the needs of the individual.", "topic": "Cultural differences in social support"}, {"q": "Brickman and colleagues (1978) compared the happiness levels of lottery winners to those of a control group. What does their finding imply about the relationship between wealth and well-being?", "options": ["Financial windfalls lead to long-term social isolation, which cancels out the benefits of the money.", "People habituate to positive changes and eventually return to their baseline level of happiness.", "A significant increase in wealth provides a permanent buffer against everyday stressors.", "Winning the lottery makes people more sensitive to small daily pleasures."], "rationales": ["While social factors may change, the primary psychological reason for the plateau in happiness was hedonic adaptation.", "The initial surge of pleasure from winning is fleeting because individuals adapt to their new status and their social comparison groups shift.", "The study found that lottery winners were not significantly happier than the control group after the initial excitement wore off.", "Actually, the study suggested that winners might find ordinary pleasures less enjoyable by comparison to their big win."], "correct": 1, "hint": "Consider how you feel after eating your second chocolate bar compared to the first.", "topic": "Hedonic adaptation"}, {"q": "Glass, Reim, and Singer (1971) conducted a study where participants were exposed to loud noises. What was the critical factor that reduced the stress experienced by the participants?", "options": ["The gradual desensitization to the sound after multiple exposures.", "The use of relaxation techniques taught by the experimenter before the noise began.", "The belief that they had the ability to stop the noise, even if they never used it.", "The presence of a supportive partner during the experiment."], "rationales": ["The focus of the study was not on habituation to the stimulus, but on the psychological impact of having an 'escape' option.", "The study measured the impact of an environmental control mechanism (a button) rather than internal coping strategies.", "Perceived control over a stressor is often more important for reducing stress than the actual use of that control.", "While social support is a buffer, this specific study isolated 'perceived control' as the independent variable."], "correct": 2, "hint": "Consider whether it was the action of stopping the noise or the option to stop it that mattered.", "topic": "Perceived control"}, {"q": "Peterson and colleagues (1998) analyzed the optimism levels of college students from the 1930s. What long-term implication did they find for those who had a more positive outlook?", "options": ["They reached their peak income levels earlier in life but retired with less savings.", "They were less likely to have died of all causes, including accidental and violent deaths, 50 years later.", "They were more likely to be married but reported lower levels of marital satisfaction.", "They reported fewer negative life events, suggesting that optimism prevents misfortune."], "rationales": ["While other studies mention income, the Peterson study specifically focused on the long-term prediction of health and mortality.", "Optimism in early adulthood correlates with better health maintenance and lower mortality rates over a lifetime.", "The study primarily linked college optimism to physical longevity and mortality data rather than marital quality.", "Optimism doesn't prevent bad events, but it changes how people respond to them, which leads to better health outcomes."], "correct": 1, "hint": "Think about the most extreme health metric you could track over a 50-year period.", "topic": "Optimism and health"}, {"q": "Wilson and colleagues (2000) found that people's predictions about how a major event would make them feel became more accurate when they were asked to do what?", "options": ["Recall a past event that was similar to the one they were predicting.", "Visualize the worst-case scenario to better prepare for emotional disappointment.", "Think about all the regular daily activities they would still be doing in the future.", "Record their current mood to use as a baseline for future comparisons."], "rationales": ["While comparison helps, the study specifically highlighted the role of focusing on 'non-event' daily life to temper extreme predictions.", "This describes 'defensive pessimism,' but it was not the technique used in the Wilson study to improve predictive accuracy.", "This helps overcome 'focalism,' where people focus too much on a single event and forget that daily routines (work, chores, socializing) moderate their mood.", "Accuracy improved by broadening the future perspective to include mundane details, not just by focusing on the present baseline."], "correct": 2, "hint": "Consider the error of focusing too narrowly on a single change while ignoring the rest of your life.", "topic": "Affective forecasting"}, {"q": "Research on self-regulation, such as the study by Tice and colleagues (2007), suggests that which of the following can help restore cognitive resources after they have been depleted?", "options": ["Engaging in competitive sports to boost adrenaline levels.", "Suppressing all thoughts of the previous task to clear the mental slate.", "Repeating a simple, repetitive task to rest the 'muscle' of self-control.", "Watching a funny video clip to induce a positive mood."], "rationales": ["Adrenaline is not cited as the restorative factor; rather, it is the shift to a positive emotional state.", "Suppression is a high-effort task that leads to further depletion, not restoration.", "Repetitive tasks that require focus might actually continue the depletion rather than restoring resources.", "Positive affect acts as an 'antidote' that can replenish the energy needed for self-regulation after it has been exhausted."], "correct": 3, "hint": "Think about what 'happy' activity might serve as a quick recharge for a tired mind.", "topic": "Resource restoration"}], "notebook": "https://notebooklm.google.com/notebook/791cd0ef-e949-4fd0-9fec-8a610efda32c/artifact/71aa7cdf-b770-429c-96f6-212f009b1f79", "root": "../index.html", "tab": "quiz", "sheet": "## Thought suppression\nAttempting to ignore negative affect is an ineffective approach because suppressed thoughts eventually return to conscious awareness.\n\n### Key terms\n1. **Thought suppression** — attempting to avoid or deny negative affect by pushing it out of conscious awareness.\n   1. putting an exam out of one’s mind instead of preparing for it\n\n### Names and studies\n1. **Wegner et al. (1987)** — instructed participants to avoid thinking of a white bear, finding the thought repeatedly popped into mind.\n2. **Gross & Levenson (1997)** — found suppression fails long-term because recalling the event to suppress it causes emotions to return when energy is low.\n3. **Baumeister (1991)** — speculated that maladaptive behaviors like drug abuse or binge eating are used to escape self-awareness.\n\n## Emotional expression\nCommunicating feelings through talking or writing is a healthy alternative to bottling them up and provides physical health benefits.\n\n### Key terms\n1. **Self-expression** — talking or writing about emotions and reactions to negative events to ourselves or others.\n   1. physical pain reduction — a positive outcome of self-expression.\n\n### Names and studies\n1. **Pennebaker & Beall (1986)** — assigned students to write about trauma, finding they had fewer health center visits over a 6-month period.\n2. **Petrie et al. (2004)** — showed that daily writing about emotional states increased immune system functioning.\n3. **Uysal & Lu (2011)** — found that self-expression was associated with experiencing less physical pain.\n\n## Delayed gratification\nSelf-regulation involves using cognitive capacities to override immediate impulses to reach long-term goals.\n\n### Key terms\n1. **Self-regulation** — the process of setting goals and using cognitive and affective capacities to reach them.\n2. **Delayed gratification** — overriding the impulse for immediate rewards to obtain greater rewards later.\n3. **Serotonin** — a neurotransmitter where low levels are linked to impulsiveness and a preference for small immediate rewards.\n\n### Names and studies\n1. **Mischel et al. (1989)** — found children who waited for two marshmallows had better SAT scores and social skills later in life.\n\n## Resource depletion\nThe effort required to regulate emotional responses consumes finite resources, leading to reduced performance on subsequent tasks.\n\n### Key terms\n1. **Emotion regulation** — the effortful task of increasing or decreasing one's emotional responses.\n2. **Regulatory depletion** — a state where the effort to control emotions consumes capacity, leaving less for other tasks.\n\n### Names and studies\n1. **Muraven, Tice, & Baumeister (1998)** — used a muscle metaphor to show that participants regulating emotions during a movie had less hand-grip strength.\n2. **Vohs & Heatherton (2000)** — found that resisting tempting snacks led to poorer performance on subsequent energy-demanding tasks.\n\n## Cultural differences in social support\nCultural values influence how individuals seek assistance, with Westerners using it for goals and Easterners avoiding it for harmony.\n\n### Key terms\n1. **Social support** — the perception or reality that one is cared for and has assistance available from others.\n   1. Direct effects — occur when others provide specific advice, financial help, or help in determining how to deal with a stressor.\n   2. Emotional effects — occur from knowing that others are available if they are needed.\n\n### Names and studies\n1. **Taylor et al. (2004)** — found American students use social support (57.1%) more than Koreans (39.3%) who worry about disrupting group harmony.\n2. **Koopman et al. (1998)** — found women with higher social support experienced less depression when adjusting to a cancer diagnosis.\n3. **Ashton et al. (2005)** — demonstrated that social support provides a buffering effect for physical health symptoms in AIDS patients.\n\n## Hedonic adaptation\nIndividuals habituate to major life changes and return to a moderate level of well-being through resilience.\n\n### Key terms\n1. **Hedonic adaptation** — the process of returning to a moderate level of happiness after a positive or negative event.\n2. **Habituation** — the process of becoming accustomed to positive outcomes so their emotional effect wears off over time.\n3. **Resilience** — the ability to bring coping skills into play when negative events occur to restore happiness levels.\n\n### Names and studies\n1. **Brickman, Coates, & Janoff-Bulman (1978)** — showed that $50,000 lottery winners were not significantly happier than non-winners over time.\n2. **Small et al. (2001)** — found that people enjoy a second chocolate bar less than the first due to adaptation.\n3. **Twenge et al. (2003)** — reviewed well-being studies and found that couples without children report higher happiness than those with children.\n\n## Perceived control\nThe belief that one can influence environmental stressors leads to constructive responses and significantly lower levels of stress.\n\n### Key terms\n1. **Perceived control** — the belief that one can influence or stop potential stressors in their environment.\n2. **Self-efficacy** — the belief in one's ability to carry out actions that produce desired outcomes.\n\n### Names and studies\n1. **Glass, Reim, & Singer (1971)** — found that participants who believed they could stop a loud noise experienced less stress even if they never did.\n2. **Rodin (1986)** — demonstrated that nursing home patients who could choose their own daily activities experienced less stress.\n\n## Optimism and health\nMaintaining an optimistic outlook and a hardy attitude contributes to physical recovery and increased longevity.\n\n### Key terms\n1. **Optimism** — a general tendency to expect positive outcomes in the future.\n2. **Hardiness** — an individual-difference measure involving a positive attitude toward stressors and a tendency to take direct action.\n\n### Names and studies\n1. **Peterson et al. (1998)** — found that college optimism levels predicted fewer accidental or violent deaths over the subsequent 50 years.\n2. **Levy & Myers (2005)** — found that older adults with positive perceptions of aging lived an average of 8 years longer than those with negative views.\n3. **Antoni et al. (2001)** — showed that training cancer patients in optimism decreased their fatigue and enhanced their positive outlook.\n\n## Affective forecasting\nHuman predictions regarding future emotional states are consistently inaccurate as people overestimate the intensity and duration of reactions.\n\n### Key terms\n1. **Affective forecasting** — the process of predicting one's future emotional states and their duration.\n2. **Focalism** — a bias where people focus only on one specific event and ignore regular activities that influence happiness.\n3. **Durability bias — the tendency to overestimate how long emotional reactions to future events will last.**\n\n### Names and studies\n1. **Wilson & Gilbert (2005)** — found that people generally overestimate their emotional reactions to future events.\n2. **Wilson et al. (2000)** — demonstrated that focusing on regular daily activities makes predictions about the influence of future events less extreme.\n3. **Argyle (1999)** — estimated that external factors like wealth and health account for only 15% to 20% of total well-being scores.\n\n## Resource restoration\nSelf-regulation capacity can be increased through practice and replenished through the experience of positive affect.\n\n### Key terms\n1. **Self-regulation training** — the practice of performing difficult tasks to improve overall self-control capacity.\n   1. maintaining good posture or avoiding swearing\n\n### Names and studies\n1. **Baumeister et al. (2006)** — showed that students who practiced difficult tasks like exercising later performed better on laboratory self-regulation tests.\n2. **Tice et al. (2007)** — found that people who watched a funny video clip were better at subsequent self-regulation tasks.\n\n## Health behaviors and emotion regulation\nMaintaining health requires using cognitive resources and emotion regulation to avoid dangerous but temporarily pleasurable behaviors.\n\n### Key terms\n1. **Binge drinking** — the act of having five or more drinks in one sitting, leading to severe negative health consequences.\n2. **Physical inactivity** — a lack of regular exercise that, combined with poor diet, represents a major threat to health.\n\n### Names and studies\n1. **Fryar et al. (2009)** — reported that more than 60% of children try smoking before age 18, with over half failing to quit.\n2. **Hillman et al. (2008)** — showed that regular physical exercise has positive influences on cognitive processes and academic performance.\n3. **Miller et al. (2007)** — found that binge-drinking students are more likely to engage in other risky behaviors like drug use or suicide attempts."}</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -366,7 +442,22 @@ function setTab(name){
   $('#quizview').classList.toggle('hide', name!=='quiz');
   $('#sheetview').classList.toggle('hide', name!=='sheet');
   $('#footer').classList.toggle('hide', name!=='quiz');
-  if(name==='quiz') draw(); else window.scrollTo(0,0);
+  if(name==='quiz'){ draw(); }
+  else { $('main').style.paddingTop = ''; window.scrollTo(0,0); }
+}
+
+/* CENTRE THE BLOCK, BUT COMPUTE THE OFFSET ONLY WHEN THE QUESTION CHANGES.
+   `justify-content:center` was the original approach and it is what made the question jump:
+   opening a rationale made the block taller and the centring recomputed underneath him.
+   Measuring once per question and freezing the padding gives both — centred on arrival,
+   immovable afterwards, because answering only ever grows the page downward. */
+const BASE_PAD = 16;
+function centreBlock(){
+  const m = $('main');
+  m.style.paddingTop = BASE_PAD + 'px';
+  const avail = innerHeight - $('header').offsetHeight - $('footer').offsetHeight;
+  const h = $('#quizview').getBoundingClientRect().height;
+  m.style.paddingTop = Math.max(BASE_PAD, Math.round((avail - h) / 2)) + 'px';
 }
 
 function draw(){
@@ -442,6 +533,7 @@ function question(fresh){
   $('#next').disabled = !answered;
   $('#next').textContent = (pos === act.length-1) ? 'Finish' : 'Next';
   $('#footer').classList.remove('hide');
+  if(isNew) centreBlock();   // never on an answer — that is the whole point
 }
 
 /* One question can be dropped from the run, the way the notebook lets him delete one —
@@ -517,6 +609,7 @@ function end(){
   $('#review').textContent = 'Review quiz';
   $('#retake').classList.remove('hide');
   lastShown = -1;
+  centreBlock();
 }
 
 function review(){
@@ -545,6 +638,7 @@ function review(){
   $('#review').classList.remove('hide');
   $('#review').textContent = 'Summary';
   $('#retake').classList.remove('hide');
+  $('main').style.paddingTop = BASE_PAD + 'px';   // a long list, never centred
   window.scrollTo(0,0);
 }
 
@@ -576,6 +670,27 @@ $('#retake').onclick = ()=>{
   save(); draw();
 };
 document.querySelectorAll('.tab').forEach(b=> b.onclick = ()=> setTab(b.dataset.tab));
+
+/* COPIES THE MARKDOWN, NOT THE RENDERED TEXT. He pastes this into Notion, and Notion parses
+   markdown on paste — so the headings, the numbering and the bold terms all survive as real
+   Notion blocks. Copying the visible text would paste one flat wall. */
+const cp = $('#copysheet');
+if(cp) cp.onclick = async ()=>{
+  const md = D.sheet || '';
+  try{ await navigator.clipboard.writeText(md); }
+  catch(e){
+    const t = document.createElement('textarea');
+    t.value = md; t.style.position='fixed'; t.style.opacity='0';
+    document.body.appendChild(t); t.select();
+    try{ document.execCommand('copy'); }catch(_){}
+    t.remove();
+  }
+  cp.textContent = 'Copied'; cp.classList.add('copied');
+  setTimeout(()=>{ cp.textContent = 'Copy'; cp.classList.remove('copied'); }, 1600);
+};
+
+// Re-centre when the window changes shape; the frozen padding would be wrong afterwards.
+addEventListener('resize', ()=>{ if(D.tab==='quiz' && !S.reviewing) centreBlock(); });
 
 document.addEventListener('keydown', e=>{
   if(D.tab!=='quiz' || S.done || S.reviewing) return;
