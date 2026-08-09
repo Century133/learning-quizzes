@@ -174,7 +174,9 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .sheet h2{font-size:1.3rem;font-weight:600;margin:34px 0 10px;letter-spacing:-.01em}
 .sheet h3{font-size:1.15rem;font-weight:600;margin:34px 0 4px;letter-spacing:-.01em;
  padding-top:18px;border-top:1px solid var(--line)}
-.sheet h3:first-child{margin-top:0;padding-top:0;border-top:0}
+/* first-of-type, not first-child: .sheettools is the first child, so first-child never
+   matched and the opening topic carried a stray rule above it */
+.sheet h3:first-of-type{margin-top:0;padding-top:0;border-top:0}
 .sheet h4,.sheet h5{font-size:.7rem;font-weight:600;margin:18px 0 8px;color:var(--muted);
  letter-spacing:.09em;text-transform:uppercase}
 .sheet p{margin:0 0 10px;color:var(--muted)}
@@ -189,8 +191,20 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .sheet strong{font-weight:600}
 .sheet hr{border:0;border-top:1px solid var(--line);margin:26px 0}
 .sheet code{background:var(--surface);padding:1px 6px;border-radius:6px;font-size:.9em}
-.sheettools{display:flex;justify-content:flex-end;padding:10px 0 4px}
+.sheettools{display:flex;justify-content:flex-end;gap:18px;padding:10px 0 4px}
 .copied{color:var(--right)}
+
+/* ---- his own additions ---- */
+.mine{margin:34px 0 0;padding-top:18px;border-top:1px solid var(--line)}
+.mine h3{margin:0 0 4px;padding:0;border:0}
+.mine .say{color:var(--muted);font-size:.85rem;margin:0 0 12px}
+#mynotes{width:100%;min-height:180px;resize:vertical;background:var(--surface);
+ color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
+ padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.6;outline:none}
+#mynotes:focus{border-color:var(--accent)}
+#mynotes::placeholder{color:var(--muted);opacity:.7}
+.saved{color:var(--muted);font-size:.78rem;margin:8px 0 0;height:1em}
+#minepreview{margin:14px 0 0}
 
 .hist{color:var(--muted);font-size:.84rem;margin:22px 0 0}
 .hist span{white-space:nowrap}
@@ -225,7 +239,10 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 <main class="wrap">
   <div id="quizview"></div>
   <div id="sheetview" class="sheet hide">
-    <div class="sheettools"><button class="link" id="copysheet">Copy</button></div>
+    <div class="sheettools">
+      <button class="link" id="previewnotes">Preview</button>
+      <button class="link" id="copysheet">Copy</button>
+    </div>
     <h3>Thought suppression</h3>
 <p>Attempting to ignore negative affect is an ineffective approach because suppressed thoughts eventually return to conscious awareness.</p>
 <h4>Key terms</h4>
@@ -376,6 +393,17 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 <li><strong>Hillman et al. (2008)</strong> — showed that regular physical exercise has positive influences on cognitive processes and academic performance.</li>
 <li><strong>Miller et al. (2007)</strong> — found that binge-drinking students are more likely to engage in other risky behaviors like drug use or suicide attempts.</li>
 </ol>
+    <div class="mine">
+      <h3>My notes</h3>
+      <p class="say">What the sheet missed. Write it however you write — one thing a line,
+      <code>Term: what it is</code>, indent to nest. Copy takes this with the sheet, formatted,
+      ready to paste into the Notion row. That row is what the week's exam is built from.</p>
+      <textarea id="mynotes" spellcheck="true" placeholder="Rebound effect: suppressed thought comes back stronger once you stop trying
+   ex. telling yourself not to check the score
+Self-control is finite - one hard task leaves less for the next"></textarea>
+      <p class="saved" id="savedmsg"></p>
+      <div id="minepreview" class="hide"></div>
+    </div>
   </div>
 </main>
 
@@ -442,8 +470,15 @@ function setTab(name){
   $('#quizview').classList.toggle('hide', name!=='quiz');
   $('#sheetview').classList.toggle('hide', name!=='sheet');
   $('#footer').classList.toggle('hide', name!=='quiz');
-  if(name==='quiz'){ draw(); }
-  else { $('main').style.paddingTop = ''; window.scrollTo(0,0); }
+  if(name==='quiz'){
+    draw();
+    // Restore the frozen offset rather than recomputing it: answer, read the sheet, come
+    // back — the question must be exactly where he left it.
+    if(quizPad !== null) $('main').style.paddingTop = quizPad;
+  } else {
+    $('main').style.paddingTop = BASE_PAD + 'px';
+    window.scrollTo(0,0);
+  }
 }
 
 /* CENTRE THE BLOCK, BUT COMPUTE THE OFFSET ONLY WHEN THE QUESTION CHANGES.
@@ -452,12 +487,14 @@ function setTab(name){
    Measuring once per question and freezing the padding gives both — centred on arrival,
    immovable afterwards, because answering only ever grows the page downward. */
 const BASE_PAD = 16;
+let quizPad = null;
 function centreBlock(){
   const m = $('main');
   m.style.paddingTop = BASE_PAD + 'px';
   const avail = innerHeight - $('header').offsetHeight - $('footer').offsetHeight;
   const h = $('#quizview').getBoundingClientRect().height;
-  m.style.paddingTop = Math.max(BASE_PAD, Math.round((avail - h) / 2)) + 'px';
+  quizPad = Math.max(BASE_PAD, Math.round((avail - h) / 2)) + 'px';
+  m.style.paddingTop = quizPad;
 }
 
 function draw(){
@@ -638,7 +675,8 @@ function review(){
   $('#review').classList.remove('hide');
   $('#review').textContent = 'Summary';
   $('#retake').classList.remove('hide');
-  $('main').style.paddingTop = BASE_PAD + 'px';   // a long list, never centred
+  quizPad = BASE_PAD + 'px';                      // a long list, never centred
+  $('main').style.paddingTop = quizPad;
   window.scrollTo(0,0);
 }
 
@@ -671,12 +709,93 @@ $('#retake').onclick = ()=>{
 };
 document.querySelectorAll('.tab').forEach(b=> b.onclick = ()=> setTab(b.dataset.tab));
 
+/* ---- his own additions -------------------------------------------------------------
+   A textarea, localStorage, and string work. NO API, no model, nothing paid — the
+   formatting below is deterministic, which is the whole reason it can be free.
+
+   The loop this closes: he pastes the result into the subchapter's Notion row, and the
+   weekly exam already scrapes that row first (board-notes.md → exam-notes.md). So anything
+   he adds here becomes exam content without touching the pipeline. */
+const NKEY = KEY + ':notes';
+const ta = $('#mynotes'), savedmsg = $('#savedmsg');
+
+function loadNotes(){ try{ return localStorage.getItem(NKEY) || ''; }catch(e){ return ''; } }
+function saveNotes(){
+  try{ localStorage.setItem(NKEY, ta.value); }catch(e){}
+  savedmsg.textContent = ta.value.trim() ? 'Saved in this browser' : '';
+}
+
+/* His shorthand → the sheet's own markdown shape, so the paste reads as one document
+   rather than a tidy half and a raw half. Bolds the term before a `:` or a dash, keeps his
+   indentation as nesting, and numbers everything (markdown renumbers `1.` itself, and
+   Notion honours that on paste). A line he already formatted is left alone. */
+function fmtLine(t){
+  if(/\*\*/.test(t)) return t;
+  let m = t.match(/^([^:]{1,60}?):\s+(.+)$/);
+  if(!m) m = t.match(/^(.{1,60}?)\s+[—–-]\s+(.+)$/);
+  return m ? '**' + m[1].trim() + '** — ' + m[2].trim() : t;
+}
+function noteMarkdown(){
+  const out = [];
+  (ta.value || '').split('\n').forEach(raw=>{
+    const line = raw.replace(/\t/g, '  ');
+    const m = line.match(/^(\s*)(?:[-*+]\s+|\d+[.)]\s+)?(.*)$/);
+    const text = m[2].trim();
+    if(!text) return;
+    const depth = Math.min(Math.floor(m[1].length / 2), 2);
+    out.push('   '.repeat(depth) + '1. ' + fmtLine(text));
+  });
+  return out.join('\n');
+}
+function fullMarkdown(){
+  const mine = noteMarkdown();
+  return (D.sheet || '') + (mine ? '\n\n## My notes\n\n' + mine + '\n' : '');
+}
+
+/* A 25-line renderer so Preview shows the same shape the paste will have. Lists and bold
+   only — anything more and this would be a markdown library, which is the dependency the
+   whole file exists to avoid. */
+function tinyMd(md){
+  const esc2 = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const inline = s => esc2(s).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  let html = '', stack = [];
+  md.split('\n').forEach(line=>{
+    if(!line.trim()) return;
+    const h = line.match(/^(#{1,4})\s+(.*)$/);
+    if(h){ while(stack.length){ html += '</ol>'; stack.pop(); }
+           html += '<h' + Math.min(h[1].length+1,5) + '>' + inline(h[2]) + '</h' + Math.min(h[1].length+1,5) + '>'; return; }
+    const m = line.match(/^(\s*)(?:[-*+]|\d+[.)])\s+(.*)$/);
+    if(!m){ while(stack.length){ html += '</ol>'; stack.pop(); } html += '<p>' + inline(line.trim()) + '</p>'; return; }
+    const d = Math.floor(m[1].length / 3);
+    while(stack.length > d + 1){ html += '</ol>'; stack.pop(); }
+    while(stack.length < d + 1){ html += '<ol>'; stack.push(1); }
+    html += '<li>' + inline(m[2]) + '</li>';
+  });
+  while(stack.length){ html += '</ol>'; stack.pop(); }
+  return html;
+}
+
+if(ta){
+  ta.value = loadNotes();
+  saveNotes();
+  let t = null;
+  ta.addEventListener('input', ()=>{ clearTimeout(t); t = setTimeout(saveNotes, 400); });
+  ta.addEventListener('blur', saveNotes);
+  $('#previewnotes').onclick = ()=>{
+    const p = $('#minepreview'), on = p.classList.contains('hide');
+    p.innerHTML = on ? (noteMarkdown() ? tinyMd(noteMarkdown())
+                                       : '<p>Nothing written yet.</p>') : '';
+    p.classList.toggle('hide', !on);
+    $('#previewnotes').textContent = on ? 'Hide preview' : 'Preview';
+  };
+}
+
 /* COPIES THE MARKDOWN, NOT THE RENDERED TEXT. He pastes this into Notion, and Notion parses
    markdown on paste — so the headings, the numbering and the bold terms all survive as real
    Notion blocks. Copying the visible text would paste one flat wall. */
 const cp = $('#copysheet');
 if(cp) cp.onclick = async ()=>{
-  const md = D.sheet || '';
+  const md = fullMarkdown();
   try{ await navigator.clipboard.writeText(md); }
   catch(e){
     const t = document.createElement('textarea');
