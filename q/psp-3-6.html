@@ -9,9 +9,9 @@
 <style>
 :root{--bg:#131314;--surface:#1e1f20;--surface-hi:#26282a;--text:#e3e3e3;
 --muted:#9aa0a6;--line:#3c4043;--accent:#8ab4f8;--right:#81c995;--wrong:#f28b82;
---radius:14px;--maxw:660px;--qsize:1.5rem;--osize:1rem;
---opad:14px 18px;--ogap:10px;--qgap:24px;--barh:50px;
---font:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;}
+--radius:14px;--maxw:660px;--qsize:1.25rem;--qweight:600;
+--osize:0.95rem;--opad:12px 16px;--ogap:7px;--qgap:18px;
+--barh:46px;--font:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;}
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
@@ -19,7 +19,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font);
  font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
  min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
 a{color:var(--accent)}
-.wrap{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 22px}
+/* Longhands, NOT `padding:0 22px`. `main` and `footer` also carry .wrap, and a class beats
+   an element selector — the shorthand here was silently zeroing their vertical padding. */
+.wrap{width:100%;max-width:var(--maxw);margin:0 auto;
+ padding-left:22px;padding-right:22px}
 
 /* ---- top bar: title, tabs, progress. Nothing else lives up here. ---- */
 header{position:sticky;top:0;z-index:5;background:var(--bg);
@@ -36,20 +39,27 @@ header{position:sticky;top:0;z-index:5;background:var(--bg);
 .rail>i{display:block;height:100%;background:var(--accent);width:0;
  transition:width .25s ease}
 
-main{flex:1;display:flex;flex-direction:column;justify-content:center;padding:34px 0 18px}
+/* TOP-ANCHORED, NOT CENTRED, and that is a fix rather than a preference. With
+   justify-content:center the question drifted upward the moment an answer opened a
+   rationale, because the block got taller and the centring recomputed — "the question
+   shifts… it should stay stationary". Anchored to the top it cannot move: only the cards
+   below the one he clicked ever change position. */
+main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;padding:16px 0 6px}
 
 /* ---- the question ---- */
-.qhead{display:flex;align-items:flex-start;gap:10px}
+.qhead{display:flex;align-items:flex-start;gap:10px;margin:0 0 var(--qgap)}
 .qhead .qcol{flex:1;min-width:0}
-.topic{margin:0 0 6px;font-size:.72rem;color:var(--muted);letter-spacing:.07em;
+.topic{margin:0 0 6px;font-size:.7rem;color:var(--muted);letter-spacing:.07em;
  text-transform:uppercase}
-.q{font-size:var(--qsize);line-height:1.35;font-weight:400;margin:0;
- letter-spacing:-.01em}
-.tools{display:flex;align-items:center;gap:14px;margin:14px 0 var(--qgap)}
+.q{font-size:var(--qsize);line-height:1.35;font-weight:var(--qweight);margin:0;
+ letter-spacing:-.005em}
 .link{background:none;border:0;padding:0;color:var(--muted);font:inherit;
  font-size:.85rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .link:hover{color:var(--text)}
-.hinttext{margin:0 0 var(--qgap);color:var(--muted);font-size:.9rem;
+/* The hint lives in the FOOTER, as Gemini's does. Opening it there grows the sticky bar
+   upward and leaves the question and every option exactly where they were; under the
+   question it would have shoved all four cards down. */
+.hinttext{margin:0 0 12px;color:var(--muted);font-size:.88rem;line-height:1.5;
  border-left:2px solid var(--line);padding-left:12px}
 
 /* ---- options ---- */
@@ -60,7 +70,7 @@ main{flex:1;display:flex;flex-direction:column;justify-content:center;padding:34
  transition:background .16s ease,border-color .16s ease,opacity .16s ease}
 .opt:hover:not(:disabled){background:var(--surface-hi)}
 .opt:disabled{cursor:default}
-.line{display:flex;gap:12px;align-items:flex-start;line-height:1.5}
+.line{display:flex;gap:12px;align-items:flex-start;line-height:1.4}
 .line .k{color:var(--muted);min-width:1.25em}
 .line .t{flex:1}
 .line .mark{font-size:1.05rem;line-height:1.45;min-width:1.05em;text-align:right;opacity:0}
@@ -84,14 +94,14 @@ main{flex:1;display:flex;flex-direction:column;justify-content:center;padding:34
 .rat>.ratin{overflow:hidden;min-height:0}
 .opt.fresh .rat{animation:reveal .3s ease}
 @keyframes reveal{from{grid-template-rows:0fr;opacity:0}to{grid-template-rows:1fr;opacity:1}}
-.lab{display:flex;align-items:center;gap:8px;font-size:.9rem;font-weight:600;
- margin:12px 0 0;padding-left:calc(1.25em + 12px)}
+.lab{display:flex;align-items:center;gap:8px;font-size:.86rem;font-weight:600;
+ margin:9px 0 0;padding-left:calc(1.25em + 12px)}
 .opt.is-right .lab{color:var(--right)}
 .opt.is-wrong .lab{color:var(--wrong)}
-.why{margin:5px 0 0;padding-left:calc(1.25em + 12px);color:var(--muted);
- font-size:.9rem;line-height:1.55}
+.why{margin:4px 0 0;padding-left:calc(1.25em + 12px);color:var(--muted);
+ font-size:.86rem;line-height:1.4}
 
-.opt.enter,.qhead.enter,.tools.enter{animation:fadein .24s ease both}
+.opt.enter,.qhead.enter{animation:fadein .24s ease both}
 @keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 
 /* ---- the ⋮ menu ---- */
@@ -109,10 +119,10 @@ main{flex:1;display:flex;flex-direction:column;justify-content:center;padding:34
 
 /* ---- bottom bar ---- */
 footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg) 30%);
- padding:14px 0 20px}
+ padding:8px 0 10px}
 .acts{display:flex;gap:10px;align-items:center}
 .spacer{flex:1}
-button.pill{font:inherit;font-size:.92rem;border-radius:999px;padding:11px 24px;
+button.pill{font:inherit;font-size:.9rem;border-radius:999px;padding:9px 22px;
  cursor:pointer;border:1px solid var(--line);background:none;color:var(--text)}
 button.pill:disabled{opacity:.32;cursor:default}
 button.pill.primary{background:var(--accent);color:#0b0b0c;border-color:var(--accent);
@@ -294,8 +304,10 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 </main>
 
 <footer id="footer" class="wrap hide">
+  <p class="hinttext hide" id="hinttext"></p>
   <div class="acts">
     <button class="pill ghost" id="back">Back</button>
+    <button class="pill ghost hide" id="hintbtn">Hint</button>
     <span class="spacer"></span>
     <button class="pill hide" id="review">Review quiz</button>
     <button class="pill hide" id="retake">Retake</button>
@@ -384,11 +396,6 @@ function question(fresh){
   h += '<h1 class="q">' + esc(q.q) + '</h1></div>';
   h += '<div class="more"><button class="dots" id="dots" aria-label="More">⋮</button></div></div>';
 
-  h += '<div class="tools' + en + '">';
-  if(!answered && q.hint) h += '<button class="link" id="hintbtn">Hint</button>';
-  h += '</div>';
-  if(S.hintOpen && !answered && q.hint) h += '<p class="hinttext">' + esc(q.hint) + '</p>';
-
   h += '<div class="opts">';
   q.options.forEach((o,k)=>{
     let cls = 'opt' + en, mark = '', lab = '', why = '';
@@ -415,11 +422,17 @@ function question(fresh){
 
   $('#quizview').innerHTML = h;
   $('#quizview').querySelectorAll('.opt').forEach(b=>{
-    b.onclick = ()=>{ S.answers[i] = +b.dataset.k; S.hintOpen = false; save(); question(true); };
+    b.onclick = ()=>{ S.answers[i] = +b.dataset.k; save(); question(true); };
   });
-  const hb = $('#hintbtn');
-  if(hb) hb.onclick = ()=>{ S.hintOpen = true; question(); };
   $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
+
+  // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
+  // touches it — and nothing above the options ever changes height.
+  const hb = $('#hintbtn'), ht = $('#hinttext');
+  hb.classList.toggle('hide', !q.hint || answered);
+  ht.classList.toggle('hide', !(S.hintOpen && q.hint && !answered));
+  ht.textContent = q.hint || '';
+  hb.onclick = ()=>{ S.hintOpen = !S.hintOpen; ht.classList.toggle('hide', !S.hintOpen); };
 
   $('#back').classList.remove('hide');
   $('#next').classList.remove('hide');
@@ -497,6 +510,8 @@ function end(){
   $('#rail').style.width = '100%';
   $('#footer').classList.remove('hide');
   $('#back').classList.add('hide');
+  $('#hintbtn').classList.add('hide');
+  $('#hinttext').classList.add('hide');
   $('#next').classList.add('hide');
   $('#review').classList.remove('hide');
   $('#review').textContent = 'Review quiz';
@@ -524,6 +539,8 @@ function review(){
   $('#quizview').innerHTML = h;
   $('#footer').classList.remove('hide');
   $('#back').classList.add('hide');
+  $('#hintbtn').classList.add('hide');
+  $('#hinttext').classList.add('hide');
   $('#next').classList.add('hide');
   $('#review').classList.remove('hide');
   $('#review').textContent = 'Summary';
