@@ -30,7 +30,6 @@ header{position:sticky;top:0;z-index:5;background:var(--bg);
 .bar{display:flex;align-items:center;gap:14px;height:var(--barh)}
 .title{font-size:.9rem;font-weight:500;white-space:nowrap;overflow:hidden;
  text-overflow:ellipsis;flex:1}
-.count{font-size:.82rem;color:var(--muted);font-variant-numeric:tabular-nums}
 .tabs{display:flex;gap:2px}
 .tab{background:none;border:0;color:var(--muted);font:inherit;font-size:.82rem;
  padding:5px 12px;border-radius:999px;cursor:pointer}
@@ -49,6 +48,10 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
 /* ---- the question ---- */
 .qhead{display:flex;align-items:flex-start;gap:10px;margin:0 0 var(--qgap)}
 .qhead .qcol{flex:1;min-width:0}
+.meta{display:flex;align-items:center;gap:8px;margin:0 0 7px;font-size:.7rem;
+ color:var(--muted);letter-spacing:.07em;text-transform:uppercase}
+.meta .num{font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.meta .dot{opacity:.55}
 .topic{margin:0 0 6px;font-size:.7rem;color:var(--muted);letter-spacing:.07em;
  text-transform:uppercase}
 .q{font-size:var(--qsize);line-height:1.35;font-weight:var(--qweight);margin:0;
@@ -231,7 +234,6 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
   <div class="wrap bar">
     <span class="title">3.6 How to Feel Better: Coping With Negative Emotions</span>
     <span class="tabs"><button class="tab" data-tab="quiz" aria-selected="true">Quiz</button><button class="tab" data-tab="sheet" aria-selected="false">Study sheet</button></span>
-    <span class="count" id="count"></span>
   </div>
   <div class="rail"><i id="rail"></i></div>
 </header>
@@ -488,13 +490,34 @@ function setTab(name){
    immovable afterwards, because answering only ever grows the page downward. */
 const BASE_PAD = 16;
 let quizPad = null;
-function centreBlock(){
+
+/* CENTRE ON THE ANSWERED HEIGHT, NOT THE HEIGHT ON SCREEN.
+   Centring on what is visible was wrong in a way that only showed up after answering: the
+   block grows by two rationales, so the top gap stayed large while the last option slid
+   under the footer. Coming back to the same question then looked right, because by then it
+   WAS the answered height being measured — the two states he photographed, from one bug.
+   `reserve` is the height with feedback open, measured off-screen before anything renders. */
+function centreBlock(reserve){
   const m = $('main');
   m.style.paddingTop = BASE_PAD + 'px';
   const avail = innerHeight - $('header').offsetHeight - $('footer').offsetHeight;
-  const h = $('#quizview').getBoundingClientRect().height;
+  const h = reserve || $('#quizview').getBoundingClientRect().height;
   quizPad = Math.max(BASE_PAD, Math.round((avail - h) / 2)) + 'px';
   m.style.paddingTop = quizPad;
+}
+
+/* The tallest this question can get: a WRONG pick, which opens two rationales rather than
+   one. Rendered into a hidden probe of the same width and thrown away. */
+function answeredHeight(i){
+  const q = D.questions[i];
+  const probe = document.createElement('div');
+  probe.style.cssText = 'position:absolute;left:-99999px;top:0;visibility:hidden';
+  probe.style.width = $('#quizview').getBoundingClientRect().width + 'px';
+  probe.innerHTML = buildQ(i, (q.correct + 1) % q.options.length, false);
+  $('main').appendChild(probe);
+  const h = probe.getBoundingClientRect().height;
+  probe.remove();
+  return h;
 }
 
 function draw(){
@@ -507,22 +530,23 @@ function draw(){
   question();
 }
 
-function question(fresh){
-  const i = S.i, q = D.questions[i], picked = S.answers[i];
+/* Pure markup, no DOM writes and no state changes — so the same builder can render the
+   question and be measured off-screen for the centring reserve. */
+function buildQ(i, picked, fresh, en){
+  const q = D.questions[i];
   const answered = picked !== undefined;
-  const act = active(S);
-  const pos = act.indexOf(i);
-  const isNew = i !== lastShown;
-  lastShown = i;
+  const act = active(S), pos = act.indexOf(i);
+  en = en || '';
 
-  $('#count').textContent = (pos+1) + ' / ' + act.length;
-  $('#rail').style.width = ((pos + (answered?1:0)) / act.length * 100) + '%';
-
-  const en = isNew ? ' enter' : '';
-  let h = '<div class="qhead' + en + '"><div class="qcol">';
-  if(q.topic) h += '<p class="topic">' + esc(q.topic) + '</p>';
-  h += '<h1 class="q">' + esc(q.q) + '</h1></div>';
-  h += '<div class="more"><button class="dots" id="dots" aria-label="More">⋮</button></div></div>';
+  // The counter sits top-left above the question, the way the notebook does it, rather than
+  // up in the bar — it belongs with the thing it counts.
+  let h = '<div class="qhead' + en + '"><div class="qcol">'
+        + '<p class="meta"><span class="num">' + (pos+1) + ' / ' + act.length + '</span>'
+        + (q.topic ? '<span class="dot">·</span><span>' + esc(q.topic) + '</span>' : '')
+        + '</p>'
+        + '<h1 class="q">' + esc(q.q) + '</h1></div>'
+        + '<div class="more"><button class="dots" id="dots" aria-label="More">⋮</button></div>'
+        + '</div>';
 
   h += '<div class="opts">';
   q.options.forEach((o,k)=>{
@@ -546,9 +570,19 @@ function question(fresh){
     }
     h += '</button>';
   });
-  h += '</div>';
+  return h + '</div>';
+}
 
-  $('#quizview').innerHTML = h;
+function question(fresh){
+  const i = S.i, q = D.questions[i], picked = S.answers[i];
+  const answered = picked !== undefined;
+  const act = active(S);
+  const pos = act.indexOf(i);
+  const isNew = i !== lastShown;
+  lastShown = i;
+
+  $('#rail').style.width = ((pos + (answered?1:0)) / act.length * 100) + '%';
+  $('#quizview').innerHTML = buildQ(i, picked, fresh, isNew ? ' enter' : '');
   $('#quizview').querySelectorAll('.opt').forEach(b=>{
     b.onclick = ()=>{ S.answers[i] = +b.dataset.k; save(); question(true); };
   });
@@ -570,7 +604,9 @@ function question(fresh){
   $('#next').disabled = !answered;
   $('#next').textContent = (pos === act.length-1) ? 'Finish' : 'Next';
   $('#footer').classList.remove('hide');
-  if(isNew) centreBlock();   // never on an answer — that is the whole point
+  // Only when the question changes, and always against the ANSWERED height, so the layout
+  // he lands on is the one he will still be looking at after he picks.
+  if(isNew) centreBlock(answeredHeight(i));
 }
 
 /* One question can be dropped from the run, the way the notebook lets him delete one —
@@ -635,7 +671,6 @@ function end(){
   $('#quizview').innerHTML = h;
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
-  $('#count').textContent = n + ' / ' + t;
   $('#rail').style.width = '100%';
   $('#footer').classList.remove('hide');
   $('#back').classList.add('hide');
