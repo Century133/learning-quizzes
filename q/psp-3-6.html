@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#131314">
+<title>3.6 How to Feel Better: Coping With Negative Emotions</title>
+<style>
+:root{--bg:#131314;--surface:#1e1f20;--surface-hi:#2a2b2d;--text:#e3e3e3;
+--muted:#9aa0a6;--line:#3c4043;--accent:#8ab4f8;--right:#81c995;--wrong:#f28b82;
+--radius:16px;--maxw:760px;--qsize:1.75rem;--font:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font);
+ font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+ min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+a{color:var(--accent)}
+.wrap{width:100%;max-width:var(--maxw);margin:0 auto;padding:0 24px}
+
+/* ---- top bar: title, tabs, progress. Nothing else lives up here. ---- */
+header{position:sticky;top:0;z-index:5;background:var(--bg);
+ border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:16px;height:56px}
+.title{font-size:.95rem;font-weight:500;letter-spacing:.01em;white-space:nowrap;
+ overflow:hidden;text-overflow:ellipsis;flex:1}
+.count{font-size:.85rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.tabs{display:flex;gap:4px}
+.tab{background:none;border:0;color:var(--muted);font:inherit;font-size:.85rem;
+ padding:6px 14px;border-radius:999px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--surface-hi);color:var(--text)}
+.rail{height:2px;background:var(--line)}
+.rail>i{display:block;height:100%;background:var(--accent);width:0;
+ transition:width .25s ease}
+
+main{flex:1;display:flex;flex-direction:column;justify-content:center;
+ padding:40px 0 24px}
+.q{font-size:var(--qsize);line-height:1.35;font-weight:400;margin:0 0 32px;
+ letter-spacing:-.01em}
+
+/* ---- options ---- */
+.opts{display:flex;flex-direction:column;gap:12px}
+.opt{display:flex;gap:14px;align-items:flex-start;width:100%;text-align:left;
+ background:var(--surface);border:1px solid transparent;border-radius:var(--radius);
+ padding:18px 20px;color:var(--text);font:inherit;cursor:pointer;
+ transition:background .12s ease,border-color .12s ease}
+.opt:hover:not(:disabled){background:var(--surface-hi)}
+.opt:disabled{cursor:default}
+.opt .k{color:var(--muted);min-width:1.2em;font-variant-numeric:tabular-nums}
+.opt .t{flex:1}
+.opt .mark{font-size:1.1rem;line-height:1.4;opacity:0;min-width:1.1em;text-align:right}
+
+/* GRAYSCALE-SAFE STATES.
+   Three signals, never colour alone: a glyph, a word (in .verdict), and luminance —
+   the right answer goes BRIGHT with a solid border, a wrong pick goes DIM with a dashed
+   one. Turn the display to grayscale and all of it still reads. */
+.opt.is-right{background:var(--surface-hi);border-color:var(--right);
+ box-shadow:inset 0 0 0 1px var(--right)}
+.opt.is-right .mark{opacity:1;color:var(--right)}
+.opt.is-wrong{background:transparent;border-style:dashed;border-color:var(--wrong);
+ opacity:.72}
+.opt.is-wrong .mark{opacity:1;color:var(--wrong)}
+.opt.is-muted{opacity:.45}
+
+.verdict{display:flex;align-items:center;gap:10px;margin:26px 0 0;
+ font-size:.95rem;font-weight:500}
+.verdict .g{font-size:1.15rem}
+.why{margin:10px 0 0;color:var(--muted);font-size:.95rem;line-height:1.6}
+/* the sticky footer floats over the end of the text, so anything we scroll to has to
+   reserve room for it or the last line lands underneath the buttons */
+.verdict,.why{scroll-margin-bottom:104px}
+.topic{margin:8px 0 0;font-size:.78rem;color:var(--muted);letter-spacing:.06em;
+ text-transform:uppercase}
+
+/* ---- bottom bar ---- */
+footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg) 28%);
+ padding:16px 0 24px}
+.acts{display:flex;gap:12px;align-items:center}
+.spacer{flex:1}
+button.pill{font:inherit;font-size:.95rem;border-radius:999px;padding:12px 26px;
+ cursor:pointer;border:1px solid var(--line);background:none;color:var(--text)}
+button.pill:disabled{opacity:.35;cursor:default}
+button.pill.primary{background:var(--accent);color:#0b0b0c;border-color:var(--accent);
+ font-weight:500}
+button.pill.ghost{border-color:transparent;color:var(--muted)}
+
+/* ---- end card ---- */
+.score{font-size:3.5rem;font-weight:400;letter-spacing:-.03em;margin:0}
+.score small{font-size:1rem;color:var(--muted);font-weight:400;letter-spacing:0}
+.sub{color:var(--muted);margin:6px 0 30px}
+.chart{display:flex;height:12px;border-radius:999px;overflow:hidden;
+ background:var(--line);margin:0 0 10px}
+.chart i{display:block;height:100%}
+.chart i.r{background:var(--right)}
+/* the wrong slice is hatched as well as coloured, so the split reads in grayscale */
+.chart i.w{background:var(--wrong);
+ background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,
+ rgba(0,0,0,.45) 3px,rgba(0,0,0,.45) 6px)}
+.legend{display:flex;gap:18px;color:var(--muted);font-size:.85rem;margin:0 0 34px}
+.legend b{color:var(--text);font-weight:500}
+.topics{margin:0 0 34px}
+.topics h3,.rev h3{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;
+ color:var(--muted);font-weight:500;margin:0 0 14px}
+.trow{display:grid;grid-template-columns:1fr auto;gap:6px 14px;align-items:center;
+ padding:9px 0;border-top:1px solid var(--line)}
+.trow .n{font-variant-numeric:tabular-nums;color:var(--muted);font-size:.9rem}
+.tbar{grid-column:1/-1;height:4px;background:var(--line);border-radius:999px;
+ overflow:hidden}
+.tbar i{display:block;height:100%;background:var(--text)}
+
+/* ---- review list ---- */
+.rev{padding:8px 0 40px}
+.item{border-top:1px solid var(--line);padding:22px 0}
+.item .qq{font-size:1.05rem;margin:0 0 14px}
+.line{display:flex;gap:10px;align-items:flex-start;padding:3px 0;font-size:.95rem}
+.line .g{min-width:1.2em}
+.line.mine{color:var(--muted)}
+.line.ok{color:var(--text)}
+.tag{display:inline-block;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;
+ color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 9px;
+ margin:0 0 10px}
+
+/* ---- study sheet ---- */
+.sheet{padding:8px 0 60px;font-size:1rem}
+.sheet h2{font-size:1.35rem;font-weight:500;margin:36px 0 12px;letter-spacing:-.01em}
+.sheet h3{font-size:1.05rem;font-weight:500;margin:26px 0 8px}
+.sheet h4,.sheet h5{font-size:.95rem;font-weight:500;margin:20px 0 6px;color:var(--muted)}
+.sheet p{margin:0 0 12px}
+.sheet ul,.sheet ol{margin:0 0 14px;padding-left:22px}
+.sheet li{margin:0 0 6px}
+.sheet strong{font-weight:600}
+.sheet hr{border:0;border-top:1px solid var(--line);margin:28px 0}
+.sheet code{background:var(--surface);padding:1px 6px;border-radius:6px;font-size:.9em}
+
+.hist{color:var(--muted);font-size:.85rem;margin:26px 0 0}
+.hist span{white-space:nowrap}
+.note{color:var(--muted);font-size:.85rem;margin:18px 0 0}
+.hide{display:none !important}
+
+@media (max-width:640px){
+  .wrap{padding:0 18px}
+  .q{font-size:1.35rem;margin-bottom:24px}
+  main{padding:26px 0 16px}
+  .opt{padding:15px 16px}
+  .score{font-size:2.75rem}
+  .bar{height:52px;gap:10px}
+  .tab{padding:6px 11px}
+  button.pill{padding:12px 20px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important}}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap bar">
+    <span class="title">3.6 How to Feel Better: Coping With Negative Emotions</span>
+    <span class="tabs"><button class="tab" data-tab="quiz" aria-selected="true">Quiz</button><button class="tab" data-tab="sheet" aria-selected="false">Study sheet</button></span>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="rail"><i id="rail"></i></div>
+</header>
+
+<main class="wrap">
+  <div id="quizview"></div>
+  <div id="sheetview" class="sheet hide"><h3>3.6 How to Feel Better: Coping With Negative Emotions</h3>
+<p>This topic covers the psychological strategies, research-backed mechanisms, and social factors that influence our ability to manage negative affect and improve long-term well-being.</p>
+<h4>Key Terms</h4>
+<p><strong>Self-regulation</strong> — The process of setting goals and using cognitive and affective capacities to reach those goals, including the control of one&#x27;s emotions.</p>
+<p><strong>Optimism</strong> — A general tendency to expect positive outcomes in the future.</p>
+<p><strong>Self-efficacy</strong> — The belief in one&#x27;s own ability to carry out specific actions that lead to desired outcomes.</p>
+<p><strong>Hardiness</strong> — A personality trait characterized by a positive outlook on stressors, taking direct action to understand causes, and attempting to learn from negative events.</p>
+<p><strong>Social Support</strong> — The perception or experience of having positive social relationships with others who can provide emotional or direct assistance.</p>
+<h4>Names and Studies</h4>
+<p><strong>Wegner et al. (White bear suppression)</strong> — Participants were instructed to avoid thinking of a white bear for five minutes; the study showed that the thought repeatedly returned to consciousness, demonstrating that suppression is often ineffective and leads to a rebound effect.</p>
+<p><strong>Pennebaker and Beall (Writing about trauma)</strong> — Students who wrote about traumatic events initially experienced negative moods but later visited the student health center significantly less over the following six months compared to those who wrote about trivial topics.</p>
+<p><strong>Walter Mischel (The marshmallow/snack test)</strong> — Children were offered one snack immediately or two if they could wait; those able to delay gratification grew up to have higher SAT scores and better social adeptness.</p>
+<p><strong>Muraven, Tice, and Baumeister (Hand-grip and movie emotion regulation)</strong> — Participants who were required to either increase or decrease their emotional responses while watching a sad movie showed a significant decrease in physical hand-grip strength afterward, suggesting self-control is a limited, &quot;muscle-like&quot; resource.</p>
+<p><strong>Glass, Reim, and Singer (Controllable vs. uncontrollable noise)</strong> — Participants who believed they had a button to stop a loud noise experienced less stress than those who did not, even if they never actually used the button, proving the psychological power of perceived control.</p>
+<p><strong>Peterson et al. (College optimism and 50-year health outcomes)</strong> — This longitudinal study found that college students who utilized a &quot;catastrophizing&quot; pessimistic style were significantly more likely to have died from accidental or violent causes fifty years later.</p>
+<p><strong>Taylor et al. (Cultural differences in support-seeking between Americans and Koreans)</strong> — Research showed that Korean students were less likely to seek social support than Americans because they perceived seeking help as a threat to group harmony or a risk of losing face.</p>
+<p><strong>Brickman, Coates, and Janoff-Bulman (Lottery winners and accident victims)</strong> — This study found that lottery winners were no happier than they had been in the past once the initial excitement wore off, demonstrating hedonic adaptation.</p>
+<p><strong>Wilson et al. (Focalism/focusing on specific events in future predictions)</strong> — Participants showed a &quot;durability bias&quot; by overestimating the impact of future events; however, they made more accurate predictions when prompted to consider daily routines that would remain unchanged.</p>
+<h4>Application Quiz (Finding to Implication)</h4>
+<p><strong>1. In Wegner’s study, participants were told not to think about a white bear while they performed a task. What was the observed result?</strong></p>
+<p>A. Participants successfully cleared their minds of the image for the full duration.</p>
+<p>B. The image of the bear repeatedly popped into their minds despite their efforts.</p>
+<p>C. Participants became so focused on the bear they forgot to perform the secondary task.</p>
+<p>D. The suppression of the bear led to a permanent decrease in the bear&#x27;s perceived &quot;yummy&quot; quality.</p>
+<p><strong>2. Pennebaker’s research required students to write about their most traumatic life experiences. What was the long-term health implication for these students?</strong></p>
+<p>A. They reported more frequent illness due to the stress of reliving the trauma.</p>
+<p>B. They showed no change in health outcomes compared to those who wrote about trivial topics.</p>
+<p>C. They visited the student health center less frequently over the next six months.</p>
+<p>D. They developed a permanent aversion to writing and self-expression.</p>
+<p><strong>3. In Mischel&#x27;s &quot;marshmallow test,&quot; some children were able to wait for a second snack while others ate the first one immediately. What did this childhood behavior predict about their adulthood?</strong></p>
+<p>A. Those who ate the snack immediately were more likely to become successful chefs.</p>
+<p>B. Those who waited for the second snack had higher SAT scores and were more socially adept.</p>
+<p>C. There was no correlation between childhood snack choices and adult behavior.</p>
+<p>D. Those who waited were more likely to experience chronic anxiety in social situations.</p>
+<p><strong>4. In Muraven’s study, participants squeezed a hand-grip exerciser before and after regulating their emotions during a movie. What did the results suggest about the nature of self-control?</strong></p>
+<p>A. Regulating emotions is an effortless cognitive process that saves physical energy.</p>
+<p>B. Suppressing emotions causes a spike in adrenaline that increases physical strength temporarily.</p>
+<p>C. Self-control acts like a muscle that becomes fatigued after use, leading to reduced stamina.</p>
+<p>D. Physical strength is the primary predictor of a person&#x27;s ability to regulate their emotions.</p>
+<p><strong>5. Tice et al. conducted a study where participants watched a funny video after completing a difficult task. What was the behavioral outcome?</strong></p>
+<p>A. The participants became too distracted by the humor to complete any further work.</p>
+<p>B. The positive mood helped restore regulatory resources, improving performance on subsequent tasks.</p>
+<p>C. Watching a funny video provided no more restorative benefit for self-regulation than watching a neutral video.</p>
+<p>D. The humor caused a total loss of impulse control, making participants give up on all subsequent goals.</p>
+<p><strong>6. In the Glass et al. study on loud noise, one group was told they could press a button to stop the noise but were asked not to use it unless necessary. What was the psychological impact?</strong></p>
+<p>A. They experienced higher stress because they were constantly thinking about the button.</p>
+<p>B. They experienced less stress than the group without a button, simply because they perceived they had control.</p>
+<p>C. They became angry at the researchers for giving them a button they weren&#x27;t supposed to use.</p>
+<p>D. They performed worse on tasks because they were waiting for the noise to stop.</p>
+<p><strong>7. Peterson’s longitudinal study tracked college students&#x27; optimism levels for 50 years. What was the specific finding regarding the health of those who &quot;catastrophized&quot; negative events?</strong></p>
+<p>A. They lived longer because they were more prepared for the worst-case scenarios.</p>
+<p>B. They were significantly more likely to die from accidental or violent causes.</p>
+<p>C. They had higher rates of heart disease but lower rates of accidental injury.</p>
+<p>D. Their pessimistic outlook had no effect on their physical health or lifespan.</p>
+<p><strong>8. Levy and Myers researched how positive self-perceptions of aging affect longevity in older adults. What was the result?</strong></p>
+<p>A. People with positive attitudes toward aging lived an average of 8 years longer.</p>
+<p>B. Positive attitudes improved mental health and life satisfaction but had no impact on physical longevity.</p>
+<p>C. Older adults who were positive about aging were more likely to ignore medical symptoms.</p>
+<p>D. Attitudes toward aging had a minor effect that was negated by the participants&#x27; marital status.</p>
+<p><strong>9. Taylor’s cultural study examined why Korean students seek social support less often than American students. What was the primary reason found?</strong></p>
+<p>A. Korean students do not believe that talking to others is effective for stress.</p>
+<p>B. Korean students are naturally more independent and do not need social support.</p>
+<p>C. Seeking support is viewed as a risk to group harmony and may cause a &quot;loss of face.&quot;</p>
+<p>D. American students have more friends available to provide support than Korean students.</p>
+<p><strong>10. Research has compared national wealth (GDP) and happiness levels in Western countries over several decades. What has this data shown?</strong></p>
+<p>A. As GDP has increased, national happiness levels have increased at the same rate.</p>
+<p>B. Increases in national wealth have led to a significant decrease in overall happiness.</p>
+<p>C. Despite dramatic increases in buying power and income, overall happiness has remained flat.</p>
+<p>D. Happiness only increases in nations that have a declining GDP.</p>
+<p><strong>11. Brickman’s study compared the happiness of lottery winners to a control group. What was the finding after the initial excitement wore off?</strong></p>
+<p>A. Winners remained significantly happier than the control group for the rest of their lives.</p>
+<p>B. Winners became much unhappier than the control group due to the stress of managing money.</p>
+<p>C. Winners were not significantly happier than they had been in the past.</p>
+<p>D. Winners were only happy if they gave all their money away to charity.</p>
+<p><strong>12. Wilson’s &quot;focalism&quot; study asked people to predict their future feelings while considering their daily routines. How did this affect their predictions?</strong></p>
+<p>A. Their predictions became more extreme as they realized how boring their lives were.</p>
+<p>B. Their predictions became less extreme and more accurate regarding the impact of future events.</p>
+<p>C. They were unable to make any predictions once they started thinking about their daily chores.</p>
+<p>D. They predicted they would be happy regardless of any future negative events.</p>
+<p><strong>13. According to the review by Twenge regarding marital satisfaction and children, what is the reported finding?</strong></p>
+<p>A. Couples with children report significantly higher levels of happiness than those without.</p>
+<p>B. Couples without children actually report being happier than those who have children.</p>
+<p>C. Marital happiness is tied more to a couple&#x27;s income level than to the presence of children.</p>
+<p>D. Having children has no measurable impact on a couple’s reported well-being.</p></div>
+</main>
+
+<footer id="footer" class="wrap hide">
+  <div class="acts">
+    <button class="pill ghost" id="back">Back</button>
+    <span class="spacer"></span>
+    <button class="pill hide" id="review">Review quiz</button>
+    <button class="pill hide" id="retake">Retake</button>
+    <button class="pill primary" id="next">Next</button>
+  </div>
+</footer>
+
+<script id="quiz-data" type="application/json">{"id": "psp-3-6", "title": "3.6 How to Feel Better: Coping With Negative Emotions", "subtitle": "Chapter 3 · Social Affect", "book": "PSP", "hash": "5657d4a5d61f95ba", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "Question 1", "options": ["The prohibited thought frequently recurred despite the participants' efforts to avoid it.", "Participants successfully cleared their minds, provided they used a physical distractor like a bell.", "Suppression was effective in the short term but led to a complete loss of focus after the five-minute mark.", "The strategy worked for participants with high self-esteem but failed for those with anxiety."], "correct": 0, "hint": "Consider what happens when you are forced to 'look' for a thought in order to ensure you aren't thinking it.", "topic": "Thought suppression"}, {"q": "Question 2", "options": ["They visited the student health center significantly less often for illnesses over the next six months.", "They reported higher levels of chronic stress and more frequent physical pain during the follow-up period.", "Their physical health remained unchanged, though they reported feeling more socially connected.", "They developed a reliance on journaling that masked the recurrence of physical symptoms."], "correct": 0, "hint": "Reflect on whether the immediate emotional discomfort of opening up led to a lasting health deficit or a benefit.", "topic": "Emotional expression"}, {"q": "Question 3", "options": ["They achieved higher SAT scores and were rated as more socially adept by their friends.", "They were more likely to follow strict career paths but reported lower overall life satisfaction.", "They showed a preference for immediate rewards in financial contexts to compensate for early deprivation.", "They were more prone to anxiety because they were constantly calculating future rewards."], "correct": 0, "hint": "Look for outcomes that suggest long-term cognitive and social advantages rather than just professional rigidity.", "topic": "Delayed gratification"}, {"q": "Question 4", "options": ["Self-control functions like a muscle that becomes fatigued after it is heavily used.", "Negative emotions cause immediate physical muscle weakness regardless of regulation efforts.", "Watching media content makes people less motivated to perform physical tasks.", "Participants who expressed their emotions became too overstimulated to exert physical force."], "correct": 0, "hint": "Think about why a mental task (emotion regulation) would affect a physical task (handgrip strength).", "topic": "Resource depletion"}, {"q": "Question 5", "options": ["The concern that seeking help would disrupt group harmony or cause them to 'lose face.'", "A general cultural belief that social support is ineffective for managing internal stress.", "A lack of established social networks compared to the more individualistic American students.", "The preference for physical exercise and entertainment over interpersonal communication."], "correct": 0, "hint": "Focus on how collectivist values prioritize the stability of the group over the needs of the individual.", "topic": "Cultural differences in social support"}, {"q": "Question 6", "options": ["People habituate to positive changes and eventually return to their baseline level of happiness.", "A significant increase in wealth provides a permanent buffer against everyday stressors.", "Financial windfalls lead to long-term social isolation, which cancels out the benefits of the money.", "Winning the lottery makes people more sensitive to small daily pleasures."], "correct": 0, "hint": "Consider how you feel after eating your second chocolate bar compared to the first.", "topic": "Hedonic adaptation"}, {"q": "Question 7", "options": ["The belief that they had the ability to stop the noise, even if they never used it.", "The gradual desensitization to the sound after multiple exposures.", "The presence of a supportive partner during the experiment.", "The use of relaxation techniques taught by the experimenter before the noise began."], "correct": 0, "hint": "Consider whether it was the action of stopping the noise or the *option* to stop it that mattered.", "topic": "Perceived control"}, {"q": "Question 8", "options": ["They were less likely to have died of all causes, including accidental and violent deaths, 50 years later.", "They reached their peak income levels earlier in life but retired with less savings.", "They reported fewer negative life events, suggesting that optimism prevents misfortune.", "They were more likely to be married but reported lower levels of marital satisfaction."], "correct": 0, "hint": "Think about the most extreme health metric you could track over a 50-year period.", "topic": "Optimism and health"}, {"q": "Question 9", "options": ["Think about all the regular daily activities they would still be doing in the future.", "Visualize the worst-case scenario to better prepare for emotional disappointment.", "Record their current mood to use as a baseline for future comparisons.", "Recall a past event that was similar to the one they were predicting."], "correct": 0, "hint": "Consider the error of focusing too narrowly on a single change while ignoring the rest of your life.", "topic": "Affective forecasting"}, {"q": "Question 10", "options": ["Watching a funny video clip to induce a positive mood.", "Repeating a simple, repetitive task to rest the 'muscle' of self-control.", "Engaging in competitive sports to boost adrenaline levels.", "Suppressing all thoughts of the previous task to clear the mental slate."], "correct": 0, "hint": "Think about what 'happy' activity might serve as a quick recharge for a tired mind.", "topic": "Resource restoration"}], "notebook": "https://notebooklm.google.com/notebook/791cd0ef-e949-4fd0-9fec-8a610efda32c/artifact/71aa7cdf-b770-429c-96f6-212f009b1f79", "root": "../index.html", "tab": "quiz"}</script>
+<script>
+const D = JSON.parse(document.getElementById('quiz-data').textContent);
+const KEY = 'lq:' + D.id;
+const $ = s => document.querySelector(s);
+
+/* ---- saved state -------------------------------------------------------------
+   Everything lives in localStorage under the page id. `hash` is the fingerprint of
+   the question set: a Redo regenerates the quiz, and when that happens the old
+   answers describe questions that no longer exist, so the attempt is retired into
+   history rather than shown against the new ones. */
+function blank(){ return {hash:D.hash, i:0, answers:{}, done:false, at:null, history:[]}; }
+function load(){
+  try{
+    const s = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if(!s) return blank();
+    if(s.hash !== D.hash){
+      const b = blank();
+      b.history = (s.history||[]).slice();
+      if(s.done) b.history.push({at:s.at, score:score(s), total:Object.keys(s.answers||{}).length, stale:true});
+      b.rebuilt = true;
+      return b;
+    }
+    if(!s.history) s.history = [];
+    return s;
+  }catch(e){ return blank(); }
+}
+function save(){
+  S.meta = {title:D.title, subtitle:D.subtitle, book:D.book, total:D.questions.length,
+            url:location.pathname, at:S.at, done:S.done, score:score(S)};
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+}
+function score(s){
+  return D.questions.reduce((n,q,i)=> n + ((s.answers||{})[i] === q.correct ? 1 : 0), 0);
+}
+let S = load();
+
+/* ---- rendering ---------------------------------------------------------------- */
+const G_OK = '✓', G_NO = '✕';
+const esc = t => { const d=document.createElement('div'); d.textContent = t==null?'':t; return d.innerHTML; };
+
+function setTab(name){
+  D.tab = name;
+  document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===name));
+  $('#quizview').classList.toggle('hide', name!=='quiz');
+  $('#sheetview').classList.toggle('hide', name!=='sheet');
+  $('#footer').classList.toggle('hide', name!=='quiz');
+  if(name==='quiz') draw(); else window.scrollTo(0,0);
+}
+
+function draw(){
+  if(D.tab!=='quiz') return;
+  if(S.done && !S.reviewing){ return end(); }
+  if(S.reviewing){ return review(); }
+  question();
+}
+
+function question(){
+  const i = S.i, q = D.questions[i], picked = S.answers[i];
+  const answered = picked !== undefined;
+  $('#count').textContent = (i+1) + ' / ' + D.questions.length;
+  $('#rail').style.width = ((i + (answered?1:0)) / D.questions.length * 100) + '%';
+
+  let h = '';
+  if(q.topic) h += '<p class="topic">' + esc(q.topic) + '</p>';
+  h += '<h1 class="q">' + esc(q.q) + '</h1><div class="opts">';
+  q.options.forEach((o,k)=>{
+    let cls = 'opt';
+    let mark = '';
+    if(answered){
+      if(k === q.correct){ cls += ' is-right'; mark = G_OK; }
+      else if(k === picked){ cls += ' is-wrong'; mark = G_NO; }
+      else cls += ' is-muted';
+    }
+    h += '<button class="'+cls+'" data-k="'+k+'"'+(answered?' disabled':'')+'>'
+       + '<span class="k">'+D.letters[k]+'.</span><span class="t">'+esc(o)+'</span>'
+       + '<span class="mark">'+mark+'</span></button>';
+  });
+  h += '</div>';
+  if(answered){
+    const right = picked === q.correct;
+    h += '<p class="verdict"><span class="g">'+(right?G_OK:G_NO)+'</span>'
+       + '<span>'+(right?'Correct':'Incorrect')+'</span></p>';
+    if(!right) h += '<p class="why"><strong>Answer:</strong> '+D.letters[q.correct]+'. '+esc(q.options[q.correct])+'</p>';
+    if(q.hint) h += '<p class="why">'+esc(q.hint)+'</p>';
+  }
+  $('#quizview').innerHTML = h;
+  $('#quizview').querySelectorAll('.opt').forEach(b=>{
+    b.onclick = ()=>{
+      S.answers[i] = +b.dataset.k; save(); question();
+      /* The question plus four options fills the screen, so the verdict and the
+         explanation are below the fold on every question worth reading. Bring them up —
+         being told "Correct" is the point of answering, and he should not have to
+         discover it by scrolling. */
+      requestAnimationFrame(()=>{
+        const el = $('#quizview').querySelector('.why') || $('#quizview').querySelector('.verdict');
+        if(el) el.scrollIntoView({block:'end', behavior:'smooth'});
+      });
+    };
+  });
+
+  $('#back').disabled = i === 0;
+  $('#next').disabled = !answered;
+  $('#next').textContent = (i === D.questions.length-1) ? 'Finish' : 'Next';
+  $('#footer').classList.remove('hide');
+}
+
+function end(){
+  const n = score(S), t = D.questions.length, pct = Math.round(n/t*100);
+  let h = '<p class="score">'+n+' <small>/ '+t+'</small></p>'
+        + '<p class="sub">'+pct+'% · '+when(S.at)+'</p>'
+        + '<div class="chart"><i class="r" style="width:'+(n/t*100)+'%"></i>'
+        + '<i class="w" style="width:'+((t-n)/t*100)+'%"></i></div>'
+        + '<p class="legend"><span>'+G_OK+' <b>'+n+'</b> correct</span>'
+        + '<span>'+G_NO+' <b>'+(t-n)+'</b> wrong</span></p>';
+
+  const by = {};
+  D.questions.forEach((q,i)=>{
+    const k = q.topic || '';
+    if(!k) return;
+    by[k] = by[k] || {n:0,t:0};
+    by[k].t++;
+    if(S.answers[i] === q.correct) by[k].n++;
+  });
+  const keys = Object.keys(by);
+  if(keys.length){
+    h += '<div class="topics"><h3>Topics covered</h3>';
+    keys.forEach(k=>{
+      h += '<div class="trow"><span>'+esc(k)+'</span><span class="n">'+by[k].n+'/'+by[k].t+'</span>'
+         + '<span class="tbar"><i style="width:'+(by[k].n/by[k].t*100)+'%"></i></span></div>';
+    });
+    h += '</div>';
+  }
+
+  if(S.history.length){
+    h += '<p class="hist">Earlier attempts: ' + S.history.slice().reverse()
+        .map(a=>'<span>'+a.score+'/'+a.total+' on '+when(a.at)+'</span>').join(' · ') + '</p>';
+  }
+  if(S.rebuilt) h += '<p class="note">These questions were rebuilt since your last attempt.</p>';
+  h += '<p class="note"><a href="'+D.root+'">All my quizzes</a>'
+     + (D.notebook ? ' · <a href="'+D.notebook+'">Open in Gemini Notebook</a>' : '') + '</p>';
+
+  $('#quizview').innerHTML = h;
+  $('#count').textContent = n + ' / ' + t;
+  $('#rail').style.width = '100%';
+  $('#footer').classList.remove('hide');
+  $('#back').classList.add('hide');
+  $('#next').classList.add('hide');
+  $('#review').classList.remove('hide');
+  $('#review').textContent = 'Review quiz';
+  $('#retake').classList.remove('hide');
+}
+
+function review(){
+  let h = '<div class="rev"><h3>Every question</h3>';
+  D.questions.forEach((q,i)=>{
+    const picked = S.answers[i], right = picked === q.correct;
+    h += '<div class="item">';
+    if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
+    h += '<p class="qq">'+(i+1)+'. '+esc(q.q)+'</p>'
+       + '<p class="line ok"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
+    if(!right){
+      h += '<p class="line mine"><span class="g">'+G_NO+'</span><span>You chose: '
+         + (picked===undefined ? 'nothing' : esc(q.options[picked])) + '</span></p>';
+    }
+    if(q.hint) h += '<p class="why">'+esc(q.hint)+'</p>';
+    h += '</div>';
+  });
+  h += '</div>';
+  $('#quizview').innerHTML = h;
+  $('#footer').classList.remove('hide');
+  $('#back').classList.add('hide');
+  $('#next').classList.add('hide');
+  $('#review').classList.remove('hide');
+  $('#review').textContent = 'Summary';
+  $('#retake').classList.remove('hide');
+  window.scrollTo(0,0);
+}
+
+function when(iso){
+  if(!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString(undefined,{month:'short',day:'numeric'})
+       + ' ' + d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+}
+
+/* ---- controls ------------------------------------------------------------------ */
+$('#next').onclick = ()=>{
+  if(S.i < D.questions.length-1){ S.i++; save(); question(); window.scrollTo(0,0); }
+  else { S.done = true; S.at = new Date().toISOString(); save(); end(); window.scrollTo(0,0); }
+};
+$('#back').onclick = ()=>{ if(S.i>0){ S.i--; save(); question(); window.scrollTo(0,0); } };
+$('#review').onclick = ()=>{ S.reviewing = !S.reviewing; draw(); };
+$('#retake').onclick = ()=>{
+  if(S.done) S.history.push({at:S.at, score:score(S), total:D.questions.length});
+  const hist = S.history;
+  S = blank(); S.history = hist;
+  save();
+  $('#back').classList.remove('hide');
+  $('#next').classList.remove('hide');
+  $('#review').classList.add('hide');
+  $('#retake').classList.add('hide');
+  question();
+};
+document.querySelectorAll('.tab').forEach(b=> b.onclick = ()=> setTab(b.dataset.tab));
+
+document.addEventListener('keydown', e=>{
+  if(D.tab!=='quiz' || S.done || S.reviewing) return;
+  const q = D.questions[S.i];
+  if(e.key === 'Enter' || e.key === 'ArrowRight'){ if(!$('#next').disabled) $('#next').click(); return; }
+  if(e.key === 'ArrowLeft'){ if(!$('#back').disabled) $('#back').click(); return; }
+  let k = -1;
+  if(/^[1-9]$/.test(e.key)) k = +e.key - 1;
+  else if(/^[a-hA-H]$/.test(e.key)) k = D.letters.indexOf(e.key.toUpperCase());
+  if(k >= 0 && k < q.options.length && S.answers[S.i] === undefined){
+    // click the real button rather than repeating its handler — one path for answering,
+    // so the scroll-to-the-verdict can never apply to the mouse and not the keyboard
+    const btn = $('#quizview').querySelector('.opt[data-k="' + k + '"]');
+    if(btn) btn.click();
+  }
+});
+
+save();
+setTab(D.tab || 'quiz');
+</script>
+</body>
+</html>
