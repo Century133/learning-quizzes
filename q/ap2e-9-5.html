@@ -11,7 +11,8 @@
 --muted:#9aa0a6;--line:#3c4043;--accent:#8ab4f8;--right:#81c995;--wrong:#f28b82;
 --radius:14px;--maxw:660px;--qsize:1.25rem;--qweight:600;
 --osize:0.95rem;--opad:12px 16px;--ogap:7px;--qgap:18px;
---barh:46px;--font:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;}
+--barh:46px;--band:#191a1b;--bandr:20px;--bandpad:20px;
+--font:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;}
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
@@ -44,6 +45,29 @@ header{position:sticky;top:0;z-index:5;background:var(--bg);
    shifts… it should stay stationary". Anchored to the top it cannot move: only the cards
    below the one he clicked ever change position. */
 main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;padding:16px 0 6px}
+
+/* ---- THE BAND ----
+   Flat black under the question made it hard to read; the notebook's lighter middle band is
+   what he wanted instead. So the question and EVERY option sit inside one surface.
+
+   IT CLOSES AT THE BOTTOM AND HUGS THE CONTENT. The first version ran off the bottom of the
+   screen — "kind of weirdly big at the bottom", and he was right: with the block centred, an
+   open band left a lot of empty surface under the last option. It is a card now, sized to
+   what is in it.
+
+   THREE TONES, and the order matters: page (--bg) → band (--band) → option card (--surface).
+   Set --band lighter than --surface and the cards vanish into it. */
+.band{background:var(--band);border:1px solid var(--line);border-radius:var(--bandr);
+ padding:var(--bandpad)}
+/* Off for the end card, the review list and the sheet — a long scrolling list does not want
+   to be in a box. */
+.band.off{background:none;border:0;padding:0}
+/* A short window pays for the band's padding out of the space the options need, so it gives
+   most of it back below 780px. Measured: at 800px all 14 questions of PSP 3.6 still fit
+   answered-wrong with no scrolling. */
+@media (max-height:780px){
+  .band{padding:12px 16px}
+}
 
 /* ---- the question ---- */
 .qhead{display:flex;align-items:flex-start;gap:10px;margin:0 0 var(--qgap)}
@@ -106,6 +130,15 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
 
 .opt.enter,.qhead.enter{animation:fadein .24s ease both}
 @keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* ---- starring ----
+   A visible toggle rather than a menu item: it is used on questions he got RIGHT as often as
+   wrong, so it has to be one press. Outline vs filled is a shape difference, so it reads in
+   grayscale without needing colour. */
+.star{background:none;border:0;color:var(--muted);font-size:1.05rem;line-height:1;
+ padding:4px 6px;border-radius:999px;cursor:pointer;flex:0 0 auto}
+.star:hover{background:var(--surface);color:var(--text)}
+.star.on{color:var(--text)}
 
 /* ---- the ⋮ menu ---- */
 .more{position:relative;flex:0 0 auto}
@@ -197,6 +230,15 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .sheettools{display:flex;justify-content:flex-end;gap:18px;padding:10px 0 4px}
 .copied{color:var(--right)}
 
+/* ---- the score, on the sheet ----
+   It sits at the top of the sheet and Copy takes it, so the paste that lands in the Notion
+   row carries what he scored beside what the section says — which is what tells him later
+   whether this one needs testing again. */
+.scorecard{border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;
+ margin:16px 0 6px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.scorecard b{font-size:1.35rem;font-weight:500;font-variant-numeric:tabular-nums}
+.scorecard span{color:var(--muted);font-size:.88rem}
+
 /* ---- his own additions ---- */
 .mine{margin:34px 0 0;padding-top:18px;border-top:1px solid var(--line)}
 .mine h3{margin:0 0 4px;padding:0;border:0}
@@ -209,6 +251,7 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .saved{color:var(--muted);font-size:.78rem;margin:8px 0 0;height:1em}
 #minepreview{margin:14px 0 0}
 
+.empty{color:var(--muted);padding:8px 0 30px}
 .hist{color:var(--muted);font-size:.84rem;margin:22px 0 0}
 .hist span{white-space:nowrap}
 .note{color:var(--muted);font-size:.84rem;margin:16px 0 0}
@@ -233,14 +276,16 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 <header>
   <div class="wrap bar">
     <span class="title">9.5 Types of Body Movements</span>
-    <span class="tabs"><button class="tab" data-tab="quiz" aria-selected="true">Quiz</button><button class="tab" data-tab="sheet" aria-selected="false">Study sheet</button></span>
+    <span class="tabs" id="tabs"><button class="tab" data-tab="quiz" aria-selected="true">Quiz</button><button class="tab hide" data-tab="starred" aria-selected="false">Starred</button><button class="tab" data-tab="sheet" aria-selected="false">Study sheet</button></span>
   </div>
   <div class="rail"><i id="rail"></i></div>
 </header>
 
 <main class="wrap">
-  <div id="quizview"></div>
+  <div class="band" id="band"><div id="quizview"></div></div>
+  <div id="starredview" class="rev hide"></div>
   <div id="sheetview" class="sheet hide">
+    <div class="scorecard hide" id="scorecard"></div>
     <div class="sheettools">
       <button class="link" id="previewnotes">Preview</button>
       <button class="link" id="copysheet">Copy</button>
@@ -360,14 +405,17 @@ Self-control is finite - one hard task leaves less for the next"></textarea>
   <div class="acts">
     <button class="pill ghost" id="back">Back</button>
     <button class="pill ghost hide" id="hintbtn">Hint</button>
+    <!-- Retake CLEARS, so it sits off to the side on its own, away from the two that keep
+         his progress. 2nd Pass is the primary one and takes the position Next held. -->
+    <button class="pill ghost hide" id="retake">Retake</button>
     <span class="spacer"></span>
     <button class="pill hide" id="review">Review quiz</button>
-    <button class="pill hide" id="retake">Retake</button>
+    <button class="pill primary hide" id="pass2">2nd Pass</button>
     <button class="pill primary" id="next">Next</button>
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "ap2e-9-5", "title": "9.5 Types of Body Movements", "subtitle": "Chapter 9 · Joints", "book": "A&P 2e", "hash": "4f229509422c6fa8", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "A student lowers their head to look at a phone and then raises it back to an upright position. Which sequence of movements occurred at the neck?", "options": ["Extension followed by flexion", "Abduction followed by adduction", "Flexion followed by extension", "Superior rotation followed by inferior rotation"], "rationales": ["This would imply the head first moved posteriorly before bending forward toward the chest.", "These movements occur in the coronal plane, involving side-to-side motion rather than forward and backward bending.", "Flexion involves an anterior bending that decreases the angle, while extension increases the angle to return to the anatomical position.", "These specific terms describe the movement of the scapula's glenoid cavity rather than the vertebral column."], "correct": 2, "hint": "Consider the movements that take place within the sagittal plane to change the angle of a joint.", "topic": "Flexion and extension"}, {"q": "To point at a bird flying high to the side of the body, a person raises their arm laterally. What movement is occurring at the shoulder joint?", "options": ["Flexion", "Adduction", "Abduction", "Medial rotation"], "rationales": ["Flexion at the shoulder involves moving the arm anteriorly (forward) rather than laterally to the side.", "This motion would bring the arm toward or across the midline of the body rather than away from it.", "Moving a limb laterally away from the midline of the body in the coronal plane is the defining characteristic of this motion.", "This involves turning the anterior surface of the humerus toward the midline rather than lifting the limb outward."], "correct": 2, "hint": "Think about movements that occur in the coronal plane relative to the midline of the body.", "topic": "Abduction and adduction"}, {"q": "A person is asked to hold out their hands to receive a bowl of soup, ensuring their palms face upward. Which movement of the forearm is required?", "options": ["Supination", "Eversion", "Lateral rotation", "Pronation"], "rationales": ["This movement rotates the radius so it is parallel to the ulna, turning the palm to an anterior or upward position.", "This is a complex movement of the foot that turns the sole away from the midline, not a forearm movement.", "While related to orientation, this term specifically describes the rotation of the humerus or femur around its long axis at a ball-and-socket joint.", "This motion causes the radius to cross over the ulna, resulting in the palm facing backward or downward."], "correct": 0, "hint": "Recall the analogy of using the hand to scoop up liquid with a spoon.", "topic": "Supination and pronation"}, {"q": "An athlete stands on their tiptoes to reach a high shelf. What specific movement is occurring at the ankle joint?", "options": ["Plantar flexion", "Elevation", "Dorsiflexion", "Inversion"], "rationales": ["Lifting the heel from the ground or pointing the toes downward involves this specific hinge-joint motion.", "While the body moves upward, this term is reserved for the upward movement of the scapula or mandible.", "This movement would lift the front of the foot toward the leg, which is the opposite of standing on tiptoes.", "This involves turning the sole of the foot toward the midline, which does not assist in gaining vertical height."], "correct": 0, "hint": "Consider the movement that increases the angle between the top of the foot and the anterior leg.", "topic": "Ankle movements"}, {"q": "While walking on a rocky trail, a hiker's foot rolls so that the sole faces inward toward the other foot. Which movement likely helped stabilize them on the uneven surface?", "options": ["Lateral rotation", "Inversion", "Eversion", "Plantar flexion"], "rationales": ["This involves the rotation of the entire lower limb at the hip joint, not the intertarsal joints of the foot.", "This movement angles the bottom of the foot toward the midline and is essential for stabilizing the foot on uneven terrain.", "This turns the bottom of the foot away from the midline; the foot generally has a smaller range for this motion compared to its opposite.", "This is an ankle joint motion that points the toes down, rather than orienting the sole medially or laterally."], "correct": 1, "hint": "Identify the movement that changes the orientation of the sole of the foot relative to the midline.", "topic": "Inversion and eversion"}, {"q": "When a person pushes against a heavy door to open it, their shoulders move forward. What is the name of this scapular movement?", "options": ["Protraction", "Superior rotation", "Retraction", "Depression"], "rationales": ["This describes the anterior movement of the scapula or mandible, often used when pushing or throwing.", "This is a rotational movement where the glenoid cavity moves upward, distinct from simple anterior translation.", "This is the posterior movement of the scapula, pulling it toward the vertebral column, as seen when pulling something.", "This describes the downward movement of the shoulder or mandible, rather than forward movement."], "correct": 0, "hint": "Consider the anterior-posterior shifts of the shoulder blade.", "topic": "Scapular movements"}, {"q": "A swimmer performs a butterfly stroke, moving their arms in a large circular motion that combines flexion, abduction, extension, and adduction. What is this movement called?", "options": ["Rotation", "Lateral excursion", "Circumduction", "Hyperextension"], "rationales": ["This involves turning a bone around its own long axis, rather than moving the entire limb in a circular path.", "This is a side-to-side movement specific to the mandible, not a circular movement of the limbs.", "This movement involves a sequential combination of several angular motions so that one end of the limb describes a circle.", "This refers to excessive movement beyond normal ranges that often leads to injury, rather than a controlled circular path."], "correct": 2, "hint": "Identify the motion that results from the continuous sequence of four basic angular movements.", "topic": "Complex movements"}, {"q": "To lift a heavy weight over their head, a person must move their scapula so the glenoid cavity faces upward. Which motion allows for this full range of abduction?", "options": ["Superior rotation", "Inferior rotation", "Elevation", "Retraction"], "rationales": ["This motion moves the glenoid cavity upward to prevent the humerus from hitting the acromion, allowing arm abduction above shoulder height.", "This occurs during limb adduction as the glenoid cavity moves downward, which would prevent high abduction.", "While the shoulder may lift, elevation alone does not change the orientation of the glenoid cavity to facilitate abduction.", "Moving the scapula toward the spine does not provide the necessary upward tilt of the joint surface for overhead reach."], "correct": 0, "hint": "Focus on how the orientation of the shoulder socket must change to allow the arm to rise above the shoulder.", "topic": "Scapular rotation"}, {"q": "Which specific joint is responsible for the 'no' movement of the head where the atlas rotates around the axis?", "options": ["Atlantoaxial joint", "Condyloid joint", "First carpometacarpal joint", "Proximal radioulnar joint"], "rationales": ["This pivot joint allows the first cervical vertebra to rotate around the dens of the second cervical vertebra.", "These biaxial joints allow for angular movements and circumduction, but the primary 'no' rotation of the head is uniaxial.", "This is a saddle joint at the base of the thumb that allows for opposition, not neck rotation.", "This pivot joint is located in the forearm and facilitates pronation and supination of the hand."], "correct": 0, "hint": "Identify the uniaxial pivot joint located at the very top of the vertebral column.", "topic": "Rotational movements"}, {"q": "An artisan picks up a tiny bead by bringing the tip of their thumb into contact with the tip of their index finger. What is this unique human movement called?", "options": ["Medial excursion", "Adduction", "Reposition", "Opposition"], "rationales": ["This term refers to returning the mandible to the midline after a side-to-side movement.", "In the thumb, this specific movement moves the thumb back toward the index finger in the plane of the palm, but not necessarily tip-to-tip.", "This is the return movement that brings the thumb back to its anatomical position next to the index finger.", "Produced at the first carpometacarpal joint, this motion combines flexion and abduction to bring the thumb to a fingertip."], "correct": 3, "hint": "Consider the action made possible by the saddle joint at the base of the first digit.", "topic": "Thumb movements"}, {"q": "During a sudden rear-end collision, a passenger's head is whipped backward beyond its normal range before snapping forward. What is the term for the initial backward movement?", "options": ["Hyperflexion", "Retraction", "Lateral flexion", "Hyperextension"], "rationales": ["This would describe the secondary part of the 'whiplash' motion where the head is forced excessively forward.", "This describes a posterior movement of the scapula or mandible along a horizontal plane, not a rotational bending of the neck.", "This is a side-to-side bending of the neck or torso, rather than the forward-backward movement described in whiplash.", "This refers to the abnormal or excessive extension of a joint beyond its typical anatomical limits, often resulting in injury."], "correct": 3, "hint": "Distinguish between the direction of the movement and whether it exceeds physiological limits.", "topic": "Excessive movement"}, {"q": "To begin chewing, a person must first lower their jaw. Which movement of the mandible is being utilized?", "options": ["Protraction", "Medial excursion", "Depression", "Elevation"], "rationales": ["This pushes the chin forward rather than opening the mouth vertically.", "This returns the jaw to the center from a side-to-side position, which is a grinding motion rather than an opening motion.", "This is the downward movement of the mandible that opens the mouth.", "This is the upward movement used to close the mouth or bite down on food."], "correct": 2, "hint": "Focus on the vertical downward movement of the lower jaw.", "topic": "Mandible movements"}, {"q": "A dancer bends their torso directly to the left side while keeping their feet planted. This movement of the vertebral column is known as:", "options": ["Lateral flexion", "Circumduction", "Abduction", "Rotation"], "rationales": ["Bending the neck or body toward the right or left side is defined as lateral flexion, involving both symphysis and plane joints.", "This would require a sequential combination of bending forward, side, and back, creating a circular path.", "While it involves moving away from the midline, this term is strictly used for limbs, fingers, and toes.", "This would involve twisting the body around its long axis rather than bending it to the side."], "correct": 0, "hint": "Think about the term for bending the spine in a plane that is neither sagittal nor rotational.", "topic": "Vertebral column"}, {"q": "A soccer player turns their leg so that the kneecap and the anterior surface of the thigh face away from the midline. What is this movement called?", "options": ["Abduction", "Medial rotation", "Eversion", "Lateral rotation"], "rationales": ["This would involve moving the entire leg outward to the side in the coronal plane, rather than twisting it.", "This would turn the anterior surface of the thigh toward the midline of the body.", "This movement involves turning the sole of the foot outward, not the rotation of the entire limb at the hip.", "Also called external rotation, this moves the anterior surface of the limb away from the midline of the body."], "correct": 3, "hint": "Focus on the direction the anterior surface of the limb turns relative to the center of the body.", "topic": "Limb rotation"}, {"q": "When a person moves their lower jaw from side to side to grind food, they are performing which type of movement?", "options": ["Protraction", "Excursion", "Rotation", "Depression"], "rationales": ["This movement sticks the chin out anteriorly and does not involve side-to-side shifting.", "Lateral and medial excursion describe the side-to-side movements of the mandible away from and back to the midline.", "Mandibular movement for grinding is a side-to-side sliding rather than a twisting around a long axis.", "This opens the mouth vertically and does not provide the horizontal grinding motion."], "correct": 1, "hint": "Look for the term specifically used for side-to-side movements of the jaw.", "topic": "Mandible excursion"}, {"q": "What structural feature primarily restricts the extension of the thigh at the hip joint compared to its much larger range of flexion?", "options": ["The symphysis joint of the pelvis", "Ligaments supporting the hip joint", "The presence of the patella", "The shape of the acetabulum"], "rationales": ["This joint provides slight movement between the pubic bones but does not determine the range of motion of the femur.", "Extension of the thigh beyond the standing anatomical position is greatly limited by the strong ligaments that support the joint.", "The patella affects knee mechanics but does not play a role in limiting hip joint extension.", "While the socket provides stability, it is the soft tissue tension, not bone-on-bone contact, that primarily limits posterior movement."], "correct": 1, "hint": "Consider the soft tissue structures that provide stability and tension to the hip.", "topic": "Joint structural limits"}], "notebook": "https://notebooklm.google.com/notebook/7195586f-1cfe-4068-9c74-b067dc43f0b1/artifact/68119ce0-2ad6-42be-af3f-cf6f0ae9fd17", "root": "../index.html", "tab": "quiz", "sheet": "## 1. Flexion and extension\nThese movements occur in the sagittal plane and involve anterior or posterior movements of the body or limbs.\n\n### Key terms\n**Flexion**: A movement that decreases the angle between bones at a joint.\n   Bending a joint to move a limb anteriorly (or bringing the foot toward the posterior thigh).\n**Extension**: A movement that increases the angle between bones and straightens a joint.\n   Straightening a joint from a flexed position or moving a limb or body part posteriorly.\n**Lateral flexion**: The bending of the neck or body toward the right or left side.\n\n## 2. Abduction and adduction\nThese involve medial-lateral motions of the limbs, fingers, toes, or thumb within the coronal plane.\n\n### Key terms\n**Abduction**: Moving a limb or hand laterally away from the midline or spreading fingers and toes.\n   Raising the arm at the shoulder joint or spreading fingers apart.\n**Adduction**: Moving a limb or hand toward or across the midline or bringing fingers and toes together.\n   Bringing the arm down to the side of the body or bringing fingers together.\n\n## 3. Supination and pronation\nThese motions describe the orientation of the radius, ulna, and palm within the forearm.\n\n### Key terms\n**Supination**: The forearm movement that turns the palm to the anterior-facing position.\n   The radius and ulna are parallel to each other.\n**Pronation**: The forearm movement that turns the palm to the posterior-facing position.\n   The radius crosses over the ulna to form an X-shape.\n\n## 4. Ankle movements\nThese movements are the only two motions allowed at the hinge joint of the ankle.\n\n### Key terms\n**Dorsiflexion**: Lifting the front of the foot so the top of the foot moves toward the anterior leg.\n**Plantar flexion**: Lifting the heel of the foot or pointing the toes downward.\n\n## 5. Inversion and eversion\nThese movements occur at the intertarsal joints to stabilize the foot on uneven surfaces.\n\n### Key terms\n**Inversion**: Turning the foot so the bottom of the foot angles toward the midline of the body.\n**Eversion**: Turning the foot so the bottom of the foot angles away from the midline.\n\n## 6. Scapular movements\nThese include anterior-posterior and upward-downward motions of the shoulder blade.\n\n### Key terms\n**Protraction**: Moving the scapula forward, as when pushing against an object.\n**Retraction**: Pulling the scapula posteriorly and medially toward the vertebral column.\n**Elevation**: The upward movement of the scapula and shoulder.\n**Depression**: The downward movement of the scapula and shoulder.\n\n## 7. Complex movements\nThese involve movements where one end of a body region moves in a circle while the other remains stationary.\n\n### Key terms\n**Circumduction**: Circular movement of a limb, hand, or finger using a combination of planes.\n   Sequential combination of flexion, adduction, extension, and abduction.\n\n## 8. Scapular rotation\nThese rotations allow for full abduction or adduction of the upper limb and are defined by the motion of the glenoid cavity.\n\n### Key terms\n**Superior rotation**: Upward motion of the glenoid cavity as the medial end of the scapular spine moves downward.\n**Inferior rotation**: Downward motion of the glenoid cavity accompanied by the upward movement of the medial end of the scapular spine.\n\n## 9. Rotational movements\nRotation involves a bone turning around its own axis or another bone at pivot or ball-and-socket joints.\n\n### Key terms\n**Rotation**: The twisting movement of a bone or body region around a central axis.\n   Turning the head from side to side at the atlantoaxial joint.\n\n## 10. Thumb movements\nThe thumb's unique structure allows for grasping and specific planar movements at the first carpometacarpal joint.\n\n### Key terms\n**Opposition**: Moving the tip of the thumb into contact with the tip of a finger.\n**Reposition**: Returning the thumb to the anatomical position next to the index finger.\n   **Flexion**: Bringing the thumb against the index finger or into the palm.\n   **Extension**: Moving the thumb away from the palm within the same plane as the palm.\n   **Abduction**: Anterior movement to a 90° perpendicular position pointing out from the palm.\n   **Adduction**: Moving the thumb back to the anatomical position next to the index finger.\n\n## 11. Excessive movement\nThese movements go beyond normal physiological ranges and are often associated with trauma or injury.\n\n### Key terms\n**Hyperextension**: The abnormal or excessive extension of a joint beyond its normal range.\n**Hyperflexion**: The abnormal or excessive flexion of a joint beyond its normal range.\n   Whiplash injuries involving sudden backward and forward movement of the neck.\n\n## 12. Mandible movements\nThe jaw moves to open, close, or protrude through vertical and anterior-posterior motions.\n\n### Key terms\n**Protraction**: Pushing the lower jaw forward to stick out the chin.\n**Retraction**: Pulling the lower jaw backward.\n**Elevation**: Upward movement of the lower jaw to close the mouth.\n**Depression**: Downward movement of the lower jaw to open the mouth.\n\n## 13. Vertebral column\nThese movements result from the summation of small motions between adjacent vertebrae.\n\n### Key terms\nJoint Types: **Symphysis** (intervertebral disc); **Plane joint** (between inferior and superior articular processes).\nMotion Types: **Flexion** (anterior bending); **Extension** (posterior-going); **Lateral flexion** (side bending).\n\n## 14. Limb rotation\nThese rotations are specific to multiaxial ball-and-socket joints at the shoulder and hip.\n\n### Key terms\n**Medial (internal) rotation**: Turning the anterior surface of the limb toward the midline of the body.\n**Lateral (external) rotation**: Turning the anterior surface of the limb away from the midline of the body.\n\n## 15. Mandible excursion\nThese movements describe how the jaw moves relative to the midline.\n\n### Key terms\n**Lateral excursion**: Moving the mandible away from the midline toward the right or left side.\n**Medial excursion**: Returning the mandible to the resting position at the midline.\n\n## 16. Joint structural limits\nThe range of motion is determined by the joint's structural type and supporting tissues.\n\n### Key terms\n**Ligaments**: Fibrous tissues that constrain range of motion or prevent extension beyond anatomical limits.\n**Structural type**: The physical classification (e.g., ball-and-socket vs. hinge) that determines available movement types."}</script>
+<script id="quiz-data" type="application/json">{"id": "ap2e-9-5", "title": "9.5 Types of Body Movements", "subtitle": "Chapter 9 · Joints", "book": "A&P 2e", "hash": "4f229509422c6fa8", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "A student lowers their head to look at a phone and then raises it back to an upright position. Which sequence of movements occurred at the neck?", "options": ["Extension followed by flexion", "Abduction followed by adduction", "Flexion followed by extension", "Superior rotation followed by inferior rotation"], "rationales": ["This would imply the head first moved posteriorly before bending forward toward the chest.", "These movements occur in the coronal plane, involving side-to-side motion rather than forward and backward bending.", "Flexion involves an anterior bending that decreases the angle, while extension increases the angle to return to the anatomical position.", "These specific terms describe the movement of the scapula's glenoid cavity rather than the vertebral column."], "correct": 2, "hint": "Consider the movements that take place within the sagittal plane to change the angle of a joint.", "topic": "Flexion and extension", "qid": "6d8af0de96"}, {"q": "To point at a bird flying high to the side of the body, a person raises their arm laterally. What movement is occurring at the shoulder joint?", "options": ["Flexion", "Adduction", "Abduction", "Medial rotation"], "rationales": ["Flexion at the shoulder involves moving the arm anteriorly (forward) rather than laterally to the side.", "This motion would bring the arm toward or across the midline of the body rather than away from it.", "Moving a limb laterally away from the midline of the body in the coronal plane is the defining characteristic of this motion.", "This involves turning the anterior surface of the humerus toward the midline rather than lifting the limb outward."], "correct": 2, "hint": "Think about movements that occur in the coronal plane relative to the midline of the body.", "topic": "Abduction and adduction", "qid": "862a21fa28"}, {"q": "A person is asked to hold out their hands to receive a bowl of soup, ensuring their palms face upward. Which movement of the forearm is required?", "options": ["Supination", "Eversion", "Lateral rotation", "Pronation"], "rationales": ["This movement rotates the radius so it is parallel to the ulna, turning the palm to an anterior or upward position.", "This is a complex movement of the foot that turns the sole away from the midline, not a forearm movement.", "While related to orientation, this term specifically describes the rotation of the humerus or femur around its long axis at a ball-and-socket joint.", "This motion causes the radius to cross over the ulna, resulting in the palm facing backward or downward."], "correct": 0, "hint": "Recall the analogy of using the hand to scoop up liquid with a spoon.", "topic": "Supination and pronation", "qid": "db5d094558"}, {"q": "An athlete stands on their tiptoes to reach a high shelf. What specific movement is occurring at the ankle joint?", "options": ["Plantar flexion", "Elevation", "Dorsiflexion", "Inversion"], "rationales": ["Lifting the heel from the ground or pointing the toes downward involves this specific hinge-joint motion.", "While the body moves upward, this term is reserved for the upward movement of the scapula or mandible.", "This movement would lift the front of the foot toward the leg, which is the opposite of standing on tiptoes.", "This involves turning the sole of the foot toward the midline, which does not assist in gaining vertical height."], "correct": 0, "hint": "Consider the movement that increases the angle between the top of the foot and the anterior leg.", "topic": "Ankle movements", "qid": "8352025cdc"}, {"q": "While walking on a rocky trail, a hiker's foot rolls so that the sole faces inward toward the other foot. Which movement likely helped stabilize them on the uneven surface?", "options": ["Lateral rotation", "Inversion", "Eversion", "Plantar flexion"], "rationales": ["This involves the rotation of the entire lower limb at the hip joint, not the intertarsal joints of the foot.", "This movement angles the bottom of the foot toward the midline and is essential for stabilizing the foot on uneven terrain.", "This turns the bottom of the foot away from the midline; the foot generally has a smaller range for this motion compared to its opposite.", "This is an ankle joint motion that points the toes down, rather than orienting the sole medially or laterally."], "correct": 1, "hint": "Identify the movement that changes the orientation of the sole of the foot relative to the midline.", "topic": "Inversion and eversion", "qid": "96d30d3626"}, {"q": "When a person pushes against a heavy door to open it, their shoulders move forward. What is the name of this scapular movement?", "options": ["Protraction", "Superior rotation", "Retraction", "Depression"], "rationales": ["This describes the anterior movement of the scapula or mandible, often used when pushing or throwing.", "This is a rotational movement where the glenoid cavity moves upward, distinct from simple anterior translation.", "This is the posterior movement of the scapula, pulling it toward the vertebral column, as seen when pulling something.", "This describes the downward movement of the shoulder or mandible, rather than forward movement."], "correct": 0, "hint": "Consider the anterior-posterior shifts of the shoulder blade.", "topic": "Scapular movements", "qid": "67e0c3dc8e"}, {"q": "A swimmer performs a butterfly stroke, moving their arms in a large circular motion that combines flexion, abduction, extension, and adduction. What is this movement called?", "options": ["Rotation", "Lateral excursion", "Circumduction", "Hyperextension"], "rationales": ["This involves turning a bone around its own long axis, rather than moving the entire limb in a circular path.", "This is a side-to-side movement specific to the mandible, not a circular movement of the limbs.", "This movement involves a sequential combination of several angular motions so that one end of the limb describes a circle.", "This refers to excessive movement beyond normal ranges that often leads to injury, rather than a controlled circular path."], "correct": 2, "hint": "Identify the motion that results from the continuous sequence of four basic angular movements.", "topic": "Complex movements", "qid": "3ca6c2e5c5"}, {"q": "To lift a heavy weight over their head, a person must move their scapula so the glenoid cavity faces upward. Which motion allows for this full range of abduction?", "options": ["Superior rotation", "Inferior rotation", "Elevation", "Retraction"], "rationales": ["This motion moves the glenoid cavity upward to prevent the humerus from hitting the acromion, allowing arm abduction above shoulder height.", "This occurs during limb adduction as the glenoid cavity moves downward, which would prevent high abduction.", "While the shoulder may lift, elevation alone does not change the orientation of the glenoid cavity to facilitate abduction.", "Moving the scapula toward the spine does not provide the necessary upward tilt of the joint surface for overhead reach."], "correct": 0, "hint": "Focus on how the orientation of the shoulder socket must change to allow the arm to rise above the shoulder.", "topic": "Scapular rotation", "qid": "e2606530f5"}, {"q": "Which specific joint is responsible for the 'no' movement of the head where the atlas rotates around the axis?", "options": ["Atlantoaxial joint", "Condyloid joint", "First carpometacarpal joint", "Proximal radioulnar joint"], "rationales": ["This pivot joint allows the first cervical vertebra to rotate around the dens of the second cervical vertebra.", "These biaxial joints allow for angular movements and circumduction, but the primary 'no' rotation of the head is uniaxial.", "This is a saddle joint at the base of the thumb that allows for opposition, not neck rotation.", "This pivot joint is located in the forearm and facilitates pronation and supination of the hand."], "correct": 0, "hint": "Identify the uniaxial pivot joint located at the very top of the vertebral column.", "topic": "Rotational movements", "qid": "cf74aeb62f"}, {"q": "An artisan picks up a tiny bead by bringing the tip of their thumb into contact with the tip of their index finger. What is this unique human movement called?", "options": ["Medial excursion", "Adduction", "Reposition", "Opposition"], "rationales": ["This term refers to returning the mandible to the midline after a side-to-side movement.", "In the thumb, this specific movement moves the thumb back toward the index finger in the plane of the palm, but not necessarily tip-to-tip.", "This is the return movement that brings the thumb back to its anatomical position next to the index finger.", "Produced at the first carpometacarpal joint, this motion combines flexion and abduction to bring the thumb to a fingertip."], "correct": 3, "hint": "Consider the action made possible by the saddle joint at the base of the first digit.", "topic": "Thumb movements", "qid": "321b47554e"}, {"q": "During a sudden rear-end collision, a passenger's head is whipped backward beyond its normal range before snapping forward. What is the term for the initial backward movement?", "options": ["Hyperflexion", "Retraction", "Lateral flexion", "Hyperextension"], "rationales": ["This would describe the secondary part of the 'whiplash' motion where the head is forced excessively forward.", "This describes a posterior movement of the scapula or mandible along a horizontal plane, not a rotational bending of the neck.", "This is a side-to-side bending of the neck or torso, rather than the forward-backward movement described in whiplash.", "This refers to the abnormal or excessive extension of a joint beyond its typical anatomical limits, often resulting in injury."], "correct": 3, "hint": "Distinguish between the direction of the movement and whether it exceeds physiological limits.", "topic": "Excessive movement", "qid": "529ff9e8df"}, {"q": "To begin chewing, a person must first lower their jaw. Which movement of the mandible is being utilized?", "options": ["Protraction", "Medial excursion", "Depression", "Elevation"], "rationales": ["This pushes the chin forward rather than opening the mouth vertically.", "This returns the jaw to the center from a side-to-side position, which is a grinding motion rather than an opening motion.", "This is the downward movement of the mandible that opens the mouth.", "This is the upward movement used to close the mouth or bite down on food."], "correct": 2, "hint": "Focus on the vertical downward movement of the lower jaw.", "topic": "Mandible movements", "qid": "9a7dd513b9"}, {"q": "A dancer bends their torso directly to the left side while keeping their feet planted. This movement of the vertebral column is known as:", "options": ["Lateral flexion", "Circumduction", "Abduction", "Rotation"], "rationales": ["Bending the neck or body toward the right or left side is defined as lateral flexion, involving both symphysis and plane joints.", "This would require a sequential combination of bending forward, side, and back, creating a circular path.", "While it involves moving away from the midline, this term is strictly used for limbs, fingers, and toes.", "This would involve twisting the body around its long axis rather than bending it to the side."], "correct": 0, "hint": "Think about the term for bending the spine in a plane that is neither sagittal nor rotational.", "topic": "Vertebral column", "qid": "be2c5ff1a8"}, {"q": "A soccer player turns their leg so that the kneecap and the anterior surface of the thigh face away from the midline. What is this movement called?", "options": ["Abduction", "Medial rotation", "Eversion", "Lateral rotation"], "rationales": ["This would involve moving the entire leg outward to the side in the coronal plane, rather than twisting it.", "This would turn the anterior surface of the thigh toward the midline of the body.", "This movement involves turning the sole of the foot outward, not the rotation of the entire limb at the hip.", "Also called external rotation, this moves the anterior surface of the limb away from the midline of the body."], "correct": 3, "hint": "Focus on the direction the anterior surface of the limb turns relative to the center of the body.", "topic": "Limb rotation", "qid": "5c6c2583c3"}, {"q": "When a person moves their lower jaw from side to side to grind food, they are performing which type of movement?", "options": ["Protraction", "Excursion", "Rotation", "Depression"], "rationales": ["This movement sticks the chin out anteriorly and does not involve side-to-side shifting.", "Lateral and medial excursion describe the side-to-side movements of the mandible away from and back to the midline.", "Mandibular movement for grinding is a side-to-side sliding rather than a twisting around a long axis.", "This opens the mouth vertically and does not provide the horizontal grinding motion."], "correct": 1, "hint": "Look for the term specifically used for side-to-side movements of the jaw.", "topic": "Mandible excursion", "qid": "51f51f28da"}, {"q": "What structural feature primarily restricts the extension of the thigh at the hip joint compared to its much larger range of flexion?", "options": ["The symphysis joint of the pelvis", "Ligaments supporting the hip joint", "The presence of the patella", "The shape of the acetabulum"], "rationales": ["This joint provides slight movement between the pubic bones but does not determine the range of motion of the femur.", "Extension of the thigh beyond the standing anatomical position is greatly limited by the strong ligaments that support the joint.", "The patella affects knee mechanics but does not play a role in limiting hip joint extension.", "While the socket provides stability, it is the soft tissue tension, not bone-on-bone contact, that primarily limits posterior movement."], "correct": 1, "hint": "Consider the soft tissue structures that provide stability and tension to the hip.", "topic": "Joint structural limits", "qid": "522fc254f1"}], "hasSheet": true, "notebook": "https://notebooklm.google.com/notebook/7195586f-1cfe-4068-9c74-b067dc43f0b1/artifact/68119ce0-2ad6-42be-af3f-cf6f0ae9fd17", "root": "../index.html", "tab": "quiz", "sheet": "## 1. Flexion and extension\nThese movements occur in the sagittal plane and involve anterior or posterior movements of the body or limbs.\n\n### Key terms\n**Flexion**: A movement that decreases the angle between bones at a joint.\n   Bending a joint to move a limb anteriorly (or bringing the foot toward the posterior thigh).\n**Extension**: A movement that increases the angle between bones and straightens a joint.\n   Straightening a joint from a flexed position or moving a limb or body part posteriorly.\n**Lateral flexion**: The bending of the neck or body toward the right or left side.\n\n## 2. Abduction and adduction\nThese involve medial-lateral motions of the limbs, fingers, toes, or thumb within the coronal plane.\n\n### Key terms\n**Abduction**: Moving a limb or hand laterally away from the midline or spreading fingers and toes.\n   Raising the arm at the shoulder joint or spreading fingers apart.\n**Adduction**: Moving a limb or hand toward or across the midline or bringing fingers and toes together.\n   Bringing the arm down to the side of the body or bringing fingers together.\n\n## 3. Supination and pronation\nThese motions describe the orientation of the radius, ulna, and palm within the forearm.\n\n### Key terms\n**Supination**: The forearm movement that turns the palm to the anterior-facing position.\n   The radius and ulna are parallel to each other.\n**Pronation**: The forearm movement that turns the palm to the posterior-facing position.\n   The radius crosses over the ulna to form an X-shape.\n\n## 4. Ankle movements\nThese movements are the only two motions allowed at the hinge joint of the ankle.\n\n### Key terms\n**Dorsiflexion**: Lifting the front of the foot so the top of the foot moves toward the anterior leg.\n**Plantar flexion**: Lifting the heel of the foot or pointing the toes downward.\n\n## 5. Inversion and eversion\nThese movements occur at the intertarsal joints to stabilize the foot on uneven surfaces.\n\n### Key terms\n**Inversion**: Turning the foot so the bottom of the foot angles toward the midline of the body.\n**Eversion**: Turning the foot so the bottom of the foot angles away from the midline.\n\n## 6. Scapular movements\nThese include anterior-posterior and upward-downward motions of the shoulder blade.\n\n### Key terms\n**Protraction**: Moving the scapula forward, as when pushing against an object.\n**Retraction**: Pulling the scapula posteriorly and medially toward the vertebral column.\n**Elevation**: The upward movement of the scapula and shoulder.\n**Depression**: The downward movement of the scapula and shoulder.\n\n## 7. Complex movements\nThese involve movements where one end of a body region moves in a circle while the other remains stationary.\n\n### Key terms\n**Circumduction**: Circular movement of a limb, hand, or finger using a combination of planes.\n   Sequential combination of flexion, adduction, extension, and abduction.\n\n## 8. Scapular rotation\nThese rotations allow for full abduction or adduction of the upper limb and are defined by the motion of the glenoid cavity.\n\n### Key terms\n**Superior rotation**: Upward motion of the glenoid cavity as the medial end of the scapular spine moves downward.\n**Inferior rotation**: Downward motion of the glenoid cavity accompanied by the upward movement of the medial end of the scapular spine.\n\n## 9. Rotational movements\nRotation involves a bone turning around its own axis or another bone at pivot or ball-and-socket joints.\n\n### Key terms\n**Rotation**: The twisting movement of a bone or body region around a central axis.\n   Turning the head from side to side at the atlantoaxial joint.\n\n## 10. Thumb movements\nThe thumb's unique structure allows for grasping and specific planar movements at the first carpometacarpal joint.\n\n### Key terms\n**Opposition**: Moving the tip of the thumb into contact with the tip of a finger.\n**Reposition**: Returning the thumb to the anatomical position next to the index finger.\n   **Flexion**: Bringing the thumb against the index finger or into the palm.\n   **Extension**: Moving the thumb away from the palm within the same plane as the palm.\n   **Abduction**: Anterior movement to a 90° perpendicular position pointing out from the palm.\n   **Adduction**: Moving the thumb back to the anatomical position next to the index finger.\n\n## 11. Excessive movement\nThese movements go beyond normal physiological ranges and are often associated with trauma or injury.\n\n### Key terms\n**Hyperextension**: The abnormal or excessive extension of a joint beyond its normal range.\n**Hyperflexion**: The abnormal or excessive flexion of a joint beyond its normal range.\n   Whiplash injuries involving sudden backward and forward movement of the neck.\n\n## 12. Mandible movements\nThe jaw moves to open, close, or protrude through vertical and anterior-posterior motions.\n\n### Key terms\n**Protraction**: Pushing the lower jaw forward to stick out the chin.\n**Retraction**: Pulling the lower jaw backward.\n**Elevation**: Upward movement of the lower jaw to close the mouth.\n**Depression**: Downward movement of the lower jaw to open the mouth.\n\n## 13. Vertebral column\nThese movements result from the summation of small motions between adjacent vertebrae.\n\n### Key terms\nJoint Types: **Symphysis** (intervertebral disc); **Plane joint** (between inferior and superior articular processes).\nMotion Types: **Flexion** (anterior bending); **Extension** (posterior-going); **Lateral flexion** (side bending).\n\n## 14. Limb rotation\nThese rotations are specific to multiaxial ball-and-socket joints at the shoulder and hip.\n\n### Key terms\n**Medial (internal) rotation**: Turning the anterior surface of the limb toward the midline of the body.\n**Lateral (external) rotation**: Turning the anterior surface of the limb away from the midline of the body.\n\n## 15. Mandible excursion\nThese movements describe how the jaw moves relative to the midline.\n\n### Key terms\n**Lateral excursion**: Moving the mandible away from the midline toward the right or left side.\n**Medial excursion**: Returning the mandible to the resting position at the midline.\n\n## 16. Joint structural limits\nThe range of motion is determined by the joint's structural type and supporting tissues.\n\n### Key terms\n**Ligaments**: Fibrous tissues that constrain range of motion or prevent extension beyond anatomical limits.\n**Structural type**: The physical classification (e.g., ball-and-socket vs. hinge) that determines available movement types."}</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -379,8 +427,25 @@ const G_OK = '✓', G_NO = '✕';
    Everything lives in localStorage under the page id. `hash` fingerprints the question
    set: a Redo regenerates the quiz, and when that happens the old answers describe
    questions that no longer exist, so the attempt is retired into history rather than
-   shown against the new ones. */
-function blank(){ return {hash:D.hash, i:0, answers:{}, skipped:{}, done:false, at:null, history:[]}; }
+   shown against the new ones.
+
+   KEYED ON q.qid, NOT ON THE ARRAY INDEX (v2). Skipping and starring have to outlive a
+   rebuild: a question he deleted must stay deleted, and a question he starred must still be
+   starred, even after the quiz is regenerated and the order changes. That is also what makes
+   `skipped` usable later as a permanent exclusion list when exam reuse is built — see qid()
+   in quizpage.py. v1 states are migrated once, on load. */
+function qk(i){ return D.questions[i].qid; }
+function blank(){ return {v:2, hash:D.hash, i:0, answers:{}, pass2:{}, skipped:{}, starred:{},
+                          phase:1, p2list:null, done:false, at:null, history:[]}; }
+function migrate(s){
+  // v1 keyed every map on the array index. The hash matches, so the indices are still valid
+  // and this is a straight re-key — done once, then never again.
+  const re = m => { const o = {}; Object.keys(m||{}).forEach(k=>{
+    const i = +k; if(D.questions[i]) o[qk(i)] = m[k]; }); return o; };
+  s.answers = re(s.answers); s.skipped = re(s.skipped);
+  s.pass2 = {}; s.starred = {}; s.phase = 1; s.p2list = null; s.v = 2;
+  return s;
+}
 function load(){
   try{
     const s = JSON.parse(localStorage.getItem(KEY) || 'null');
@@ -398,10 +463,18 @@ function load(){
         total: (s.meta && s.meta.total) || Object.keys(s.answers||{}).length,
         stale: true});
       b.rebuilt = true;
+      // A REBUILD DOES NOT RESURRECT A DELETED QUESTION. Answers are retired because they
+      // describe questions that may be gone; skipped and starred are decisions ABOUT
+      // questions, so they carry over on qid and simply miss anything no longer present.
+      if(s.v === 2){ b.skipped = s.skipped || {}; b.starred = s.starred || {}; }
       return b;
     }
     if(!s.history) s.history = [];
+    if(s.v !== 2) return migrate(s);
     if(!s.skipped) s.skipped = {};
+    if(!s.starred) s.starred = {};
+    if(!s.pass2) s.pass2 = {};
+    if(!s.phase) s.phase = 1;
     return s;
   }catch(e){ return blank(); }
 }
@@ -412,18 +485,49 @@ function save(){
 }
 /* Skipped questions leave the run entirely — out of the count, out of the denominator,
    out of the topic breakdown. Anything less makes "8 / 10" a lie about a quiz of nine. */
-function active(s){ return D.questions.map((_,i)=>i).filter(i => !(s.skipped||{})[i]); }
-function score(s){
-  return active(s).reduce((n,i)=> n + ((s.answers||{})[i] === D.questions[i].correct ? 1 : 0), 0);
+function active(s){ return D.questions.map((_,i)=>i).filter(i => !(s.skipped||{})[qk(i)]); }
+function ans(i){ return S.answers[qk(i)]; }
+function ans2(i){ return S.pass2[qk(i)]; }
+function firstRight(i){ return ans(i) === D.questions[i].correct; }
+/* THE SECOND PASS REDEEMS. Wrong first, right second → the question counts as right; wrong
+   both times stays wrong, and there is no third pass. The first answer is never overwritten,
+   which is what lets the end card say "10 right, +2 redeemed" instead of quietly rewriting a
+   10 into a 12. */
+function finalRight(i){ return firstRight(i) || ans2(i) === D.questions[i].correct; }
+function score(s){ return active(s).reduce((n,i)=> n + (finalRight(i) ? 1 : 0), 0); }
+function redeemed(){ return active(S).filter(i => !firstRight(i) && ans2(i) === D.questions[i].correct); }
+/* What a second pass would still have to cover: wrong on the first pass and not yet
+   re-answered. Empty → no button, which is the "if there are no mistakes there is no second
+   pass" rule and also what ends the round rather than looping it. */
+function pending2(){
+  return active(S).filter(i => ans(i) !== undefined && !firstRight(i) && ans2(i) === undefined);
 }
+/* The questions THIS pass runs over. Frozen into p2list when the second pass starts, so
+   answering one correctly cannot shrink the list under his feet mid-run. */
+function runList(){
+  if(S.phase === 2 && S.p2list) return S.p2list.filter(i => !S.skipped[qk(i)]);
+  return active(S);
+}
+function pick(i){ return S.phase === 2 ? ans2(i) : ans(i); }
 let S = load();
 let lastShown = -1;
 
 /* ---- rendering ---------------------------------------------------------------- */
+/* The Starred tab only exists while something is starred, and the Study sheet tab only when
+   the quiz shipped with one — a linguistics quiz built before topic tags has none. If that
+   leaves one tab, the whole group goes: a lone "Quiz" button is chrome that says nothing. */
+function syncTabs(){
+  const nstar = Object.keys(S.starred||{}).length;
+  document.querySelector('.tab[data-tab="starred"]').classList.toggle('hide', !nstar);
+  document.querySelector('.tab[data-tab="sheet"]').classList.toggle('hide', !D.hasSheet);
+  $('#tabs').classList.toggle('hide', !nstar && !D.hasSheet);
+  if(D.tab === 'starred' && !nstar) setTab('quiz');
+}
 function setTab(name){
   D.tab = name;
   document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===name));
-  $('#quizview').classList.toggle('hide', name!=='quiz');
+  $('#band').classList.toggle('hide', name!=='quiz');
+  $('#starredview').classList.toggle('hide', name!=='starred');
   $('#sheetview').classList.toggle('hide', name!=='sheet');
   $('#footer').classList.toggle('hide', name!=='quiz');
   if(name==='quiz'){
@@ -432,6 +536,8 @@ function setTab(name){
     // back — the question must be exactly where he left it.
     if(quizPad !== null) $('main').style.paddingTop = quizPad;
   } else {
+    if(name==='starred') drawStarred();
+    if(name==='sheet') renderScore();
     $('main').style.paddingTop = BASE_PAD + 'px';
     window.scrollTo(0,0);
   }
@@ -455,7 +561,10 @@ function centreBlock(reserve){
   const m = $('main');
   m.style.paddingTop = BASE_PAD + 'px';
   const avail = innerHeight - $('header').offsetHeight - $('footer').offsetHeight;
-  const h = reserve || $('#quizview').getBoundingClientRect().height;
+  // The band's own padding is part of the block now, so it has to be inside the measurement
+  // or the box lands low by exactly one padding.
+  const bp = parseFloat(getComputedStyle($('#band')).paddingTop) || 0;
+  const h = (reserve || $('#quizview').getBoundingClientRect().height) + bp * 2;
   quizPad = Math.max(BASE_PAD, Math.round((avail - h) / 2)) + 'px';
   m.style.paddingTop = quizPad;
 }
@@ -474,13 +583,21 @@ function answeredHeight(i){
   return h;
 }
 
+/* NEVER BACKWARDS. The old fallback here was `S.i = act[0]`, so skipping a question sent him
+   to question 1 — the whole way back to the start of the quiz. The nearest question AFTER
+   the one that just left is the only sensible landing place. */
+function nextFrom(list, i){
+  const nx = list.find(j => j > i);
+  return nx === undefined ? list[list.length-1] : nx;
+}
 function draw(){
   if(D.tab!=='quiz') return;
+  $('#band').classList.toggle('off', !!(S.reviewing || S.done));
   if(S.reviewing) return review();
   if(S.done) return end();
-  const act = active(S);
+  const act = runList();
   if(!act.length) return end();
-  if(act.indexOf(S.i) < 0) S.i = act[0];
+  if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
   question();
 }
 
@@ -489,16 +606,21 @@ function draw(){
 function buildQ(i, picked, fresh, en){
   const q = D.questions[i];
   const answered = picked !== undefined;
-  const act = active(S), pos = act.indexOf(i);
+  const act = runList(), pos = act.indexOf(i);
+  const starred = !!S.starred[q.qid];
   en = en || '';
 
   // The counter sits top-left above the question, the way the notebook does it, rather than
-  // up in the bar — it belongs with the thing it counts.
+  // up in the bar — it belongs with the thing it counts. On a second pass it counts the
+  // second pass, so four wrong answers read as "1 / 4" and not as a broken 16.
   let h = '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta"><span class="num">' + (pos+1) + ' / ' + act.length + '</span>'
+        + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
         + (q.topic ? '<span class="dot">·</span><span>' + esc(q.topic) + '</span>' : '')
         + '</p>'
         + '<h1 class="q">' + esc(q.q) + '</h1></div>'
+        + '<button class="star' + (starred?' on':'') + '" id="star" aria-label="Star">'
+        + (starred?'★':'☆') + '</button>'
         + '<div class="more"><button class="dots" id="dots" aria-label="More">⋮</button></div>'
         + '</div>';
 
@@ -528,9 +650,9 @@ function buildQ(i, picked, fresh, en){
 }
 
 function question(fresh){
-  const i = S.i, q = D.questions[i], picked = S.answers[i];
+  const i = S.i, q = D.questions[i], picked = pick(i);
   const answered = picked !== undefined;
-  const act = active(S);
+  const act = runList();
   const pos = act.indexOf(i);
   const isNew = i !== lastShown;
   lastShown = i;
@@ -538,8 +660,13 @@ function question(fresh){
   $('#rail').style.width = ((pos + (answered?1:0)) / act.length * 100) + '%';
   $('#quizview').innerHTML = buildQ(i, picked, fresh, isNew ? ' enter' : '');
   $('#quizview').querySelectorAll('.opt').forEach(b=>{
-    b.onclick = ()=>{ S.answers[i] = +b.dataset.k; save(); question(true); };
+    b.onclick = ()=>{
+      // The first pass is never overwritten — a second-pass answer goes in its own map.
+      if(S.phase === 2) S.pass2[qk(i)] = +b.dataset.k; else S.answers[qk(i)] = +b.dataset.k;
+      save(); question(true);
+    };
   });
+  $('#star').onclick = ()=> toggleStar(i);
   $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
 
   // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
@@ -548,12 +675,13 @@ function question(fresh){
   hb.classList.toggle('hide', !q.hint || answered);
   ht.classList.toggle('hide', !(S.hintOpen && q.hint && !answered));
   ht.textContent = q.hint || '';
-  hb.onclick = ()=>{ S.hintOpen = !S.hintOpen; ht.classList.toggle('hide', !S.hintOpen); };
+  hb.onclick = toggleHint;
 
   $('#back').classList.remove('hide');
   $('#next').classList.remove('hide');
   $('#review').classList.add('hide');
   $('#retake').classList.add('hide');
+  $('#pass2').classList.add('hide');
   $('#back').disabled = pos === 0;
   $('#next').disabled = !answered;
   $('#next').textContent = (pos === act.length-1) ? 'Finish' : 'Next';
@@ -563,9 +691,35 @@ function question(fresh){
   if(isNew) centreBlock(answeredHeight(i));
 }
 
+/* THE HINT, from the button or from `h`. One path for both, and the BUTTON'S OWN VISIBILITY
+   is the gate: it is already hidden when the question has no hint or has been answered, so
+   there is no second copy of that condition to fall out of step. */
+function toggleHint(){
+  const hb = $('#hintbtn'), ht = $('#hinttext');
+  if(hb.classList.contains('hide')) return;
+  S.hintOpen = !S.hintOpen;
+  ht.classList.toggle('hide', !S.hintOpen);
+}
+
+/* STARRING is not the same thing as skipping and the two maps never mix. Starred = worth
+   coming back to, right or wrong, still fully part of the run and the score. Skipped =
+   removed from it. Keeping them apart is what lets exam reuse later take the starred ones as
+   candidates and treat the skipped ones as permanently excluded. */
+function toggleStar(i){
+  const k = qk(i);
+  if(S.starred[k]) delete S.starred[k]; else S.starred[k] = true;
+  save(); syncTabs();
+  const b = $('#star');
+  if(b){ b.textContent = S.starred[k] ? '★' : '☆'; b.classList.toggle('on', !!S.starred[k]); }
+}
+
 /* One question can be dropped from the run, the way the notebook lets him delete one —
    except nothing is deleted in NotebookLM, so a rebuild brings it back and the end card
-   can put it back at any time. */
+   can put it back at any time.
+
+   SKIPPING THE LAST QUESTION SUBMITS. It used to send him back to question 1, because the
+   skipped index left `active()` and draw()'s fallback was `act[0]`. Deleting the last item
+   in a list means the list is finished, so this does exactly what Finish does. */
 function openMenu(){
   const host = $('.more');
   if(host.querySelector('.menu')) return closeMenu();
@@ -574,24 +728,46 @@ function openMenu(){
   m.innerHTML = '<button id="skipq">Skip this question</button>';
   host.appendChild(m);
   m.querySelector('#skipq').onclick = ()=>{
-    if(active(S).length <= 1) return closeMenu();   // never skip the last one standing
-    S.skipped[S.i] = true;
-    delete S.answers[S.i];
-    save(); closeMenu(); draw();
+    const list = runList(), pos = list.indexOf(S.i);
+    if(list.length <= 1) return closeMenu();        // never skip the last one standing
+    const wasLast = pos === list.length - 1;
+    S.skipped[qk(S.i)] = true;
+    delete S.answers[qk(S.i)];
+    delete S.pass2[qk(S.i)];
+    delete S.starred[qk(S.i)];                     // a deleted question is not a starred one
+    closeMenu();
+    syncTabs();
+    if(wasLast){ finish(); return; }
+    // After the removal the list has shrunk, so the item now AT `pos` is the one that
+    // followed the skipped question. Forwards, never back to the top.
+    S.i = runList()[pos];
+    S.hintOpen = false;
+    lastShown = -1;
+    save(); question(); window.scrollTo(0,0);
   };
   setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
 }
 function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(); }
 
+function finish(){
+  S.done = true; S.at = new Date().toISOString();
+  save(); end(); window.scrollTo(0,0);
+}
+
 function end(){
   const act = active(S), n = score(S), t = act.length;
   const pct = t ? Math.round(n/t*100) : 0;
+  const red = redeemed().length;
   let h = '<p class="score">'+n+' <small>/ '+t+'</small></p>'
         + '<p class="sub">'+pct+'% · '+when(S.at)+'</p>'
         + '<div class="chart"><i class="r" style="width:'+(t?n/t*100:0)+'%"></i>'
         + '<i class="w" style="width:'+(t?(t-n)/t*100:0)+'%"></i></div>'
         + '<p class="legend"><span>'+G_OK+' <b>'+n+'</b> correct</span>'
-        + '<span>'+G_NO+' <b>'+(t-n)+'</b> wrong</span></p>';
+        + '<span>'+G_NO+' <b>'+(t-n)+'</b> wrong</span>'
+        // The chart stays TWO segments. A third fill for redemptions would need its own
+        // grayscale-safe hatch and would make the one number he reads harder to read; the
+        // count says it in words instead.
+        + (red ? '<span>+<b>'+red+'</b> on the second pass</span>' : '') + '</p>';
 
   const by = {};
   act.forEach(i=>{
@@ -599,7 +775,7 @@ function end(){
     if(!k) return;
     by[k] = by[k] || {n:0,t:0};
     by[k].t++;
-    if(S.answers[i] === q.correct) by[k].n++;
+    if(finalRight(i)) by[k].n++;
   });
   const keys = Object.keys(by);
   if(keys.length){
@@ -626,6 +802,7 @@ function end(){
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
   $('#rail').style.width = '100%';
+  $('#band').classList.add('off');
   $('#footer').classList.remove('hide');
   $('#back').classList.add('hide');
   $('#hintbtn').classList.add('hide');
@@ -634,39 +811,100 @@ function end(){
   $('#review').classList.remove('hide');
   $('#review').textContent = 'Review quiz';
   $('#retake').classList.remove('hide');
+  // No wrong answers left to retry → no button at all, which is also what stops the second
+  // pass looping into a third: anything answered on pass two leaves pending2() for good.
+  $('#pass2').classList.toggle('hide', pending2().length === 0);
+  renderScore();
   lastShown = -1;
   centreBlock();
 }
 
+/* One question's full record: the right answer, what he chose on each pass, the rationale.
+   Shared by the review list and the Starred tab so the two can never drift apart. */
+function itemHTML(i, n){
+  const q = D.questions[i], first = ans(i), second = ans2(i);
+  let h = '<div class="item">';
+  if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
+  h += '<p class="qq">'+(n===undefined?'':(n+1)+'. ')+esc(q.q)+'</p>'
+     + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
+  if(!firstRight(i)){
+    h += '<p class="rline mine"><span class="g">'+G_NO+'</span><span>You chose: '
+       + (first===undefined ? 'nothing' : esc(q.options[first])) + '</span></p>';
+    if(second !== undefined){
+      h += '<p class="rline mine"><span class="g">'+(second===q.correct?G_OK:G_NO)+'</span>'
+         + '<span>Second pass: '+esc(q.options[second])
+         + (second===q.correct ? ' — redeemed' : '') + '</span></p>';
+    }
+  }
+  const why = q.rationales ? q.rationales[q.correct] : '';
+  if(why) h += '<p class="why" style="padding-left:0">'+esc(why)+'</p>';
+  return h + '</div>';
+}
+
 function review(){
   let h = '<div class="rev"><h3>Every question</h3>';
-  active(S).forEach((i,n)=>{
-    const q = D.questions[i], picked = S.answers[i], right = picked === q.correct;
-    h += '<div class="item">';
-    if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
-    h += '<p class="qq">'+(n+1)+'. '+esc(q.q)+'</p>'
-       + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
-    if(!right){
-      h += '<p class="rline mine"><span class="g">'+G_NO+'</span><span>You chose: '
-         + (picked===undefined ? 'nothing' : esc(q.options[picked])) + '</span></p>';
-    }
-    const why = q.rationales ? q.rationales[q.correct] : '';
-    if(why) h += '<p class="why" style="padding-left:0">'+esc(why)+'</p>';
-    h += '</div>';
-  });
+  active(S).forEach((i,n)=>{ h += itemHTML(i, n); });
   h += '</div>';
   $('#quizview').innerHTML = h;
+  $('#band').classList.add('off');
   $('#footer').classList.remove('hide');
   $('#back').classList.add('hide');
   $('#hintbtn').classList.add('hide');
   $('#hinttext').classList.add('hide');
   $('#next').classList.add('hide');
+  $('#pass2').classList.add('hide');
   $('#review').classList.remove('hide');
   $('#review').textContent = 'Summary';
   $('#retake').classList.remove('hide');
   quizPad = BASE_PAD + 'px';                      // a long list, never centred
   $('main').style.paddingTop = quizPad;
   window.scrollTo(0,0);
+}
+
+/* ---- the Starred tab ---------------------------------------------------------------
+   Its own view rather than a section of the review list, because the point is to find them
+   again quickly on a later visit — including on a quiz he has not retaken. Right or wrong
+   does not matter; "this one is important" is the only thing being recorded. */
+function drawStarred(){
+  const list = D.questions.map((_,i)=>i).filter(i => S.starred[qk(i)]);
+  if(!list.length){
+    $('#starredview').innerHTML = '<h3>Starred</h3><p class="empty">Nothing starred yet. '
+      + 'Use the ☆ beside a question.</p>';
+    return;
+  }
+  let h = '<h3>Starred · '+list.length+'</h3>';
+  list.forEach((i,n)=>{
+    h += itemHTML(i, n).replace('</div>',
+      '<p class="rline"><button class="link" data-unstar="'+i+'">Unstar</button></p></div>');
+  });
+  $('#starredview').innerHTML = h;
+  $('#starredview').querySelectorAll('[data-unstar]').forEach(b=>{
+    b.onclick = ()=>{ delete S.starred[qk(+b.dataset.unstar)]; save(); syncTabs(); drawStarred(); };
+  });
+}
+
+/* ---- the score, written where he copies from ---------------------------------------- */
+function scoreParts(){
+  const act = active(S), n = score(S), t = act.length, red = redeemed().length;
+  return {n:n, t:t, pct: t ? Math.round(n/t*100) : 0, red:red, first:n-red, wrong:t-n,
+          skipped: Object.keys(S.skipped||{}).length};
+}
+function scoreMarkdown(){
+  if(!S.done) return '';
+  const p = scoreParts();
+  return '**Quiz:** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
+       + (p.red ? ', +' + p.red + ' redeemed' : '') + ', ' + p.wrong + ' wrong'
+       + (p.skipped ? ', ' + p.skipped + ' skipped' : '') + ' · ' + when(S.at);
+}
+function renderScore(){
+  const el = $('#scorecard');
+  if(!el) return;
+  el.classList.toggle('hide', !S.done);
+  if(!S.done) return;
+  const p = scoreParts();
+  el.innerHTML = '<b>'+p.n+' / '+p.t+'</b><span>'+p.pct+'% · '+p.first+' right'
+    + (p.red ? ', +'+p.red+' on the second pass' : '') + ', '+p.wrong+' wrong'
+    + (p.skipped ? ' · '+p.skipped+' skipped' : '') + ' · '+when(S.at)+'</span>';
 }
 
 function when(iso){
@@ -678,10 +916,8 @@ function when(iso){
 
 /* ---- controls ------------------------------------------------------------------ */
 function step(dir){
-  const act = active(S), pos = act.indexOf(S.i);
-  if(dir > 0 && pos === act.length-1){
-    S.done = true; S.at = new Date().toISOString(); save(); end(); window.scrollTo(0,0); return;
-  }
+  const act = runList(), pos = act.indexOf(S.i);
+  if(dir > 0 && pos === act.length-1){ finish(); return; }
   const nx = act[pos + dir];
   if(nx === undefined) return;
   S.i = nx; S.hintOpen = false; save(); question(); window.scrollTo(0,0);
@@ -689,12 +925,26 @@ function step(dir){
 $('#next').onclick = ()=> step(1);
 $('#back').onclick = ()=> step(-1);
 $('#review').onclick = ()=>{ S.reviewing = !S.reviewing; draw(); };
+/* THE SECOND PASS — the preferred way out of the end card, and the one that keeps
+   everything. It re-runs only what he got wrong, on a list frozen at the moment he presses
+   it, and a right answer here redeems the question in the final score. */
+$('#pass2').onclick = ()=>{
+  const list = pending2();
+  if(!list.length) return;
+  S.phase = 2; S.p2list = list; S.i = list[0];
+  S.done = false; S.reviewing = false; S.hintOpen = false;
+  lastShown = -1;
+  save(); draw(); window.scrollTo(0,0);
+};
+/* RETAKE CLEARS, which is why it sits apart from the other two. The attempt goes into
+   history first so nothing is lost, and the questions he deleted or starred stay that way —
+   they are decisions about the quiz, not part of one attempt at it. */
 $('#retake').onclick = ()=>{
   if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length});
-  const hist = S.history;
-  S = blank(); S.history = hist;
+  const hist = S.history, skipped = S.skipped, starred = S.starred;
+  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred;
   lastShown = -1;
-  save(); draw();
+  save(); syncTabs(); renderScore(); draw();
 };
 document.querySelectorAll('.tab').forEach(b=> b.onclick = ()=> setTab(b.dataset.tab));
 
@@ -736,9 +986,15 @@ function noteMarkdown(){
   });
   return out.join('\n');
 }
+/* THE SCORE RIDES ALONG WITH THE COPY. One press still takes score + sheet + his own notes
+   as a single markdown block, which is what Notion parses on paste — so the row that the
+   week's exam is built from also records how the quiz went, and he can see later whether
+   this section needs testing again. */
 function fullMarkdown(){
   const mine = noteMarkdown();
-  return (D.sheet || '') + (mine ? '\n\n## My notes\n\n' + mine + '\n' : '');
+  const sc = scoreMarkdown();
+  return (sc ? sc + '\n\n' : '') + (D.sheet || '')
+       + (mine ? '\n\n## My notes\n\n' + mine + '\n' : '');
 }
 
 /* A 25-line renderer so Preview shows the same shape the paste will have. Lists and bold
@@ -798,17 +1054,24 @@ if(cp) cp.onclick = async ()=>{
 };
 
 // Re-centre when the window changes shape; the frozen padding would be wrong afterwards.
-addEventListener('resize', ()=>{ if(D.tab==='quiz' && !S.reviewing) centreBlock(); });
+// Against the ANSWERED height, like every other call — measuring what is on screen is the
+// bug this file already fixed once.
+addEventListener('resize', ()=>{
+  if(D.tab==='quiz' && !S.reviewing && !S.done) centreBlock(answeredHeight(S.i));
+});
 
 document.addEventListener('keydown', e=>{
   if(D.tab!=='quiz' || S.done || S.reviewing) return;
   const q = D.questions[S.i];
   if(e.key === 'Enter' || e.key === 'ArrowRight'){ if(!$('#next').disabled) step(1); return; }
   if(e.key === 'ArrowLeft'){ if(!$('#back').disabled) step(-1); return; }
+  // `h` IS THE HINT, not option H. Every quiz here has four options, so H as an option key
+  // has never been reachable; if one ever has eight, the eighth is still `8`.
+  if(e.key === 'h' || e.key === 'H'){ toggleHint(); return; }
   let k = -1;
   if(/^[1-9]$/.test(e.key)) k = +e.key - 1;
-  else if(/^[a-hA-H]$/.test(e.key)) k = D.letters.indexOf(e.key.toUpperCase());
-  if(k >= 0 && k < q.options.length && S.answers[S.i] === undefined){
+  else if(/^[a-gA-G]$/.test(e.key)) k = D.letters.indexOf(e.key.toUpperCase());
+  if(k >= 0 && k < q.options.length && pick(S.i) === undefined){
     // click the real button rather than repeating its handler — one path for answering
     const btn = $('#quizview').querySelector('.opt[data-k="' + k + '"]');
     if(btn) btn.click();
@@ -816,6 +1079,8 @@ document.addEventListener('keydown', e=>{
 });
 
 save();
+syncTabs();
+renderScore();
 setTab(D.tab || 'quiz');
 </script>
 </body>

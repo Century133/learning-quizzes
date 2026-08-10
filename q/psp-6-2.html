@@ -11,7 +11,8 @@
 --muted:#9aa0a6;--line:#3c4043;--accent:#8ab4f8;--right:#81c995;--wrong:#f28b82;
 --radius:14px;--maxw:660px;--qsize:1.25rem;--qweight:600;
 --osize:0.95rem;--opad:12px 16px;--ogap:7px;--qgap:18px;
---barh:46px;--font:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;}
+--barh:46px;--band:#191a1b;--bandr:20px;--bandpad:20px;
+--font:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;}
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
@@ -44,6 +45,29 @@ header{position:sticky;top:0;z-index:5;background:var(--bg);
    shifts… it should stay stationary". Anchored to the top it cannot move: only the cards
    below the one he clicked ever change position. */
 main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;padding:16px 0 6px}
+
+/* ---- THE BAND ----
+   Flat black under the question made it hard to read; the notebook's lighter middle band is
+   what he wanted instead. So the question and EVERY option sit inside one surface.
+
+   IT CLOSES AT THE BOTTOM AND HUGS THE CONTENT. The first version ran off the bottom of the
+   screen — "kind of weirdly big at the bottom", and he was right: with the block centred, an
+   open band left a lot of empty surface under the last option. It is a card now, sized to
+   what is in it.
+
+   THREE TONES, and the order matters: page (--bg) → band (--band) → option card (--surface).
+   Set --band lighter than --surface and the cards vanish into it. */
+.band{background:var(--band);border:1px solid var(--line);border-radius:var(--bandr);
+ padding:var(--bandpad)}
+/* Off for the end card, the review list and the sheet — a long scrolling list does not want
+   to be in a box. */
+.band.off{background:none;border:0;padding:0}
+/* A short window pays for the band's padding out of the space the options need, so it gives
+   most of it back below 780px. Measured: at 800px all 14 questions of PSP 3.6 still fit
+   answered-wrong with no scrolling. */
+@media (max-height:780px){
+  .band{padding:12px 16px}
+}
 
 /* ---- the question ---- */
 .qhead{display:flex;align-items:flex-start;gap:10px;margin:0 0 var(--qgap)}
@@ -106,6 +130,15 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
 
 .opt.enter,.qhead.enter{animation:fadein .24s ease both}
 @keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* ---- starring ----
+   A visible toggle rather than a menu item: it is used on questions he got RIGHT as often as
+   wrong, so it has to be one press. Outline vs filled is a shape difference, so it reads in
+   grayscale without needing colour. */
+.star{background:none;border:0;color:var(--muted);font-size:1.05rem;line-height:1;
+ padding:4px 6px;border-radius:999px;cursor:pointer;flex:0 0 auto}
+.star:hover{background:var(--surface);color:var(--text)}
+.star.on{color:var(--text)}
 
 /* ---- the ⋮ menu ---- */
 .more{position:relative;flex:0 0 auto}
@@ -197,6 +230,15 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .sheettools{display:flex;justify-content:flex-end;gap:18px;padding:10px 0 4px}
 .copied{color:var(--right)}
 
+/* ---- the score, on the sheet ----
+   It sits at the top of the sheet and Copy takes it, so the paste that lands in the Notion
+   row carries what he scored beside what the section says — which is what tells him later
+   whether this one needs testing again. */
+.scorecard{border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;
+ margin:16px 0 6px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.scorecard b{font-size:1.35rem;font-weight:500;font-variant-numeric:tabular-nums}
+.scorecard span{color:var(--muted);font-size:.88rem}
+
 /* ---- his own additions ---- */
 .mine{margin:34px 0 0;padding-top:18px;border-top:1px solid var(--line)}
 .mine h3{margin:0 0 4px;padding:0;border:0}
@@ -209,6 +251,7 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .saved{color:var(--muted);font-size:.78rem;margin:8px 0 0;height:1em}
 #minepreview{margin:14px 0 0}
 
+.empty{color:var(--muted);padding:8px 0 30px}
 .hist{color:var(--muted);font-size:.84rem;margin:22px 0 0}
 .hist span{white-space:nowrap}
 .note{color:var(--muted);font-size:.84rem;margin:16px 0 0}
@@ -233,14 +276,16 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 <header>
   <div class="wrap bar">
     <span class="title">6.2 Inferring Dispositions Using Causal Attribution</span>
-    <span class="tabs"><button class="tab" data-tab="quiz" aria-selected="true">Quiz</button><button class="tab" data-tab="sheet" aria-selected="false">Study sheet</button></span>
+    <span class="tabs" id="tabs"><button class="tab" data-tab="quiz" aria-selected="true">Quiz</button><button class="tab hide" data-tab="starred" aria-selected="false">Starred</button><button class="tab" data-tab="sheet" aria-selected="false">Study sheet</button></span>
   </div>
   <div class="rail"><i id="rail"></i></div>
 </header>
 
 <main class="wrap">
-  <div id="quizview"></div>
+  <div class="band" id="band"><div id="quizview"></div></div>
+  <div id="starredview" class="rev hide"></div>
   <div id="sheetview" class="sheet hide">
+    <div class="scorecard hide" id="scorecard"></div>
     <div class="sheettools">
       <button class="link" id="previewnotes">Preview</button>
       <button class="link" id="copysheet">Copy</button>
@@ -373,14 +418,17 @@ Self-control is finite - one hard task leaves less for the next"></textarea>
   <div class="acts">
     <button class="pill ghost" id="back">Back</button>
     <button class="pill ghost hide" id="hintbtn">Hint</button>
+    <!-- Retake CLEARS, so it sits off to the side on its own, away from the two that keep
+         his progress. 2nd Pass is the primary one and takes the position Next held. -->
+    <button class="pill ghost hide" id="retake">Retake</button>
     <span class="spacer"></span>
     <button class="pill hide" id="review">Review quiz</button>
-    <button class="pill hide" id="retake">Retake</button>
+    <button class="pill primary hide" id="pass2">2nd Pass</button>
     <button class="pill primary" id="next">Next</button>
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "psp-6-2", "title": "6.2 Inferring Dispositions Using Causal Attribution", "subtitle": "Chapter 6 · Perceiving Others", "book": "PSP", "hash": "fe4c037513c68ff1", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "In the 1961 study by Jones, Davis, and Gergen, participants viewed job applicants for roles as either an astronaut (introverted) or a submariner (extroverted). What happened when an applicant for the astronaut position acted in an extroverted manner?", "options": ["Participants rated the applicant as more introverted to match the job requirements.", "Participants dismissed the behavior as a situational lie intended to impress the interviewers.", "Participants made stronger personal attributions because the behavior was unexpected for the situation.", "Participants were unable to draw any conclusions because the behavior was considered irrational."], "rationales": ["Observers tended to believe the extroverted behavior reflected the applicant's real personality more strongly when it defied role expectations.", "The study found that unexpected behaviors were actually seen as more indicative of true personality, not less.", "When behavior contradicts situational expectations, it is more easily attributed to the person's true disposition rather than social pressure.", "Observers typically use unexpected behavior as a diagnostic tool for identifying underlying traits."], "correct": 2, "hint": "consider how we interpret actions that defy what a specific social context normally requires.", "topic": "Role expectations"}, {"q": "According to the covariation principle, if your friend loves a specific movie but typically dislikes most other movies they see, which factor is high, and what attribution is likely?", "options": ["Distinctiveness is high, suggesting the cause is the movie itself.", "Consistency is high, suggesting the cause is the friend's personality.", "Distinctiveness is low, suggesting the cause is the friend's generally positive attitude.", "Consensus is high, suggesting the cause is the friend's unique taste."], "rationales": ["High distinctiveness occurs when a behavior happens only in a specific situation, leading to a situational attribution.", "Consistency refers to the behavior occurring every time that specific situation is present, not how it compares to other situations.", "Low distinctiveness would mean the friend likes all movies, but here they only like this specific one.", "High consensus would mean most other people also like the movie, which is not described in this specific scenario."], "correct": 0, "hint": "focus on whether the behavior is unique to this specific stimulus or happens across all stimuli.", "topic": "Covariation principle"}, {"q": "In Weiner's model of success and failure, how is 'task difficulty' classified as a cause for an outcome?", "options": ["External and unstable.", "External and stable.", "Internal and stable.", "Internal and unstable."], "rationales": ["External unstable causes refer to factors like luck, which can change significantly from one moment to the next.", "The model assumes that the difficulty of a specific task remains relatively constant and is determined by the situation rather than the person.", "Internal stable causes refer to personal traits like ability or intelligence rather than the nature of the task.", "Internal unstable causes refer to effort or motivation, which the person can change depending on the day."], "correct": 1, "hint": "think about whether the difficulty of a test resides in the person or the exam, and if it is likely to change tomorrow.", "topic": "Weiner’s model"}, {"q": "Skitka and colleagues (2002) conducted a study where a 'quizmaster' created difficult questions for a 'contestant.' Why did observers rate the quizmaster as more intelligent despite knowing the roles were assigned by drawing straws?", "options": ["They exhibited the actor-observer difference by focusing on the contestant's stress.", "They committed the fundamental attribution error by ignoring the quizmaster's situational advantage.", "They assumed the quizmaster's knowledge was unstable and subject to luck.", "They utilized high consensus information to determine the quizmaster's superior ability."], "rationales": ["The actor-observer difference involves how one views themselves versus others, while this error focused on judging another person's traits.", "Observers often fail to account for how situational roles, like getting to pick the questions, facilitate a person's performance.", "The error was in attributing the performance to a stable internal trait (intelligence) rather than the unstable situational role.", "Consensus would involve comparing the quizmaster to other quizmasters, which was not the focus of the observer's bias here."], "correct": 1, "hint": "consider why we might focus on a person's visible knowledge while ignoring the rules that let them show it.", "topic": "Fundamental attribution error"}, {"q": "In the study by Nisbett and colleagues (1973), participants were asked to describe themselves and others using trait terms or the phrase 'depends on the situation.' What was the primary finding?", "options": ["Participants used situational explanations for everyone they knew personally but trait terms for strangers.", "Participants were more likely to assign stable traits to themselves to maintain a sense of identity.", "Participants assigned more traits to their fathers and best friends than to distant figures like Walter Cronkite.", "Participants used 'depends on the situation' significantly more often for themselves than for others."], "rationales": ["The bias was specifically centered on the 'self' versus 'everyone else,' regardless of how well the other person was known.", "Contrary to this, the study showed that people are more hesitant to apply fixed traits to their own varying behaviors.", "The study found that trait attributions were high for all 'others,' including well-known media figures, compared to the self.", "The actor-observer difference suggests we see our own behavior as flexible and situationally driven, while others' behavior is seen as trait-based."], "correct": 3, "hint": "think about which person in the study had the most 'flexible' personality according to the participants.", "topic": "Actor-observer difference"}, {"q": "Research indicates that personal attributions are often made spontaneously and without effort. What happens to our attributional accuracy when we are tired or distracted?", "options": ["We stop making causal attributions entirely and rely on luck to explain events.", "We overcompensate by making extreme situational attributions for everyone.", "We are more likely to commit the fundamental attribution error because situational correction requires cognitive effort.", "We become more accurate because our brain defaults to situational logic when energy is low."], "rationales": ["We still make attributions, but they lean more heavily toward the easiest, most spontaneous personal explanations.", "Overcompensation is unlikely because situational attributions are more complex and effortful to construct than personal ones.", "Adjusting a spontaneous personal judgment to account for the situation is an effortful secondary step that fails under cognitive load.", "Accuracy decreases because the default is the personal attribution, and we lack the energy to challenge it."], "correct": 2, "hint": "consider which type of explanation 'pops into mind' first and whether the second step of thinking is easy or hard.", "topic": "Attributional accuracy"}, {"q": "A student who attributes their high grade on a math test to their natural brilliance but blames a low grade on a history test on 'unfair' questions is demonstrating which phenomenon?", "options": ["The fundamental attribution error.", "Self-serving attributions.", "High consistency information.", "The actor-observer difference."], "rationales": ["The fundamental attribution error typically refers to judging others' behaviors, not explaining one's own outcomes.", "This bias involves taking internal credit for successes while blaming external situational factors for failures to protect self-esteem.", "The student is actually showing low consistency across different subjects, which should lead to a situational attribution, but they are distorting it for self-enhancement.", "While related to self-perception, the specific pattern of taking credit for good and blaming others for bad is the hallmark of self-serving bias."], "correct": 1, "hint": "look for a pattern where the explanation changes specifically to make the individual look better.", "topic": "Self-serving attributions"}, {"q": "If most people cry at a specific wedding (high consensus), and I only cry at weddings (high distinctiveness), but I cry at every wedding I attend (high consistency), what is the most likely causal attribution according to Kelley?", "options": ["The attribution is impossible to determine without more information.", "My personality (being a 'crier') is the cause.", "The situation (the wedding) is the cause.", "Luck and unstable motivation are the causes."], "rationales": ["Kelley's model provides a clear framework for situational attribution when all three types of information are present and high.", "A personal attribution would be more likely if consensus and distinctiveness were low, meaning only I cried and I cried everywhere.", "When consensus, distinctiveness, and consistency are all high, the behavior is attributed to the external situation or stimulus.", "The covariation principle focuses on person vs. situation rather than the luck/motivation categories found in Weiner's model."], "correct": 2, "hint": "evaluate if the cause seems to reside in the specific event or in the individual's general nature.", "topic": "Covariation principle"}, {"q": "Jones and Harris (1967) found that even when participants were told a student was assigned to write a pro-Castro essay, they still believed the student actually supported Castro. What does this imply about the role of choice in attribution?", "options": ["We tend to ignore the lack of choice and assume behavior reflects internal attitudes.", "Choice is the only factor people use when making personal attributions.", "Participants only make personal attributions when they personally agree with the essay.", "People are highly sensitive to external pressure and always discount assigned behaviors."], "rationales": ["This is a classic demonstration of the correspondence bias, where situational constraints like 'being assigned' are underweighted.", "The study showed that people make personal attributions even when choice is clearly absent.", "The attribution was made regardless of the participant's own beliefs, focusing instead on the writer's perceived disposition.", "The findings showed the opposite; people did not sufficiently discount the assigned behavior."], "correct": 0, "hint": "reflect on whether knowing someone was 'forced' to do something prevents us from judging their character.", "topic": "Choice and attribution"}, {"q": "According to the text, why is 'salience' a reason for the fundamental attribution error?", "options": ["We are more focused on our own internal states when observing others.", "Situational factors are usually more vivid and colorful than the people in them.", "Salience helps us remember situational details better than personality traits.", "Other people are the focus of our visual attention, making them seem like the primary cause of their actions."], "rationales": ["When observing others, our focus is external (on them), which prevents us from considering their situational constraints.", "The text states the opposite: people are more salient in our social environments than the abstract situational context.", "Salience actually leads us to ignore situational details in favor of easy-to-see person factors.", "We attribute causality to what we are looking at; since we see others but not the situation or ourselves, we over-attribute to them."], "correct": 3, "hint": "think about the direction of your eyes when you are watching another person behave.", "topic": "Fundamental attribution error"}], "notebook": "https://notebooklm.google.com/notebook/415ea099-d230-407a-9f00-9d6cae2ced32/artifact/2d9c9664-8532-4353-84d6-a2ed1af6fb50", "root": "../index.html", "tab": "quiz", "sheet": "## 1. Role Expectations\nPersonality inferences are significantly easier to make when we observe behaviors that either violate established social norms or contradict the specific requirements of a social role.\n\n### Key Terms\n*   **Causal attribution**: The social-cognitive process of attempting to determine the underlying causes of an individual's behavior.\n*   **Personal (internal or dispositional) attribution**: The inference that a behavior was caused primarily by the person’s internal traits or characteristics rather than by the environment.\n    *   Example: If Tess sticks her tongue out at you instead of shaking your hand, the violation of social expectations makes it easier to infer she is an unfriendly person.\n\n### Names and Studies\n**Jones, Davis, & Gergen (1961)**\n*   **Method**: Participants viewed one of four videos of a job applicant. The role was either for a submariner (requiring an extrovert) or an astronaut (requiring an introvert). The applicant then acted either extroverted or introverted.\n*   **Finding**: When the applicant's behavior violated role expectations (e.g., an extroverted astronaut candidate), participants made much stronger personality attributions. Specifically, participants believed the applicant's extraverted responses represented their true personality **91%** of the time when applying for the introvert-coded astronaut role, compared to only **45%** of the time when the same responses were expected for the submariner role.\n\n## 2. Covariation Principle\nThe covariation principle suggests that we determine if a behavior is situational by observing how that behavior changes or \"covaries\" across different social contexts and time.\n\n### Key Terms\n*   **Consistency information**: Determining whether a specific situation always produces the same behavior from the individual (e.g., a person cries at every wedding they attend).\n*   **Distinctiveness information**: Determining whether the behavior occurs only in a specific situation and nowhere else (e.g., a person who only cries at weddings but remains composed in all other emotional settings).\n*   **Consensus information**: Determining whether most people behave in the same way when faced with that specific situation (e.g., observing that many other guests are also crying at the wedding).\n\n## 3. Weiner’s Model\nThis model categorizes the perceived causes of success and failure based on two primary dimensions: **Locus** (Internal vs. External) and **Stability** (Stable vs. Unstable).\n\n### Key Terms\n*   **Locus**: The determination of whether the cause of an event is internal to the person or external to the situation.\n    *   **Personal causes**: Internal factors, such as ability and motivation.\n*   **Stability**: The determination of whether a cause is likely to stay the same over time or change.\n    *   **Situational causes**: External factors, such as luck and task difficulty.\n\n### The 2x2 Attribution Framework\n*   **Ability [Internal / Stable]**: An internal cause of success perceived as a fixed trait (e.g., natural intelligence).\n*   **Motivation [Internal / Unstable]**: An internal cause of success that can fluctuate (e.g., working hard for one specific exam).\n*   **Task Difficulty [External / Stable]**: A situational cause that remains constant (e.g., a consistently easy or hard course).\n*   **Luck [External / Unstable]**: A situational cause that is unpredictable and subject to change (e.g., guessing correctly on a multiple-choice test).\n\n## 4. Fundamental Attribution Error\nThe fundamental attribution error is the pervasive human tendency to overestimate the influence of personal factors while simultaneously underestimating the impact of the social situation when judging others.\n\n### Key Terms\n*   **Fundamental attribution error (correspondence bias)**: The systematic bias of overemphasizing internal person factors when explaining the behavior of others.\n    *   Example: Assuming a diner who leaves a large tip is naturally generous, without considering they may be using the tip to impress their companions.\n\n### Names and Studies\n**Skitka, Mullen, Griffin, Hutchinson, & Chamberlin (2002)**\n*   **Method**: In a trivia game study, participants were randomly assigned to be \"quizmasters\" or \"contestants.\" Quizmasters were instructed to generate difficult questions based on their own **idiosyncratic or esoteric knowledge**.\n*   **Result**: Despite knowing the roles were randomly assigned, observers rated the quizmasters as significantly more intelligent than the contestants, failing to account for the massive situational advantage provided by the quizmasters' ability to choose the topics.\n\n## 5. Actor-Observer Difference\nThe actor-observer difference explains why individuals tend to attribute their own behaviors to situational requirements while attributing the exact same behaviors in others to stable internal traits.\n\n### Key Terms\n*   **Actor-observer difference**: The tendency to make more situational attributions for oneself than for others.\n    *   Example: Describing oneself as \"shy depending on the situation\" (situational), while labeling a friend as simply \"shy\" (personal trait).\n\n### Names and Studies\n**Nisbett, Caputo, Legant, & Marecek (1973)**\n*   **Method**: College students were asked to choose trait terms (e.g., \"energetic,\" \"relaxed\") to describe themselves, their best friend, their father, and the newscaster Walter Cronkite.\n*   **Result**: Participants selected the \"depends on the situation\" option significantly more often for themselves than they did for any of the other three people, demonstrating a bias toward situational explanations for their own behavior.\n\n## 6. Attributional Accuracy\nWhile human attributional skills are generally \"good enough\" for social navigation, the process is highly prone to spontaneous biases, particularly when cognitive resources are low.\n\n### Key Terms\n*   **Salience**: The degree to which a person stands out as the focus of attention in an environment.\n    *   **Effect**: Because we are \"directly watching\" the person, our visual orientation makes them seem like the primary cause of an action. When we act, we look outward at the situation; when we observe others, we look at the person, making their traits more salient than their context.\n*   **Spontaneous processing**: The effortless, automatic, and rapid nature of making personal attributions without conscious deliberation.\n*   **Cognitive load**: A state of being tired, distracted, or busy. This increases attribution errors because the \"adjustment\" phase—where we try to account for the situation—requires effortful thought and is frequently insufficient or skipped entirely.\n\n## 7. Self-Serving Attributions\nIndividuals frequently distort their causal attributions to protect their self-esteem or maintain a positive self-image.\n\n### Key Terms\n*   **Self-serving attributions**: Attributions designed to meet the desire to see oneself in a positive light.\n    *   Example: A teacher taking personal credit for a class's high test scores (\"I am a great teacher\") while blaming the students' lack of effort for poor scores.\n\n## 8. Choice and Attribution\nPersonal attributions are far more likely to be made when an observer perceives that the actor chose their behavior freely without external coercion.\n\n### Key Terms\n*   **Situational attribution**: The decision that a behavior was caused primarily by environmental pressures or external threats.\n    *   Example: Handing over a wallet to a gunman is attributed to the situation (the threat) rather than a person's inherent \"generosity.\"\n\n### Names and Studies\n**Jones & Harris (1967)**\n*   **Method**: Participants read student essays (regarding political topics like Fidel Castro) and were told the authors either chose their own stance or were assigned a topic by a professor.\n*   **Result**: Participants attributed the essay's viewpoints to the authors' true beliefs when they believed the author had a choice. However, even when told the topic was assigned, many participants still committed the fundamental attribution error by assuming the author's real beliefs matched the essay."}</script>
+<script id="quiz-data" type="application/json">{"id": "psp-6-2", "title": "6.2 Inferring Dispositions Using Causal Attribution", "subtitle": "Chapter 6 · Perceiving Others", "book": "PSP", "hash": "fe4c037513c68ff1", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "In the 1961 study by Jones, Davis, and Gergen, participants viewed job applicants for roles as either an astronaut (introverted) or a submariner (extroverted). What happened when an applicant for the astronaut position acted in an extroverted manner?", "options": ["Participants rated the applicant as more introverted to match the job requirements.", "Participants dismissed the behavior as a situational lie intended to impress the interviewers.", "Participants made stronger personal attributions because the behavior was unexpected for the situation.", "Participants were unable to draw any conclusions because the behavior was considered irrational."], "rationales": ["Observers tended to believe the extroverted behavior reflected the applicant's real personality more strongly when it defied role expectations.", "The study found that unexpected behaviors were actually seen as more indicative of true personality, not less.", "When behavior contradicts situational expectations, it is more easily attributed to the person's true disposition rather than social pressure.", "Observers typically use unexpected behavior as a diagnostic tool for identifying underlying traits."], "correct": 2, "hint": "consider how we interpret actions that defy what a specific social context normally requires.", "topic": "Role expectations", "qid": "bba768a591"}, {"q": "According to the covariation principle, if your friend loves a specific movie but typically dislikes most other movies they see, which factor is high, and what attribution is likely?", "options": ["Distinctiveness is high, suggesting the cause is the movie itself.", "Consistency is high, suggesting the cause is the friend's personality.", "Distinctiveness is low, suggesting the cause is the friend's generally positive attitude.", "Consensus is high, suggesting the cause is the friend's unique taste."], "rationales": ["High distinctiveness occurs when a behavior happens only in a specific situation, leading to a situational attribution.", "Consistency refers to the behavior occurring every time that specific situation is present, not how it compares to other situations.", "Low distinctiveness would mean the friend likes all movies, but here they only like this specific one.", "High consensus would mean most other people also like the movie, which is not described in this specific scenario."], "correct": 0, "hint": "focus on whether the behavior is unique to this specific stimulus or happens across all stimuli.", "topic": "Covariation principle", "qid": "0cfd2c5c1a"}, {"q": "In Weiner's model of success and failure, how is 'task difficulty' classified as a cause for an outcome?", "options": ["External and unstable.", "External and stable.", "Internal and stable.", "Internal and unstable."], "rationales": ["External unstable causes refer to factors like luck, which can change significantly from one moment to the next.", "The model assumes that the difficulty of a specific task remains relatively constant and is determined by the situation rather than the person.", "Internal stable causes refer to personal traits like ability or intelligence rather than the nature of the task.", "Internal unstable causes refer to effort or motivation, which the person can change depending on the day."], "correct": 1, "hint": "think about whether the difficulty of a test resides in the person or the exam, and if it is likely to change tomorrow.", "topic": "Weiner’s model", "qid": "e982abe9e5"}, {"q": "Skitka and colleagues (2002) conducted a study where a 'quizmaster' created difficult questions for a 'contestant.' Why did observers rate the quizmaster as more intelligent despite knowing the roles were assigned by drawing straws?", "options": ["They exhibited the actor-observer difference by focusing on the contestant's stress.", "They committed the fundamental attribution error by ignoring the quizmaster's situational advantage.", "They assumed the quizmaster's knowledge was unstable and subject to luck.", "They utilized high consensus information to determine the quizmaster's superior ability."], "rationales": ["The actor-observer difference involves how one views themselves versus others, while this error focused on judging another person's traits.", "Observers often fail to account for how situational roles, like getting to pick the questions, facilitate a person's performance.", "The error was in attributing the performance to a stable internal trait (intelligence) rather than the unstable situational role.", "Consensus would involve comparing the quizmaster to other quizmasters, which was not the focus of the observer's bias here."], "correct": 1, "hint": "consider why we might focus on a person's visible knowledge while ignoring the rules that let them show it.", "topic": "Fundamental attribution error", "qid": "1adb7507c6"}, {"q": "In the study by Nisbett and colleagues (1973), participants were asked to describe themselves and others using trait terms or the phrase 'depends on the situation.' What was the primary finding?", "options": ["Participants used situational explanations for everyone they knew personally but trait terms for strangers.", "Participants were more likely to assign stable traits to themselves to maintain a sense of identity.", "Participants assigned more traits to their fathers and best friends than to distant figures like Walter Cronkite.", "Participants used 'depends on the situation' significantly more often for themselves than for others."], "rationales": ["The bias was specifically centered on the 'self' versus 'everyone else,' regardless of how well the other person was known.", "Contrary to this, the study showed that people are more hesitant to apply fixed traits to their own varying behaviors.", "The study found that trait attributions were high for all 'others,' including well-known media figures, compared to the self.", "The actor-observer difference suggests we see our own behavior as flexible and situationally driven, while others' behavior is seen as trait-based."], "correct": 3, "hint": "think about which person in the study had the most 'flexible' personality according to the participants.", "topic": "Actor-observer difference", "qid": "c0feb4c2a6"}, {"q": "Research indicates that personal attributions are often made spontaneously and without effort. What happens to our attributional accuracy when we are tired or distracted?", "options": ["We stop making causal attributions entirely and rely on luck to explain events.", "We overcompensate by making extreme situational attributions for everyone.", "We are more likely to commit the fundamental attribution error because situational correction requires cognitive effort.", "We become more accurate because our brain defaults to situational logic when energy is low."], "rationales": ["We still make attributions, but they lean more heavily toward the easiest, most spontaneous personal explanations.", "Overcompensation is unlikely because situational attributions are more complex and effortful to construct than personal ones.", "Adjusting a spontaneous personal judgment to account for the situation is an effortful secondary step that fails under cognitive load.", "Accuracy decreases because the default is the personal attribution, and we lack the energy to challenge it."], "correct": 2, "hint": "consider which type of explanation 'pops into mind' first and whether the second step of thinking is easy or hard.", "topic": "Attributional accuracy", "qid": "745b063375"}, {"q": "A student who attributes their high grade on a math test to their natural brilliance but blames a low grade on a history test on 'unfair' questions is demonstrating which phenomenon?", "options": ["The fundamental attribution error.", "Self-serving attributions.", "High consistency information.", "The actor-observer difference."], "rationales": ["The fundamental attribution error typically refers to judging others' behaviors, not explaining one's own outcomes.", "This bias involves taking internal credit for successes while blaming external situational factors for failures to protect self-esteem.", "The student is actually showing low consistency across different subjects, which should lead to a situational attribution, but they are distorting it for self-enhancement.", "While related to self-perception, the specific pattern of taking credit for good and blaming others for bad is the hallmark of self-serving bias."], "correct": 1, "hint": "look for a pattern where the explanation changes specifically to make the individual look better.", "topic": "Self-serving attributions", "qid": "393b7b97a7"}, {"q": "If most people cry at a specific wedding (high consensus), and I only cry at weddings (high distinctiveness), but I cry at every wedding I attend (high consistency), what is the most likely causal attribution according to Kelley?", "options": ["The attribution is impossible to determine without more information.", "My personality (being a 'crier') is the cause.", "The situation (the wedding) is the cause.", "Luck and unstable motivation are the causes."], "rationales": ["Kelley's model provides a clear framework for situational attribution when all three types of information are present and high.", "A personal attribution would be more likely if consensus and distinctiveness were low, meaning only I cried and I cried everywhere.", "When consensus, distinctiveness, and consistency are all high, the behavior is attributed to the external situation or stimulus.", "The covariation principle focuses on person vs. situation rather than the luck/motivation categories found in Weiner's model."], "correct": 2, "hint": "evaluate if the cause seems to reside in the specific event or in the individual's general nature.", "topic": "Covariation principle", "qid": "1a26450e4f"}, {"q": "Jones and Harris (1967) found that even when participants were told a student was assigned to write a pro-Castro essay, they still believed the student actually supported Castro. What does this imply about the role of choice in attribution?", "options": ["We tend to ignore the lack of choice and assume behavior reflects internal attitudes.", "Choice is the only factor people use when making personal attributions.", "Participants only make personal attributions when they personally agree with the essay.", "People are highly sensitive to external pressure and always discount assigned behaviors."], "rationales": ["This is a classic demonstration of the correspondence bias, where situational constraints like 'being assigned' are underweighted.", "The study showed that people make personal attributions even when choice is clearly absent.", "The attribution was made regardless of the participant's own beliefs, focusing instead on the writer's perceived disposition.", "The findings showed the opposite; people did not sufficiently discount the assigned behavior."], "correct": 0, "hint": "reflect on whether knowing someone was 'forced' to do something prevents us from judging their character.", "topic": "Choice and attribution", "qid": "335929ed29"}, {"q": "According to the text, why is 'salience' a reason for the fundamental attribution error?", "options": ["We are more focused on our own internal states when observing others.", "Situational factors are usually more vivid and colorful than the people in them.", "Salience helps us remember situational details better than personality traits.", "Other people are the focus of our visual attention, making them seem like the primary cause of their actions."], "rationales": ["When observing others, our focus is external (on them), which prevents us from considering their situational constraints.", "The text states the opposite: people are more salient in our social environments than the abstract situational context.", "Salience actually leads us to ignore situational details in favor of easy-to-see person factors.", "We attribute causality to what we are looking at; since we see others but not the situation or ourselves, we over-attribute to them."], "correct": 3, "hint": "think about the direction of your eyes when you are watching another person behave.", "topic": "Fundamental attribution error", "qid": "95599a27ce"}], "hasSheet": true, "notebook": "https://notebooklm.google.com/notebook/415ea099-d230-407a-9f00-9d6cae2ced32/artifact/2d9c9664-8532-4353-84d6-a2ed1af6fb50", "root": "../index.html", "tab": "quiz", "sheet": "## 1. Role Expectations\nPersonality inferences are significantly easier to make when we observe behaviors that either violate established social norms or contradict the specific requirements of a social role.\n\n### Key Terms\n*   **Causal attribution**: The social-cognitive process of attempting to determine the underlying causes of an individual's behavior.\n*   **Personal (internal or dispositional) attribution**: The inference that a behavior was caused primarily by the person’s internal traits or characteristics rather than by the environment.\n    *   Example: If Tess sticks her tongue out at you instead of shaking your hand, the violation of social expectations makes it easier to infer she is an unfriendly person.\n\n### Names and Studies\n**Jones, Davis, & Gergen (1961)**\n*   **Method**: Participants viewed one of four videos of a job applicant. The role was either for a submariner (requiring an extrovert) or an astronaut (requiring an introvert). The applicant then acted either extroverted or introverted.\n*   **Finding**: When the applicant's behavior violated role expectations (e.g., an extroverted astronaut candidate), participants made much stronger personality attributions. Specifically, participants believed the applicant's extraverted responses represented their true personality **91%** of the time when applying for the introvert-coded astronaut role, compared to only **45%** of the time when the same responses were expected for the submariner role.\n\n## 2. Covariation Principle\nThe covariation principle suggests that we determine if a behavior is situational by observing how that behavior changes or \"covaries\" across different social contexts and time.\n\n### Key Terms\n*   **Consistency information**: Determining whether a specific situation always produces the same behavior from the individual (e.g., a person cries at every wedding they attend).\n*   **Distinctiveness information**: Determining whether the behavior occurs only in a specific situation and nowhere else (e.g., a person who only cries at weddings but remains composed in all other emotional settings).\n*   **Consensus information**: Determining whether most people behave in the same way when faced with that specific situation (e.g., observing that many other guests are also crying at the wedding).\n\n## 3. Weiner’s Model\nThis model categorizes the perceived causes of success and failure based on two primary dimensions: **Locus** (Internal vs. External) and **Stability** (Stable vs. Unstable).\n\n### Key Terms\n*   **Locus**: The determination of whether the cause of an event is internal to the person or external to the situation.\n    *   **Personal causes**: Internal factors, such as ability and motivation.\n*   **Stability**: The determination of whether a cause is likely to stay the same over time or change.\n    *   **Situational causes**: External factors, such as luck and task difficulty.\n\n### The 2x2 Attribution Framework\n*   **Ability [Internal / Stable]**: An internal cause of success perceived as a fixed trait (e.g., natural intelligence).\n*   **Motivation [Internal / Unstable]**: An internal cause of success that can fluctuate (e.g., working hard for one specific exam).\n*   **Task Difficulty [External / Stable]**: A situational cause that remains constant (e.g., a consistently easy or hard course).\n*   **Luck [External / Unstable]**: A situational cause that is unpredictable and subject to change (e.g., guessing correctly on a multiple-choice test).\n\n## 4. Fundamental Attribution Error\nThe fundamental attribution error is the pervasive human tendency to overestimate the influence of personal factors while simultaneously underestimating the impact of the social situation when judging others.\n\n### Key Terms\n*   **Fundamental attribution error (correspondence bias)**: The systematic bias of overemphasizing internal person factors when explaining the behavior of others.\n    *   Example: Assuming a diner who leaves a large tip is naturally generous, without considering they may be using the tip to impress their companions.\n\n### Names and Studies\n**Skitka, Mullen, Griffin, Hutchinson, & Chamberlin (2002)**\n*   **Method**: In a trivia game study, participants were randomly assigned to be \"quizmasters\" or \"contestants.\" Quizmasters were instructed to generate difficult questions based on their own **idiosyncratic or esoteric knowledge**.\n*   **Result**: Despite knowing the roles were randomly assigned, observers rated the quizmasters as significantly more intelligent than the contestants, failing to account for the massive situational advantage provided by the quizmasters' ability to choose the topics.\n\n## 5. Actor-Observer Difference\nThe actor-observer difference explains why individuals tend to attribute their own behaviors to situational requirements while attributing the exact same behaviors in others to stable internal traits.\n\n### Key Terms\n*   **Actor-observer difference**: The tendency to make more situational attributions for oneself than for others.\n    *   Example: Describing oneself as \"shy depending on the situation\" (situational), while labeling a friend as simply \"shy\" (personal trait).\n\n### Names and Studies\n**Nisbett, Caputo, Legant, & Marecek (1973)**\n*   **Method**: College students were asked to choose trait terms (e.g., \"energetic,\" \"relaxed\") to describe themselves, their best friend, their father, and the newscaster Walter Cronkite.\n*   **Result**: Participants selected the \"depends on the situation\" option significantly more often for themselves than they did for any of the other three people, demonstrating a bias toward situational explanations for their own behavior.\n\n## 6. Attributional Accuracy\nWhile human attributional skills are generally \"good enough\" for social navigation, the process is highly prone to spontaneous biases, particularly when cognitive resources are low.\n\n### Key Terms\n*   **Salience**: The degree to which a person stands out as the focus of attention in an environment.\n    *   **Effect**: Because we are \"directly watching\" the person, our visual orientation makes them seem like the primary cause of an action. When we act, we look outward at the situation; when we observe others, we look at the person, making their traits more salient than their context.\n*   **Spontaneous processing**: The effortless, automatic, and rapid nature of making personal attributions without conscious deliberation.\n*   **Cognitive load**: A state of being tired, distracted, or busy. This increases attribution errors because the \"adjustment\" phase—where we try to account for the situation—requires effortful thought and is frequently insufficient or skipped entirely.\n\n## 7. Self-Serving Attributions\nIndividuals frequently distort their causal attributions to protect their self-esteem or maintain a positive self-image.\n\n### Key Terms\n*   **Self-serving attributions**: Attributions designed to meet the desire to see oneself in a positive light.\n    *   Example: A teacher taking personal credit for a class's high test scores (\"I am a great teacher\") while blaming the students' lack of effort for poor scores.\n\n## 8. Choice and Attribution\nPersonal attributions are far more likely to be made when an observer perceives that the actor chose their behavior freely without external coercion.\n\n### Key Terms\n*   **Situational attribution**: The decision that a behavior was caused primarily by environmental pressures or external threats.\n    *   Example: Handing over a wallet to a gunman is attributed to the situation (the threat) rather than a person's inherent \"generosity.\"\n\n### Names and Studies\n**Jones & Harris (1967)**\n*   **Method**: Participants read student essays (regarding political topics like Fidel Castro) and were told the authors either chose their own stance or were assigned a topic by a professor.\n*   **Result**: Participants attributed the essay's viewpoints to the authors' true beliefs when they believed the author had a choice. However, even when told the topic was assigned, many participants still committed the fundamental attribution error by assuming the author's real beliefs matched the essay."}</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -392,8 +440,25 @@ const G_OK = '✓', G_NO = '✕';
    Everything lives in localStorage under the page id. `hash` fingerprints the question
    set: a Redo regenerates the quiz, and when that happens the old answers describe
    questions that no longer exist, so the attempt is retired into history rather than
-   shown against the new ones. */
-function blank(){ return {hash:D.hash, i:0, answers:{}, skipped:{}, done:false, at:null, history:[]}; }
+   shown against the new ones.
+
+   KEYED ON q.qid, NOT ON THE ARRAY INDEX (v2). Skipping and starring have to outlive a
+   rebuild: a question he deleted must stay deleted, and a question he starred must still be
+   starred, even after the quiz is regenerated and the order changes. That is also what makes
+   `skipped` usable later as a permanent exclusion list when exam reuse is built — see qid()
+   in quizpage.py. v1 states are migrated once, on load. */
+function qk(i){ return D.questions[i].qid; }
+function blank(){ return {v:2, hash:D.hash, i:0, answers:{}, pass2:{}, skipped:{}, starred:{},
+                          phase:1, p2list:null, done:false, at:null, history:[]}; }
+function migrate(s){
+  // v1 keyed every map on the array index. The hash matches, so the indices are still valid
+  // and this is a straight re-key — done once, then never again.
+  const re = m => { const o = {}; Object.keys(m||{}).forEach(k=>{
+    const i = +k; if(D.questions[i]) o[qk(i)] = m[k]; }); return o; };
+  s.answers = re(s.answers); s.skipped = re(s.skipped);
+  s.pass2 = {}; s.starred = {}; s.phase = 1; s.p2list = null; s.v = 2;
+  return s;
+}
 function load(){
   try{
     const s = JSON.parse(localStorage.getItem(KEY) || 'null');
@@ -411,10 +476,18 @@ function load(){
         total: (s.meta && s.meta.total) || Object.keys(s.answers||{}).length,
         stale: true});
       b.rebuilt = true;
+      // A REBUILD DOES NOT RESURRECT A DELETED QUESTION. Answers are retired because they
+      // describe questions that may be gone; skipped and starred are decisions ABOUT
+      // questions, so they carry over on qid and simply miss anything no longer present.
+      if(s.v === 2){ b.skipped = s.skipped || {}; b.starred = s.starred || {}; }
       return b;
     }
     if(!s.history) s.history = [];
+    if(s.v !== 2) return migrate(s);
     if(!s.skipped) s.skipped = {};
+    if(!s.starred) s.starred = {};
+    if(!s.pass2) s.pass2 = {};
+    if(!s.phase) s.phase = 1;
     return s;
   }catch(e){ return blank(); }
 }
@@ -425,18 +498,49 @@ function save(){
 }
 /* Skipped questions leave the run entirely — out of the count, out of the denominator,
    out of the topic breakdown. Anything less makes "8 / 10" a lie about a quiz of nine. */
-function active(s){ return D.questions.map((_,i)=>i).filter(i => !(s.skipped||{})[i]); }
-function score(s){
-  return active(s).reduce((n,i)=> n + ((s.answers||{})[i] === D.questions[i].correct ? 1 : 0), 0);
+function active(s){ return D.questions.map((_,i)=>i).filter(i => !(s.skipped||{})[qk(i)]); }
+function ans(i){ return S.answers[qk(i)]; }
+function ans2(i){ return S.pass2[qk(i)]; }
+function firstRight(i){ return ans(i) === D.questions[i].correct; }
+/* THE SECOND PASS REDEEMS. Wrong first, right second → the question counts as right; wrong
+   both times stays wrong, and there is no third pass. The first answer is never overwritten,
+   which is what lets the end card say "10 right, +2 redeemed" instead of quietly rewriting a
+   10 into a 12. */
+function finalRight(i){ return firstRight(i) || ans2(i) === D.questions[i].correct; }
+function score(s){ return active(s).reduce((n,i)=> n + (finalRight(i) ? 1 : 0), 0); }
+function redeemed(){ return active(S).filter(i => !firstRight(i) && ans2(i) === D.questions[i].correct); }
+/* What a second pass would still have to cover: wrong on the first pass and not yet
+   re-answered. Empty → no button, which is the "if there are no mistakes there is no second
+   pass" rule and also what ends the round rather than looping it. */
+function pending2(){
+  return active(S).filter(i => ans(i) !== undefined && !firstRight(i) && ans2(i) === undefined);
 }
+/* The questions THIS pass runs over. Frozen into p2list when the second pass starts, so
+   answering one correctly cannot shrink the list under his feet mid-run. */
+function runList(){
+  if(S.phase === 2 && S.p2list) return S.p2list.filter(i => !S.skipped[qk(i)]);
+  return active(S);
+}
+function pick(i){ return S.phase === 2 ? ans2(i) : ans(i); }
 let S = load();
 let lastShown = -1;
 
 /* ---- rendering ---------------------------------------------------------------- */
+/* The Starred tab only exists while something is starred, and the Study sheet tab only when
+   the quiz shipped with one — a linguistics quiz built before topic tags has none. If that
+   leaves one tab, the whole group goes: a lone "Quiz" button is chrome that says nothing. */
+function syncTabs(){
+  const nstar = Object.keys(S.starred||{}).length;
+  document.querySelector('.tab[data-tab="starred"]').classList.toggle('hide', !nstar);
+  document.querySelector('.tab[data-tab="sheet"]').classList.toggle('hide', !D.hasSheet);
+  $('#tabs').classList.toggle('hide', !nstar && !D.hasSheet);
+  if(D.tab === 'starred' && !nstar) setTab('quiz');
+}
 function setTab(name){
   D.tab = name;
   document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===name));
-  $('#quizview').classList.toggle('hide', name!=='quiz');
+  $('#band').classList.toggle('hide', name!=='quiz');
+  $('#starredview').classList.toggle('hide', name!=='starred');
   $('#sheetview').classList.toggle('hide', name!=='sheet');
   $('#footer').classList.toggle('hide', name!=='quiz');
   if(name==='quiz'){
@@ -445,6 +549,8 @@ function setTab(name){
     // back — the question must be exactly where he left it.
     if(quizPad !== null) $('main').style.paddingTop = quizPad;
   } else {
+    if(name==='starred') drawStarred();
+    if(name==='sheet') renderScore();
     $('main').style.paddingTop = BASE_PAD + 'px';
     window.scrollTo(0,0);
   }
@@ -468,7 +574,10 @@ function centreBlock(reserve){
   const m = $('main');
   m.style.paddingTop = BASE_PAD + 'px';
   const avail = innerHeight - $('header').offsetHeight - $('footer').offsetHeight;
-  const h = reserve || $('#quizview').getBoundingClientRect().height;
+  // The band's own padding is part of the block now, so it has to be inside the measurement
+  // or the box lands low by exactly one padding.
+  const bp = parseFloat(getComputedStyle($('#band')).paddingTop) || 0;
+  const h = (reserve || $('#quizview').getBoundingClientRect().height) + bp * 2;
   quizPad = Math.max(BASE_PAD, Math.round((avail - h) / 2)) + 'px';
   m.style.paddingTop = quizPad;
 }
@@ -487,13 +596,21 @@ function answeredHeight(i){
   return h;
 }
 
+/* NEVER BACKWARDS. The old fallback here was `S.i = act[0]`, so skipping a question sent him
+   to question 1 — the whole way back to the start of the quiz. The nearest question AFTER
+   the one that just left is the only sensible landing place. */
+function nextFrom(list, i){
+  const nx = list.find(j => j > i);
+  return nx === undefined ? list[list.length-1] : nx;
+}
 function draw(){
   if(D.tab!=='quiz') return;
+  $('#band').classList.toggle('off', !!(S.reviewing || S.done));
   if(S.reviewing) return review();
   if(S.done) return end();
-  const act = active(S);
+  const act = runList();
   if(!act.length) return end();
-  if(act.indexOf(S.i) < 0) S.i = act[0];
+  if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
   question();
 }
 
@@ -502,16 +619,21 @@ function draw(){
 function buildQ(i, picked, fresh, en){
   const q = D.questions[i];
   const answered = picked !== undefined;
-  const act = active(S), pos = act.indexOf(i);
+  const act = runList(), pos = act.indexOf(i);
+  const starred = !!S.starred[q.qid];
   en = en || '';
 
   // The counter sits top-left above the question, the way the notebook does it, rather than
-  // up in the bar — it belongs with the thing it counts.
+  // up in the bar — it belongs with the thing it counts. On a second pass it counts the
+  // second pass, so four wrong answers read as "1 / 4" and not as a broken 16.
   let h = '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta"><span class="num">' + (pos+1) + ' / ' + act.length + '</span>'
+        + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
         + (q.topic ? '<span class="dot">·</span><span>' + esc(q.topic) + '</span>' : '')
         + '</p>'
         + '<h1 class="q">' + esc(q.q) + '</h1></div>'
+        + '<button class="star' + (starred?' on':'') + '" id="star" aria-label="Star">'
+        + (starred?'★':'☆') + '</button>'
         + '<div class="more"><button class="dots" id="dots" aria-label="More">⋮</button></div>'
         + '</div>';
 
@@ -541,9 +663,9 @@ function buildQ(i, picked, fresh, en){
 }
 
 function question(fresh){
-  const i = S.i, q = D.questions[i], picked = S.answers[i];
+  const i = S.i, q = D.questions[i], picked = pick(i);
   const answered = picked !== undefined;
-  const act = active(S);
+  const act = runList();
   const pos = act.indexOf(i);
   const isNew = i !== lastShown;
   lastShown = i;
@@ -551,8 +673,13 @@ function question(fresh){
   $('#rail').style.width = ((pos + (answered?1:0)) / act.length * 100) + '%';
   $('#quizview').innerHTML = buildQ(i, picked, fresh, isNew ? ' enter' : '');
   $('#quizview').querySelectorAll('.opt').forEach(b=>{
-    b.onclick = ()=>{ S.answers[i] = +b.dataset.k; save(); question(true); };
+    b.onclick = ()=>{
+      // The first pass is never overwritten — a second-pass answer goes in its own map.
+      if(S.phase === 2) S.pass2[qk(i)] = +b.dataset.k; else S.answers[qk(i)] = +b.dataset.k;
+      save(); question(true);
+    };
   });
+  $('#star').onclick = ()=> toggleStar(i);
   $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
 
   // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
@@ -561,12 +688,13 @@ function question(fresh){
   hb.classList.toggle('hide', !q.hint || answered);
   ht.classList.toggle('hide', !(S.hintOpen && q.hint && !answered));
   ht.textContent = q.hint || '';
-  hb.onclick = ()=>{ S.hintOpen = !S.hintOpen; ht.classList.toggle('hide', !S.hintOpen); };
+  hb.onclick = toggleHint;
 
   $('#back').classList.remove('hide');
   $('#next').classList.remove('hide');
   $('#review').classList.add('hide');
   $('#retake').classList.add('hide');
+  $('#pass2').classList.add('hide');
   $('#back').disabled = pos === 0;
   $('#next').disabled = !answered;
   $('#next').textContent = (pos === act.length-1) ? 'Finish' : 'Next';
@@ -576,9 +704,35 @@ function question(fresh){
   if(isNew) centreBlock(answeredHeight(i));
 }
 
+/* THE HINT, from the button or from `h`. One path for both, and the BUTTON'S OWN VISIBILITY
+   is the gate: it is already hidden when the question has no hint or has been answered, so
+   there is no second copy of that condition to fall out of step. */
+function toggleHint(){
+  const hb = $('#hintbtn'), ht = $('#hinttext');
+  if(hb.classList.contains('hide')) return;
+  S.hintOpen = !S.hintOpen;
+  ht.classList.toggle('hide', !S.hintOpen);
+}
+
+/* STARRING is not the same thing as skipping and the two maps never mix. Starred = worth
+   coming back to, right or wrong, still fully part of the run and the score. Skipped =
+   removed from it. Keeping them apart is what lets exam reuse later take the starred ones as
+   candidates and treat the skipped ones as permanently excluded. */
+function toggleStar(i){
+  const k = qk(i);
+  if(S.starred[k]) delete S.starred[k]; else S.starred[k] = true;
+  save(); syncTabs();
+  const b = $('#star');
+  if(b){ b.textContent = S.starred[k] ? '★' : '☆'; b.classList.toggle('on', !!S.starred[k]); }
+}
+
 /* One question can be dropped from the run, the way the notebook lets him delete one —
    except nothing is deleted in NotebookLM, so a rebuild brings it back and the end card
-   can put it back at any time. */
+   can put it back at any time.
+
+   SKIPPING THE LAST QUESTION SUBMITS. It used to send him back to question 1, because the
+   skipped index left `active()` and draw()'s fallback was `act[0]`. Deleting the last item
+   in a list means the list is finished, so this does exactly what Finish does. */
 function openMenu(){
   const host = $('.more');
   if(host.querySelector('.menu')) return closeMenu();
@@ -587,24 +741,46 @@ function openMenu(){
   m.innerHTML = '<button id="skipq">Skip this question</button>';
   host.appendChild(m);
   m.querySelector('#skipq').onclick = ()=>{
-    if(active(S).length <= 1) return closeMenu();   // never skip the last one standing
-    S.skipped[S.i] = true;
-    delete S.answers[S.i];
-    save(); closeMenu(); draw();
+    const list = runList(), pos = list.indexOf(S.i);
+    if(list.length <= 1) return closeMenu();        // never skip the last one standing
+    const wasLast = pos === list.length - 1;
+    S.skipped[qk(S.i)] = true;
+    delete S.answers[qk(S.i)];
+    delete S.pass2[qk(S.i)];
+    delete S.starred[qk(S.i)];                     // a deleted question is not a starred one
+    closeMenu();
+    syncTabs();
+    if(wasLast){ finish(); return; }
+    // After the removal the list has shrunk, so the item now AT `pos` is the one that
+    // followed the skipped question. Forwards, never back to the top.
+    S.i = runList()[pos];
+    S.hintOpen = false;
+    lastShown = -1;
+    save(); question(); window.scrollTo(0,0);
   };
   setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
 }
 function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(); }
 
+function finish(){
+  S.done = true; S.at = new Date().toISOString();
+  save(); end(); window.scrollTo(0,0);
+}
+
 function end(){
   const act = active(S), n = score(S), t = act.length;
   const pct = t ? Math.round(n/t*100) : 0;
+  const red = redeemed().length;
   let h = '<p class="score">'+n+' <small>/ '+t+'</small></p>'
         + '<p class="sub">'+pct+'% · '+when(S.at)+'</p>'
         + '<div class="chart"><i class="r" style="width:'+(t?n/t*100:0)+'%"></i>'
         + '<i class="w" style="width:'+(t?(t-n)/t*100:0)+'%"></i></div>'
         + '<p class="legend"><span>'+G_OK+' <b>'+n+'</b> correct</span>'
-        + '<span>'+G_NO+' <b>'+(t-n)+'</b> wrong</span></p>';
+        + '<span>'+G_NO+' <b>'+(t-n)+'</b> wrong</span>'
+        // The chart stays TWO segments. A third fill for redemptions would need its own
+        // grayscale-safe hatch and would make the one number he reads harder to read; the
+        // count says it in words instead.
+        + (red ? '<span>+<b>'+red+'</b> on the second pass</span>' : '') + '</p>';
 
   const by = {};
   act.forEach(i=>{
@@ -612,7 +788,7 @@ function end(){
     if(!k) return;
     by[k] = by[k] || {n:0,t:0};
     by[k].t++;
-    if(S.answers[i] === q.correct) by[k].n++;
+    if(finalRight(i)) by[k].n++;
   });
   const keys = Object.keys(by);
   if(keys.length){
@@ -639,6 +815,7 @@ function end(){
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
   $('#rail').style.width = '100%';
+  $('#band').classList.add('off');
   $('#footer').classList.remove('hide');
   $('#back').classList.add('hide');
   $('#hintbtn').classList.add('hide');
@@ -647,39 +824,100 @@ function end(){
   $('#review').classList.remove('hide');
   $('#review').textContent = 'Review quiz';
   $('#retake').classList.remove('hide');
+  // No wrong answers left to retry → no button at all, which is also what stops the second
+  // pass looping into a third: anything answered on pass two leaves pending2() for good.
+  $('#pass2').classList.toggle('hide', pending2().length === 0);
+  renderScore();
   lastShown = -1;
   centreBlock();
 }
 
+/* One question's full record: the right answer, what he chose on each pass, the rationale.
+   Shared by the review list and the Starred tab so the two can never drift apart. */
+function itemHTML(i, n){
+  const q = D.questions[i], first = ans(i), second = ans2(i);
+  let h = '<div class="item">';
+  if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
+  h += '<p class="qq">'+(n===undefined?'':(n+1)+'. ')+esc(q.q)+'</p>'
+     + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
+  if(!firstRight(i)){
+    h += '<p class="rline mine"><span class="g">'+G_NO+'</span><span>You chose: '
+       + (first===undefined ? 'nothing' : esc(q.options[first])) + '</span></p>';
+    if(second !== undefined){
+      h += '<p class="rline mine"><span class="g">'+(second===q.correct?G_OK:G_NO)+'</span>'
+         + '<span>Second pass: '+esc(q.options[second])
+         + (second===q.correct ? ' — redeemed' : '') + '</span></p>';
+    }
+  }
+  const why = q.rationales ? q.rationales[q.correct] : '';
+  if(why) h += '<p class="why" style="padding-left:0">'+esc(why)+'</p>';
+  return h + '</div>';
+}
+
 function review(){
   let h = '<div class="rev"><h3>Every question</h3>';
-  active(S).forEach((i,n)=>{
-    const q = D.questions[i], picked = S.answers[i], right = picked === q.correct;
-    h += '<div class="item">';
-    if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
-    h += '<p class="qq">'+(n+1)+'. '+esc(q.q)+'</p>'
-       + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
-    if(!right){
-      h += '<p class="rline mine"><span class="g">'+G_NO+'</span><span>You chose: '
-         + (picked===undefined ? 'nothing' : esc(q.options[picked])) + '</span></p>';
-    }
-    const why = q.rationales ? q.rationales[q.correct] : '';
-    if(why) h += '<p class="why" style="padding-left:0">'+esc(why)+'</p>';
-    h += '</div>';
-  });
+  active(S).forEach((i,n)=>{ h += itemHTML(i, n); });
   h += '</div>';
   $('#quizview').innerHTML = h;
+  $('#band').classList.add('off');
   $('#footer').classList.remove('hide');
   $('#back').classList.add('hide');
   $('#hintbtn').classList.add('hide');
   $('#hinttext').classList.add('hide');
   $('#next').classList.add('hide');
+  $('#pass2').classList.add('hide');
   $('#review').classList.remove('hide');
   $('#review').textContent = 'Summary';
   $('#retake').classList.remove('hide');
   quizPad = BASE_PAD + 'px';                      // a long list, never centred
   $('main').style.paddingTop = quizPad;
   window.scrollTo(0,0);
+}
+
+/* ---- the Starred tab ---------------------------------------------------------------
+   Its own view rather than a section of the review list, because the point is to find them
+   again quickly on a later visit — including on a quiz he has not retaken. Right or wrong
+   does not matter; "this one is important" is the only thing being recorded. */
+function drawStarred(){
+  const list = D.questions.map((_,i)=>i).filter(i => S.starred[qk(i)]);
+  if(!list.length){
+    $('#starredview').innerHTML = '<h3>Starred</h3><p class="empty">Nothing starred yet. '
+      + 'Use the ☆ beside a question.</p>';
+    return;
+  }
+  let h = '<h3>Starred · '+list.length+'</h3>';
+  list.forEach((i,n)=>{
+    h += itemHTML(i, n).replace('</div>',
+      '<p class="rline"><button class="link" data-unstar="'+i+'">Unstar</button></p></div>');
+  });
+  $('#starredview').innerHTML = h;
+  $('#starredview').querySelectorAll('[data-unstar]').forEach(b=>{
+    b.onclick = ()=>{ delete S.starred[qk(+b.dataset.unstar)]; save(); syncTabs(); drawStarred(); };
+  });
+}
+
+/* ---- the score, written where he copies from ---------------------------------------- */
+function scoreParts(){
+  const act = active(S), n = score(S), t = act.length, red = redeemed().length;
+  return {n:n, t:t, pct: t ? Math.round(n/t*100) : 0, red:red, first:n-red, wrong:t-n,
+          skipped: Object.keys(S.skipped||{}).length};
+}
+function scoreMarkdown(){
+  if(!S.done) return '';
+  const p = scoreParts();
+  return '**Quiz:** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
+       + (p.red ? ', +' + p.red + ' redeemed' : '') + ', ' + p.wrong + ' wrong'
+       + (p.skipped ? ', ' + p.skipped + ' skipped' : '') + ' · ' + when(S.at);
+}
+function renderScore(){
+  const el = $('#scorecard');
+  if(!el) return;
+  el.classList.toggle('hide', !S.done);
+  if(!S.done) return;
+  const p = scoreParts();
+  el.innerHTML = '<b>'+p.n+' / '+p.t+'</b><span>'+p.pct+'% · '+p.first+' right'
+    + (p.red ? ', +'+p.red+' on the second pass' : '') + ', '+p.wrong+' wrong'
+    + (p.skipped ? ' · '+p.skipped+' skipped' : '') + ' · '+when(S.at)+'</span>';
 }
 
 function when(iso){
@@ -691,10 +929,8 @@ function when(iso){
 
 /* ---- controls ------------------------------------------------------------------ */
 function step(dir){
-  const act = active(S), pos = act.indexOf(S.i);
-  if(dir > 0 && pos === act.length-1){
-    S.done = true; S.at = new Date().toISOString(); save(); end(); window.scrollTo(0,0); return;
-  }
+  const act = runList(), pos = act.indexOf(S.i);
+  if(dir > 0 && pos === act.length-1){ finish(); return; }
   const nx = act[pos + dir];
   if(nx === undefined) return;
   S.i = nx; S.hintOpen = false; save(); question(); window.scrollTo(0,0);
@@ -702,12 +938,26 @@ function step(dir){
 $('#next').onclick = ()=> step(1);
 $('#back').onclick = ()=> step(-1);
 $('#review').onclick = ()=>{ S.reviewing = !S.reviewing; draw(); };
+/* THE SECOND PASS — the preferred way out of the end card, and the one that keeps
+   everything. It re-runs only what he got wrong, on a list frozen at the moment he presses
+   it, and a right answer here redeems the question in the final score. */
+$('#pass2').onclick = ()=>{
+  const list = pending2();
+  if(!list.length) return;
+  S.phase = 2; S.p2list = list; S.i = list[0];
+  S.done = false; S.reviewing = false; S.hintOpen = false;
+  lastShown = -1;
+  save(); draw(); window.scrollTo(0,0);
+};
+/* RETAKE CLEARS, which is why it sits apart from the other two. The attempt goes into
+   history first so nothing is lost, and the questions he deleted or starred stay that way —
+   they are decisions about the quiz, not part of one attempt at it. */
 $('#retake').onclick = ()=>{
   if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length});
-  const hist = S.history;
-  S = blank(); S.history = hist;
+  const hist = S.history, skipped = S.skipped, starred = S.starred;
+  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred;
   lastShown = -1;
-  save(); draw();
+  save(); syncTabs(); renderScore(); draw();
 };
 document.querySelectorAll('.tab').forEach(b=> b.onclick = ()=> setTab(b.dataset.tab));
 
@@ -749,9 +999,15 @@ function noteMarkdown(){
   });
   return out.join('\n');
 }
+/* THE SCORE RIDES ALONG WITH THE COPY. One press still takes score + sheet + his own notes
+   as a single markdown block, which is what Notion parses on paste — so the row that the
+   week's exam is built from also records how the quiz went, and he can see later whether
+   this section needs testing again. */
 function fullMarkdown(){
   const mine = noteMarkdown();
-  return (D.sheet || '') + (mine ? '\n\n## My notes\n\n' + mine + '\n' : '');
+  const sc = scoreMarkdown();
+  return (sc ? sc + '\n\n' : '') + (D.sheet || '')
+       + (mine ? '\n\n## My notes\n\n' + mine + '\n' : '');
 }
 
 /* A 25-line renderer so Preview shows the same shape the paste will have. Lists and bold
@@ -811,17 +1067,24 @@ if(cp) cp.onclick = async ()=>{
 };
 
 // Re-centre when the window changes shape; the frozen padding would be wrong afterwards.
-addEventListener('resize', ()=>{ if(D.tab==='quiz' && !S.reviewing) centreBlock(); });
+// Against the ANSWERED height, like every other call — measuring what is on screen is the
+// bug this file already fixed once.
+addEventListener('resize', ()=>{
+  if(D.tab==='quiz' && !S.reviewing && !S.done) centreBlock(answeredHeight(S.i));
+});
 
 document.addEventListener('keydown', e=>{
   if(D.tab!=='quiz' || S.done || S.reviewing) return;
   const q = D.questions[S.i];
   if(e.key === 'Enter' || e.key === 'ArrowRight'){ if(!$('#next').disabled) step(1); return; }
   if(e.key === 'ArrowLeft'){ if(!$('#back').disabled) step(-1); return; }
+  // `h` IS THE HINT, not option H. Every quiz here has four options, so H as an option key
+  // has never been reachable; if one ever has eight, the eighth is still `8`.
+  if(e.key === 'h' || e.key === 'H'){ toggleHint(); return; }
   let k = -1;
   if(/^[1-9]$/.test(e.key)) k = +e.key - 1;
-  else if(/^[a-hA-H]$/.test(e.key)) k = D.letters.indexOf(e.key.toUpperCase());
-  if(k >= 0 && k < q.options.length && S.answers[S.i] === undefined){
+  else if(/^[a-gA-G]$/.test(e.key)) k = D.letters.indexOf(e.key.toUpperCase());
+  if(k >= 0 && k < q.options.length && pick(S.i) === undefined){
     // click the real button rather than repeating its handler — one path for answering
     const btn = $('#quizview').querySelector('.opt[data-k="' + k + '"]');
     if(btn) btn.click();
@@ -829,6 +1092,8 @@ document.addEventListener('keydown', e=>{
 });
 
 save();
+syncTabs();
+renderScore();
 setTab(D.tab || 'quiz');
 </script>
 </body>

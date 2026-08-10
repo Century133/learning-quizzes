@@ -43,6 +43,29 @@ header{position:sticky;top:0;z-index:5;background:var(--bg);
    below the one he clicked ever change position. */
 main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;padding:16px 0 6px}
 
+/* ---- THE BAND ----
+   Flat black under the question made it hard to read; the notebook's lighter middle band is
+   what he wanted instead. So the question and EVERY option sit inside one surface.
+
+   IT CLOSES AT THE BOTTOM AND HUGS THE CONTENT. The first version ran off the bottom of the
+   screen — "kind of weirdly big at the bottom", and he was right: with the block centred, an
+   open band left a lot of empty surface under the last option. It is a card now, sized to
+   what is in it.
+
+   THREE TONES, and the order matters: page (--bg) → band (--band) → option card (--surface).
+   Set --band lighter than --surface and the cards vanish into it. */
+.band{background:var(--band);border:1px solid var(--line);border-radius:var(--bandr);
+ padding:var(--bandpad)}
+/* Off for the end card, the review list and the sheet — a long scrolling list does not want
+   to be in a box. */
+.band.off{background:none;border:0;padding:0}
+/* A short window pays for the band's padding out of the space the options need, so it gives
+   most of it back below 780px. Measured: at 800px all 14 questions of PSP 3.6 still fit
+   answered-wrong with no scrolling. */
+@media (max-height:780px){
+  .band{padding:12px 16px}
+}
+
 /* ---- the question ---- */
 .qhead{display:flex;align-items:flex-start;gap:10px;margin:0 0 var(--qgap)}
 .qhead .qcol{flex:1;min-width:0}
@@ -104,6 +127,15 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
 
 .opt.enter,.qhead.enter{animation:fadein .24s ease both}
 @keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* ---- starring ----
+   A visible toggle rather than a menu item: it is used on questions he got RIGHT as often as
+   wrong, so it has to be one press. Outline vs filled is a shape difference, so it reads in
+   grayscale without needing colour. */
+.star{background:none;border:0;color:var(--muted);font-size:1.05rem;line-height:1;
+ padding:4px 6px;border-radius:999px;cursor:pointer;flex:0 0 auto}
+.star:hover{background:var(--surface);color:var(--text)}
+.star.on{color:var(--text)}
 
 /* ---- the ⋮ menu ---- */
 .more{position:relative;flex:0 0 auto}
@@ -195,6 +227,15 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .sheettools{display:flex;justify-content:flex-end;gap:18px;padding:10px 0 4px}
 .copied{color:var(--right)}
 
+/* ---- the score, on the sheet ----
+   It sits at the top of the sheet and Copy takes it, so the paste that lands in the Notion
+   row carries what he scored beside what the section says — which is what tells him later
+   whether this one needs testing again. */
+.scorecard{border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;
+ margin:16px 0 6px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.scorecard b{font-size:1.35rem;font-weight:500;font-variant-numeric:tabular-nums}
+.scorecard span{color:var(--muted);font-size:.88rem}
+
 /* ---- his own additions ---- */
 .mine{margin:34px 0 0;padding-top:18px;border-top:1px solid var(--line)}
 .mine h3{margin:0 0 4px;padding:0;border:0}
@@ -207,6 +248,7 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .saved{color:var(--muted);font-size:.78rem;margin:8px 0 0;height:1em}
 #minepreview{margin:14px 0 0}
 
+.empty{color:var(--muted);padding:8px 0 30px}
 .hist{color:var(--muted);font-size:.84rem;margin:22px 0 0}
 .hist span{white-space:nowrap}
 .note{color:var(--muted);font-size:.84rem;margin:16px 0 0}
