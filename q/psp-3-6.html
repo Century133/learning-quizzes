@@ -418,7 +418,15 @@ function load(){
     if(s.hash !== D.hash){
       const b = blank();
       b.history = (s.history||[]).slice();
-      if(s.done) b.history.push({at:s.at, score:score(s), total:active(s).length, stale:true});
+      // TAKE THE SCORE AS IT WAS RECORDED, never recompute it. These answers were given to
+      // questions that no longer exist, so scoring them against the new set is meaningless —
+      // it turned a real 8/10 into 2/10 in testing. `meta` is written on every save for
+      // exactly this moment.
+      if(s.done) b.history.push({
+        at: s.at,
+        score: (s.meta && typeof s.meta.score === 'number') ? s.meta.score : 0,
+        total: (s.meta && s.meta.total) || Object.keys(s.answers||{}).length,
+        stale: true});
       b.rebuilt = true;
       return b;
     }
