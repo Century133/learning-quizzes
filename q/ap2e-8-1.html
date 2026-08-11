@@ -1,0 +1,1104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#131314">
+<title>8.1 The Pectoral Girdle</title>
+<style>
+:root{--bg:#131314;--surface:#1e1f20;--surface-hi:#26282a;--text:#e3e3e3;
+--muted:#9aa0a6;--line:#3c4043;--accent:#8ab4f8;--right:#81c995;--wrong:#f28b82;
+--radius:14px;--maxw:660px;--qsize:1.25rem;--qweight:600;
+--osize:0.95rem;--opad:12px 16px;--ogap:7px;--qgap:18px;
+--barh:46px;--band:#191a1b;--bandr:20px;--bandpad:20px;
+--font:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font);
+ font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+ min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+a{color:var(--accent)}
+/* Longhands, NOT `padding:0 22px`. `main` and `footer` also carry .wrap, and a class beats
+   an element selector — the shorthand here was silently zeroing their vertical padding. */
+.wrap{width:100%;max-width:var(--maxw);margin:0 auto;
+ padding-left:22px;padding-right:22px}
+
+/* ---- top bar: title, tabs, progress. Nothing else lives up here. ---- */
+header{position:sticky;top:0;z-index:5;background:var(--bg);
+ border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:14px;height:var(--barh)}
+.title{font-size:.9rem;font-weight:500;white-space:nowrap;overflow:hidden;
+ text-overflow:ellipsis;flex:1}
+.tabs{display:flex;gap:2px}
+.tab{background:none;border:0;color:var(--muted);font:inherit;font-size:.82rem;
+ padding:5px 12px;border-radius:999px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--surface-hi);color:var(--text)}
+.rail{height:2px;background:var(--line)}
+.rail>i{display:block;height:100%;background:var(--accent);width:0;
+ transition:width .25s ease}
+
+/* TOP-ANCHORED, NOT CENTRED, and that is a fix rather than a preference. With
+   justify-content:center the question drifted upward the moment an answer opened a
+   rationale, because the block got taller and the centring recomputed — "the question
+   shifts… it should stay stationary". Anchored to the top it cannot move: only the cards
+   below the one he clicked ever change position. */
+main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;padding:16px 0 6px}
+
+/* ---- THE BAND ----
+   Flat black under the question made it hard to read; the notebook's lighter middle band is
+   what he wanted instead. So the question and EVERY option sit inside one surface.
+
+   IT CLOSES AT THE BOTTOM AND HUGS THE CONTENT. The first version ran off the bottom of the
+   screen — "kind of weirdly big at the bottom", and he was right: with the block centred, an
+   open band left a lot of empty surface under the last option. It is a card now, sized to
+   what is in it.
+
+   THREE TONES, and the order matters: page (--bg) → band (--band) → option card (--surface).
+   Set --band lighter than --surface and the cards vanish into it. */
+.band{background:var(--band);border:1px solid var(--line);border-radius:var(--bandr);
+ padding:var(--bandpad)}
+/* Off for the end card, the review list and the sheet — a long scrolling list does not want
+   to be in a box. */
+.band.off{background:none;border:0;padding:0}
+/* A short window pays for the band's padding out of the space the options need, so it gives
+   most of it back below 780px. Measured: at 800px all 14 questions of PSP 3.6 still fit
+   answered-wrong with no scrolling. */
+@media (max-height:780px){
+  .band{padding:12px 16px}
+}
+
+/* ---- the question ---- */
+.qhead{display:flex;align-items:flex-start;gap:10px;margin:0 0 var(--qgap)}
+.qhead .qcol{flex:1;min-width:0}
+.meta{display:flex;align-items:center;gap:8px;margin:0 0 7px;font-size:.7rem;
+ color:var(--muted);letter-spacing:.07em;text-transform:uppercase}
+.meta .num{font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.meta .dot{opacity:.55}
+.topic{margin:0 0 6px;font-size:.7rem;color:var(--muted);letter-spacing:.07em;
+ text-transform:uppercase}
+.q{font-size:var(--qsize);line-height:1.35;font-weight:var(--qweight);margin:0;
+ letter-spacing:-.005em}
+.link{background:none;border:0;padding:0;color:var(--muted);font:inherit;
+ font-size:.85rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.link:hover{color:var(--text)}
+/* The hint lives in the FOOTER, as Gemini's does. Opening it there grows the sticky bar
+   upward and leaves the question and every option exactly where they were; under the
+   question it would have shoved all four cards down. */
+.hinttext{margin:0 0 12px;color:var(--muted);font-size:.88rem;line-height:1.5;
+ border-left:2px solid var(--line);padding-left:12px}
+
+/* ---- options ---- */
+.opts{display:flex;flex-direction:column;gap:var(--ogap)}
+.opt{display:block;width:100%;text-align:left;background:var(--surface);
+ border:1px solid transparent;border-radius:var(--radius);padding:var(--opad);
+ color:var(--text);font:inherit;font-size:var(--osize);cursor:pointer;
+ transition:background .16s ease,border-color .16s ease,opacity .16s ease}
+.opt:hover:not(:disabled){background:var(--surface-hi)}
+.opt:disabled{cursor:default}
+.line{display:flex;gap:12px;align-items:flex-start;line-height:1.4}
+.line .k{color:var(--muted);min-width:1.25em}
+.line .t{flex:1}
+.line .mark{font-size:1.05rem;line-height:1.45;min-width:1.05em;text-align:right;opacity:0}
+
+/* GRAYSCALE-SAFE STATES — three signals, never colour alone: the ✓/✕ glyph, the WORD in
+   .lab, and luminance (bright solid border vs dimmed dashed). Turn the display to
+   grayscale and every state still reads. */
+.opt.is-right{background:var(--surface-hi);border-color:var(--right);
+ box-shadow:inset 0 0 0 1px var(--right)}
+.opt.is-right .mark{opacity:1;color:var(--right)}
+.opt.is-wrong{background:transparent;border-style:dashed;border-color:var(--wrong);
+ opacity:.8}
+.opt.is-wrong .mark{opacity:1;color:var(--wrong)}
+.opt.is-muted{opacity:.42}
+
+/* THE FEEDBACK LIVES INSIDE THE CARD, as Gemini's does — that is what he asked for, and it
+   is also why nothing has to scroll: the explanation appears where he is already looking.
+   The 0fr→1fr grid trick animates an unknown height with no JS measuring. If a browser
+   refuses to animate it, the row still ends at 1fr, so the text is visible either way. */
+.rat{display:grid;grid-template-rows:1fr;opacity:1}
+.rat>.ratin{overflow:hidden;min-height:0}
+.opt.fresh .rat{animation:reveal .3s ease}
+@keyframes reveal{from{grid-template-rows:0fr;opacity:0}to{grid-template-rows:1fr;opacity:1}}
+.lab{display:flex;align-items:center;gap:8px;font-size:.86rem;font-weight:600;
+ margin:9px 0 0;padding-left:calc(1.25em + 12px)}
+.opt.is-right .lab{color:var(--right)}
+.opt.is-wrong .lab{color:var(--wrong)}
+.why{margin:4px 0 0;padding-left:calc(1.25em + 12px);color:var(--muted);
+ font-size:.86rem;line-height:1.4}
+
+.opt.enter,.qhead.enter{animation:fadein .24s ease both}
+@keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* ---- starring ----
+   A visible toggle rather than a menu item: it is used on questions he got RIGHT as often as
+   wrong, so it has to be one press. Outline vs filled is a shape difference, so it reads in
+   grayscale without needing colour. */
+.star{background:none;border:0;color:var(--muted);font-size:1.05rem;line-height:1;
+ padding:4px 6px;border-radius:999px;cursor:pointer;flex:0 0 auto}
+.star:hover{background:var(--surface);color:var(--text)}
+.star.on{color:var(--text)}
+
+/* ---- the ⋮ menu ---- */
+.more{position:relative;flex:0 0 auto}
+.dots{background:none;border:0;color:var(--muted);font-size:1.15rem;line-height:1;
+ padding:4px 8px;border-radius:999px;cursor:pointer}
+.dots:hover{background:var(--surface);color:var(--text)}
+.menu{position:absolute;right:0;top:32px;background:var(--surface-hi);
+ border:1px solid var(--line);border-radius:10px;padding:5px;min-width:170px;z-index:6;
+ box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.menu button{display:block;width:100%;text-align:left;background:none;border:0;
+ color:var(--text);font:inherit;font-size:.88rem;padding:8px 10px;border-radius:7px;
+ cursor:pointer;white-space:nowrap}
+.menu button:hover{background:var(--surface)}
+
+/* ---- bottom bar ---- */
+footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg) 30%);
+ padding:8px 0 10px}
+.acts{display:flex;gap:10px;align-items:center}
+.spacer{flex:1}
+button.pill{font:inherit;font-size:.9rem;border-radius:999px;padding:9px 22px;
+ cursor:pointer;border:1px solid var(--line);background:none;color:var(--text)}
+button.pill:disabled{opacity:.32;cursor:default}
+button.pill.primary{background:var(--accent);color:#0b0b0c;border-color:var(--accent);
+ font-weight:500}
+button.pill.ghost{border-color:transparent;color:var(--muted)}
+
+/* ---- end card ---- */
+.score{font-size:3.1rem;font-weight:400;letter-spacing:-.03em;margin:0}
+.score small{font-size:.95rem;color:var(--muted);font-weight:400;letter-spacing:0}
+.sub{color:var(--muted);margin:5px 0 26px;font-size:.92rem}
+.chart{display:flex;height:11px;border-radius:999px;overflow:hidden;
+ background:var(--line);margin:0 0 9px}
+.chart i{display:block;height:100%}
+.chart i.r{background:var(--right)}
+/* hatched as well as coloured, so the split reads with the colour off */
+.chart i.w{background:var(--wrong);
+ background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,
+ rgba(0,0,0,.45) 3px,rgba(0,0,0,.45) 6px)}
+.legend{display:flex;gap:16px;color:var(--muted);font-size:.84rem;margin:0 0 30px}
+.legend b{color:var(--text);font-weight:500}
+.topics{margin:0 0 30px}
+.topics h3,.rev h3{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;
+ color:var(--muted);font-weight:500;margin:0 0 12px}
+.trow{display:grid;grid-template-columns:1fr auto;gap:5px 14px;align-items:center;
+ padding:8px 0;border-top:1px solid var(--line)}
+.trow .n{font-variant-numeric:tabular-nums;color:var(--muted);font-size:.88rem}
+.tbar{grid-column:1/-1;height:3px;background:var(--line);border-radius:999px;
+ overflow:hidden}
+.tbar i{display:block;height:100%;background:var(--text)}
+
+/* ---- review list ---- */
+.rev{padding:6px 0 36px}
+.item{border-top:1px solid var(--line);padding:20px 0}
+.item .qq{font-size:1rem;margin:0 0 12px}
+.rline{display:flex;gap:10px;align-items:flex-start;padding:3px 0;font-size:.92rem}
+.rline .g{min-width:1.2em}
+.rline.mine{color:var(--muted)}
+.tag{display:inline-block;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;
+ color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 9px;
+ margin:0 0 9px}
+
+/* ---- study sheet ----
+   THREE DISTINCT LEVELS, because two of them used to look the same: he could not tell the
+   topic from the "Key terms" heading under it. Topic = large, over a rule. Key terms /
+   Names and studies = a small uppercase label, the same treatment the quiz gives its topic
+   tag. Entries = a numbered list with the term in bold, which is the shape of his own
+   Notion notes, so his shorthand sits beside this instead of clashing with it. */
+.sheet{padding:2px 0 56px;font-size:.95rem}
+.sheet h2{font-size:1.3rem;font-weight:600;margin:34px 0 10px;letter-spacing:-.01em}
+.sheet h3{font-size:1.15rem;font-weight:600;margin:34px 0 4px;letter-spacing:-.01em;
+ padding-top:18px;border-top:1px solid var(--line)}
+/* first-of-type, not first-child: .sheettools is the first child, so first-child never
+   matched and the opening topic carried a stray rule above it */
+.sheet h3:first-of-type{margin-top:0;padding-top:0;border-top:0}
+.sheet h4,.sheet h5{font-size:.7rem;font-weight:600;margin:18px 0 8px;color:var(--muted);
+ letter-spacing:.09em;text-transform:uppercase}
+.sheet p{margin:0 0 10px;color:var(--muted)}
+.sheet h3+p{color:var(--text);margin-bottom:4px}
+.sheet ul,.sheet ol{margin:0 0 4px;padding-left:24px}
+.sheet ol{list-style:decimal}
+.sheet ol ol{list-style:lower-alpha;margin:4px 0 6px}
+.sheet ul ul,.sheet ol ul{margin:4px 0 6px}
+.sheet li{margin:0 0 6px;padding-left:2px}
+.sheet li::marker{color:var(--muted)}
+.sheet li>strong:first-child{color:var(--text)}
+.sheet strong{font-weight:600}
+.sheet hr{border:0;border-top:1px solid var(--line);margin:26px 0}
+.sheet code{background:var(--surface);padding:1px 6px;border-radius:6px;font-size:.9em}
+.sheettools{display:flex;justify-content:flex-end;gap:18px;padding:10px 0 4px}
+.copied{color:var(--right)}
+
+/* ---- the score, on the sheet ----
+   It sits at the top of the sheet and Copy takes it, so the paste that lands in the Notion
+   row carries what he scored beside what the section says — which is what tells him later
+   whether this one needs testing again. */
+.scorecard{border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;
+ margin:16px 0 6px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.scorecard b{font-size:1.35rem;font-weight:500;font-variant-numeric:tabular-nums}
+.scorecard span{color:var(--muted);font-size:.88rem}
+
+/* ---- his own additions ---- */
+.mine{margin:34px 0 0;padding-top:18px;border-top:1px solid var(--line)}
+.mine h3{margin:0 0 4px;padding:0;border:0}
+.mine .say{color:var(--muted);font-size:.85rem;margin:0 0 12px}
+#mynotes{width:100%;min-height:180px;resize:vertical;background:var(--surface);
+ color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
+ padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.6;outline:none}
+#mynotes:focus{border-color:var(--accent)}
+#mynotes::placeholder{color:var(--muted);opacity:.7}
+.saved{color:var(--muted);font-size:.78rem;margin:8px 0 0;height:1em}
+#minepreview{margin:14px 0 0}
+
+.empty{color:var(--muted);padding:8px 0 30px}
+.hist{color:var(--muted);font-size:.84rem;margin:22px 0 0}
+.hist span{white-space:nowrap}
+.note{color:var(--muted);font-size:.84rem;margin:16px 0 0}
+.hide{display:none !important}
+
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  .q{font-size:1.22rem}
+  main{padding:22px 0 14px}
+  .score{font-size:2.5rem}
+  .bar{gap:8px}
+  .tab{padding:5px 10px}
+  button.pill{padding:11px 18px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important}
+}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap bar">
+    <span class="title">8.1 The Pectoral Girdle</span>
+    <span class="tabs" id="tabs"><button class="tab" data-tab="quiz" aria-selected="true">Quiz</button><button class="tab hide" data-tab="starred" aria-selected="false">Starred</button><button class="tab" data-tab="sheet" aria-selected="false">Study sheet</button></span>
+  </div>
+  <div class="rail"><i id="rail"></i></div>
+</header>
+
+<main class="wrap">
+  <div class="band" id="band"><div id="quizview"></div></div>
+  <div id="starredview" class="rev hide"></div>
+  <div id="sheetview" class="sheet hide">
+    <div class="scorecard hide" id="scorecard"></div>
+    <div class="sheettools">
+      <button class="link" id="previewnotes">Preview</button>
+      <button class="link" id="copysheet">Copy</button>
+    </div>
+    <h4>Pectoral girdle mobility</h4>
+<p>The structural independence of the two pectoral girdles and their single, mobile attachment to the axial skeleton provide the upper limbs with an extensive and versatile range of motion.</p>
+<p><strong>Key terms</strong></p>
+<ol>
+<li><strong>Pectoral girdle</strong> — The two-bone structure, consisting of the scapula and clavicle, that attaches the upper limb to the axial skeleton.</li>
+<li><strong>Mobility</strong> — The extensive range of motion enabled by the independent operation of each girdle and a single, mobile joint connection.</li>
+</ol>
+<h4>Clavicle function</h4>
+<p>The clavicle acts as a lateral strut supported by superior muscles to position the shoulder joint away from the body trunk, providing maximal freedom of motion for the limb while protecting underlying structures.</p>
+<p><strong>Key terms</strong></p>
+<ol>
+<li><strong>Strut</strong> — A lateral extension supported by muscles that holds the shoulder joint away from the body trunk.</li>
+<ol>
+<li><strong>Maximal freedom of motion</strong> — The lateral positioning provided by the clavicle allows the upper limb a wide range of movement and manipulation.</li>
+</ol>
+</ol>
+<h4>Sternoclavicular joint</h4>
+<p>This joint serves as the primary anchor point between the appendicular and axial skeletons and is the sole bony articulation for the upper limb.</p>
+<p><strong>Key terms</strong></p>
+<ol>
+<li><strong>Sternal end of the clavicle</strong> — The triangular medial end of the bone that articulates with the manubrium of the sternum.</li>
+<li><strong>Sternoclavicular joint</strong> — The only bony articulation between the pectoral girdle and the axial skeleton.</li>
+<ol>
+<li><strong>Upward/downward and anterior/posterior</strong> — The specific directions of movement permitted by this joint during shoulder activity.</li>
+</ol>
+</ol>
+<h4>Scapular attachment</h4>
+<p>The scapula is suspended on the posterior thorax through complex muscular attachments rather than through direct articulation with the ribs of the thoracic cage.</p>
+<p><strong>Key terms</strong></p>
+<ol>
+<li><strong>Scapula</strong> — A flat, triangular bone located on the posterior aspect of the shoulder.</li>
+<li><strong>Muscular attachment</strong> — The method of support where the bone is surrounded by muscle and does not join the ribs.</li>
+</ol>
+<h4>Force transmission</h4>
+<p>The clavicle serves as a vital conduit that conducts physical stress and impact from the upper limb directly to the sternum and the central axial skeleton.</p>
+<p><strong>Key terms</strong></p>
+<ol>
+<li><strong>Force transmission</strong> — The process of sending physical impact from the upper limb to the sternum.</li>
+</ol>
+<h4>Glenohumeral joint</h4>
+<p>The glenohumeral joint, commonly known as the shoulder joint, is the articulation formed where the scapula receives the head of the humerus.</p>
+<p><strong>Key terms</strong></p>
+<ol>
+<li><strong>Glenoid cavity</strong> — The shallow depression on the scapula that receives the humerus.</li>
+<li><strong>Glenohumeral joint</strong> — The articulation between the scapula and the arm bone (humerus).</li>
+</ol>
+<h4>Clavicle fracture</h4>
+<p>Commonly caused by falls on outstretched arms or lateral shoulder impacts, a clavicular fracture causes the shoulder to drop and be pulled anteriorly and medially.</p>
+<p><strong>Key terms</strong></p>
+<ol>
+<li><strong>Fracture mechanism</strong> — A break resulting from force exerted when falling on outstretched arms or receiving a strong blow to the lateral shoulder.</li>
+<li><strong>Complete fracture</strong> — A total break where the weight of the limb causes the shoulder to drop and muscles pull the shoulder and lateral fragment anteriorly and medially.</li>
+</ol>
+<h4>Inferior scapular angle</h4>
+<p>The inferior angle is the lowest point of the scapula and serves as a critical attachment site for powerful muscles that move the shoulder and upper limb.</p>
+<p><strong>Key terms</strong></p>
+<ol>
+<li><strong>Inferior angle of the scapula</strong> — The lowest corner of the bone, located where the medial and lateral borders meet.</li>
+<ol>
+<li><strong>Muscle attachment point</strong> — A site for several powerful muscles involved in executing intensive shoulder and limb movements.</li>
+</ol>
+</ol>
+<h4>Vascular protection</h4>
+<p>The clavicle is positioned to safeguard the essential nerves and blood vessels as they pass from the body trunk into the upper limb.</p>
+<p><strong>Key terms</strong></p>
+<ol>
+<li><strong>Protective positioning</strong> — The location of the clavicle overlying the neurovascular structures that serve the upper limb.</li>
+</ol>
+<h4>Costoclavicular ligament</h4>
+<p>The costoclavicular ligament provides indirect support to the medial pectoral girdle by anchoring the clavicle to the first rib.</p>
+<p><strong>Key terms</strong></p>
+<ol>
+<li><strong>Costoclavicular ligament</strong> — The tissue spanning the sternal end of the clavicle and the underlying first rib.</li>
+</ol>
+<h4>Clavicle morphology</h4>
+<p>The clavicle is a horizontal, S-shaped bone that displays physical variations based on sex and the musculoskeletal demands of manual labor.</p>
+<p><strong>Key terms</strong></p>
+<ol>
+<li><strong>S-shape</strong> — The horizontal, curved long bone morphology of the clavicle.</li>
+<li><strong>Sex differences</strong> — Morphological variations where male clavicles are typically heavier, longer, and more curved than female clavicles.</li>
+<ol>
+<li><strong>Manual workers</strong> — Individuals who often exhibit more pronounced muscle attachment features and rougher bone surfaces where muscles attach.</li>
+</ol>
+</ol>
+<h4>Acromial end</h4>
+<p>The acromial end is the lateral articulation point of the collarbone that joins with the scapula to form the bony tip of the shoulder.</p>
+<p><strong>Key terms</strong></p>
+<ol>
+<li><strong>Acromial end of the clavicle</strong> — The lateral end of the bone that joins with the acromion of the scapula.</li>
+<li><strong>Bony tip of the shoulder</strong> — The palpable landmark formed by the acromion where it joins the lateral end of the clavicle.</li>
+</ol>
+<h4>Scapular tubercles</h4>
+<p>These small bony projections are located immediately above and below the glenoid cavity to serve as anchors for the muscles of the arm.</p>
+<p><strong>Key terms</strong></p>
+<ol>
+<li><strong>Supraglenoid tubercle</strong> — The small bump located immediately above the glenoid cavity.</li>
+<li><strong>Infraglenoid tubercle</strong> — The small bump located immediately below the glenoid cavity.</li>
+</ol>
+<h4>Scapular borders</h4>
+<p>The triangular shape of the scapula is defined by three margins that designate its spatial orientation on the posterior shoulder.</p>
+<p><strong>Key terms</strong></p>
+<ol>
+<li><strong>Superior border</strong> — The top margin of the scapula, which contains the suprascapular notch.</li>
+<li><strong>Medial border</strong> — The inner margin of the scapula.</li>
+<li><strong>Lateral border</strong> — The outer margin of the scapula.</li>
+</ol>
+<h4>Limb functional demands</h4>
+<p>Human evolutionary stance has dictated that the lower limbs specialize in weight-bearing stability while the upper limbs are adapted for high mobility and object manipulation.</p>
+<p><strong>Key terms</strong></p>
+<ol>
+<li><strong>Weight-bearing support</strong> — The primary function of the lower limb bones, which are adapted for stability and locomotion.</li>
+<li><strong>High mobility</strong> — The primary demand for the upper limbs, allowing for a wide variety of activities and manipulation.</li>
+</ol>
+    <div class="mine">
+      <h3>My notes</h3>
+      <p class="say">What the sheet missed. Write it however you write — one thing a line,
+      <code>Term: what it is</code>, indent to nest. Copy takes this with the sheet, formatted,
+      ready to paste into the Notion row. That row is what the week's exam is built from.</p>
+      <textarea id="mynotes" spellcheck="true" placeholder="Rebound effect: suppressed thought comes back stronger once you stop trying
+   ex. telling yourself not to check the score
+Self-control is finite - one hard task leaves less for the next"></textarea>
+      <p class="saved" id="savedmsg"></p>
+      <div id="minepreview" class="hide"></div>
+    </div>
+  </div>
+</main>
+
+<footer id="footer" class="wrap hide">
+  <p class="hinttext hide" id="hinttext"></p>
+  <div class="acts">
+    <button class="pill ghost" id="back">Back</button>
+    <button class="pill ghost hide" id="hintbtn">Hint</button>
+    <!-- Retake CLEARS, so it sits off to the side on its own, away from the two that keep
+         his progress. 2nd Pass is the primary one and takes the position Next held. -->
+    <button class="pill ghost hide" id="retake">Retake</button>
+    <span class="spacer"></span>
+    <button class="pill hide" id="review">Review quiz</button>
+    <button class="pill primary hide" id="pass2">2nd Pass</button>
+    <button class="pill primary" id="next">Next</button>
+  </div>
+</footer>
+
+<script id="quiz-data" type="application/json">{"id": "ap2e-8-1", "title": "8.1 The Pectoral Girdle", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "hash": "680571a90e44fb0f", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "Why are the right and left pectoral girdles not connected to each other anteriorly or posteriorly?", "options": ["To accommodate the expansion of the thoracic cage during deep inhalation.", "To prevent the transmission of muscle forces from one arm to the other.", "To provide a rigid frame that can support the full weight of the head and neck.", "To allow each girdle to operate and move independently, enhancing overall mobility."], "rationales": ["While the thoracic cage expands, the separation of the girdles specifically facilitates independent limb movement rather than respiratory volume.", "While it does isolate forces, the primary evolutionary advantage described is the independent range of motion.", "A rigid, connected frame would prioritize stability over the mobility required for upper limb function.", "The lack of connection between the two girdles allows for a greater range of motion and independent function for each upper limb."], "correct": 3, "hint": "consider how the range of motion for one arm would change if it were physically tied to the other side.", "topic": "Pectoral girdle mobility", "qid": "75048c315c"}, {"q": "How does the horizontal positioning of the clavicle facilitate the extensive range of motion found in the upper limb?", "options": ["By locking the scapula against the ribs to prevent shoulder dislocation.", "By acting as a lateral strut that holds the shoulder joint away from the body trunk.", "By serving as the primary attachment site for the muscles that rotate the neck.", "By providing a vertical column that transmits weight-bearing forces to the legs."], "rationales": ["The scapula does not articulate with the ribs, and locking it would severely limit shoulder mobility.", "The clavicle extends laterally to position the scapula and humerus away from the midline, maximizing freedom of motion.", "While neck muscles may attach nearby, the clavicle's horizontal 'strut' function is specifically for shoulder positioning.", "The clavicle is a horizontal bone, and the upper limbs are not primarily adapted for weight-bearing support."], "correct": 1, "hint": "think about the spatial relationship and distance between the arm and the central trunk.", "topic": "Clavicle function", "qid": "a6c7c4b66d"}, {"q": "If a person experiences a complete dislocation of the sternoclavicular joint, what is the consequence for the pectoral girdle's connection to the rest of the skeleton?", "options": ["The humerus will immediately detach from the scapula.", "The pectoral girdle loses its only bony articulation with the axial skeleton.", "The scapula will fuse with the ribs of the thoracic cage to maintain stability.", "The costoclavicular ligament will take over as the primary bony joint."], "rationales": ["The glenohumeral joint connects the humerus to the scapula, which is separate from the axial connection at the sternum.", "The sternoclavicular joint is the single point where the pectoral girdle makes a direct bony connection to the central axis of the body.", "The scapula is surrounded by muscles and does not articulate with the ribs, regardless of clavicle status.", "A ligament is soft tissue and cannot function as a bony articulation or joint."], "correct": 1, "hint": "identify the point where the girdle makes direct contact with the central chest bone.", "topic": "Sternoclavicular joint", "qid": "cf3afc6cf7"}, {"q": "The scapula is described as being 'supported by the clavicle' and surrounded by muscle. What does this imply about its relationship with the thoracic cage?", "options": ["The scapula does not articulate directly with the ribs of the thoracic cage.", "The scapula articulates with the vertebral column via the superior angle.", "The scapula is fused to the thoracic cage to provide a stable base for the arm.", "The scapula's medial border is the primary weight-bearing surface for the ribs."], "rationales": ["Because it is surrounded by muscle on both sides, the scapula remains mobile and does not form a joint with the ribs.", "The scapula does not articulate with the vertebral column; it is anchored to the axial skeleton only through the clavicle.", "Fusion would eliminate the mobility required for the high range of upper limb movements.", "The upper limb bones are not adapted for weight-bearing support, and the ribs are part of the axial skeleton."], "correct": 0, "hint": "consider the structural difference between a bone that floats in tissue versus one that forms a rigid joint with the cage.", "topic": "Scapular attachment", "qid": "61a4ec7fff"}, {"q": "When an individual catches themselves during a fall with an outstretched hand, how is the resulting force managed by the pectoral girdle?", "options": ["The force is directed into the infraglenoid tubercle to be dissipated by muscles.", "The force is absorbed entirely by the glenoid cavity to protect the collarbone.", "The force is transferred to the scapula, which then locks against the ribs.", "The force is transmitted through the clavicle to the sternum and the axial skeleton."], "rationales": ["While muscles help, the mechanical force must be transmitted through the bony structure of the clavicle to the axial skeleton.", "The glenoid cavity is a shallow depression that facilitates movement rather than absorbing the full force of an impact.", "The scapula lacks a bony articulation with the ribs, making it an inefficient path for direct force transmission to the axial skeleton.", "One of the clavicle's primary functions is to transmit forces acting on the upper limb to the central axis of the body."], "correct": 3, "hint": "trace the path of mechanical stress from the arm through the girdle to the sternum.", "topic": "Force transmission", "qid": "01e6afb73c"}, {"q": "The humerus articulates with which specific feature of the scapula to form the shoulder joint?", "options": ["The acromion, which forms the acromioclavicular joint.", "The glenoid cavity, which forms the glenohumeral joint.", "The coracoclavicular ligament, which provides vertical stability.", "The suprascapular notch, which allows for nerve passage."], "rationales": ["The acromion articulates with the lateral end of the clavicle, not the humerus.", "The glenoid cavity is the shallow depression on the scapula that receives the head of the humerus.", "Ligaments provide support but do not serve as the primary articulation surface for a joint.", "A notch is a passage for soft tissues rather than an articulation surface for a major limb bone."], "correct": 1, "hint": "look for the shallow depression that receives the head of the arm bone.", "topic": "Glenohumeral joint", "qid": "c5963da280"}, {"q": "In a complete fracture of the clavicle, why does the affected shoulder and the lateral fragment of the bone typically drop?", "options": ["The sternoclavicular joint is automatically dislocated during the fracture.", "The glenohumeral joint becomes dislocated due to the sudden loss of muscle tension.", "The weight of the upper limb is no longer supported by the clavicle acting as a strut.", "The costoclavicular ligament pulls the lateral fragment downward toward the first rib."], "rationales": ["The sternoclavicular joint is very strong and rarely dislocates; instead, the bone itself breaks under excessive force.", "While muscle tension changes, the dropping of the shoulder is a direct result of the loss of bony structural support.", "Once the clavicle breaks, it can no longer support the weight of the arm, causing the limb and the lateral bone fragment to sag.", "The costoclavicular ligament is located at the medial end of the clavicle and would not cause the lateral end to drop."], "correct": 2, "hint": "evaluate the effect of gravity on a limb that has lost its horizontal bony support.", "topic": "Clavicle fracture", "qid": "d809688ce3"}, {"q": "What is the functional importance of the inferior angle of the scapula during complex arm movements?", "options": ["It provides a bony articulation point for the lower ribs to stabilize the girdle.", "It forms the bony tip of the shoulder to protect the glenohumeral joint.", "It acts as a pivot point for the clavicle during shrugging movements.", "It serves as an attachment point for several powerful muscles involved in shoulder and limb motion."], "rationales": ["The scapula does not articulate with the ribs; it is supported by muscles.", "The acromion forms the bony tip of the shoulder, not the inferior angle.", "The clavicle pivots at the sternoclavicular joint, not at the inferior angle of the scapula.", "As the most inferior portion of the scapula, this angle provides a critical lever and anchor for major muscles."], "correct": 3, "hint": "look for the role of the lowest corner of the triangular bone in relation to soft tissue.", "topic": "Inferior scapular angle", "qid": "ac1ee9cf6b"}, {"q": "What structural benefit is provided to the upper limb by the clavicle's position over the gap between the trunk and the arm?", "options": ["It prevents the scapula from moving in an anterior or posterior direction.", "It protects the underlying nerves and blood vessels passing between the trunk and the limb.", "It increases the weight-bearing capacity of the upper limb during walking.", "It provides a rigid anchor for the lungs to expand against during exertion."], "rationales": ["The pectoral girdle is designed for high mobility, including anterior and posterior movements.", "The clavicle sits superior to critical neurovascular structures, acting as a shield for them as they enter the arm.", "The upper limbs are not required for weight-bearing or locomotion in humans.", "The lungs are contained within the thoracic cage, which is part of the axial skeleton, not the pectoral girdle."], "correct": 1, "hint": "consider what soft structures must travel safely from the neck and chest into the upper limb.", "topic": "Vascular protection", "qid": "f5e10f2c5e"}, {"q": "The sternal end of the clavicle is anchored to the thoracic cage by which structure to prevent it from shifting too far out of place?", "options": ["The glenoid labrum, which deepens the shoulder socket.", "The coracoclavicular ligament, which attaches to the acromion.", "The costoclavicular ligament, which spans between the clavicle and the first rib.", "The suprascapular notch, which houses the anchoring tendons."], "rationales": ["The glenoid labrum is associated with the glenohumeral joint, not the sternal articulation.", "The coracoclavicular ligament is located at the lateral end of the clavicle, not the sternal (medial) end.", "This ligament provides indirect support to the sternoclavicular joint by tethering the clavicle to the underlying rib.", "The suprascapular notch is a landmark on the scapula's superior border, not a ligament or anchoring site for the sternal end."], "correct": 2, "hint": "search for the connection between the medial collarbone and the ribs.", "topic": "Costoclavicular ligament", "qid": "757aa0060a"}, {"q": "In forensic anthropology, which set of clavicular features would most likely indicate a male individual who performed heavy manual labor?", "options": ["A bone that is highly flexible and lacks a sternoclavicular joint.", "A shorter and thinner bone with a smoother surface and minimal curvature.", "A bone with a perfectly straight shaft to maximize force transmission to the ribs.", "A heavier and longer bone with a greater curvature and rougher muscle attachment surfaces."], "rationales": ["All human clavicles have a sternoclavicular joint, and bone is generally a rigid tissue rather than a flexible one.", "These features are more characteristic of female clavicles, which tend to be lighter and less curved.", "The clavicle is naturally S-shaped; a perfectly straight shaft is not a normal morphological variation.", "Sex differences and mechanical stress from manual work result in a thicker, more curved clavicle with pronounced muscle markings in men."], "correct": 3, "hint": "look for the intersection of biological sex and the physical effects of labor on bone structure.", "topic": "Clavicle morphology", "qid": "919ff40752"}, {"q": "The lateral or acromial end of the clavicle articulates with which specific part of the scapula?", "options": ["The acromion, which forms the bony tip of the shoulder.", "The medial border, which lies closest to the vertebral column.", "The coracoid process, which provides attachment for muscles.", "The glenoid cavity, located between the superior and lateral borders."], "rationales": ["The acromial end of the clavicle and the acromion of the scapula join to form the acromioclavicular joint at the shoulder's peak.", "The clavicle articulates with the lateral portion of the scapula, far from the medial border.", "While nearby, the primary bony articulation for the lateral clavicle is the acromion.", "The glenoid cavity articulates with the humerus, not the clavicle."], "correct": 0, "hint": "focus on the structure that forms the outermost bony point of the shoulder.", "topic": "Acromial end", "qid": "1ab89aa3f1"}, {"q": "What is the function of the supraglenoid and infraglenoid tubercles located on the scapula?", "options": ["They provide attachment points for the muscles of the arm.", "They act as stoppers to prevent the humerus from rotating too far.", "They house the nerves that pass through the suprascapular notch.", "They articulate with the clavicle to stabilize the acromioclavicular joint."], "rationales": ["These small bony bumps are situated specifically to serve as anchors for arm muscles near the shoulder joint.", "These structures are attachment points for soft tissue rather than mechanical bony blocks for rotation.", "Tubercles are solid bony projections for muscle attachment, not hollow spaces for housing nerves.", "The acromioclavicular joint involves the acromion and the clavicle, not these tubercles."], "correct": 0, "hint": "identify the role of small bony projections located immediately adjacent to a joint cavity.", "topic": "Scapular tubercles", "qid": "2b5e6effea"}, {"q": "The scapula is described as a flat, triangular bone with three distinct borders. What is the functional purpose of these broad surfaces and margins?", "options": ["To articulate with the vertebral column to support the body's weight.", "To provide a rigid, non-moving base for the head and neck muscles.", "To protect the heart and lungs from posterior impacts.", "To serve as extensive attachment sites for muscles that move the shoulder and arm."], "rationales": ["The scapula has no bony articulation with the vertebral column and is not a weight-bearing bone.", "The scapula is highly mobile and moves together with the clavicle as a unit during arm movements.", "While it provides some coverage, the ribs and thoracic cage are the primary structures for protecting vital organs.", "The large surface area and defined borders of the scapula are essential for anchoring the many muscles required for limb mobility."], "correct": 3, "hint": "consider why a bone might evolve to have a wide, flat surface area covered by tissue.", "topic": "Scapular borders", "qid": "b9ca9bca95"}, {"q": "Which directional movements of the pectoral girdle are facilitated by the highly mobile sternoclavicular joint?", "options": ["Rotational movement of the individual ribs during breathing.", "Inward compression of the thoracic cage to increase pressure.", "Upward/downward and anterior/posterior directions.", "Medial rotation of the sternum relative to the vertebral column."], "rationales": ["The sternoclavicular joint moves the pectoral girdle, not the axial ribs themselves.", "The joint's purpose is to facilitate limb movement, not to compress the central chest cavity.", "This joint allows the clavicle and scapula to move in multiple planes, which is necessary for shrugging and reaching.", "The sternum is part of the axial skeleton and does not rotate medially via the sternoclavicular joint."], "correct": 2, "hint": "think about the directions your shoulder moves when you shrug or pull your shoulders back.", "topic": "Sternoclavicular joint", "qid": "eaf7872a4a"}, {"q": "In comparison to the bones of the lower limbs, how have the bones of the pectoral girdle and upper limbs adapted to human functional demands?", "options": ["They have developed fused joints to prevent the transmission of forces during manual labor.", "They have prioritized high mobility and the ability to manipulate objects over weight-bearing stability.", "They have lost their bony connections to the axial skeleton to maximize flexibility.", "They have become heavier and thicker to support the upright stance of the body."], "rationales": ["Fused joints would limit mobility, which is the primary functional advantage of the upper limb.", "Human upper limbs are adapted for a wide variety of activities and object manipulation rather than locomotion and support.", "The upper limb remains attached to the axial skeleton via the sternoclavicular joint.", "The lower limbs carry the weight of the body; the upper limbs are lighter to facilitate mobility."], "correct": 1, "hint": "reflect on how humans use their hands to interact with and build their environment.", "topic": "Limb functional demands", "qid": "bd9bd811c1"}], "hasSheet": true, "notebook": "https://notebooklm.google.com/notebook/cf57202f-1a73-4c88-9b58-abfcd3f6cae1/artifact/eb321058-46c5-4a9e-92d4-d46c902d91b3", "root": "../index.html", "tab": "quiz", "sheet": "### 1. Pectoral girdle mobility\nThe structural independence of the two pectoral girdles and their single, mobile attachment to the axial skeleton provide the upper limbs with an extensive and versatile range of motion.\n\n**Key terms**\n1. **Pectoral girdle** — The two-bone structure, consisting of the scapula and clavicle, that attaches the upper limb to the axial skeleton.\n2. **Mobility** — The extensive range of motion enabled by the independent operation of each girdle and a single, mobile joint connection.\n\n### 2. Clavicle function\nThe clavicle acts as a lateral strut supported by superior muscles to position the shoulder joint away from the body trunk, providing maximal freedom of motion for the limb while protecting underlying structures.\n\n**Key terms**\n1. **Strut** — A lateral extension supported by muscles that holds the shoulder joint away from the body trunk.\n    1. **Maximal freedom of motion** — The lateral positioning provided by the clavicle allows the upper limb a wide range of movement and manipulation.\n\n### 3. Sternoclavicular joint\nThis joint serves as the primary anchor point between the appendicular and axial skeletons and is the sole bony articulation for the upper limb.\n\n**Key terms**\n1. **Sternal end of the clavicle** — The triangular medial end of the bone that articulates with the manubrium of the sternum.\n2. **Sternoclavicular joint** — The only bony articulation between the pectoral girdle and the axial skeleton.\n    1. **Upward/downward and anterior/posterior** — The specific directions of movement permitted by this joint during shoulder activity.\n\n### 4. Scapular attachment\nThe scapula is suspended on the posterior thorax through complex muscular attachments rather than through direct articulation with the ribs of the thoracic cage.\n\n**Key terms**\n1. **Scapula** — A flat, triangular bone located on the posterior aspect of the shoulder.\n2. **Muscular attachment** — The method of support where the bone is surrounded by muscle and does not join the ribs.\n\n### 5. Force transmission\nThe clavicle serves as a vital conduit that conducts physical stress and impact from the upper limb directly to the sternum and the central axial skeleton.\n\n**Key terms**\n1. **Force transmission** — The process of sending physical impact from the upper limb to the sternum.\n\n### 6. Glenohumeral joint\nThe glenohumeral joint, commonly known as the shoulder joint, is the articulation formed where the scapula receives the head of the humerus.\n\n**Key terms**\n1. **Glenoid cavity** — The shallow depression on the scapula that receives the humerus.\n2. **Glenohumeral joint** — The articulation between the scapula and the arm bone (humerus).\n\n### 7. Clavicle fracture\nCommonly caused by falls on outstretched arms or lateral shoulder impacts, a clavicular fracture causes the shoulder to drop and be pulled anteriorly and medially.\n\n**Key terms**\n1. **Fracture mechanism** — A break resulting from force exerted when falling on outstretched arms or receiving a strong blow to the lateral shoulder.\n2. **Complete fracture** — A total break where the weight of the limb causes the shoulder to drop and muscles pull the shoulder and lateral fragment anteriorly and medially.\n\n### 8. Inferior scapular angle\nThe inferior angle is the lowest point of the scapula and serves as a critical attachment site for powerful muscles that move the shoulder and upper limb.\n\n**Key terms**\n1. **Inferior angle of the scapula** — The lowest corner of the bone, located where the medial and lateral borders meet.\n    1. **Muscle attachment point** — A site for several powerful muscles involved in executing intensive shoulder and limb movements.\n\n### 9. Vascular protection\nThe clavicle is positioned to safeguard the essential nerves and blood vessels as they pass from the body trunk into the upper limb.\n\n**Key terms**\n1. **Protective positioning** — The location of the clavicle overlying the neurovascular structures that serve the upper limb.\n\n### 10. Costoclavicular ligament\nThe costoclavicular ligament provides indirect support to the medial pectoral girdle by anchoring the clavicle to the first rib.\n\n**Key terms**\n1. **Costoclavicular ligament** — The tissue spanning the sternal end of the clavicle and the underlying first rib.\n\n### 11. Clavicle morphology\nThe clavicle is a horizontal, S-shaped bone that displays physical variations based on sex and the musculoskeletal demands of manual labor.\n\n**Key terms**\n1. **S-shape** — The horizontal, curved long bone morphology of the clavicle.\n2. **Sex differences** — Morphological variations where male clavicles are typically heavier, longer, and more curved than female clavicles.\n    1. **Manual workers** — Individuals who often exhibit more pronounced muscle attachment features and rougher bone surfaces where muscles attach.\n\n### 12. Acromial end\nThe acromial end is the lateral articulation point of the collarbone that joins with the scapula to form the bony tip of the shoulder.\n\n**Key terms**\n1. **Acromial end of the clavicle** — The lateral end of the bone that joins with the acromion of the scapula.\n2. **Bony tip of the shoulder** — The palpable landmark formed by the acromion where it joins the lateral end of the clavicle.\n\n### 13. Scapular tubercles\nThese small bony projections are located immediately above and below the glenoid cavity to serve as anchors for the muscles of the arm.\n\n**Key terms**\n1. **Supraglenoid tubercle** — The small bump located immediately above the glenoid cavity.\n2. **Infraglenoid tubercle** — The small bump located immediately below the glenoid cavity.\n\n### 14. Scapular borders\nThe triangular shape of the scapula is defined by three margins that designate its spatial orientation on the posterior shoulder.\n\n**Key terms**\n1. **Superior border** — The top margin of the scapula, which contains the suprascapular notch.\n2. **Medial border** — The inner margin of the scapula.\n3. **Lateral border** — The outer margin of the scapula.\n\n### 15. Limb functional demands\nHuman evolutionary stance has dictated that the lower limbs specialize in weight-bearing stability while the upper limbs are adapted for high mobility and object manipulation.\n\n**Key terms**\n1. **Weight-bearing support** — The primary function of the lower limb bones, which are adapted for stability and locomotion.\n2. **High mobility** — The primary demand for the upper limbs, allowing for a wide variety of activities and manipulation."}</script>
+<script>
+const D = JSON.parse(document.getElementById('quiz-data').textContent);
+const KEY = 'lq:' + D.id;
+const $ = s => document.querySelector(s);
+const esc = t => { const d=document.createElement('div'); d.textContent = t==null?'':t; return d.innerHTML; };
+const G_OK = '✓', G_NO = '✕';
+
+/* ---- saved state -------------------------------------------------------------
+   Everything lives in localStorage under the page id. `hash` fingerprints the question
+   set: a Redo regenerates the quiz, and when that happens the old answers describe
+   questions that no longer exist, so the attempt is retired into history rather than
+   shown against the new ones.
+
+   KEYED ON q.qid, NOT ON THE ARRAY INDEX (v2). Skipping and starring have to outlive a
+   rebuild: a question he deleted must stay deleted, and a question he starred must still be
+   starred, even after the quiz is regenerated and the order changes. That is also what makes
+   `skipped` usable later as a permanent exclusion list when exam reuse is built — see qid()
+   in quizpage.py. v1 states are migrated once, on load. */
+function qk(i){ return D.questions[i].qid; }
+function blank(){ return {v:2, hash:D.hash, i:0, answers:{}, pass2:{}, skipped:{}, starred:{},
+                          phase:1, p2list:null, done:false, at:null, history:[]}; }
+function migrate(s){
+  // v1 keyed every map on the array index. The hash matches, so the indices are still valid
+  // and this is a straight re-key — done once, then never again.
+  const re = m => { const o = {}; Object.keys(m||{}).forEach(k=>{
+    const i = +k; if(D.questions[i]) o[qk(i)] = m[k]; }); return o; };
+  s.answers = re(s.answers); s.skipped = re(s.skipped);
+  s.pass2 = {}; s.starred = {}; s.phase = 1; s.p2list = null; s.v = 2;
+  return s;
+}
+function load(){
+  try{
+    const s = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if(!s) return blank();
+    if(s.hash !== D.hash){
+      const b = blank();
+      b.history = (s.history||[]).slice();
+      // TAKE THE SCORE AS IT WAS RECORDED, never recompute it. These answers were given to
+      // questions that no longer exist, so scoring them against the new set is meaningless —
+      // it turned a real 8/10 into 2/10 in testing. `meta` is written on every save for
+      // exactly this moment.
+      if(s.done) b.history.push({
+        at: s.at,
+        score: (s.meta && typeof s.meta.score === 'number') ? s.meta.score : 0,
+        total: (s.meta && s.meta.total) || Object.keys(s.answers||{}).length,
+        stale: true});
+      b.rebuilt = true;
+      // A REBUILD DOES NOT RESURRECT A DELETED QUESTION. Answers are retired because they
+      // describe questions that may be gone; skipped and starred are decisions ABOUT
+      // questions, so they carry over on qid and simply miss anything no longer present.
+      if(s.v === 2){ b.skipped = s.skipped || {}; b.starred = s.starred || {}; }
+      return b;
+    }
+    if(!s.history) s.history = [];
+    if(s.v !== 2) return migrate(s);
+    if(!s.skipped) s.skipped = {};
+    if(!s.starred) s.starred = {};
+    if(!s.pass2) s.pass2 = {};
+    if(!s.phase) s.phase = 1;
+    return s;
+  }catch(e){ return blank(); }
+}
+function save(){
+  S.meta = {title:D.title, subtitle:D.subtitle, book:D.book, total:active(S).length,
+            at:S.at, done:S.done, score:score(S)};
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+}
+/* Skipped questions leave the run entirely — out of the count, out of the denominator,
+   out of the topic breakdown. Anything less makes "8 / 10" a lie about a quiz of nine. */
+function active(s){ return D.questions.map((_,i)=>i).filter(i => !(s.skipped||{})[qk(i)]); }
+function ans(i){ return S.answers[qk(i)]; }
+function ans2(i){ return S.pass2[qk(i)]; }
+function firstRight(i){ return ans(i) === D.questions[i].correct; }
+/* THE SECOND PASS REDEEMS. Wrong first, right second → the question counts as right; wrong
+   both times stays wrong, and there is no third pass. The first answer is never overwritten,
+   which is what lets the end card say "10 right, +2 redeemed" instead of quietly rewriting a
+   10 into a 12. */
+function finalRight(i){ return firstRight(i) || ans2(i) === D.questions[i].correct; }
+function score(s){ return active(s).reduce((n,i)=> n + (finalRight(i) ? 1 : 0), 0); }
+function redeemed(){ return active(S).filter(i => !firstRight(i) && ans2(i) === D.questions[i].correct); }
+/* What a second pass would still have to cover: wrong on the first pass and not yet
+   re-answered. Empty → no button, which is the "if there are no mistakes there is no second
+   pass" rule and also what ends the round rather than looping it. */
+function pending2(){
+  return active(S).filter(i => ans(i) !== undefined && !firstRight(i) && ans2(i) === undefined);
+}
+/* The questions THIS pass runs over. Frozen into p2list when the second pass starts, so
+   answering one correctly cannot shrink the list under his feet mid-run. */
+function runList(){
+  if(S.phase === 2 && S.p2list) return S.p2list.filter(i => !S.skipped[qk(i)]);
+  return active(S);
+}
+function pick(i){ return S.phase === 2 ? ans2(i) : ans(i); }
+let S = load();
+let lastShown = -1;
+
+/* ---- rendering ---------------------------------------------------------------- */
+/* The Starred tab only exists while something is starred, and the Study sheet tab only when
+   the quiz shipped with one — a linguistics quiz built before topic tags has none. If that
+   leaves one tab, the whole group goes: a lone "Quiz" button is chrome that says nothing. */
+function syncTabs(){
+  const nstar = Object.keys(S.starred||{}).length;
+  document.querySelector('.tab[data-tab="starred"]').classList.toggle('hide', !nstar);
+  document.querySelector('.tab[data-tab="sheet"]').classList.toggle('hide', !D.hasSheet);
+  $('#tabs').classList.toggle('hide', !nstar && !D.hasSheet);
+  if(D.tab === 'starred' && !nstar) setTab('quiz');
+}
+function setTab(name){
+  D.tab = name;
+  document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===name));
+  $('#band').classList.toggle('hide', name!=='quiz');
+  $('#starredview').classList.toggle('hide', name!=='starred');
+  $('#sheetview').classList.toggle('hide', name!=='sheet');
+  $('#footer').classList.toggle('hide', name!=='quiz');
+  if(name==='quiz'){
+    draw();
+    // Restore the frozen offset rather than recomputing it: answer, read the sheet, come
+    // back — the question must be exactly where he left it.
+    if(quizPad !== null) $('main').style.paddingTop = quizPad;
+  } else {
+    if(name==='starred') drawStarred();
+    if(name==='sheet') renderScore();
+    $('main').style.paddingTop = BASE_PAD + 'px';
+    window.scrollTo(0,0);
+  }
+}
+
+/* CENTRE THE BLOCK, BUT COMPUTE THE OFFSET ONLY WHEN THE QUESTION CHANGES.
+   `justify-content:center` was the original approach and it is what made the question jump:
+   opening a rationale made the block taller and the centring recomputed underneath him.
+   Measuring once per question and freezing the padding gives both — centred on arrival,
+   immovable afterwards, because answering only ever grows the page downward. */
+const BASE_PAD = 16;
+let quizPad = null;
+
+/* CENTRE ON THE ANSWERED HEIGHT, NOT THE HEIGHT ON SCREEN.
+   Centring on what is visible was wrong in a way that only showed up after answering: the
+   block grows by two rationales, so the top gap stayed large while the last option slid
+   under the footer. Coming back to the same question then looked right, because by then it
+   WAS the answered height being measured — the two states he photographed, from one bug.
+   `reserve` is the height with feedback open, measured off-screen before anything renders. */
+function centreBlock(reserve){
+  const m = $('main');
+  m.style.paddingTop = BASE_PAD + 'px';
+  const avail = innerHeight - $('header').offsetHeight - $('footer').offsetHeight;
+  // The band's own padding is part of the block now, so it has to be inside the measurement
+  // or the box lands low by exactly one padding.
+  const bp = parseFloat(getComputedStyle($('#band')).paddingTop) || 0;
+  const h = (reserve || $('#quizview').getBoundingClientRect().height) + bp * 2;
+  quizPad = Math.max(BASE_PAD, Math.round((avail - h) / 2)) + 'px';
+  m.style.paddingTop = quizPad;
+}
+
+/* The tallest this question can get: a WRONG pick, which opens two rationales rather than
+   one. Rendered into a hidden probe of the same width and thrown away. */
+function answeredHeight(i){
+  const q = D.questions[i];
+  const probe = document.createElement('div');
+  probe.style.cssText = 'position:absolute;left:-99999px;top:0;visibility:hidden';
+  probe.style.width = $('#quizview').getBoundingClientRect().width + 'px';
+  probe.innerHTML = buildQ(i, (q.correct + 1) % q.options.length, false);
+  $('main').appendChild(probe);
+  const h = probe.getBoundingClientRect().height;
+  probe.remove();
+  return h;
+}
+
+/* NEVER BACKWARDS. The old fallback here was `S.i = act[0]`, so skipping a question sent him
+   to question 1 — the whole way back to the start of the quiz. The nearest question AFTER
+   the one that just left is the only sensible landing place. */
+function nextFrom(list, i){
+  const nx = list.find(j => j > i);
+  return nx === undefined ? list[list.length-1] : nx;
+}
+function draw(){
+  if(D.tab!=='quiz') return;
+  $('#band').classList.toggle('off', !!(S.reviewing || S.done));
+  if(S.reviewing) return review();
+  if(S.done) return end();
+  const act = runList();
+  if(!act.length) return end();
+  if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
+  question();
+}
+
+/* Pure markup, no DOM writes and no state changes — so the same builder can render the
+   question and be measured off-screen for the centring reserve. */
+function buildQ(i, picked, fresh, en){
+  const q = D.questions[i];
+  const answered = picked !== undefined;
+  const act = runList(), pos = act.indexOf(i);
+  const starred = !!S.starred[q.qid];
+  en = en || '';
+
+  // The counter sits top-left above the question, the way the notebook does it, rather than
+  // up in the bar — it belongs with the thing it counts. On a second pass it counts the
+  // second pass, so four wrong answers read as "1 / 4" and not as a broken 16.
+  let h = '<div class="qhead' + en + '"><div class="qcol">'
+        + '<p class="meta"><span class="num">' + (pos+1) + ' / ' + act.length + '</span>'
+        + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        + (q.topic ? '<span class="dot">·</span><span>' + esc(q.topic) + '</span>' : '')
+        + '</p>'
+        + '<h1 class="q">' + esc(q.q) + '</h1></div>'
+        + '<button class="star' + (starred?' on':'') + '" id="star" aria-label="Star">'
+        + (starred?'★':'☆') + '</button>'
+        + '<div class="more"><button class="dots" id="dots" aria-label="More">⋮</button></div>'
+        + '</div>';
+
+  h += '<div class="opts">';
+  q.options.forEach((o,k)=>{
+    let cls = 'opt' + en, mark = '', lab = '', why = '';
+    if(answered){
+      if(k === q.correct){ cls += ' is-right'; mark = G_OK; lab = 'Right answer'; }
+      else if(k === picked){ cls += ' is-wrong'; mark = G_NO; lab = 'Not quite'; }
+      else cls += ' is-muted';
+      if(lab && fresh) cls += ' fresh';
+      why = q.rationales ? (q.rationales[k]||'') : '';
+    }
+    h += '<button class="'+cls+'" data-k="'+k+'"'+(answered?' disabled':'')+'>'
+       + '<span class="line"><span class="k">'+D.letters[k]+'.</span>'
+       + '<span class="t">'+esc(o)+'</span>'
+       + '<span class="mark">'+mark+'</span></span>';
+    if(lab){
+      h += '<span class="rat"><span class="ratin">'
+         + '<span class="lab"><span class="g">'+mark+'</span>'+lab+'</span>'
+         + (why ? '<span class="why" style="display:block">'+esc(why)+'</span>' : '')
+         + '</span></span>';
+    }
+    h += '</button>';
+  });
+  return h + '</div>';
+}
+
+function question(fresh){
+  const i = S.i, q = D.questions[i], picked = pick(i);
+  const answered = picked !== undefined;
+  const act = runList();
+  const pos = act.indexOf(i);
+  const isNew = i !== lastShown;
+  lastShown = i;
+
+  $('#rail').style.width = ((pos + (answered?1:0)) / act.length * 100) + '%';
+  $('#quizview').innerHTML = buildQ(i, picked, fresh, isNew ? ' enter' : '');
+  $('#quizview').querySelectorAll('.opt').forEach(b=>{
+    b.onclick = ()=>{
+      // The first pass is never overwritten — a second-pass answer goes in its own map.
+      if(S.phase === 2) S.pass2[qk(i)] = +b.dataset.k; else S.answers[qk(i)] = +b.dataset.k;
+      save(); question(true);
+    };
+  });
+  $('#star').onclick = ()=> toggleStar(i);
+  $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
+
+  // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
+  // touches it — and nothing above the options ever changes height.
+  const hb = $('#hintbtn'), ht = $('#hinttext');
+  hb.classList.toggle('hide', !q.hint || answered);
+  ht.classList.toggle('hide', !(S.hintOpen && q.hint && !answered));
+  ht.textContent = q.hint || '';
+  hb.onclick = toggleHint;
+
+  $('#back').classList.remove('hide');
+  $('#next').classList.remove('hide');
+  $('#review').classList.add('hide');
+  $('#retake').classList.add('hide');
+  $('#pass2').classList.add('hide');
+  $('#back').disabled = pos === 0;
+  $('#next').disabled = !answered;
+  $('#next').textContent = (pos === act.length-1) ? 'Finish' : 'Next';
+  $('#footer').classList.remove('hide');
+  // Only when the question changes, and always against the ANSWERED height, so the layout
+  // he lands on is the one he will still be looking at after he picks.
+  if(isNew) centreBlock(answeredHeight(i));
+}
+
+/* THE HINT, from the button or from `h`. One path for both, and the BUTTON'S OWN VISIBILITY
+   is the gate: it is already hidden when the question has no hint or has been answered, so
+   there is no second copy of that condition to fall out of step. */
+function toggleHint(){
+  const hb = $('#hintbtn'), ht = $('#hinttext');
+  if(hb.classList.contains('hide')) return;
+  S.hintOpen = !S.hintOpen;
+  ht.classList.toggle('hide', !S.hintOpen);
+}
+
+/* STARRING is not the same thing as skipping and the two maps never mix. Starred = worth
+   coming back to, right or wrong, still fully part of the run and the score. Skipped =
+   removed from it. Keeping them apart is what lets exam reuse later take the starred ones as
+   candidates and treat the skipped ones as permanently excluded. */
+function toggleStar(i){
+  const k = qk(i);
+  if(S.starred[k]) delete S.starred[k]; else S.starred[k] = true;
+  save(); syncTabs();
+  const b = $('#star');
+  if(b){ b.textContent = S.starred[k] ? '★' : '☆'; b.classList.toggle('on', !!S.starred[k]); }
+}
+
+/* One question can be dropped from the run, the way the notebook lets him delete one —
+   except nothing is deleted in NotebookLM, so a rebuild brings it back and the end card
+   can put it back at any time.
+
+   SKIPPING THE LAST QUESTION SUBMITS. It used to send him back to question 1, because the
+   skipped index left `active()` and draw()'s fallback was `act[0]`. Deleting the last item
+   in a list means the list is finished, so this does exactly what Finish does. */
+function openMenu(){
+  const host = $('.more');
+  if(host.querySelector('.menu')) return closeMenu();
+  const m = document.createElement('div');
+  m.className = 'menu';
+  m.innerHTML = '<button id="skipq">Skip this question</button>';
+  host.appendChild(m);
+  m.querySelector('#skipq').onclick = ()=>{
+    const list = runList(), pos = list.indexOf(S.i);
+    if(list.length <= 1) return closeMenu();        // never skip the last one standing
+    const wasLast = pos === list.length - 1;
+    S.skipped[qk(S.i)] = true;
+    delete S.answers[qk(S.i)];
+    delete S.pass2[qk(S.i)];
+    delete S.starred[qk(S.i)];                     // a deleted question is not a starred one
+    closeMenu();
+    syncTabs();
+    if(wasLast){ finish(); return; }
+    // After the removal the list has shrunk, so the item now AT `pos` is the one that
+    // followed the skipped question. Forwards, never back to the top.
+    S.i = runList()[pos];
+    S.hintOpen = false;
+    lastShown = -1;
+    save(); question(); window.scrollTo(0,0);
+  };
+  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
+}
+function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(); }
+
+function finish(){
+  S.done = true; S.at = new Date().toISOString();
+  save(); end(); window.scrollTo(0,0);
+}
+
+function end(){
+  const act = active(S), n = score(S), t = act.length;
+  const pct = t ? Math.round(n/t*100) : 0;
+  const red = redeemed().length;
+  let h = '<p class="score">'+n+' <small>/ '+t+'</small></p>'
+        + '<p class="sub">'+pct+'% · '+when(S.at)+'</p>'
+        + '<div class="chart"><i class="r" style="width:'+(t?n/t*100:0)+'%"></i>'
+        + '<i class="w" style="width:'+(t?(t-n)/t*100:0)+'%"></i></div>'
+        + '<p class="legend"><span>'+G_OK+' <b>'+n+'</b> correct</span>'
+        + '<span>'+G_NO+' <b>'+(t-n)+'</b> wrong</span>'
+        // The chart stays TWO segments. A third fill for redemptions would need its own
+        // grayscale-safe hatch and would make the one number he reads harder to read; the
+        // count says it in words instead.
+        + (red ? '<span>+<b>'+red+'</b> on the second pass</span>' : '') + '</p>';
+
+  const by = {};
+  act.forEach(i=>{
+    const q = D.questions[i], k = q.topic || '';
+    if(!k) return;
+    by[k] = by[k] || {n:0,t:0};
+    by[k].t++;
+    if(finalRight(i)) by[k].n++;
+  });
+  const keys = Object.keys(by);
+  if(keys.length){
+    h += '<div class="topics"><h3>Topics covered</h3>';
+    keys.forEach(k=>{
+      h += '<div class="trow"><span>'+esc(k)+'</span><span class="n">'+by[k].n+'/'+by[k].t+'</span>'
+         + '<span class="tbar"><i style="width:'+(by[k].n/by[k].t*100)+'%"></i></span></div>';
+    });
+    h += '</div>';
+  }
+
+  if(S.history.length){
+    h += '<p class="hist">Earlier attempts: ' + S.history.slice().reverse()
+        .map(a=>'<span>'+a.score+'/'+a.total+' on '+when(a.at)+'</span>').join(' · ') + '</p>';
+  }
+  const nskip = Object.keys(S.skipped||{}).length;
+  if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
+              + '<button class="link" id="unskip">put them back</button></p>';
+  if(S.rebuilt) h += '<p class="note">These questions were rebuilt since your last attempt.</p>';
+  h += '<p class="note"><a href="'+D.root+'">All my quizzes</a>'
+     + (D.notebook ? ' · <a href="'+D.notebook+'">Open in Gemini Notebook</a>' : '') + '</p>';
+
+  $('#quizview').innerHTML = h;
+  const u = $('#unskip');
+  if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  $('#rail').style.width = '100%';
+  $('#band').classList.add('off');
+  $('#footer').classList.remove('hide');
+  $('#back').classList.add('hide');
+  $('#hintbtn').classList.add('hide');
+  $('#hinttext').classList.add('hide');
+  $('#next').classList.add('hide');
+  $('#review').classList.remove('hide');
+  $('#review').textContent = 'Review quiz';
+  $('#retake').classList.remove('hide');
+  // No wrong answers left to retry → no button at all, which is also what stops the second
+  // pass looping into a third: anything answered on pass two leaves pending2() for good.
+  $('#pass2').classList.toggle('hide', pending2().length === 0);
+  renderScore();
+  lastShown = -1;
+  centreBlock();
+}
+
+/* One question's full record: the right answer, what he chose on each pass, the rationale.
+   Shared by the review list and the Starred tab so the two can never drift apart. */
+function itemHTML(i, n){
+  const q = D.questions[i], first = ans(i), second = ans2(i);
+  let h = '<div class="item">';
+  if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
+  h += '<p class="qq">'+(n===undefined?'':(n+1)+'. ')+esc(q.q)+'</p>'
+     + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
+  if(!firstRight(i)){
+    h += '<p class="rline mine"><span class="g">'+G_NO+'</span><span>You chose: '
+       + (first===undefined ? 'nothing' : esc(q.options[first])) + '</span></p>';
+    if(second !== undefined){
+      h += '<p class="rline mine"><span class="g">'+(second===q.correct?G_OK:G_NO)+'</span>'
+         + '<span>Second pass: '+esc(q.options[second])
+         + (second===q.correct ? ' — redeemed' : '') + '</span></p>';
+    }
+  }
+  const why = q.rationales ? q.rationales[q.correct] : '';
+  if(why) h += '<p class="why" style="padding-left:0">'+esc(why)+'</p>';
+  return h + '</div>';
+}
+
+function review(){
+  let h = '<div class="rev"><h3>Every question</h3>';
+  active(S).forEach((i,n)=>{ h += itemHTML(i, n); });
+  h += '</div>';
+  $('#quizview').innerHTML = h;
+  $('#band').classList.add('off');
+  $('#footer').classList.remove('hide');
+  $('#back').classList.add('hide');
+  $('#hintbtn').classList.add('hide');
+  $('#hinttext').classList.add('hide');
+  $('#next').classList.add('hide');
+  $('#pass2').classList.add('hide');
+  $('#review').classList.remove('hide');
+  $('#review').textContent = 'Summary';
+  $('#retake').classList.remove('hide');
+  quizPad = BASE_PAD + 'px';                      // a long list, never centred
+  $('main').style.paddingTop = quizPad;
+  window.scrollTo(0,0);
+}
+
+/* ---- the Starred tab ---------------------------------------------------------------
+   Its own view rather than a section of the review list, because the point is to find them
+   again quickly on a later visit — including on a quiz he has not retaken. Right or wrong
+   does not matter; "this one is important" is the only thing being recorded. */
+function drawStarred(){
+  const list = D.questions.map((_,i)=>i).filter(i => S.starred[qk(i)]);
+  if(!list.length){
+    $('#starredview').innerHTML = '<h3>Starred</h3><p class="empty">Nothing starred yet. '
+      + 'Use the ☆ beside a question.</p>';
+    return;
+  }
+  let h = '<h3>Starred · '+list.length+'</h3>';
+  list.forEach((i,n)=>{
+    h += itemHTML(i, n).replace('</div>',
+      '<p class="rline"><button class="link" data-unstar="'+i+'">Unstar</button></p></div>');
+  });
+  $('#starredview').innerHTML = h;
+  $('#starredview').querySelectorAll('[data-unstar]').forEach(b=>{
+    b.onclick = ()=>{ delete S.starred[qk(+b.dataset.unstar)]; save(); syncTabs(); drawStarred(); };
+  });
+}
+
+/* ---- the score, written where he copies from ---------------------------------------- */
+function scoreParts(){
+  const act = active(S), n = score(S), t = act.length, red = redeemed().length;
+  return {n:n, t:t, pct: t ? Math.round(n/t*100) : 0, red:red, first:n-red, wrong:t-n,
+          skipped: Object.keys(S.skipped||{}).length};
+}
+function scoreMarkdown(){
+  if(!S.done) return '';
+  const p = scoreParts();
+  return '**Quiz:** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
+       + (p.red ? ', +' + p.red + ' redeemed' : '') + ', ' + p.wrong + ' wrong'
+       + (p.skipped ? ', ' + p.skipped + ' skipped' : '') + ' · ' + when(S.at);
+}
+function renderScore(){
+  const el = $('#scorecard');
+  if(!el) return;
+  el.classList.toggle('hide', !S.done);
+  if(!S.done) return;
+  const p = scoreParts();
+  el.innerHTML = '<b>'+p.n+' / '+p.t+'</b><span>'+p.pct+'% · '+p.first+' right'
+    + (p.red ? ', +'+p.red+' on the second pass' : '') + ', '+p.wrong+' wrong'
+    + (p.skipped ? ' · '+p.skipped+' skipped' : '') + ' · '+when(S.at)+'</span>';
+}
+
+function when(iso){
+  if(!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString(undefined,{month:'short',day:'numeric'})
+       + ' ' + d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+}
+
+/* ---- controls ------------------------------------------------------------------ */
+function step(dir){
+  const act = runList(), pos = act.indexOf(S.i);
+  if(dir > 0 && pos === act.length-1){ finish(); return; }
+  const nx = act[pos + dir];
+  if(nx === undefined) return;
+  S.i = nx; S.hintOpen = false; save(); question(); window.scrollTo(0,0);
+}
+$('#next').onclick = ()=> step(1);
+$('#back').onclick = ()=> step(-1);
+$('#review').onclick = ()=>{ S.reviewing = !S.reviewing; draw(); };
+/* THE SECOND PASS — the preferred way out of the end card, and the one that keeps
+   everything. It re-runs only what he got wrong, on a list frozen at the moment he presses
+   it, and a right answer here redeems the question in the final score. */
+$('#pass2').onclick = ()=>{
+  const list = pending2();
+  if(!list.length) return;
+  S.phase = 2; S.p2list = list; S.i = list[0];
+  S.done = false; S.reviewing = false; S.hintOpen = false;
+  lastShown = -1;
+  save(); draw(); window.scrollTo(0,0);
+};
+/* RETAKE CLEARS, which is why it sits apart from the other two. The attempt goes into
+   history first so nothing is lost, and the questions he deleted or starred stay that way —
+   they are decisions about the quiz, not part of one attempt at it. */
+$('#retake').onclick = ()=>{
+  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length});
+  const hist = S.history, skipped = S.skipped, starred = S.starred;
+  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred;
+  lastShown = -1;
+  save(); syncTabs(); renderScore(); draw();
+};
+document.querySelectorAll('.tab').forEach(b=> b.onclick = ()=> setTab(b.dataset.tab));
+
+/* ---- his own additions -------------------------------------------------------------
+   A textarea, localStorage, and string work. NO API, no model, nothing paid — the
+   formatting below is deterministic, which is the whole reason it can be free.
+
+   The loop this closes: he pastes the result into the subchapter's Notion row, and the
+   weekly exam already scrapes that row first (board-notes.md → exam-notes.md). So anything
+   he adds here becomes exam content without touching the pipeline. */
+const NKEY = KEY + ':notes';
+const ta = $('#mynotes'), savedmsg = $('#savedmsg');
+
+function loadNotes(){ try{ return localStorage.getItem(NKEY) || ''; }catch(e){ return ''; } }
+function saveNotes(){
+  try{ localStorage.setItem(NKEY, ta.value); }catch(e){}
+  savedmsg.textContent = ta.value.trim() ? 'Saved in this browser' : '';
+}
+
+/* His shorthand → the sheet's own markdown shape, so the paste reads as one document
+   rather than a tidy half and a raw half. Bolds the term before a `:` or a dash, keeps his
+   indentation as nesting, and numbers everything (markdown renumbers `1.` itself, and
+   Notion honours that on paste). A line he already formatted is left alone. */
+function fmtLine(t){
+  if(/\*\*/.test(t)) return t;
+  let m = t.match(/^([^:]{1,60}?):\s+(.+)$/);
+  if(!m) m = t.match(/^(.{1,60}?)\s+[—–-]\s+(.+)$/);
+  return m ? '**' + m[1].trim() + '** — ' + m[2].trim() : t;
+}
+function noteMarkdown(){
+  const out = [];
+  (ta.value || '').split('\n').forEach(raw=>{
+    const line = raw.replace(/\t/g, '  ');
+    const m = line.match(/^(\s*)(?:[-*+]\s+|\d+[.)]\s+)?(.*)$/);
+    const text = m[2].trim();
+    if(!text) return;
+    const depth = Math.min(Math.floor(m[1].length / 2), 2);
+    out.push('   '.repeat(depth) + '1. ' + fmtLine(text));
+  });
+  return out.join('\n');
+}
+/* THE SCORE RIDES ALONG WITH THE COPY. One press still takes score + sheet + his own notes
+   as a single markdown block, which is what Notion parses on paste — so the row that the
+   week's exam is built from also records how the quiz went, and he can see later whether
+   this section needs testing again. */
+function fullMarkdown(){
+  const mine = noteMarkdown();
+  const sc = scoreMarkdown();
+  return (sc ? sc + '\n\n' : '') + (D.sheet || '')
+       + (mine ? '\n\n## My notes\n\n' + mine + '\n' : '');
+}
+
+/* A 25-line renderer so Preview shows the same shape the paste will have. Lists and bold
+   only — anything more and this would be a markdown library, which is the dependency the
+   whole file exists to avoid. */
+function tinyMd(md){
+  const esc2 = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const inline = s => esc2(s).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  let html = '', stack = [];
+  md.split('\n').forEach(line=>{
+    if(!line.trim()) return;
+    const h = line.match(/^(#{1,4})\s+(.*)$/);
+    if(h){ while(stack.length){ html += '</ol>'; stack.pop(); }
+           html += '<h' + Math.min(h[1].length+1,5) + '>' + inline(h[2]) + '</h' + Math.min(h[1].length+1,5) + '>'; return; }
+    const m = line.match(/^(\s*)(?:[-*+]|\d+[.)])\s+(.*)$/);
+    if(!m){ while(stack.length){ html += '</ol>'; stack.pop(); } html += '<p>' + inline(line.trim()) + '</p>'; return; }
+    const d = Math.floor(m[1].length / 3);
+    while(stack.length > d + 1){ html += '</ol>'; stack.pop(); }
+    while(stack.length < d + 1){ html += '<ol>'; stack.push(1); }
+    html += '<li>' + inline(m[2]) + '</li>';
+  });
+  while(stack.length){ html += '</ol>'; stack.pop(); }
+  return html;
+}
+
+if(ta){
+  ta.value = loadNotes();
+  saveNotes();
+  let t = null;
+  ta.addEventListener('input', ()=>{ clearTimeout(t); t = setTimeout(saveNotes, 400); });
+  ta.addEventListener('blur', saveNotes);
+  $('#previewnotes').onclick = ()=>{
+    const p = $('#minepreview'), on = p.classList.contains('hide');
+    p.innerHTML = on ? (noteMarkdown() ? tinyMd(noteMarkdown())
+                                       : '<p>Nothing written yet.</p>') : '';
+    p.classList.toggle('hide', !on);
+    $('#previewnotes').textContent = on ? 'Hide preview' : 'Preview';
+  };
+}
+
+/* COPIES THE MARKDOWN, NOT THE RENDERED TEXT. He pastes this into Notion, and Notion parses
+   markdown on paste — so the headings, the numbering and the bold terms all survive as real
+   Notion blocks. Copying the visible text would paste one flat wall. */
+const cp = $('#copysheet');
+if(cp) cp.onclick = async ()=>{
+  const md = fullMarkdown();
+  try{ await navigator.clipboard.writeText(md); }
+  catch(e){
+    const t = document.createElement('textarea');
+    t.value = md; t.style.position='fixed'; t.style.opacity='0';
+    document.body.appendChild(t); t.select();
+    try{ document.execCommand('copy'); }catch(_){}
+    t.remove();
+  }
+  cp.textContent = 'Copied'; cp.classList.add('copied');
+  setTimeout(()=>{ cp.textContent = 'Copy'; cp.classList.remove('copied'); }, 1600);
+};
+
+// Re-centre when the window changes shape; the frozen padding would be wrong afterwards.
+// Against the ANSWERED height, like every other call — measuring what is on screen is the
+// bug this file already fixed once.
+addEventListener('resize', ()=>{
+  if(D.tab==='quiz' && !S.reviewing && !S.done) centreBlock(answeredHeight(S.i));
+});
+
+document.addEventListener('keydown', e=>{
+  if(D.tab!=='quiz' || S.done || S.reviewing) return;
+  const q = D.questions[S.i];
+  if(e.key === 'Enter' || e.key === 'ArrowRight'){ if(!$('#next').disabled) step(1); return; }
+  if(e.key === 'ArrowLeft'){ if(!$('#back').disabled) step(-1); return; }
+  // `h` IS THE HINT, not option H. Every quiz here has four options, so H as an option key
+  // has never been reachable; if one ever has eight, the eighth is still `8`.
+  if(e.key === 'h' || e.key === 'H'){ toggleHint(); return; }
+  let k = -1;
+  if(/^[1-9]$/.test(e.key)) k = +e.key - 1;
+  else if(/^[a-gA-G]$/.test(e.key)) k = D.letters.indexOf(e.key.toUpperCase());
+  if(k >= 0 && k < q.options.length && pick(S.i) === undefined){
+    // click the real button rather than repeating its handler — one path for answering
+    const btn = $('#quizview').querySelector('.opt[data-k="' + k + '"]');
+    if(btn) btn.click();
+  }
+});
+
+save();
+syncTabs();
+renderScore();
+setTab(D.tab || 'quiz');
+</script>
+</body>
+</html>
