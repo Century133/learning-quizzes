@@ -62,5 +62,13 @@
   "book": "A&P 2e",
   "url": "q/ap2e-8-1.html",
   "total": 16
+ },
+ {
+  "id": "psp-3-3",
+  "title": "3.3 Emotions, Stress, and Well-Being",
+  "subtitle": "Chapter 3 · Social Affect",
+  "book": "PSP",
+  "url": "q/psp-3-3.html",
+  "total": 12
  }
 ]

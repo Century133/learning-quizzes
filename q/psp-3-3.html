@@ -1,0 +1,1603 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#131314">
+<title>3.3 Emotions, Stress, and Well-Being</title>
+<style>
+:root{--bg:#131314;--surface:#1e1f20;--surface-hi:#26282a;--text:#e3e3e3;
+--muted:#9aa0a6;--line:#3c4043;--accent:#8ab4f8;--right:#81c995;--wrong:#f28b82;
+--radius:14px;--maxw:660px;--qsize:1.25rem;--qweight:600;
+--osize:0.95rem;--opad:12px 16px;--ogap:7px;--qgap:18px;
+--barh:46px;--band:#191a1b;--bandr:20px;--bandpad:20px;
+--font:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font);
+ font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+ min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+a{color:var(--accent)}
+/* Longhands, NOT `padding:0 22px`. `main` and `footer` also carry .wrap, and a class beats
+   an element selector — the shorthand here was silently zeroing their vertical padding. */
+.wrap{width:100%;max-width:var(--maxw);margin:0 auto;
+ padding-left:22px;padding-right:22px}
+
+/* ---- top bar: title, tabs, progress. Nothing else lives up here. ---- */
+header{position:sticky;top:0;z-index:5;background:var(--bg);
+ border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:14px;height:var(--barh)}
+.title{font-size:.9rem;font-weight:500;white-space:nowrap;overflow:hidden;
+ text-overflow:ellipsis;flex:1}
+.tabs{display:flex;gap:2px}
+.tab{background:none;border:0;color:var(--muted);font:inherit;font-size:.82rem;
+ padding:5px 12px;border-radius:999px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--surface-hi);color:var(--text)}
+.rail{height:2px;background:var(--line)}
+.rail>i{display:block;height:100%;background:var(--accent);width:0;
+ transition:width .25s ease}
+
+/* TOP-ANCHORED, NOT CENTRED, and that is a fix rather than a preference. With
+   justify-content:center the question drifted upward the moment an answer opened a
+   rationale, because the block got taller and the centring recomputed — "the question
+   shifts… it should stay stationary". Anchored to the top it cannot move: only the cards
+   below the one he clicked ever change position. */
+main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;padding:16px 0 6px}
+
+/* ---- THE BAND ----
+   Flat black under the question made it hard to read; the notebook's lighter middle band is
+   what he wanted instead. So the question and EVERY option sit inside one surface.
+
+   IT CLOSES AT THE BOTTOM AND HUGS THE CONTENT. The first version ran off the bottom of the
+   screen — "kind of weirdly big at the bottom", and he was right: with the block centred, an
+   open band left a lot of empty surface under the last option. It is a card now, sized to
+   what is in it.
+
+   THREE TONES, and the order matters: page (--bg) → band (--band) → option card (--surface).
+   Set --band lighter than --surface and the cards vanish into it. */
+.band{background:var(--band);border:1px solid var(--line);border-radius:var(--bandr);
+ padding:var(--bandpad)}
+/* Off for the end card, the review list and the sheet — a long scrolling list does not want
+   to be in a box. */
+.band.off{background:none;border:0;padding:0}
+/* A short window pays for the band's padding out of the space the options need, so it gives
+   most of it back below 780px. Measured: at 800px all 14 questions of PSP 3.6 still fit
+   answered-wrong with no scrolling. */
+@media (max-height:780px){
+  .band{padding:12px 16px}
+}
+
+/* ---- the question ---- */
+.qhead{display:flex;align-items:flex-start;gap:10px;margin:0 0 var(--qgap)}
+.qhead .qcol{flex:1;min-width:0}
+.meta{display:flex;align-items:center;gap:8px;margin:0 0 7px;font-size:.7rem;
+ color:var(--muted);letter-spacing:.07em;text-transform:uppercase}
+.meta .num{font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.meta .dot{opacity:.55}
+.topic{margin:0 0 6px;font-size:.7rem;color:var(--muted);letter-spacing:.07em;
+ text-transform:uppercase}
+.q{font-size:var(--qsize);line-height:1.35;font-weight:var(--qweight);margin:0;
+ letter-spacing:-.005em}
+.link{background:none;border:0;padding:0;color:var(--muted);font:inherit;
+ font-size:.85rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.link:hover{color:var(--text)}
+/* The hint lives in the FOOTER, as Gemini's does. Opening it there grows the sticky bar
+   upward and leaves the question and every option exactly where they were; under the
+   question it would have shoved all four cards down. */
+.hinttext{margin:0 0 12px;color:var(--muted);font-size:.88rem;line-height:1.5;
+ border-left:2px solid var(--line);padding-left:12px}
+
+/* ---- options ---- */
+.opts{display:flex;flex-direction:column;gap:var(--ogap)}
+.opt{display:block;width:100%;text-align:left;background:var(--surface);
+ border:1px solid transparent;border-radius:var(--radius);padding:var(--opad);
+ color:var(--text);font:inherit;font-size:var(--osize);cursor:pointer;
+ transition:background .16s ease,border-color .16s ease,opacity .16s ease}
+.opt:hover:not(:disabled){background:var(--surface-hi)}
+.opt:disabled{cursor:default}
+.line{display:flex;gap:12px;align-items:flex-start;line-height:1.4}
+.line .k{color:var(--muted);min-width:1.25em}
+.line .t{flex:1}
+.line .mark{font-size:1.05rem;line-height:1.45;min-width:1.05em;text-align:right;opacity:0}
+
+/* GRAYSCALE-SAFE STATES — three signals, never colour alone: the ✓/✕ glyph, the WORD in
+   .lab, and luminance (bright solid border vs dimmed dashed). Turn the display to
+   grayscale and every state still reads. */
+.opt.is-right{background:var(--surface-hi);border-color:var(--right);
+ box-shadow:inset 0 0 0 1px var(--right)}
+.opt.is-right .mark{opacity:1;color:var(--right)}
+.opt.is-wrong{background:transparent;border-style:dashed;border-color:var(--wrong);
+ opacity:.8}
+.opt.is-wrong .mark{opacity:1;color:var(--wrong)}
+.opt.is-muted{opacity:.42}
+
+/* THE FEEDBACK LIVES INSIDE THE CARD, as Gemini's does — that is what he asked for, and it
+   is also why nothing has to scroll: the explanation appears where he is already looking.
+   The 0fr→1fr grid trick animates an unknown height with no JS measuring. If a browser
+   refuses to animate it, the row still ends at 1fr, so the text is visible either way. */
+.rat{display:grid;grid-template-rows:1fr;opacity:1}
+.rat>.ratin{overflow:hidden;min-height:0}
+.opt.fresh .rat{animation:reveal .3s ease}
+@keyframes reveal{from{grid-template-rows:0fr;opacity:0}to{grid-template-rows:1fr;opacity:1}}
+.lab{display:flex;align-items:center;gap:8px;font-size:.86rem;font-weight:600;
+ margin:9px 0 0;padding-left:calc(1.25em + 12px)}
+.opt.is-right .lab{color:var(--right)}
+.opt.is-wrong .lab{color:var(--wrong)}
+.why{margin:4px 0 0;padding-left:calc(1.25em + 12px);color:var(--muted);
+ font-size:.86rem;line-height:1.4}
+
+.opt.enter,.qhead.enter{animation:fadein .24s ease both}
+@keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* ---- SELECTABLE TEXT, and it is timed rather than global ----
+   He searches the web while he works, so the wording has to leave the page. Two different
+   problems, one each side of the answer:
+
+   THE QUESTION was never selectable because the browser's own stylesheet turns selection
+   off inside a <button>, and the whole question head sits in one. `user-select:text` on the
+   text itself puts it back; it costs nothing, because nothing up there is a click target
+   except the ☆ and the ⋮, which are excluded below.
+
+   THE OPTIONS STAY LOCKED UNTIL HE HAS ANSWERED, and that is deliberate, not an oversight.
+   An option IS the button — drag across one to select it and the mouseup answers the
+   question with whatever he happened to start the drag on. So selection is enabled on
+   `:disabled`, which is exactly the set of options that can no longer be clicked: every
+   option, the moment the answer is in. On a second pass the pending question re-enables and
+   locks again, which is right — it is live again. */
+.q,.qq,.why,.lab,.hinttext,.rline,.tag,.sheet,.topics,.legend{
+ user-select:text;-webkit-user-select:text}
+.opt{user-select:none;-webkit-user-select:none}
+.opt:disabled,.opt:disabled *{user-select:text;-webkit-user-select:text;cursor:auto}
+.star,.dots,.tab,button.pill{user-select:none;-webkit-user-select:none}
+
+/* ---- HIS RESEARCH, one box per question ----
+   Under the options, inside the band, and OUTSIDE #quizview — so answering re-renders the
+   question without touching what he is halfway through typing, the same reason the hint
+   lives in the footer.
+
+   THE TOGGLE ROW IS ALWAYS VISIBLE AND THE BODY IS WHAT COLLAPSES. That is what keeps the
+   centring honest: the block's minimum height is a constant the measurement can include,
+   whether the box is open or shut. Opening it only ever grows the page downward, which is
+   the one direction this page allows. */
+.research{margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+.rtoggle{display:inline-flex;align-items:center;gap:7px;background:none;border:0;padding:0;
+ color:var(--muted);font:inherit;font-size:.82rem;cursor:pointer;text-decoration:underline;
+ text-underline-offset:3px;user-select:none;-webkit-user-select:none}
+.rtoggle:hover{color:var(--text)}
+.rtoggle.has{color:var(--text)}
+.rbody{margin:12px 0 0}
+#rtext{width:100%;min-height:104px;resize:vertical;background:var(--surface);
+ color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
+ padding:11px 13px;font:inherit;font-size:.9rem;line-height:1.55;outline:none}
+#rtext:focus{border-color:var(--accent)}
+#rtext::placeholder{color:var(--muted);opacity:.7}
+.rshots{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
+.shot{position:relative;display:block;line-height:0}
+.shot img{max-height:88px;max-width:150px;border-radius:9px;border:1px solid var(--line)}
+.shot .x{position:absolute;top:-6px;right:-6px;width:20px;height:20px;line-height:18px;
+ text-align:center;border-radius:999px;border:1px solid var(--line);background:var(--surface-hi);
+ color:var(--text);font:inherit;font-size:.8rem;cursor:pointer;padding:0}
+.rsay{color:var(--muted);font-size:.76rem;margin:9px 0 0;min-height:1em}
+.rsay.warn{color:var(--wrong)}
+
+/* the same material, read back on the study sheet */
+.ritem{border-top:1px solid var(--line);padding:16px 0 4px}
+.ritem:first-of-type{border-top:0;padding-top:6px}
+.rq{font-size:.95rem;font-weight:600;margin:0 0 8px}
+.rtxt p{margin:0 0 9px;color:var(--muted)}
+.rimg{display:block;max-width:100%;border-radius:10px;border:1px solid var(--line);
+ margin:0 0 10px}
+
+/* ---- starring ----
+   A visible toggle rather than a menu item: it is used on questions he got RIGHT as often as
+   wrong, so it has to be one press. Outline vs filled is a shape difference, so it reads in
+   grayscale without needing colour. */
+.star{background:none;border:0;color:var(--muted);font-size:1.05rem;line-height:1;
+ padding:4px 6px;border-radius:999px;cursor:pointer;flex:0 0 auto}
+.star:hover{background:var(--surface);color:var(--text)}
+.star.on{color:var(--text)}
+
+/* ---- ? "no idea, needs work" ----
+   Beside the star and read the same way. GRAYSCALE-SAFE like everything else on this page:
+   on/off is a RING appearing, not a colour changing, so it reads with the colour off and at
+   a glance in a screenshot. */
+.qmark{background:none;border:1px solid transparent;color:var(--muted);font:inherit;
+ font-size:.9rem;font-weight:600;line-height:1;width:26px;height:26px;padding:0;
+ border-radius:999px;cursor:pointer;flex:0 0 auto;user-select:none;-webkit-user-select:none}
+.qmark:hover{background:var(--surface);color:var(--text)}
+.qmark.on{color:var(--text);border-color:var(--accent);background:var(--surface-hi)}
+
+/* ---- the ⋮ menu ---- */
+.more{position:relative;flex:0 0 auto}
+.dots{background:none;border:0;color:var(--muted);font-size:1.15rem;line-height:1;
+ padding:4px 8px;border-radius:999px;cursor:pointer}
+.dots:hover{background:var(--surface);color:var(--text)}
+.menu{position:absolute;right:0;top:32px;background:var(--surface-hi);
+ border:1px solid var(--line);border-radius:10px;padding:5px;min-width:170px;z-index:6;
+ box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.menu button{display:block;width:100%;text-align:left;background:none;border:0;
+ color:var(--text);font:inherit;font-size:.88rem;padding:8px 10px;border-radius:7px;
+ cursor:pointer;white-space:nowrap}
+.menu button:hover{background:var(--surface)}
+
+/* ---- bottom bar ---- */
+footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg) 30%);
+ padding:8px 0 10px}
+.acts{display:flex;gap:10px;align-items:center}
+.spacer{flex:1}
+button.pill{font:inherit;font-size:.9rem;border-radius:999px;padding:9px 22px;
+ cursor:pointer;border:1px solid var(--line);background:none;color:var(--text)}
+button.pill:disabled{opacity:.32;cursor:default}
+button.pill.primary{background:var(--accent);color:#0b0b0c;border-color:var(--accent);
+ font-weight:500}
+button.pill.ghost{border-color:transparent;color:var(--muted)}
+
+/* ---- end card ---- */
+.score{font-size:3.1rem;font-weight:400;letter-spacing:-.03em;margin:0}
+.score small{font-size:.95rem;color:var(--muted);font-weight:400;letter-spacing:0}
+.sub{color:var(--muted);margin:5px 0 26px;font-size:.92rem}
+.chart{display:flex;height:11px;border-radius:999px;overflow:hidden;
+ background:var(--line);margin:0 0 9px}
+.chart i{display:block;height:100%}
+.chart i.r{background:var(--right)}
+/* hatched as well as coloured, so the split reads with the colour off */
+.chart i.w{background:var(--wrong);
+ background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,
+ rgba(0,0,0,.45) 3px,rgba(0,0,0,.45) 6px)}
+.legend{display:flex;gap:16px;color:var(--muted);font-size:.84rem;margin:0 0 30px}
+.legend b{color:var(--text);font-weight:500}
+.topics{margin:0 0 30px}
+.topics h3,.rev h3{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;
+ color:var(--muted);font-weight:500;margin:0 0 12px}
+.trow{display:grid;grid-template-columns:1fr auto;gap:5px 14px;align-items:center;
+ padding:8px 0;border-top:1px solid var(--line)}
+.trow .n{font-variant-numeric:tabular-nums;color:var(--muted);font-size:.88rem}
+.tbar{grid-column:1/-1;height:3px;background:var(--line);border-radius:999px;
+ overflow:hidden}
+.tbar i{display:block;height:100%;background:var(--text)}
+
+/* ---- review list ---- */
+.rev{padding:6px 0 36px}
+.item{border-top:1px solid var(--line);padding:20px 0}
+.item .qq{font-size:1rem;margin:0 0 12px}
+.rline{display:flex;gap:10px;align-items:flex-start;padding:3px 0;font-size:.92rem}
+.rline .g{min-width:1.2em}
+.rline.mine{color:var(--muted)}
+.tag{display:inline-block;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;
+ color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 9px;
+ margin:0 0 9px}
+
+/* ---- study sheet ----
+   THREE DISTINCT LEVELS, because two of them used to look the same: he could not tell the
+   topic from the "Key terms" heading under it. Topic = large, over a rule. Key terms /
+   Names and studies = a small uppercase label, the same treatment the quiz gives its topic
+   tag. Entries = a numbered list with the term in bold, which is the shape of his own
+   Notion notes, so his shorthand sits beside this instead of clashing with it. */
+.sheet{padding:2px 0 56px;font-size:.95rem}
+.sheet h2{font-size:1.3rem;font-weight:600;margin:34px 0 10px;letter-spacing:-.01em}
+.sheet h3{font-size:1.15rem;font-weight:600;margin:34px 0 4px;letter-spacing:-.01em;
+ padding-top:18px;border-top:1px solid var(--line)}
+/* first-of-type, not first-child: .sheettools is the first child, so first-child never
+   matched and the opening topic carried a stray rule above it */
+.sheet h3:first-of-type{margin-top:0;padding-top:0;border-top:0}
+.sheet h4,.sheet h5{font-size:.7rem;font-weight:600;margin:18px 0 8px;color:var(--muted);
+ letter-spacing:.09em;text-transform:uppercase}
+.sheet p{margin:0 0 10px;color:var(--muted)}
+.sheet h3+p{color:var(--text);margin-bottom:4px}
+.sheet ul,.sheet ol{margin:0 0 4px;padding-left:24px}
+.sheet ol{list-style:decimal}
+.sheet ol ol{list-style:lower-alpha;margin:4px 0 6px}
+.sheet ul ul,.sheet ol ul{margin:4px 0 6px}
+.sheet li{margin:0 0 6px;padding-left:2px}
+.sheet li::marker{color:var(--muted)}
+.sheet li>strong:first-child{color:var(--text)}
+.sheet strong{font-weight:600}
+.sheet hr{border:0;border-top:1px solid var(--line);margin:26px 0}
+.sheet code{background:var(--surface);padding:1px 6px;border-radius:6px;font-size:.9em}
+.sheettools{display:flex;justify-content:flex-end;gap:18px;padding:10px 0 4px}
+.copied{color:var(--right)}
+
+/* ---- the score, on the sheet ----
+   It sits at the top of the sheet and Copy takes it, so the paste that lands in the Notion
+   row carries what he scored beside what the section says — which is what tells him later
+   whether this one needs testing again. */
+.scorecard{border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;
+ margin:16px 0 6px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.scorecard b{font-size:1.35rem;font-weight:500;font-variant-numeric:tabular-nums}
+.scorecard span{color:var(--muted);font-size:.88rem}
+/* Its own row under the score, never beside it — the projected number is a second reading
+   of the same quiz and putting it inline would read as more of the first one. */
+.scorecard .proj{flex-basis:100%;padding-top:2px;border-top:1px solid var(--line);
+ margin-top:4px;font-size:.84rem}
+
+/* ---- his own additions ---- */
+/* SCOPED TO .sheet, because `.mine` is also the review list's "you chose this" modifier
+   (`.rline.mine`) and this block sits later in the file — unscoped, it was handing every
+   wrong-answer line in the review list a 34px gap and a rule above it. */
+.own{margin:34px 0 0;padding-top:18px;border-top:1px solid var(--line)}
+.own h3{margin:0 0 4px;padding:0;border:0}
+.own .say{color:var(--muted);font-size:.85rem;margin:0 0 12px}
+.own .item:first-of-type{border-top:0;padding-top:6px}
+#mynotes{width:100%;min-height:180px;resize:vertical;background:var(--surface);
+ color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
+ padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.6;outline:none}
+#mynotes:focus{border-color:var(--accent)}
+#mynotes::placeholder{color:var(--muted);opacity:.7}
+.saved{color:var(--muted);font-size:.78rem;margin:8px 0 0;height:1em}
+#minepreview{margin:14px 0 0}
+
+.empty{color:var(--muted);padding:8px 0 30px}
+.hist{color:var(--muted);font-size:.84rem;margin:22px 0 0}
+.hist span{white-space:nowrap}
+.note{color:var(--muted);font-size:.84rem;margin:16px 0 0}
+.hide{display:none !important}
+
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  .q{font-size:1.22rem}
+  main{padding:22px 0 14px}
+  .score{font-size:2.5rem}
+  .bar{gap:8px}
+  .tab{padding:5px 10px}
+  button.pill{padding:11px 18px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important}
+}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap bar">
+    <span class="title">3.3 Emotions, Stress, and Well-Being</span>
+    <span class="tabs" id="tabs"><button class="tab" data-tab="quiz" aria-selected="true">Quiz</button><button class="tab hide" data-tab="starred" aria-selected="false">Starred</button><button class="tab" data-tab="sheet" aria-selected="false">Study sheet</button></span>
+  </div>
+  <div class="rail"><i id="rail"></i></div>
+</header>
+
+<main class="wrap">
+  <div class="band" id="band">
+    <div id="quizview"></div>
+    <!-- Outside #quizview on purpose: answering re-renders the question, and it must not
+         throw away what he is halfway through pasting. -->
+    <div class="research hide" id="research">
+      <button class="rtoggle" id="rtoggle">+ Add research</button>
+      <div class="rbody hide" id="rbody">
+        <textarea id="rtext" spellcheck="false" placeholder="Paste what you found — an explanation, a definition, a diagram. Images paste straight in."></textarea>
+        <div class="rshots hide" id="rshots"></div>
+        <p class="rsay" id="rsay"></p>
+      </div>
+    </div>
+  </div>
+  <div id="starredview" class="rev hide"></div>
+  <div id="sheetview" class="sheet hide">
+    <div class="scorecard hide" id="scorecard"></div>
+    <div class="sheettools">
+      <button class="link" id="previewnotes">Preview</button>
+      <button class="link" id="copysheet">Copy</button>
+    </div>
+    <div id="sheetmd"><h3>Extreme stressors</h3>
+<p>Extreme social situations and disasters trigger severe long-term mental health syndromes and heightened physical risks.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Post-traumatic stress disorder (PTSD)</strong> — Medical syndrome from extreme stress featuring anxiety, sleeplessness, nightmares, and social withdrawal.</li>
+</ol>
+<p>Soldiers, victims of natural disasters, or victims of terrorism.</p>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>American Medical Association (2009)</strong> — Found Hurricane Katrina survivors had heart attack rates triple the national average.</li>
+<li><strong>Lampert, Baron, McPherson, &amp; Lee (2002)</strong> — Correlated 9/11 site proximity with higher reported stress levels during the following year.</li>
+</ol>
+<h3>General Adaptation Syndrome</h3>
+<p>The body manages prolonged stress through a predictable three-phase physiological sequence of mobilization and eventual exhaustion.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>General adaptation syndrome</strong> — Three-phase physiological change occurring in response to long-term stress.</li>
+</ol>
+<p>Alarm, resistance, and exhaustion.</p>
+<ol>
+<li><strong>Alarm</strong> — Initial physiological reaction where the body mobilizes resources to respond to a perceived threat.</li>
+<li><strong>Resistance</strong> — Adaptation phase where glucose and blood pressure increase as the body attempts to maintain normal function.</li>
+<li><strong>Exhaustion</strong> — Final phase where energy and immunity reserves deplete, leading to illness, organ failure, or collapse.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Hans Seyle</strong> — Documented identical physiological changes in rats exposed to varied extreme stressors like cold and shock.</li>
+</ol>
+<h3>HPA axis</h3>
+<p>The HPA axis functions as a complex communication system between the brain and glands to regulate hormonal stress responses.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>HPA axis</strong> — Physiological response system involving interactions among the hypothalamus, pituitary gland, and adrenal glands.</li>
+<li><strong>ACTH</strong> — Pituitary hormone signaling adrenal glands to secrete epinephrine, norepinephrine, and cortisol.</li>
+<li><strong>Cortisol</strong> — Stress hormone that releases blood sugars to prepare for threat and serves as an HPA activation marker.</li>
+</ol>
+<p>Saliva sampling used for measurement and analysis.</p>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Rodrigues, LeDoux, &amp; Sapolsky (2009)</strong> — Summarized how stress hormones influence fear circuitry within the brain.</li>
+</ol>
+<h3>Psychological stress studies</h3>
+<p>Everyday environmental pressures and academic challenges significantly compromise physical health and immune system efficacy.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Daily hassles</strong> — Negative everyday environmental interactions contributing to stress and poor health.</li>
+</ol>
+<p>Arguments with friends or getting cut off in traffic.</p>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Sheldon Cohen and colleagues (1998)</strong> — Experiment showed long-term stressors significantly increased cold infection rates after virus exposure.</li>
+<li><strong>Holmes and Rahe (1967)</strong> — Developed Social Readjustment Rating Scale where high life-change scores predict increased hospitalizations.</li>
+<li><strong>Glaser (1985)</strong> — Found medical students&#x27; immune functioning decreased during exam periods compared to several weeks prior.</li>
+<li><strong>Cacioppo et al. (1998)</strong> — Demonstrated that performing experimental math problems is sufficient to compromise immune health.</li>
+</ol>
+<h3>Stress and health</h3>
+<p>Prolonged stress redirects energy from biological maintenance to threat response, suppressing repair and immunity.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Sympathetic nervous system (SNS)</strong> — Increases heart rate, breathing, and general arousal during the stress response.</li>
+<li><strong>Parasympathetic nervous system (PNS)</strong> — Controls essential maintenance like digestion but is suppressed during long-term stress.</li>
+<li><strong>DNA damage</strong> — Harm resulting from stress that inhibits wound healing and responses to disease-causing mutations.</li>
+</ol>
+<h3>Gender stress responses</h3>
+<p>Men and women exhibit distinct behavioral and hormonal strategies when reacting to perceived threats.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Fight-or-flight response</strong> — Male-typical reaction involving aggression or retreat to control or escape stress.</li>
+</ol>
+<p>Activation of the HPA axis.</p>
+<ol>
+<li><strong>Tend-and-befriend response</strong> — Female-typical reaction involving social network creation for protection and resource exchange.</li>
+</ol>
+<p>Release of the hormone oxytocin.</p>
+<ol>
+<li><strong>Oxytocin</strong> — Hormone promoting affiliation and social protection while avoiding high HPA-related arousal.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Taylor et al. (2000)</strong> — Proposed tend-and-befriend as a healthier, less arousing alternative to fight-or-flight.</li>
+</ol>
+<h3>Self-discrepancy theory</h3>
+<p>Emotional distress arises when individuals perceive a gap between their actual self and internalized or external standards.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Actual self-concept</strong> — Current perception of one’s own behaviors and characteristics.</li>
+<li><strong>Ideal self-concept</strong> — Internal standards based on personal hopes, goals, and desires.</li>
+<li><strong>Ought self-concept</strong> — Standards based on duties, obligations, and beliefs regarding what one should be.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Tory Higgins and colleagues</strong> — Linked actual-ideal gaps to depression and actual-ought gaps to anxiety.</li>
+</ol>
+<h3>Social cycle of depression</h3>
+<p>Negative emotional states lead to social withdrawal and behaviors that elicit negative responses, creating a self-reinforcing loop.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Depression</strong> — Affective disorder featuring sadness, low self-esteem, pessimism, and physical symptoms like insomnia.</li>
+<li><strong>Anxiety</strong> — Psychological disorder involving agitation, sweaty hands, and poor concentration.</li>
+<li><strong>Loneliness</strong> — Health risk factor resulting from shyness or social avoidance that contributes to mental disorders.</li>
+</ol>
+<p>Negative behaviors elicit negative social responses, reinforcing negative affect and cognitions.</p>
+<h3>Cardiovascular health</h3>
+<p>Hostile personality traits and elevated stress hormones directly contribute to hypertension and coronary disease.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Hypertension</strong> — High blood pressure caused by increased cardiac output combined with arterial constriction.</li>
+<li><strong>Plaque</strong> — Artery wall buildup encouraged by elevated cortisol levels from long-term stress.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Friedman &amp; Rosenman (1974)</strong> — Identified husband-wife hostility differences as a key predictor of heart disease.</li>
+<li><strong>Williams et al. (2001)</strong> — Found individuals with high anger scores were three times more likely to suffer heart attacks.</li>
+</ol></div>
+    <div class="own">
+      <h3>My notes</h3>
+      <p class="say">What the sheet missed. Write it however you write — one thing a line,
+      <code>Term: what it is</code>, indent to nest. Copy takes this with the sheet, formatted,
+      ready to paste into the Notion row. That row is what the week's exam is built from.</p>
+      <textarea id="mynotes" spellcheck="true" placeholder="Rebound effect: suppressed thought comes back stronger once you stop trying
+   ex. telling yourself not to check the score
+Self-control is finite - one hard task leaves less for the next"></textarea>
+      <p class="saved" id="savedmsg"></p>
+      <div id="minepreview" class="hide"></div>
+    </div>
+    <!-- Last on the sheet, and last in the Copy, so the paste reads sheet → his notes →
+         what he went and found, grouped under the question that sent him looking. -->
+    <div class="own hide" id="starredsheet"></div>
+    <div class="own hide" id="unsuresheet"></div>
+    <div class="own hide" id="researchview"></div>
+  </div>
+</main>
+
+<footer id="footer" class="wrap hide">
+  <p class="hinttext hide" id="hinttext"></p>
+  <div class="acts">
+    <button class="pill ghost" id="back">Back</button>
+    <button class="pill ghost hide" id="hintbtn">Hint</button>
+    <!-- Retake CLEARS, so it sits off to the side on its own, away from the two that keep
+         his progress. 2nd Pass is the primary one and takes the position Next held. -->
+    <button class="pill ghost hide" id="retake">Retake</button>
+    <span class="spacer"></span>
+    <button class="pill hide" id="review">Review quiz</button>
+    <button class="pill primary hide" id="pass2">2nd Pass</button>
+    <button class="pill primary" id="next">Next</button>
+  </div>
+</footer>
+
+<script id="quiz-data" type="application/json">{"id": "psp-3-3", "title": "3.3 Emotions, Stress, and Well-Being", "subtitle": "Chapter 3 · Social Affect", "book": "PSP", "hash": "792e0d7c5ab73381", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "In the years following Hurricane Katrina, researchers found that survivors experienced heart attacks at a rate three times the national average. What does this suggest about the impact of extreme social stressors?", "options": ["Heart disease is strictly a genetic outcome that is only temporarily accelerated by social situations.", "The increase in heart attacks was likely due to a lack of medical infrastructure rather than psychological stress.", "Extreme events have a prolonged physiological impact that increases cardiovascular vulnerability.", "Natural disasters primarily cause short-term psychological distress without lasting physical health consequences."], "rationales": ["The text states that while genetics play a role, stress is a major contributor that can lead to heart attacks.", "The text explicitly attributes the increased rate to the stress created by the hurricane.", "The source identifies the hurricane-induced stress as the likely cause for the significant increase in heart attack rates among survivors.", "This contradicts the finding that heart attack rates remained elevated in the years following the disaster."], "correct": 2, "hint": "consider the long-term health statistics of disaster survivors.", "topic": "Extreme stressors", "qid": "41b0e1e05f"}, {"q": "Hans Selye's research on rats exposed to prolonged stressors like extreme cold and infection revealed a consistent three-phase response. What characterizes the 'Exhaustion' stage of this syndrome?", "options": ["The sympathetic nervous system shuts down immediately to conserve remaining glucose for the brain.", "Energy and immunity reserves are depleted, leading to potential organ failure and illness.", "The body successfully adapts to the threat and returns all physiological functions to normal levels.", "A sudden burst of cortisol provides a final surge of energy that allows for a last-minute flight response."], "rationales": ["The exhaustion stage is characterized by a gradual depletion and collapse rather than a strategic shutdown for conservation.", "In the exhaustion stage, the body has run out of its reserves, resulting in mental and physical collapse.", "This description refers to the resistance stage, whereas exhaustion involves a failure to maintain these levels.", "Exhaustion is marked by decreased stress tolerance and the inability to respond further to the threat."], "correct": 1, "hint": "focus on the final consequences of long-term exposure to a stressor.", "topic": "General Adaptation Syndrome", "qid": "4a1586c220"}, {"q": "The HPA axis is a complex system involving the hypothalamus, pituitary gland, and adrenal glands. How does the release of cortisol through this axis specifically impact the coronary system during chronic stress?", "options": ["It causes the heart to pump less blood to prevent overworking the cardiac muscle.", "It stimulates the parasympathetic nervous system to offset the high arousal of the sympathetic system.", "It leads to a buildup of plaque on artery walls, which restricts blood flow and increases pressure.", "It decreases blood pressure by relaxing the walls of the arteries to increase flow."], "rationales": ["Stress actually increases cardiac output, making the heart pump more blood into constricted vessels.", "Stress suppresses the parasympathetic nervous system while keeping the HPA axis active.", "The source notes that increased cortisol leads to plaque buildup, which combines with high output to damage heart muscle.", "Chronic stress actually leads to increased blood pressure and arterial constriction."], "correct": 2, "hint": "think about the physiological changes in the blood vessels when stress hormones remain elevated.", "topic": "HPA axis", "qid": "bea0dd76c0"}, {"q": "Sheldon Cohen and colleagues administered a cold virus to volunteers to study susceptibility. Which participants were significantly more likely to actually develop a cold?", "options": ["Members of the control group who received a placebo saline solution.", "Those who had experienced brief, intense stressors like a single school exam.", "Participants who were naturally shy but had no recent stressful life events.", "Those who reported long-term interpersonal difficulties or underemployment."], "rationales": ["None of the control group participants got a cold because they were not exposed to the virus.", "The study found that susceptibility was linked specifically to enduring, long-term stressors.", "The study measured reported stressful experiences rather than personality traits like shyness.", "Enduring interpersonal or work-related stressors were the primary predictors of catching a cold in the experimental group."], "correct": 3, "hint": "identify the duration and type of stressor that compromised the immune system.", "topic": "Psychological stress studies", "qid": "3db8c86533"}, {"q": "Based on the research by Holmes and Rahe using the Social Readjustment Rating Scale with 2,500 military members, what is the primary implication of having a high 'life-changing units' score?", "options": ["It shows that minor daily hassles are more dangerous than major life changes.", "It predicts an increased likelihood of being hospitalized within the following six months.", "It indicates a high level of resilience and a lower probability of needing medical care.", "It suggests that only negative life events, like divorce, contribute to the risk of getting sick."], "rationales": ["While daily hassles matter, this specific scale and study focused on major life-changing events.", "The researchers found a clear correlation between high scale scores and soldiers ending up in the hospital.", "The study found the opposite: higher scores were clear predictors of increased illness.", "The scale includes positive events like marriage and outstanding achievement as contributors to stress."], "correct": 1, "hint": "look for the specific outcome measured in the six-month follow-up of the soldiers.", "topic": "Stress and health", "qid": "be96a2e71c"}, {"q": "Physiologically, why is the 'tend-and-befriend' response generally considered healthier than the 'fight-or-flight' response?", "options": ["It suppresses the immune system temporarily to allow for better concentration on social networks.", "It involves the hormone oxytocin and does not produce the elevated HPA arousal levels related to cortisol.", "It utilizes the HPA axis to maximize glucose levels for long-term social interactions.", "It relies on a sudden burst of adrenaline which helps repair damaged DNA more quickly."], "rationales": ["The tend-and-befriend response is healthier because it avoids the immune suppression associated with the HPA axis.", "Tend-and-befriend is triggered by oxytocin, which promotes affiliation and avoids the negative effects of high cortisol.", "The HPA axis is associated with the more taxing fight-or-flight response, not tend-and-befriend.", "Adrenaline is part of the arousal system that can cause damage when prolonged, not repair it."], "correct": 1, "hint": "identify the specific hormone and the system it avoids activating.", "topic": "Gender stress responses", "qid": "23a8aa857b"}, {"q": "According to Higgins’ research on self-discrepancy, what emotional state is typically produced when an individual perceives a gap between their 'actual self-concept' and their 'ideal self-concept'?", "options": ["Increased motivation to meet external standards provided by parents.", "A total lack of emotion, known as the neutral point of well-being.", "Sadness, dissatisfaction, and depression-related emotions.", "Agitation and fear, as the individual feels they are failing their duties."], "rationales": ["The research focuses on the resulting negative emotions rather than a boost in motivation.", "Discrepancies from goals or standards produce more emotion, not less.", "Discrepancies between the actual self and the ideal self (hopes and goals) lead to depression-related feelings.", "Fear and tension are associated with the 'ought' self-concept, not the 'ideal' self-concept."], "correct": 2, "hint": "distinguish between the emotions linked to 'hopes' versus 'duties'.", "topic": "Self-discrepancy theory", "qid": "90b35b1046"}, {"q": "How do social interactions typically reinforce the cycle of depression and anxiety in a 'self-fulfilling' manner?", "options": ["Depressed individuals seek out social interactions to fix their mood, which leads to rapid recovery.", "Anxious people overestimate social focus, which paradoxically makes them more fun to be around.", "Negative behaviors lead others to respond negatively, which reinforces the person's negative self-thoughts.", "Social networks provide a 'buffering' effect that automatically reverses negative cognitions."], "rationales": ["The text notes that depressed people frequently tend to avoid social interactions altogether.", "The text explicitly states that people who are depressed or anxious are often seen as less fun to be around.", "The text explains that negative states are visible to others, who then respond negatively, making it harder to succeed.", "While social support is helpful, the cycle described in the text shows how negative interactions worsen the state."], "correct": 2, "hint": "consider the feedback loop between an individual's behavior and the reactions of others.", "topic": "Social cycle of depression", "qid": "f8e0c149b0"}, {"q": "Friedman and Rosenman observed that husbands in married couples generally had more heart disease than their wives. What personality characteristic did they identify as the primary predictor for this difference?", "options": ["A lack of physical exercise compared to their spouses.", "A genetic predisposition to high cholesterol that is exclusive to men.", "The tendency to respond to stressors with hostility and negative emotions.", "High levels of extroversion and excessive social interaction."], "rationales": ["The researchers noted that the couples often had similar diet and exercise patterns.", "While genetics play a role, the study focused on the personality responses to stress.", "Hostility and negative emotional responses were the key personality factors identified in the husbands.", "Extroversion is actually linked to having fewer health problems and less depression."], "correct": 2, "hint": "focus on the specific emotional reaction husbands had toward stressors.", "topic": "Cardiovascular health", "qid": "8851b7f82b"}, {"q": "What did research by Glaser (1985) discover regarding the immune system of medical students during their examination periods?", "options": ["The students' parasympathetic nervous systems were highly active to help them stay calm.", "The students showed a 'resistance' phase boost, making them immune to the common cold.", "There was no measurable change in immune functioning, only subjective reports of fatigue.", "Immune system functioning was significantly lower during the exams than several weeks before."], "rationales": ["Stress increases the sympathetic system and suppresses the parasympathetic system.", "The stress of exams compromised the immune system rather than boosting it.", "The study found objective physiological impairments in cellular immunity.", "Testing during exam periods showed lower immune functioning compared to periods without exams."], "correct": 3, "hint": "compare the students' physiological state during exams versus during normal periods.", "topic": "Psychological stress studies", "qid": "750ec90e11"}, {"q": "In the context of Higgins' theory, if a student feels they are failing to meet their 'ought self-concept'—such as the duties and obligations their parents expect—what is the most likely emotional outcome?", "options": ["A sense of apathy and loss of appetite.", "Heightened self-esteem from recognizing external standards.", "A state of fear, worry, and tension.", "Feelings of dissatisfaction and sadness."], "rationales": ["These are symptoms of depression, which is linked to the ideal self-concept, not the ought self-concept.", "Failing to meet these standards leads to negative emotions, not a boost in self-esteem.", "Discrepancies involving the ought self (duties/obligations) specifically lead to anxiety-related emotions like fear and tension.", "Dissatisfaction and sadness are associated with discrepancies in the ideal self-concept."], "correct": 2, "hint": "focus on the specific cluster of emotions associated with 'duty'.", "topic": "Self-discrepancy theory", "qid": "3fb0be7b1f"}, {"q": "Williams and colleagues (2001) conducted a study measuring levels of anger in participants. What was the health outcome for those who scored high on anger measures?", "options": ["They were three times more likely to suffer from heart attacks than those with lower scores.", "They were more likely to use a 'tend-and-befriend' response to recover from stress.", "They showed a faster recovery from wounds due to increased adrenaline flow.", "Their HPA axis activity was lower because their hostility acted as a psychological shield."], "rationales": ["High anger scores were a strong predictor of heart attacks in comparison to lower scores.", "Anger is part of the fight-or-flight response, which is the opposite of tend-and-befriend.", "Stress and negative emotions actually lead to slower wound healing and DNA damage.", "Hostility is linked to a stronger, more damaging physiological stress response."], "correct": 0, "hint": "look for the specific risk multiplier associated with high anger.", "topic": "Cardiovascular health", "qid": "c1026861fa"}], "hasSheet": true, "notebook": "https://notebooklm.google.com/notebook/791cd0ef-e949-4fd0-9fec-8a610efda32c/artifact/314b8fa5-7cbd-47a4-8a1f-66a969666f04", "root": "../index.html", "tab": "quiz", "sheet": "## 1. Extreme stressors\nExtreme social situations and disasters trigger severe long-term mental health syndromes and heightened physical risks.\n### Key terms\n1. **Post-traumatic stress disorder (PTSD)** — Medical syndrome from extreme stress featuring anxiety, sleeplessness, nightmares, and social withdrawal.\n   Soldiers, victims of natural disasters, or victims of terrorism.\n### Names and studies\n1. **American Medical Association (2009)** — Found Hurricane Katrina survivors had heart attack rates triple the national average.\n2. **Lampert, Baron, McPherson, & Lee (2002)** — Correlated 9/11 site proximity with higher reported stress levels during the following year.\n\n## 2. General Adaptation Syndrome\nThe body manages prolonged stress through a predictable three-phase physiological sequence of mobilization and eventual exhaustion.\n### Key terms\n1. **General adaptation syndrome** — Three-phase physiological change occurring in response to long-term stress.\n   Alarm, resistance, and exhaustion.\n2. **Alarm** — Initial physiological reaction where the body mobilizes resources to respond to a perceived threat.\n3. **Resistance** — Adaptation phase where glucose and blood pressure increase as the body attempts to maintain normal function.\n4. **Exhaustion** — Final phase where energy and immunity reserves deplete, leading to illness, organ failure, or collapse.\n### Names and studies\n1. **Hans Seyle** — Documented identical physiological changes in rats exposed to varied extreme stressors like cold and shock.\n\n## 3. HPA axis\nThe HPA axis functions as a complex communication system between the brain and glands to regulate hormonal stress responses.\n### Key terms\n1. **HPA axis** — Physiological response system involving interactions among the hypothalamus, pituitary gland, and adrenal glands.\n2. **ACTH** — Pituitary hormone signaling adrenal glands to secrete epinephrine, norepinephrine, and cortisol.\n3. **Cortisol** — Stress hormone that releases blood sugars to prepare for threat and serves as an HPA activation marker.\n   Saliva sampling used for measurement and analysis.\n### Names and studies\n1. **Rodrigues, LeDoux, & Sapolsky (2009)** — Summarized how stress hormones influence fear circuitry within the brain.\n\n## 4. Psychological stress studies\nEveryday environmental pressures and academic challenges significantly compromise physical health and immune system efficacy.\n### Key terms\n1. **Daily hassles** — Negative everyday environmental interactions contributing to stress and poor health.\n   Arguments with friends or getting cut off in traffic.\n### Names and studies\n1. **Sheldon Cohen and colleagues (1998)** — Experiment showed long-term stressors significantly increased cold infection rates after virus exposure.\n2. **Holmes and Rahe (1967)** — Developed Social Readjustment Rating Scale where high life-change scores predict increased hospitalizations.\n3. **Glaser (1985)** — Found medical students' immune functioning decreased during exam periods compared to several weeks prior.\n4. **Cacioppo et al. (1998)** — Demonstrated that performing experimental math problems is sufficient to compromise immune health.\n\n## 5. Stress and health\nProlonged stress redirects energy from biological maintenance to threat response, suppressing repair and immunity.\n### Key terms\n1. **Sympathetic nervous system (SNS)** — Increases heart rate, breathing, and general arousal during the stress response.\n2. **Parasympathetic nervous system (PNS)** — Controls essential maintenance like digestion but is suppressed during long-term stress.\n3. **DNA damage** — Harm resulting from stress that inhibits wound healing and responses to disease-causing mutations.\n\n## 6. Gender stress responses\nMen and women exhibit distinct behavioral and hormonal strategies when reacting to perceived threats.\n### Key terms\n1. **Fight-or-flight response** — Male-typical reaction involving aggression or retreat to control or escape stress.\n   Activation of the HPA axis.\n2. **Tend-and-befriend response** — Female-typical reaction involving social network creation for protection and resource exchange.\n   Release of the hormone oxytocin.\n3. **Oxytocin** — Hormone promoting affiliation and social protection while avoiding high HPA-related arousal.\n### Names and studies\n1. **Taylor et al. (2000)** — Proposed tend-and-befriend as a healthier, less arousing alternative to fight-or-flight.\n\n## 7. Self-discrepancy theory\nEmotional distress arises when individuals perceive a gap between their actual self and internalized or external standards.\n### Key terms\n1. **Actual self-concept** — Current perception of one’s own behaviors and characteristics.\n2. **Ideal self-concept** — Internal standards based on personal hopes, goals, and desires.\n3. **Ought self-concept** — Standards based on duties, obligations, and beliefs regarding what one should be.\n### Names and studies\n1. **Tory Higgins and colleagues** — Linked actual-ideal gaps to depression and actual-ought gaps to anxiety.\n\n## 8. Social cycle of depression\nNegative emotional states lead to social withdrawal and behaviors that elicit negative responses, creating a self-reinforcing loop.\n### Key terms\n1. **Depression** — Affective disorder featuring sadness, low self-esteem, pessimism, and physical symptoms like insomnia.\n2. **Anxiety** — Psychological disorder involving agitation, sweaty hands, and poor concentration.\n3. **Loneliness** — Health risk factor resulting from shyness or social avoidance that contributes to mental disorders.\n   Negative behaviors elicit negative social responses, reinforcing negative affect and cognitions.\n\n## 9. Cardiovascular health\nHostile personality traits and elevated stress hormones directly contribute to hypertension and coronary disease.\n### Key terms\n1. **Hypertension** — High blood pressure caused by increased cardiac output combined with arterial constriction.\n2. **Plaque** — Artery wall buildup encouraged by elevated cortisol levels from long-term stress.\n### Names and studies\n1. **Friedman & Rosenman (1974)** — Identified husband-wife hostility differences as a key predictor of heart disease.\n2. **Williams et al. (2001)** — Found individuals with high anger scores were three times more likely to suffer heart attacks."}</script>
+<script>
+const D = JSON.parse(document.getElementById('quiz-data').textContent);
+const KEY = 'lq:' + D.id;
+const $ = s => document.querySelector(s);
+const esc = t => { const d=document.createElement('div'); d.textContent = t==null?'':t; return d.innerHTML; };
+const G_OK = '✓', G_NO = '✕';
+
+/* ---- saved state -------------------------------------------------------------
+   Everything lives in localStorage under the page id. `hash` fingerprints the question
+   set: a Redo regenerates the quiz, and when that happens the old answers describe
+   questions that no longer exist, so the attempt is retired into history rather than
+   shown against the new ones.
+
+   KEYED ON q.qid, NOT ON THE ARRAY INDEX (v2). Skipping and starring have to outlive a
+   rebuild: a question he deleted must stay deleted, and a question he starred must still be
+   starred, even after the quiz is regenerated and the order changes. That is also what makes
+   `skipped` usable later as a permanent exclusion list when exam reuse is built — see qid()
+   in quizpage.py. v1 states are migrated once, on load. */
+function qk(i){ return D.questions[i].qid; }
+function blank(){ return {v:2, hash:D.hash, i:0, answers:{}, pass2:{}, skipped:{}, starred:{},
+                          unsure:{}, hints:{}, phase:1, p2list:null, done:false, at:null,
+                          history:[]}; }
+function migrate(s){
+  // v1 keyed every map on the array index. The hash matches, so the indices are still valid
+  // and this is a straight re-key — done once, then never again.
+  const re = m => { const o = {}; Object.keys(m||{}).forEach(k=>{
+    const i = +k; if(D.questions[i]) o[qk(i)] = m[k]; }); return o; };
+  s.answers = re(s.answers); s.skipped = re(s.skipped);
+  s.pass2 = {}; s.starred = {}; s.unsure = {}; s.hints = {}; s.phase = 1; s.p2list = null;
+  s.v = 2;
+  return s;
+}
+function load(){
+  try{
+    const s = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if(!s) return blank();
+    if(s.hash !== D.hash){
+      const b = blank();
+      b.history = (s.history||[]).slice();
+      // TAKE THE SCORE AS IT WAS RECORDED, never recompute it. These answers were given to
+      // questions that no longer exist, so scoring them against the new set is meaningless —
+      // it turned a real 8/10 into 2/10 in testing. `meta` is written on every save for
+      // exactly this moment.
+      if(s.done) b.history.push({
+        at: s.at,
+        score: (s.meta && typeof s.meta.score === 'number') ? s.meta.score : 0,
+        total: (s.meta && s.meta.total) || Object.keys(s.answers||{}).length,
+        stale: true});
+      b.rebuilt = true;
+      // A REBUILD DOES NOT RESURRECT A DELETED QUESTION. Answers are retired because they
+      // describe questions that may be gone; skipped and starred are decisions ABOUT
+      // questions, so they carry over on qid and simply miss anything no longer present.
+      if(s.v === 2){ b.skipped = s.skipped || {}; b.starred = s.starred || {};
+                     b.unsure = s.unsure || {}; }
+      return b;
+    }
+    if(!s.history) s.history = [];
+    if(s.v !== 2) return migrate(s);
+    if(!s.skipped) s.skipped = {};
+    if(!s.starred) s.starred = {};
+    if(!s.unsure) s.unsure = {};
+    if(!s.hints) s.hints = {};
+    if(!s.pass2) s.pass2 = {};
+    if(!s.phase) s.phase = 1;
+    return s;
+  }catch(e){ return blank(); }
+}
+function save(){
+  S.meta = {title:D.title, subtitle:D.subtitle, book:D.book, total:active(S).length,
+            at:S.at, done:S.done, score:score(S)};
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+}
+/* Skipped questions leave the run entirely — out of the count, out of the denominator,
+   out of the topic breakdown. Anything less makes "8 / 10" a lie about a quiz of nine. */
+function active(s){ return D.questions.map((_,i)=>i).filter(i => !(s.skipped||{})[qk(i)]); }
+function ans(i){ return S.answers[qk(i)]; }
+function ans2(i){ return S.pass2[qk(i)]; }
+function firstRight(i){ return ans(i) === D.questions[i].correct; }
+/* THE SECOND PASS REDEEMS. Wrong first, right second → the question counts as right; wrong
+   both times stays wrong, and there is no third pass. The first answer is never overwritten,
+   which is what lets the end card say "10 right, +2 redeemed" instead of quietly rewriting a
+   10 into a 12. */
+function finalRight(i){ return firstRight(i) || ans2(i) === D.questions[i].correct; }
+function score(s){ return active(s).reduce((n,i)=> n + (finalRight(i) ? 1 : 0), 0); }
+function redeemed(){ return active(S).filter(i => !firstRight(i) && ans2(i) === D.questions[i].correct); }
+/* What a second pass would still have to cover: wrong on the first pass and not yet
+   re-answered. Empty → no button, which is the "if there are no mistakes there is no second
+   pass" rule and also what ends the round rather than looping it. */
+function pending2(){
+  return active(S).filter(i => ans(i) !== undefined && !firstRight(i) && ans2(i) === undefined);
+}
+/* The questions THIS pass runs over. Frozen into p2list when the second pass starts, so
+   answering one correctly cannot shrink the list under his feet mid-run. */
+function runList(){
+  if(S.phase === 2 && S.p2list) return S.p2list.filter(i => !S.skipped[qk(i)]);
+  return active(S);
+}
+function pick(i){ return S.phase === 2 ? ans2(i) : ans(i); }
+let S = load();
+let lastShown = -1;
+
+/* ---- HIS RESEARCH, kept apart from the attempt ---------------------------------------
+   Its own localStorage key, NOT a field of S, and that is the whole design. S is one
+   attempt: Retake clears it, a rebuilt quiz retires it. What he went and found while
+   answering is neither — it is material, and it has to survive both. Keyed on q.qid like
+   `starred` and `skipped`, so it also survives a Redo that reorders the questions.
+
+   `{ qid: {t: "his text", i: ["data:image/...", ...]} }` — an entry with neither is deleted
+   rather than stored empty, which is what makes `rhas()` a simple truth test. */
+const RKEY = KEY + ':research';
+function loadResearch(){
+  try{ const r = JSON.parse(localStorage.getItem(RKEY) || '{}');
+       return (r && typeof r === 'object') ? r : {}; }
+  catch(e){ return {}; }
+}
+let R = loadResearch();
+function rget(id){ const r = R[id]; return {t: (r && r.t) || '', i: (r && r.i) || []}; }
+function rput(id, t, imgs){
+  if(!t.trim() && !imgs.length) delete R[id]; else R[id] = {t: t, i: imgs};
+  try{ localStorage.setItem(RKEY, JSON.stringify(R)); return true; }
+  catch(e){ return false; }                       // quota — the caller puts it back
+}
+
+/* ---- rendering ---------------------------------------------------------------- */
+/* The Starred tab only exists while something is starred, and the Study sheet tab only when
+   the quiz shipped with one — a linguistics quiz built before topic tags has none. If that
+   leaves one tab, the whole group goes: a lone "Quiz" button is chrome that says nothing. */
+function syncTabs(){
+  const nstar = Object.keys(S.starred||{}).length;
+  document.querySelector('.tab[data-tab="starred"]').classList.toggle('hide', !nstar);
+  document.querySelector('.tab[data-tab="sheet"]').classList.toggle('hide', !D.hasSheet);
+  $('#tabs').classList.toggle('hide', !nstar && !D.hasSheet);
+  if(D.tab === 'starred' && !nstar) setTab('quiz');
+}
+function setTab(name){
+  if(D.tab === 'quiz' && name !== 'quiz') flushResearch();
+  D.tab = name;
+  document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===name));
+  $('#band').classList.toggle('hide', name!=='quiz');
+  $('#starredview').classList.toggle('hide', name!=='starred');
+  $('#sheetview').classList.toggle('hide', name!=='sheet');
+  $('#footer').classList.toggle('hide', name!=='quiz');
+  if(name==='quiz'){
+    draw();
+    // Restore the frozen offset rather than recomputing it: answer, read the sheet, come
+    // back — the question must be exactly where he left it.
+    if(quizPad !== null) $('main').style.paddingTop = quizPad;
+  } else {
+    if(name==='starred') drawStarred();
+    if(name==='sheet'){ renderScore(); renderSheetExtras(); }
+    $('main').style.paddingTop = BASE_PAD + 'px';
+    window.scrollTo(0,0);
+  }
+}
+
+/* CENTRE THE BLOCK, BUT COMPUTE THE OFFSET ONLY WHEN THE QUESTION CHANGES.
+   `justify-content:center` was the original approach and it is what made the question jump:
+   opening a rationale made the block taller and the centring recomputed underneath him.
+   Measuring once per question and freezing the padding gives both — centred on arrival,
+   immovable afterwards, because answering only ever grows the page downward. */
+const BASE_PAD = 16;
+let quizPad = null;
+
+/* CENTRE ON THE ANSWERED HEIGHT, NOT THE HEIGHT ON SCREEN.
+   Centring on what is visible was wrong in a way that only showed up after answering: the
+   block grows by two rationales, so the top gap stayed large while the last option slid
+   under the footer. Coming back to the same question then looked right, because by then it
+   WAS the answered height being measured — the two states he photographed, from one bug.
+   `reserve` is the height with feedback open, measured off-screen before anything renders. */
+function centreBlock(reserve){
+  const m = $('main');
+  m.style.paddingTop = BASE_PAD + 'px';
+  const avail = innerHeight - $('header').offsetHeight - $('footer').offsetHeight;
+  // The band's own padding is part of the block now, so it has to be inside the measurement
+  // or the box lands low by exactly one padding.
+  const bp = parseFloat(getComputedStyle($('#band')).paddingTop) || 0;
+  // The research toggle row is part of the block and its height is CONSTANT — the body is
+  // what collapses, the row never does. So it can be measured whether the box is open or
+  // shut, and opening it moves nothing above it.
+  const rp = $('#research');
+  const rh = (rp && !rp.classList.contains('hide')) ? $('#rtoggle').offsetHeight + 31 : 0;
+  const h = (reserve || $('#quizview').getBoundingClientRect().height) + bp * 2 + rh;
+  quizPad = Math.max(BASE_PAD, Math.round((avail - h) / 2)) + 'px';
+  m.style.paddingTop = quizPad;
+}
+
+/* The tallest this question can get: a WRONG pick, which opens two rationales rather than
+   one. Rendered into a hidden probe of the same width and thrown away. */
+function answeredHeight(i){
+  const q = D.questions[i];
+  const probe = document.createElement('div');
+  probe.style.cssText = 'position:absolute;left:-99999px;top:0;visibility:hidden';
+  probe.style.width = $('#quizview').getBoundingClientRect().width + 'px';
+  probe.innerHTML = buildQ(i, (q.correct + 1) % q.options.length, false);
+  $('main').appendChild(probe);
+  const h = probe.getBoundingClientRect().height;
+  probe.remove();
+  return h;
+}
+
+/* NEVER BACKWARDS. The old fallback here was `S.i = act[0]`, so skipping a question sent him
+   to question 1 — the whole way back to the start of the quiz. The nearest question AFTER
+   the one that just left is the only sensible landing place. */
+function nextFrom(list, i){
+  const nx = list.find(j => j > i);
+  return nx === undefined ? list[list.length-1] : nx;
+}
+function draw(){
+  if(D.tab!=='quiz') return;
+  $('#band').classList.toggle('off', !!(S.reviewing || S.done));
+  // The box belongs to a question on screen. The end card and the review list have none, so
+  // it goes away there rather than floating under a score.
+  showResearch(!(S.reviewing || S.done));
+  if(S.reviewing) return review();
+  if(S.done) return end();
+  const act = runList();
+  if(!act.length) return end();
+  if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
+  question();
+}
+
+/* Pure markup, no DOM writes and no state changes — so the same builder can render the
+   question and be measured off-screen for the centring reserve. */
+function buildQ(i, picked, fresh, en){
+  const q = D.questions[i];
+  const answered = picked !== undefined;
+  const act = runList(), pos = act.indexOf(i);
+  const starred = !!S.starred[q.qid];
+  const unsure = !!(S.unsure||{})[q.qid];
+  en = en || '';
+
+  // The counter sits top-left above the question, the way the notebook does it, rather than
+  // up in the bar — it belongs with the thing it counts. On a second pass it counts the
+  // second pass, so four wrong answers read as "1 / 4" and not as a broken 16.
+  let h = '<div class="qhead' + en + '"><div class="qcol">'
+        + '<p class="meta"><span class="num">' + (pos+1) + ' / ' + act.length + '</span>'
+        + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        + (q.topic ? '<span class="dot">·</span><span>' + esc(q.topic) + '</span>' : '')
+        + '</p>'
+        + '<h1 class="q">' + esc(q.q) + '</h1></div>'
+        // ? BEFORE ☆, because it is the one pressed while the question is still unanswered:
+        // "no idea" is a thing he knows before he picks, and starring is usually after.
+        + '<button class="qmark' + (unsure?' on':'') + '" id="qmark" '
+        + 'title="No idea — needs work" aria-label="No idea, needs work">?</button>'
+        + '<button class="star' + (starred?' on':'') + '" id="star" aria-label="Star">'
+        + (starred?'★':'☆') + '</button>'
+        + '<div class="more"><button class="dots" id="dots" aria-label="More">⋮</button></div>'
+        + '</div>';
+
+  h += '<div class="opts">';
+  q.options.forEach((o,k)=>{
+    let cls = 'opt' + en, mark = '', lab = '', why = '';
+    if(answered){
+      if(k === q.correct){ cls += ' is-right'; mark = G_OK; lab = 'Right answer'; }
+      else if(k === picked){ cls += ' is-wrong'; mark = G_NO; lab = 'Not quite'; }
+      else cls += ' is-muted';
+      if(lab && fresh) cls += ' fresh';
+      why = q.rationales ? (q.rationales[k]||'') : '';
+    }
+    h += '<button class="'+cls+'" data-k="'+k+'"'+(answered?' disabled':'')+'>'
+       + '<span class="line"><span class="k">'+D.letters[k]+'.</span>'
+       + '<span class="t">'+esc(o)+'</span>'
+       + '<span class="mark">'+mark+'</span></span>';
+    if(lab){
+      h += '<span class="rat"><span class="ratin">'
+         + '<span class="lab"><span class="g">'+mark+'</span>'+lab+'</span>'
+         + (why ? '<span class="why" style="display:block">'+esc(why)+'</span>' : '')
+         + '</span></span>';
+    }
+    h += '</button>';
+  });
+  return h + '</div>';
+}
+
+function question(fresh){
+  const i = S.i, q = D.questions[i], picked = pick(i);
+  const answered = picked !== undefined;
+  const act = runList();
+  const pos = act.indexOf(i);
+  const isNew = i !== lastShown;
+  lastShown = i;
+
+  $('#rail').style.width = ((pos + (answered?1:0)) / act.length * 100) + '%';
+  $('#quizview').innerHTML = buildQ(i, picked, fresh, isNew ? ' enter' : '');
+  $('#quizview').querySelectorAll('.opt').forEach(b=>{
+    b.onclick = ()=>{
+      // The first pass is never overwritten — a second-pass answer goes in its own map.
+      if(S.phase === 2) S.pass2[qk(i)] = +b.dataset.k; else S.answers[qk(i)] = +b.dataset.k;
+      save(); question(true);
+    };
+  });
+  $('#star').onclick = ()=> toggleStar(i);
+  $('#qmark').onclick = ()=> toggleUnsure(i);
+  $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
+
+  // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
+  // touches it — and nothing above the options ever changes height.
+  const hb = $('#hintbtn'), ht = $('#hinttext');
+  hb.classList.toggle('hide', !q.hint || answered);
+  ht.classList.toggle('hide', !(S.hintOpen && q.hint && !answered));
+  ht.textContent = q.hint || '';
+  hb.onclick = toggleHint;
+
+  $('#back').classList.remove('hide');
+  $('#next').classList.remove('hide');
+  $('#review').classList.add('hide');
+  $('#retake').classList.add('hide');
+  $('#pass2').classList.add('hide');
+  $('#back').disabled = pos === 0;
+  $('#next').disabled = !answered;
+  $('#next').textContent = (pos === act.length-1) ? 'Finish' : 'Next';
+  $('#footer').classList.remove('hide');
+  mountResearch(q.qid);
+  // Only when the question changes, and always against the ANSWERED height, so the layout
+  // he lands on is the one he will still be looking at after he picks.
+  if(isNew) centreBlock(answeredHeight(i));
+}
+
+/* THE HINT, from the button or from `h`. One path for both, and the BUTTON'S OWN VISIBILITY
+   is the gate: it is already hidden when the question has no hint or has been answered, so
+   there is no second copy of that condition to fall out of step. */
+function toggleHint(){
+  const hb = $('#hintbtn'), ht = $('#hinttext');
+  if(hb.classList.contains('hide')) return;
+  S.hintOpen = !S.hintOpen;
+  ht.classList.toggle('hide', !S.hintOpen);
+  /* RECORDED PER QUESTION, NOT PER PRESS, and only on the way open. Closing and reopening
+     the same hint is one hint used — the number is meant to say how many questions he
+     needed help on, and counting keystrokes would make a fidget look like a gap. It rides
+     in S, so a Retake clears it: it describes this attempt, unlike ☆ and ?. */
+  if(S.hintOpen){ if(!S.hints) S.hints = {}; S.hints[qk(S.i)] = true; save(); }
+}
+
+/* STARRING is not the same thing as skipping and the two maps never mix. Starred = worth
+   coming back to, right or wrong, still fully part of the run and the score. Skipped =
+   removed from it. Keeping them apart is what lets exam reuse later take the starred ones as
+   candidates and treat the skipped ones as permanently excluded. */
+function toggleStar(i){
+  const k = qk(i);
+  if(S.starred[k]) delete S.starred[k]; else S.starred[k] = true;
+  save(); syncTabs();
+  const b = $('#star');
+  if(b){ b.textContent = S.starred[k] ? '★' : '☆'; b.classList.toggle('on', !!S.starred[k]); }
+}
+
+/* ? IS NOT ☆ AND IT IS NOT WRONG EITHER. His words: "I have no idea and whether or not I get
+   this right or wrong, it still needs work." So it is a third map beside `starred` and
+   `skipped`, it changes no score, and it survives a Retake and a rebuild exactly as the
+   other two do — a guess that happened to land right is the case it exists for, and that
+   question would otherwise leave no trace anywhere. */
+function toggleUnsure(i){
+  const k = qk(i);
+  if(!S.unsure) S.unsure = {};
+  if(S.unsure[k]) delete S.unsure[k]; else S.unsure[k] = true;
+  save();
+  const b = $('#qmark');
+  if(b) b.classList.toggle('on', !!S.unsure[k]);
+}
+
+/* ---- the research box ----------------------------------------------------------------
+   One box per question, opened from a row under the options. It holds pasted text and
+   pasted images, and both come back out at the bottom of the study sheet, grouped under the
+   question that sent him looking — which is what the Copy hands to Notion.
+
+   OPEN/SHUT IS STICKY ACROSS QUESTIONS, deliberately: an evening spent looking things up
+   should not need the box reopening fifteen times. The CONTENT is per question. */
+const rpanel = $('#research'), rtoggle = $('#rtoggle'), rbody = $('#rbody');
+const rtext = $('#rtext'), rshots = $('#rshots'), rsay = $('#rsay');
+let rOpen = false;
+let rFor = null;          // the qid the box currently holds
+let rTimer = null;
+
+function showResearch(on){ if(rpanel) rpanel.classList.toggle('hide', !on); }
+
+/* Write the textarea back to the question it belongs to. Called before the box is pointed
+   at a different question, on blur, on a debounce while typing, and on the way out of the
+   page — the textarea is the live copy and everything else reads from R. */
+function flushResearch(){
+  if(rFor === null || !rtext) return;
+  const cur = rget(rFor);
+  if(!rput(rFor, rtext.value, cur.i)) warnFull();
+  paintToggle();
+}
+function mountResearch(id){
+  if(!rpanel) return;
+  if(rFor !== null && rFor !== id) flushResearch();
+  rFor = id;
+  rtext.value = rget(id).t;
+  rbody.classList.toggle('hide', !rOpen);
+  rsay.textContent = ''; rsay.classList.remove('warn');
+  drawShots();
+  paintToggle();
+}
+/* The row says what is behind it, so a question he has already researched is visible
+   without opening anything. */
+function paintToggle(){
+  if(!rtoggle) return;
+  const r = rget(rFor), n = r.i.length, bits = [];
+  if(r.t.trim()) bits.push('notes');
+  if(n) bits.push(n + (n > 1 ? ' images' : ' image'));
+  rtoggle.textContent = bits.length ? ('My research · ' + bits.join(', ')) : '+ Add research';
+  rtoggle.classList.toggle('has', !!bits.length);
+}
+function drawShots(){
+  const imgs = rget(rFor).i;
+  rshots.classList.toggle('hide', !imgs.length);
+  rshots.innerHTML = imgs.map((src, n) =>
+    '<span class="shot"><img src="' + src + '" alt="Pasted image ' + (n+1) + '">'
+    + '<button class="x" data-rm="' + n + '" aria-label="Remove image">×</button></span>').join('');
+  rshots.querySelectorAll('[data-rm]').forEach(b => {
+    b.onclick = () => {
+      const imgs2 = rget(rFor).i.slice();
+      imgs2.splice(+b.dataset.rm, 1);
+      rput(rFor, rtext.value, imgs2);
+      drawShots(); paintToggle();
+      rsay.textContent = ''; rsay.classList.remove('warn');
+    };
+  });
+}
+
+/* IMAGES ARE SHRUNK BEFORE THEY ARE STORED, and that is not a nicety — localStorage is a
+   few megabytes for the whole origin, and one full-size screenshot off a web page is
+   comfortably a megabyte of base64. Long edge 1100px, WebP where the browser has it,
+   JPEG where it does not. A diagram is still readable and a page's worth of them fits. */
+function shrink(file, cb){
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  img.onload = () => {
+    const max = 1100;
+    const s = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+    const c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round(img.naturalWidth * s));
+    c.height = Math.max(1, Math.round(img.naturalHeight * s));
+    const ctx = c.getContext('2d');
+    // JPEG has no transparency and paints it black, so a white plate goes down first —
+    // most diagrams he will paste are black line art on a transparent background.
+    ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, c.width, c.height);
+    ctx.drawImage(img, 0, 0, c.width, c.height);
+    URL.revokeObjectURL(url);
+    let out = '';
+    try{ out = c.toDataURL('image/webp', 0.72); }catch(e){}
+    if(out.slice(0, 15) !== 'data:image/webp') out = c.toDataURL('image/jpeg', 0.78);
+    cb(out);
+  };
+  img.onerror = () => { URL.revokeObjectURL(url); cb(null); };
+  img.src = url;
+}
+function warnFull(){
+  rsay.textContent = 'This browser is out of room — remove an image and try again.';
+  rsay.classList.add('warn');
+}
+
+if(rpanel){
+  rtoggle.onclick = () => {
+    rOpen = !rOpen;
+    rbody.classList.toggle('hide', !rOpen);
+    if(rOpen){ rtext.focus(); rbody.scrollIntoView({block:'nearest', behavior:'smooth'}); }
+  };
+  rtext.addEventListener('input', () => { clearTimeout(rTimer); rTimer = setTimeout(flushResearch, 400); });
+  rtext.addEventListener('blur', flushResearch);
+
+  /* NO preventDefault. A copied web selection puts BOTH a text flavour and an image file on
+     the clipboard; swallowing the event to grab the image would throw the text away. The
+     text lands in the textarea by itself and the files are picked off beside it. */
+  rbody.addEventListener('paste', e => {
+    const items = (e.clipboardData && e.clipboardData.items) || [];
+    const files = [];
+    for(let n = 0; n < items.length; n++){
+      if(items[n].kind === 'file' && /^image\//.test(items[n].type)){
+        const f = items[n].getAsFile();
+        if(f) files.push(f);
+      }
+    }
+    if(!files.length) return;
+    const target = rFor;
+    rsay.textContent = 'Adding ' + files.length + ' image' + (files.length > 1 ? 's' : '') + '…';
+    rsay.classList.remove('warn');
+    let left = files.length;
+    files.forEach(f => shrink(f, data => {
+      left--;
+      if(data && target === rFor){
+        // Hold the list as it was: a failed rput has already written the oversized entry
+        // into R, so the revert needs a copy taken BEFORE the attempt, not after it.
+        const prev = rget(target).i.slice();
+        if(rput(target, rtext.value, prev.concat([data]))){ drawShots(); paintToggle(); }
+        else { rput(target, rtext.value, prev); warnFull(); return; }
+      }
+      if(left === 0 && !rsay.classList.contains('warn')) rsay.textContent = '';
+    }));
+  });
+  addEventListener('beforeunload', flushResearch);
+}
+
+/* One question can be dropped from the run, the way the notebook lets him delete one —
+   except nothing is deleted in NotebookLM, so a rebuild brings it back and the end card
+   can put it back at any time.
+
+   SKIPPING THE LAST QUESTION SUBMITS. It used to send him back to question 1, because the
+   skipped index left `active()` and draw()'s fallback was `act[0]`. Deleting the last item
+   in a list means the list is finished, so this does exactly what Finish does. */
+function openMenu(){
+  const host = $('.more');
+  if(host.querySelector('.menu')) return closeMenu();
+  const m = document.createElement('div');
+  m.className = 'menu';
+  m.innerHTML = '<button id="skipq">Skip this question</button>';
+  host.appendChild(m);
+  m.querySelector('#skipq').onclick = ()=>{
+    const list = runList(), pos = list.indexOf(S.i);
+    if(list.length <= 1) return closeMenu();        // never skip the last one standing
+    const wasLast = pos === list.length - 1;
+    S.skipped[qk(S.i)] = true;
+    delete S.answers[qk(S.i)];
+    delete S.pass2[qk(S.i)];
+    delete S.starred[qk(S.i)];                     // a deleted question is not a starred one
+    if(S.unsure) delete S.unsure[qk(S.i)];         // nor one that still needs work
+    closeMenu();
+    syncTabs();
+    if(wasLast){ finish(); return; }
+    // After the removal the list has shrunk, so the item now AT `pos` is the one that
+    // followed the skipped question. Forwards, never back to the top.
+    S.i = runList()[pos];
+    S.hintOpen = false;
+    lastShown = -1;
+    save(); question(); window.scrollTo(0,0);
+  };
+  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
+}
+function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(); }
+
+function finish(){
+  S.done = true; S.at = new Date().toISOString();
+  save(); end(); window.scrollTo(0,0);
+}
+
+function end(){
+  const act = active(S), n = score(S), t = act.length;
+  const pct = t ? Math.round(n/t*100) : 0;
+  const red = redeemed().length;
+  let h = '<p class="score">'+n+' <small>/ '+t+'</small></p>'
+        + '<p class="sub">'+pct+'% · '+when(S.at)+'</p>'
+        + '<div class="chart"><i class="r" style="width:'+(t?n/t*100:0)+'%"></i>'
+        + '<i class="w" style="width:'+(t?(t-n)/t*100:0)+'%"></i></div>'
+        + '<p class="legend"><span>'+G_OK+' <b>'+n+'</b> correct</span>'
+        + '<span>'+G_NO+' <b>'+(t-n)+'</b> wrong</span>'
+        // The chart stays TWO segments. A third fill for redemptions would need its own
+        // grayscale-safe hatch and would make the one number he reads harder to read; the
+        // count says it in words instead.
+        + (red ? '<span>+<b>'+red+'</b> on the second pass</span>' : '') + '</p>';
+
+  const by = {};
+  act.forEach(i=>{
+    const q = D.questions[i], k = q.topic || '';
+    if(!k) return;
+    by[k] = by[k] || {n:0,t:0};
+    by[k].t++;
+    if(finalRight(i)) by[k].n++;
+  });
+  const keys = Object.keys(by);
+  if(keys.length){
+    h += '<div class="topics"><h3>Topics covered</h3>';
+    keys.forEach(k=>{
+      h += '<div class="trow"><span>'+esc(k)+'</span><span class="n">'+by[k].n+'/'+by[k].t+'</span>'
+         + '<span class="tbar"><i style="width:'+(by[k].n/by[k].t*100)+'%"></i></span></div>';
+    });
+    h += '</div>';
+  }
+
+  if(S.history.length){
+    h += '<p class="hist">Earlier attempts: ' + S.history.slice().reverse()
+        .map(a=>'<span>'+a.score+'/'+a.total+' on '+when(a.at)+'</span>').join(' · ') + '</p>';
+  }
+  const nskip = Object.keys(S.skipped||{}).length;
+  if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
+              + '<button class="link" id="unskip">put them back</button></p>';
+  if(S.rebuilt) h += '<p class="note">These questions were rebuilt since your last attempt.</p>';
+  h += '<p class="note"><a href="'+D.root+'">All my quizzes</a>'
+     + (D.notebook ? ' · <a href="'+D.notebook+'">Open in Gemini Notebook</a>' : '') + '</p>';
+
+  $('#quizview').innerHTML = h;
+  const u = $('#unskip');
+  if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  $('#rail').style.width = '100%';
+  $('#band').classList.add('off');
+  showResearch(false);
+  $('#footer').classList.remove('hide');
+  $('#back').classList.add('hide');
+  $('#hintbtn').classList.add('hide');
+  $('#hinttext').classList.add('hide');
+  $('#next').classList.add('hide');
+  $('#review').classList.remove('hide');
+  $('#review').textContent = 'Review quiz';
+  $('#retake').classList.remove('hide');
+  // No wrong answers left to retry → no button at all, which is also what stops the second
+  // pass looping into a third: anything answered on pass two leaves pending2() for good.
+  $('#pass2').classList.toggle('hide', pending2().length === 0);
+  renderScore();
+  lastShown = -1;
+  centreBlock();
+}
+
+/* One question's full record: the right answer, what he chose on each pass, the rationale.
+   Shared by the review list and the Starred tab so the two can never drift apart. */
+function itemHTML(i, n){
+  const q = D.questions[i], first = ans(i), second = ans2(i);
+  let h = '<div class="item">';
+  if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
+  h += '<p class="qq">'+(n===undefined?'':(n+1)+'. ')+esc(q.q)+'</p>'
+     + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
+  if(!firstRight(i)){
+    h += '<p class="rline mine"><span class="g">'+G_NO+'</span><span>You chose: '
+       + (first===undefined ? 'nothing' : esc(q.options[first])) + '</span></p>';
+    if(second !== undefined){
+      h += '<p class="rline mine"><span class="g">'+(second===q.correct?G_OK:G_NO)+'</span>'
+         + '<span>Second pass: '+esc(q.options[second])
+         + (second===q.correct ? ' — redeemed' : '') + '</span></p>';
+    }
+  }
+  const why = q.rationales ? q.rationales[q.correct] : '';
+  if(why) h += '<p class="why" style="padding-left:0">'+esc(why)+'</p>';
+  return h + '</div>';
+}
+
+function review(){
+  let h = '<div class="rev"><h3>Every question</h3>';
+  active(S).forEach((i,n)=>{ h += itemHTML(i, n); });
+  h += '</div>';
+  $('#quizview').innerHTML = h;
+  $('#band').classList.add('off');
+  showResearch(false);
+  $('#footer').classList.remove('hide');
+  $('#back').classList.add('hide');
+  $('#hintbtn').classList.add('hide');
+  $('#hinttext').classList.add('hide');
+  $('#next').classList.add('hide');
+  $('#pass2').classList.add('hide');
+  $('#review').classList.remove('hide');
+  $('#review').textContent = 'Summary';
+  $('#retake').classList.remove('hide');
+  quizPad = BASE_PAD + 'px';                      // a long list, never centred
+  $('main').style.paddingTop = quizPad;
+  window.scrollTo(0,0);
+}
+
+/* ---- the Starred tab ---------------------------------------------------------------
+   Its own view rather than a section of the review list, because the point is to find them
+   again quickly on a later visit — including on a quiz he has not retaken. Right or wrong
+   does not matter; "this one is important" is the only thing being recorded. */
+function drawStarred(){
+  const list = D.questions.map((_,i)=>i).filter(i => S.starred[qk(i)]);
+  if(!list.length){
+    $('#starredview').innerHTML = '<h3>Starred</h3><p class="empty">Nothing starred yet. '
+      + 'Use the ☆ beside a question.</p>';
+    return;
+  }
+  let h = '<h3>Starred · '+list.length+'</h3>';
+  list.forEach((i,n)=>{
+    h += itemHTML(i, n).replace('</div>',
+      '<p class="rline"><button class="link" data-unstar="'+i+'">Unstar</button></p></div>');
+  });
+  $('#starredview').innerHTML = h;
+  $('#starredview').querySelectorAll('[data-unstar]').forEach(b=>{
+    b.onclick = ()=>{ delete S.starred[qk(+b.dataset.unstar)]; save(); syncTabs(); drawStarred(); };
+  });
+}
+
+/* ---- the score, written where he copies from ---------------------------------------- */
+/* THE PROJECTED SCORE DOCKS A MARK FOR EVERY HINT, which is his rule and his reasoning:
+   a high score with a lot of hints "is actually a sign that you didn't know them very
+   well". So `(right − hints) / total`, floored at zero — the number he would have got
+   with the hints shut. It never touches the real score; both are printed, and the gap
+   between them is the thing worth looking at.
+
+   Hints are counted per question, so this cannot go more negative than the score itself. */
+function scoreParts(){
+  const act = active(S), n = score(S), t = act.length, red = redeemed().length;
+  const hints = act.filter(i => (S.hints || {})[qk(i)]).length;
+  const proj = Math.max(0, n - hints);
+  return {n:n, t:t, pct: t ? Math.round(n/t*100) : 0, red:red, first:n-red, wrong:t-n,
+          skipped: Object.keys(S.skipped||{}).length,
+          hints:hints, proj:proj, projpct: t ? Math.round(proj/t*100) : 0};
+}
+function hintLine(p){
+  if(!p.hints) return 'No hints used';
+  return p.hints + ' hint' + (p.hints > 1 ? 's' : '') + ' used · projected '
+       + p.proj + ' / ' + p.t + ' (' + p.projpct + '%) with the hints docked';
+}
+function scoreMarkdown(){
+  if(!S.done) return '';
+  const p = scoreParts();
+  return '**Quiz:** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
+       + (p.red ? ', +' + p.red + ' redeemed' : '') + ', ' + p.wrong + ' wrong'
+       + (p.skipped ? ', ' + p.skipped + ' skipped' : '') + ' · ' + when(S.at)
+       + '\n**Hints:** ' + hintLine(p);
+}
+function renderScore(){
+  const el = $('#scorecard');
+  if(!el) return;
+  el.classList.toggle('hide', !S.done);
+  if(!S.done) return;
+  const p = scoreParts();
+  el.innerHTML = '<b>'+p.n+' / '+p.t+'</b><span>'+p.pct+'% · '+p.first+' right'
+    + (p.red ? ', +'+p.red+' on the second pass' : '') + ', '+p.wrong+' wrong'
+    + (p.skipped ? ' · '+p.skipped+' skipped' : '') + ' · '+when(S.at)+'</span>'
+    + '<span class="proj">'+hintLine(p)+'</span>';
+}
+
+function when(iso){
+  if(!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString(undefined,{month:'short',day:'numeric'})
+       + ' ' + d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+}
+
+/* ---- controls ------------------------------------------------------------------ */
+function step(dir){
+  const act = runList(), pos = act.indexOf(S.i);
+  if(dir > 0 && pos === act.length-1){ finish(); return; }
+  const nx = act[pos + dir];
+  if(nx === undefined) return;
+  S.i = nx; S.hintOpen = false; save(); question(); window.scrollTo(0,0);
+}
+$('#next').onclick = ()=> step(1);
+$('#back').onclick = ()=> step(-1);
+$('#review').onclick = ()=>{ S.reviewing = !S.reviewing; draw(); };
+/* THE SECOND PASS — the preferred way out of the end card, and the one that keeps
+   everything. It re-runs only what he got wrong, on a list frozen at the moment he presses
+   it, and a right answer here redeems the question in the final score. */
+$('#pass2').onclick = ()=>{
+  const list = pending2();
+  if(!list.length) return;
+  S.phase = 2; S.p2list = list; S.i = list[0];
+  S.done = false; S.reviewing = false; S.hintOpen = false;
+  lastShown = -1;
+  save(); draw(); window.scrollTo(0,0);
+};
+/* RETAKE CLEARS, which is why it sits apart from the other two. The attempt goes into
+   history first so nothing is lost, and the questions he deleted or starred stay that way —
+   they are decisions about the quiz, not part of one attempt at it. */
+$('#retake').onclick = ()=>{
+  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length});
+  const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
+  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  lastShown = -1;
+  save(); syncTabs(); renderScore(); draw();
+};
+document.querySelectorAll('.tab').forEach(b=> b.onclick = ()=> setTab(b.dataset.tab));
+
+/* ---- his own additions -------------------------------------------------------------
+   A textarea, localStorage, and string work. NO API, no model, nothing paid — the
+   formatting below is deterministic, which is the whole reason it can be free.
+
+   The loop this closes: he pastes the result into the subchapter's Notion row, and the
+   weekly exam already scrapes that row first (board-notes.md → exam-notes.md). So anything
+   he adds here becomes exam content without touching the pipeline. */
+const NKEY = KEY + ':notes';
+const ta = $('#mynotes'), savedmsg = $('#savedmsg');
+
+function loadNotes(){ try{ return localStorage.getItem(NKEY) || ''; }catch(e){ return ''; } }
+function saveNotes(){
+  try{ localStorage.setItem(NKEY, ta.value); }catch(e){}
+  savedmsg.textContent = ta.value.trim() ? 'Saved in this browser' : '';
+}
+
+/* His shorthand → the sheet's own markdown shape, so the paste reads as one document
+   rather than a tidy half and a raw half. Bolds the term before a `:` or a dash, keeps his
+   indentation as nesting, and numbers everything (markdown renumbers `1.` itself, and
+   Notion honours that on paste). A line he already formatted is left alone. */
+function fmtLine(t){
+  if(/\*\*/.test(t)) return t;
+  let m = t.match(/^([^:]{1,60}?):\s+(.+)$/);
+  if(!m) m = t.match(/^(.{1,60}?)\s+[—–-]\s+(.+)$/);
+  return m ? '**' + m[1].trim() + '** — ' + m[2].trim() : t;
+}
+function noteMarkdown(){
+  const out = [];
+  (ta.value || '').split('\n').forEach(raw=>{
+    const line = raw.replace(/\t/g, '  ');
+    const m = line.match(/^(\s*)(?:[-*+]\s+|\d+[.)]\s+)?(.*)$/);
+    const text = m[2].trim();
+    if(!text) return;
+    const depth = Math.min(Math.floor(m[1].length / 2), 2);
+    out.push('   '.repeat(depth) + '1. ' + fmtLine(text));
+  });
+  return out.join('\n');
+}
+/* ---- ☆ and ? read back on the sheet --------------------------------------------------
+   Both marks end up in the same place for the same reason he gave: he stopped and marked
+   the question, so it is worth having beside the sheet when he pastes it into Notion — and
+   the ? ones especially, because a lucky guess leaves no other trace. Each entry is the
+   full record from `itemHTML`, so the sheet and the review list can never disagree. */
+function markedList(map){
+  const out = [];
+  D.questions.forEach((q, i) => { if((map || {})[q.qid]) out.push({n: i + 1, i: i, q: q}); });
+  return out;
+}
+function renderMarked(sel, list, head, say){
+  const box = $(sel);
+  if(!box) return;
+  box.classList.toggle('hide', !list.length);
+  if(!list.length) return;
+  let h = '<h3>' + head + ' · ' + list.length + '</h3><p class="say">' + say + '</p>';
+  list.forEach(x => { h += itemHTML(x.i, x.n - 1); });
+  box.innerHTML = h;
+}
+function markedMarkdown(list, head){
+  if(!list.length) return '';
+  let out = '\n\n## ' + head + '\n';
+  list.forEach(x => {
+    const q = x.q, why = q.rationales ? q.rationales[q.correct] : '';
+    out += '\n### ' + x.n + '. ' + q.q + '\n\n'
+         + '**Answer:** ' + q.options[q.correct] + '\n'
+         + (why ? '\n' + why + '\n' : '');
+  });
+  return out;
+}
+function markedHTML(list, head){
+  if(!list.length) return '';
+  let h = '<h2>' + head + '</h2>';
+  list.forEach(x => {
+    const q = x.q, why = q.rationales ? q.rationales[q.correct] : '';
+    h += '<h3>' + x.n + '. ' + esc(q.q) + '</h3>'
+       + '<p><strong>Answer:</strong> ' + esc(q.options[q.correct]) + '</p>'
+       + (why ? '<p>' + esc(why) + '</p>' : '');
+  });
+  return h;
+}
+
+/* ---- what he found, read back on the sheet ------------------------------------------
+   Grouped by the question, in question order, and NOT filtered by anything: a question he
+   skipped still keeps its research, because the research is his and the skip was about the
+   question. Numbering is the question's own position, so it does not move when the run does. */
+function researchList(){
+  const out = [];
+  D.questions.forEach((q, i) => {
+    const r = rget(q.qid);
+    if(r.t.trim() || r.i.length) out.push({n: i + 1, q: q, r: r});
+  });
+  return out;
+}
+function paras(t){
+  return t.trim().split(/\n{2,}/)
+          .map(p => '<p>' + esc(p).replace(/\n/g, '<br>') + '</p>').join('');
+}
+/* Everything the sheet grows below the book's own material, in the order the Copy writes
+   it: what he marked, then what he went and found. */
+function renderSheetExtras(){
+  renderMarked('#starredsheet', markedList(S.starred), 'Starred',
+               'Marked while answering, right or wrong.');
+  renderMarked('#unsuresheet', markedList(S.unsure), 'Needs work',
+               'Marked ? — no idea at the time, so the answer is not proof of anything.');
+  renderResearch();
+}
+function renderResearch(){
+  const el = $('#researchview');
+  if(!el) return;
+  // The textarea is the live copy while a question is on screen, so write it back before
+  // reading R — otherwise the sheet shows everything except the paragraph he just typed.
+  flushResearch();
+  const list = researchList();
+  el.classList.toggle('hide', !list.length);
+  if(!list.length) return;
+  let h = '<h3>My research</h3><p class="say">What you pasted while answering, under the '
+        + 'question that sent you looking. Copy takes this with the sheet.</p>';
+  list.forEach(x => {
+    h += '<div class="ritem"><p class="rq">' + x.n + '. ' + esc(x.q.q) + '</p>';
+    if(x.r.t.trim()) h += '<div class="rtxt">' + paras(x.r.t) + '</div>';
+    x.r.i.forEach((src, k) => {
+      h += '<img class="rimg" src="' + src + '" alt="Pasted image ' + (k+1) + '">';
+    });
+    h += '</div>';
+  });
+  el.innerHTML = h;
+}
+
+/* THE IMAGES DO NOT GO IN THE PLAIN TEXT, and that is the point of the two flavours below.
+   A pasted screenshot is a couple of hundred kilobytes of base64; dropping that into the
+   markdown would make one Notion row unreadable and the paste enormous. So the text
+   flavour names each image and the HTML flavour carries it. */
+function researchMarkdown(){
+  const list = researchList();
+  if(!list.length) return '';
+  let out = '\n\n## My research\n';
+  list.forEach(x => {
+    out += '\n### ' + x.n + '. ' + x.q.q + '\n\n';
+    const t = x.r.t.trim();
+    if(t) out += t + '\n\n';
+    if(x.r.i.length){
+      x.r.i.forEach((_, k) => { out += '_[image ' + (k+1) + ' — on the quiz page]_\n'; });
+      out += '\n';
+    }
+  });
+  return out.replace(/\n+$/, '\n');
+}
+
+/* THE SCORE RIDES ALONG WITH THE COPY. One press still takes score + sheet + his own notes
+   as a single markdown block, which is what Notion parses on paste — so the row that the
+   week's exam is built from also records how the quiz went, and he can see later whether
+   this section needs testing again. His research is last, so the shape of the paste he
+   already knows is unchanged and the new material is appended under it. */
+function fullMarkdown(){
+  const mine = noteMarkdown();
+  const sc = scoreMarkdown();
+  return (sc ? sc + '\n\n' : '') + (D.sheet || '')
+       + (mine ? '\n\n## My notes\n\n' + mine + '\n' : '')
+       + markedMarkdown(markedList(S.starred), 'Starred')
+       + markedMarkdown(markedList(S.unsure), 'Needs work')
+       + researchMarkdown();
+}
+
+/* THE HTML FLAVOUR EXISTS ONLY FOR THE IMAGES, and it is only put on the clipboard when
+   there is one. That rule is what protects the paste he already relies on: with no images
+   the clipboard holds plain markdown and Notion parses it exactly as it does today. With
+   images there is no other way — no clipboard format carries markdown AND a picture — so
+   the whole document goes over as HTML, which Notion also turns into real blocks.
+
+   The sheet's own HTML is reused rather than re-rendered: #sheetmd already holds what
+   md_to_html produced, so the two can never drift. */
+function fullHTML(){
+  let h = '';
+  const sc = scoreMarkdown();
+  if(sc) h += tinyMd(sc);
+  const md = $('#sheetmd');
+  if(md) h += md.innerHTML;
+  const mine = noteMarkdown();
+  if(mine) h += '<h2>My notes</h2>' + tinyMd(mine);
+  h += markedHTML(markedList(S.starred), 'Starred');
+  h += markedHTML(markedList(S.unsure), 'Needs work');
+  const list = researchList();
+  if(list.length){
+    h += '<h2>My research</h2>';
+    list.forEach(x => {
+      h += '<h3>' + x.n + '. ' + esc(x.q.q) + '</h3>';
+      if(x.r.t.trim()) h += paras(x.r.t);
+      x.r.i.forEach(src => { h += '<p><img src="' + src + '"></p>'; });
+    });
+  }
+  return '<meta charset="utf-8">' + h;
+}
+
+/* A 25-line renderer so Preview shows the same shape the paste will have. Lists and bold
+   only — anything more and this would be a markdown library, which is the dependency the
+   whole file exists to avoid. */
+function tinyMd(md){
+  const esc2 = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const inline = s => esc2(s).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  let html = '', stack = [];
+  md.split('\n').forEach(line=>{
+    if(!line.trim()) return;
+    const h = line.match(/^(#{1,4})\s+(.*)$/);
+    if(h){ while(stack.length){ html += '</ol>'; stack.pop(); }
+           html += '<h' + Math.min(h[1].length+1,5) + '>' + inline(h[2]) + '</h' + Math.min(h[1].length+1,5) + '>'; return; }
+    const m = line.match(/^(\s*)(?:[-*+]|\d+[.)])\s+(.*)$/);
+    if(!m){ while(stack.length){ html += '</ol>'; stack.pop(); } html += '<p>' + inline(line.trim()) + '</p>'; return; }
+    const d = Math.floor(m[1].length / 3);
+    while(stack.length > d + 1){ html += '</ol>'; stack.pop(); }
+    while(stack.length < d + 1){ html += '<ol>'; stack.push(1); }
+    html += '<li>' + inline(m[2]) + '</li>';
+  });
+  while(stack.length){ html += '</ol>'; stack.pop(); }
+  return html;
+}
+
+if(ta){
+  ta.value = loadNotes();
+  saveNotes();
+  let t = null;
+  ta.addEventListener('input', ()=>{ clearTimeout(t); t = setTimeout(saveNotes, 400); });
+  ta.addEventListener('blur', saveNotes);
+  $('#previewnotes').onclick = ()=>{
+    const p = $('#minepreview'), on = p.classList.contains('hide');
+    p.innerHTML = on ? (noteMarkdown() ? tinyMd(noteMarkdown())
+                                       : '<p>Nothing written yet.</p>') : '';
+    p.classList.toggle('hide', !on);
+    $('#previewnotes').textContent = on ? 'Hide preview' : 'Preview';
+  };
+}
+
+/* COPIES THE MARKDOWN, NOT THE RENDERED TEXT. He pastes this into Notion, and Notion parses
+   markdown on paste — so the headings, the numbering and the bold terms all survive as real
+   Notion blocks. Copying the visible text would paste one flat wall. */
+const cp = $('#copysheet');
+if(cp) cp.onclick = async ()=>{
+  flushResearch();
+  // Both strings are built BEFORE the first await: Safari only honours a clipboard write
+  // inside the gesture that asked for it, and work done after an await is outside it.
+  const md = fullMarkdown();
+  const shots = researchList().some(x => x.r.i.length);
+  const html = shots ? fullHTML() : '';
+  let done = false;
+  if(shots && window.ClipboardItem && navigator.clipboard && navigator.clipboard.write){
+    try{
+      await navigator.clipboard.write([new ClipboardItem({
+        'text/html':  new Blob([html], {type: 'text/html'}),
+        'text/plain': new Blob([md],   {type: 'text/plain'})
+      })]);
+      done = true;
+    }catch(e){}                      // fall through to the plain paste rather than nothing
+  }
+  if(!done){
+    try{ await navigator.clipboard.writeText(md); done = true; }
+    catch(e){
+      const t = document.createElement('textarea');
+      t.value = md; t.style.position='fixed'; t.style.opacity='0';
+      document.body.appendChild(t); t.select();
+      try{ document.execCommand('copy'); }catch(_){}
+      t.remove();
+    }
+  }
+  cp.textContent = shots ? 'Copied + images' : 'Copied';
+  cp.classList.add('copied');
+  setTimeout(()=>{ cp.textContent = 'Copy'; cp.classList.remove('copied'); }, 1600);
+};
+
+// Re-centre when the window changes shape; the frozen padding would be wrong afterwards.
+// Against the ANSWERED height, like every other call — measuring what is on screen is the
+// bug this file already fixed once.
+addEventListener('resize', ()=>{
+  if(D.tab==='quiz' && !S.reviewing && !S.done) centreBlock(answeredHeight(S.i));
+});
+
+document.addEventListener('keydown', e=>{
+  /* TYPING IS NOT ANSWERING. The research box is a textarea ON THE QUIZ TAB, so without
+     this every letter he types would be read as an option key and `h` would open the hint —
+     the notes box on the sheet tab was only safe because that tab returns above. */
+  const t = e.target;
+  if(t && (t.tagName === 'TEXTAREA' || t.tagName === 'INPUT' || t.isContentEditable)) return;
+
+  /* THE WHOLE END OF A QUIZ IS ONE KEY. Enter walks it in the order he works in — second
+     pass, then the review list, then the sheet — and `c` on the sheet copies. Enter already
+     meant "next" all the way through the questions, so it just carries on meaning it past
+     the last one instead of stopping dead at the end card.
+
+     Each step is taken by CLICKING THE REAL BUTTON, so there is one path into a second pass
+     and one into the review list, whether he pressed the key or the button. A step with no
+     button on screen is skipped rather than faked: no wrong answers means no 2nd Pass, so
+     Enter goes straight to the review list. */
+  if(D.tab === 'sheet'){
+    if(e.key === 'c' || e.key === 'C'){ const b = $('#copysheet'); if(b) b.click(); }
+    return;
+  }
+  if(D.tab !== 'quiz') return;
+  if(S.done || S.reviewing){
+    if(e.key !== 'Enter') return;
+    e.preventDefault();
+    if(!S.reviewing && pending2().length){ $('#pass2').click(); return; }
+    if(!S.reviewing){ $('#review').click(); return; }
+    if(D.hasSheet) setTab('sheet');
+    return;
+  }
+  const q = D.questions[S.i];
+  if(e.key === 'Enter' || e.key === 'ArrowRight'){ if(!$('#next').disabled) step(1); return; }
+  if(e.key === 'ArrowLeft'){ if(!$('#back').disabled) step(-1); return; }
+  // `h` IS THE HINT, not option H. Every quiz here has four options, so H as an option key
+  // has never been reachable; if one ever has eight, the eighth is still `8`.
+  if(e.key === 'h' || e.key === 'H'){ toggleHint(); return; }
+  let k = -1;
+  if(/^[1-9]$/.test(e.key)) k = +e.key - 1;
+  else if(/^[a-gA-G]$/.test(e.key)) k = D.letters.indexOf(e.key.toUpperCase());
+  if(k >= 0 && k < q.options.length && pick(S.i) === undefined){
+    // click the real button rather than repeating its handler — one path for answering
+    const btn = $('#quizview').querySelector('.opt[data-k="' + k + '"]');
+    if(btn) btn.click();
+  }
+});
+
+save();
+syncTabs();
+renderScore();
+setTab(D.tab || 'quiz');
+</script>
+</body>
+</html>
