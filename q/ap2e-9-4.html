@@ -29,13 +29,25 @@ a{color:var(--accent)}
 header{position:sticky;top:0;z-index:5;background:var(--bg);
  border-bottom:1px solid var(--line)}
 .bar{display:flex;align-items:center;gap:14px;height:var(--barh)}
+/* CENTRED IN THE SPACE BESIDE THE TABS, not dead-centre of the bar (08-11, his ask).
+   Dead-centre needs an empty gutter the width of the tabs on the left to balance them, which
+   leaves ~310px for the title — and these titles run past 450px, so a true centre would
+   ellipsis every one of them. Centring what is left reads as centred and never truncates. */
 .title{font-size:.9rem;font-weight:500;white-space:nowrap;overflow:hidden;
- text-overflow:ellipsis;flex:1}
+ text-overflow:ellipsis;flex:1;text-align:center}
 .tabs{display:flex;gap:2px}
 .tab{background:none;border:0;color:var(--muted);font:inherit;font-size:.82rem;
  padding:5px 12px;border-radius:999px;cursor:pointer}
 .tab[aria-selected="true"]{background:var(--surface-hi);color:var(--text)}
-.rail{height:2px;background:var(--line)}
+/* END CAPS, because a grey line on a grey page has no visible extent — "hard to see the
+   defined start and end". Two short uprights mark where the quiz begins and ends, so the
+   blue fill is read against a track with edges rather than against the whole window. They
+   are luminance, not colour, so they survive grayscale like the rest of the page. */
+.rail{height:2px;background:var(--line);position:relative}
+.rail::before,.rail::after{content:"";position:absolute;top:-3px;width:2px;height:8px;
+ background:var(--muted);border-radius:1px}
+.rail::before{left:0}
+.rail::after{right:0}
 .rail>i{display:block;height:100%;background:var(--accent);width:0;
  transition:width .25s ease}
 
@@ -131,6 +143,65 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
 .opt.enter,.qhead.enter{animation:fadein .24s ease both}
 @keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 
+/* ---- SELECTABLE TEXT, and it is timed rather than global ----
+   He searches the web while he works, so the wording has to leave the page. Two different
+   problems, one each side of the answer:
+
+   THE QUESTION was never selectable because the browser's own stylesheet turns selection
+   off inside a <button>, and the whole question head sits in one. `user-select:text` on the
+   text itself puts it back; it costs nothing, because nothing up there is a click target
+   except the ☆ and the ⋮, which are excluded below.
+
+   THE OPTIONS STAY LOCKED UNTIL HE HAS ANSWERED, and that is deliberate, not an oversight.
+   An option IS the button — drag across one to select it and the mouseup answers the
+   question with whatever he happened to start the drag on. So selection is enabled on
+   `:disabled`, which is exactly the set of options that can no longer be clicked: every
+   option, the moment the answer is in. On a second pass the pending question re-enables and
+   locks again, which is right — it is live again. */
+.q,.qq,.why,.lab,.hinttext,.rline,.tag,.sheet,.topics,.legend{
+ user-select:text;-webkit-user-select:text}
+.opt{user-select:none;-webkit-user-select:none}
+.opt:disabled,.opt:disabled *{user-select:text;-webkit-user-select:text;cursor:auto}
+.star,.dots,.tab,button.pill{user-select:none;-webkit-user-select:none}
+
+/* ---- HIS RESEARCH, one box per question ----
+   Under the options, inside the band, and OUTSIDE #quizview — so answering re-renders the
+   question without touching what he is halfway through typing, the same reason the hint
+   lives in the footer.
+
+   THE TOGGLE ROW IS ALWAYS VISIBLE AND THE BODY IS WHAT COLLAPSES. That is what keeps the
+   centring honest: the block's minimum height is a constant the measurement can include,
+   whether the box is open or shut. Opening it only ever grows the page downward, which is
+   the one direction this page allows. */
+.research{margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+.rtoggle{display:inline-flex;align-items:center;gap:7px;background:none;border:0;padding:0;
+ color:var(--muted);font:inherit;font-size:.82rem;cursor:pointer;text-decoration:underline;
+ text-underline-offset:3px;user-select:none;-webkit-user-select:none}
+.rtoggle:hover{color:var(--text)}
+.rtoggle.has{color:var(--text)}
+.rbody{margin:12px 0 0}
+#rtext{width:100%;min-height:104px;resize:vertical;background:var(--surface);
+ color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
+ padding:11px 13px;font:inherit;font-size:.9rem;line-height:1.55;outline:none}
+#rtext:focus{border-color:var(--accent)}
+#rtext::placeholder{color:var(--muted);opacity:.7}
+.rshots{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
+.shot{position:relative;display:block;line-height:0}
+.shot img{max-height:88px;max-width:150px;border-radius:9px;border:1px solid var(--line)}
+.shot .x{position:absolute;top:-6px;right:-6px;width:20px;height:20px;line-height:18px;
+ text-align:center;border-radius:999px;border:1px solid var(--line);background:var(--surface-hi);
+ color:var(--text);font:inherit;font-size:.8rem;cursor:pointer;padding:0}
+.rsay{color:var(--muted);font-size:.76rem;margin:9px 0 0;min-height:1em}
+.rsay.warn{color:var(--wrong)}
+
+/* the same material, read back on the study sheet */
+.ritem{border-top:1px solid var(--line);padding:16px 0 4px}
+.ritem:first-of-type{border-top:0;padding-top:6px}
+.rq{font-size:.95rem;font-weight:600;margin:0 0 8px}
+.rtxt p{margin:0 0 9px;color:var(--muted)}
+.rimg{display:block;max-width:100%;border-radius:10px;border:1px solid var(--line);
+ margin:0 0 10px}
+
 /* ---- starring ----
    A visible toggle rather than a menu item: it is used on questions he got RIGHT as often as
    wrong, so it has to be one press. Outline vs filled is a shape difference, so it reads in
@@ -139,6 +210,16 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
  padding:4px 6px;border-radius:999px;cursor:pointer;flex:0 0 auto}
 .star:hover{background:var(--surface);color:var(--text)}
 .star.on{color:var(--text)}
+
+/* ---- ? "no idea, needs work" ----
+   Beside the star and read the same way. GRAYSCALE-SAFE like everything else on this page:
+   on/off is a RING appearing, not a colour changing, so it reads with the colour off and at
+   a glance in a screenshot. */
+.qmark{background:none;border:1px solid transparent;color:var(--muted);font:inherit;
+ font-size:.9rem;font-weight:600;line-height:1;width:26px;height:26px;padding:0;
+ border-radius:999px;cursor:pointer;flex:0 0 auto;user-select:none;-webkit-user-select:none}
+.qmark:hover{background:var(--surface);color:var(--text)}
+.qmark.on{color:var(--text);border-color:var(--accent);background:var(--surface-hi)}
 
 /* ---- the ⋮ menu ---- */
 .more{position:relative;flex:0 0 auto}
@@ -238,11 +319,19 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
  margin:16px 0 6px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
 .scorecard b{font-size:1.35rem;font-weight:500;font-variant-numeric:tabular-nums}
 .scorecard span{color:var(--muted);font-size:.88rem}
+/* Its own row under the score, never beside it — the projected number is a second reading
+   of the same quiz and putting it inline would read as more of the first one. */
+.scorecard .proj{flex-basis:100%;padding-top:2px;border-top:1px solid var(--line);
+ margin-top:4px;font-size:.84rem}
 
 /* ---- his own additions ---- */
-.mine{margin:34px 0 0;padding-top:18px;border-top:1px solid var(--line)}
-.mine h3{margin:0 0 4px;padding:0;border:0}
-.mine .say{color:var(--muted);font-size:.85rem;margin:0 0 12px}
+/* SCOPED TO .sheet, because `.mine` is also the review list's "you chose this" modifier
+   (`.rline.mine`) and this block sits later in the file — unscoped, it was handing every
+   wrong-answer line in the review list a 34px gap and a rule above it. */
+.own{margin:34px 0 0;padding-top:18px;border-top:1px solid var(--line)}
+.own h3{margin:0 0 4px;padding:0;border:0}
+.own .say{color:var(--muted);font-size:.85rem;margin:0 0 12px}
+.own .item:first-of-type{border-top:0;padding-top:6px}
 #mynotes{width:100%;min-height:180px;resize:vertical;background:var(--surface);
  color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
  padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.6;outline:none}
@@ -278,11 +367,26 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
     <span class="title">9.4 Synovial Joints</span>
     <span class="tabs" id="tabs"><button class="tab" data-tab="quiz" aria-selected="true">Quiz</button><button class="tab hide" data-tab="starred" aria-selected="false">Starred</button><button class="tab" data-tab="sheet" aria-selected="false">Study sheet</button></span>
   </div>
-  <div class="rail"><i id="rail"></i></div>
+  <!-- In the same .wrap as the title and the tabs: the progress track used to run the full
+       width of the window under a centred column, which is the one thing up here that was
+       not lined up with everything else. -->
+  <div class="wrap"><div class="rail"><i id="rail"></i></div></div>
 </header>
 
 <main class="wrap">
-  <div class="band" id="band"><div id="quizview"></div></div>
+  <div class="band" id="band">
+    <div id="quizview"></div>
+    <!-- Outside #quizview on purpose: answering re-renders the question, and it must not
+         throw away what he is halfway through pasting. -->
+    <div class="research hide" id="research">
+      <button class="rtoggle" id="rtoggle">+ Add research</button>
+      <div class="rbody hide" id="rbody">
+        <textarea id="rtext" spellcheck="false" placeholder="Paste what you found — an explanation, a definition, a diagram. Images paste straight in."></textarea>
+        <div class="rshots hide" id="rshots"></div>
+        <p class="rsay" id="rsay"></p>
+      </div>
+    </div>
+  </div>
   <div id="starredview" class="rev hide"></div>
   <div id="sheetview" class="sheet hide">
     <div class="scorecard hide" id="scorecard"></div>
@@ -290,7 +394,7 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
       <button class="link" id="previewnotes">Preview</button>
       <button class="link" id="copysheet">Copy</button>
     </div>
-    <h3>Synovial membranes</h3>
+    <div id="sheetmd"><h3>Synovial membranes</h3>
 <p>As the most common type of joint, every synovial joint is functionally classified as a diarthrosis.</p>
 <h4>Key terms</h4>
 <ol>
@@ -443,8 +547,8 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 <ol>
 <li>prosthesis — artificial components used to replace worn or damaged bone parts.</li>
 </ol>
-</ol>
-    <div class="mine">
+</ol></div>
+    <div class="own">
       <h3>My notes</h3>
       <p class="say">What the sheet missed. Write it however you write — one thing a line,
       <code>Term: what it is</code>, indent to nest. Copy takes this with the sheet, formatted,
@@ -455,6 +559,11 @@ Self-control is finite - one hard task leaves less for the next"></textarea>
       <p class="saved" id="savedmsg"></p>
       <div id="minepreview" class="hide"></div>
     </div>
+    <!-- Last on the sheet, and last in the Copy, so the paste reads sheet → his notes →
+         what he went and found, grouped under the question that sent him looking. -->
+    <div class="own hide" id="starredsheet"></div>
+    <div class="own hide" id="unsuresheet"></div>
+    <div class="own hide" id="researchview"></div>
   </div>
 </main>
 
@@ -494,14 +603,16 @@ const G_OK = '✓', G_NO = '✕';
    in quizpage.py. v1 states are migrated once, on load. */
 function qk(i){ return D.questions[i].qid; }
 function blank(){ return {v:2, hash:D.hash, i:0, answers:{}, pass2:{}, skipped:{}, starred:{},
-                          phase:1, p2list:null, done:false, at:null, history:[]}; }
+                          unsure:{}, hints:{}, phase:1, p2list:null, done:false, at:null,
+                          history:[]}; }
 function migrate(s){
   // v1 keyed every map on the array index. The hash matches, so the indices are still valid
   // and this is a straight re-key — done once, then never again.
   const re = m => { const o = {}; Object.keys(m||{}).forEach(k=>{
     const i = +k; if(D.questions[i]) o[qk(i)] = m[k]; }); return o; };
   s.answers = re(s.answers); s.skipped = re(s.skipped);
-  s.pass2 = {}; s.starred = {}; s.phase = 1; s.p2list = null; s.v = 2;
+  s.pass2 = {}; s.starred = {}; s.unsure = {}; s.hints = {}; s.phase = 1; s.p2list = null;
+  s.v = 2;
   return s;
 }
 function load(){
@@ -524,13 +635,16 @@ function load(){
       // A REBUILD DOES NOT RESURRECT A DELETED QUESTION. Answers are retired because they
       // describe questions that may be gone; skipped and starred are decisions ABOUT
       // questions, so they carry over on qid and simply miss anything no longer present.
-      if(s.v === 2){ b.skipped = s.skipped || {}; b.starred = s.starred || {}; }
+      if(s.v === 2){ b.skipped = s.skipped || {}; b.starred = s.starred || {};
+                     b.unsure = s.unsure || {}; }
       return b;
     }
     if(!s.history) s.history = [];
     if(s.v !== 2) return migrate(s);
     if(!s.skipped) s.skipped = {};
     if(!s.starred) s.starred = {};
+    if(!s.unsure) s.unsure = {};
+    if(!s.hints) s.hints = {};
     if(!s.pass2) s.pass2 = {};
     if(!s.phase) s.phase = 1;
     return s;
@@ -570,6 +684,28 @@ function pick(i){ return S.phase === 2 ? ans2(i) : ans(i); }
 let S = load();
 let lastShown = -1;
 
+/* ---- HIS RESEARCH, kept apart from the attempt ---------------------------------------
+   Its own localStorage key, NOT a field of S, and that is the whole design. S is one
+   attempt: Retake clears it, a rebuilt quiz retires it. What he went and found while
+   answering is neither — it is material, and it has to survive both. Keyed on q.qid like
+   `starred` and `skipped`, so it also survives a Redo that reorders the questions.
+
+   `{ qid: {t: "his text", i: ["data:image/...", ...]} }` — an entry with neither is deleted
+   rather than stored empty, which is what makes `rhas()` a simple truth test. */
+const RKEY = KEY + ':research';
+function loadResearch(){
+  try{ const r = JSON.parse(localStorage.getItem(RKEY) || '{}');
+       return (r && typeof r === 'object') ? r : {}; }
+  catch(e){ return {}; }
+}
+let R = loadResearch();
+function rget(id){ const r = R[id]; return {t: (r && r.t) || '', i: (r && r.i) || []}; }
+function rput(id, t, imgs){
+  if(!t.trim() && !imgs.length) delete R[id]; else R[id] = {t: t, i: imgs};
+  try{ localStorage.setItem(RKEY, JSON.stringify(R)); return true; }
+  catch(e){ return false; }                       // quota — the caller puts it back
+}
+
 /* ---- rendering ---------------------------------------------------------------- */
 /* The Starred tab only exists while something is starred, and the Study sheet tab only when
    the quiz shipped with one — a linguistics quiz built before topic tags has none. If that
@@ -582,6 +718,7 @@ function syncTabs(){
   if(D.tab === 'starred' && !nstar) setTab('quiz');
 }
 function setTab(name){
+  if(D.tab === 'quiz' && name !== 'quiz') flushResearch();
   D.tab = name;
   document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===name));
   $('#band').classList.toggle('hide', name!=='quiz');
@@ -595,7 +732,7 @@ function setTab(name){
     if(quizPad !== null) $('main').style.paddingTop = quizPad;
   } else {
     if(name==='starred') drawStarred();
-    if(name==='sheet') renderScore();
+    if(name==='sheet'){ renderScore(); renderSheetExtras(); }
     $('main').style.paddingTop = BASE_PAD + 'px';
     window.scrollTo(0,0);
   }
@@ -615,15 +752,35 @@ let quizPad = null;
    under the footer. Coming back to the same question then looked right, because by then it
    WAS the answered height being measured — the two states he photographed, from one bug.
    `reserve` is the height with feedback open, measured off-screen before anything renders. */
-function centreBlock(reserve){
+/* CENTRE THE QUESTION HE IS LOOKING AT; ONLY MOVE UP IF THE ANSWER WOULD NOT FIT.
+   Two rules that used to fight, now resolved with a `min` instead of a choice between them:
+
+     centred = the block as it is on screen, centred        ← what he reads
+     fit     = the lowest start that still leaves room for the ANSWERED block
+
+   `min` of the two. On a tall window the answered block still fits inside the centred
+   position, so nothing clamps and the question sits in the middle of the page — *"so i dont
+   have to look at the top too much but just straight at the center"* (08-11). On a short
+   one, `fit` wins and the block rides up exactly as far as it must, which is the 08-10
+   behaviour and no further.
+
+   Either way the padding is computed ONCE per question and frozen, so answering still moves
+   nothing: only the cards below the one he clicked ever change position.
+
+   THE RESEARCH ROW IS DELIBERATELY OUT OF BOTH MEASUREMENTS (08-11). Counting it would
+   centre the whole band and lift the question by half the row — he tried that and preferred
+   it without: *"if research is opened I can scroll down to add it in."* */
+function centreBlock(i){
   const m = $('main');
   m.style.paddingTop = BASE_PAD + 'px';
   const avail = innerHeight - $('header').offsetHeight - $('footer').offsetHeight;
-  // The band's own padding is part of the block now, so it has to be inside the measurement
-  // or the box lands low by exactly one padding.
+  // The band's own padding is part of the block, or the box lands low by exactly one padding.
   const bp = parseFloat(getComputedStyle($('#band')).paddingTop) || 0;
-  const h = (reserve || $('#quizview').getBoundingClientRect().height) + bp * 2;
-  quizPad = Math.max(BASE_PAD, Math.round((avail - h) / 2)) + 'px';
+  const live = $('#quizview').getBoundingClientRect().height + bp * 2;
+  const answered = (i === undefined ? live : answeredHeight(i) + bp * 2);
+  const centred = Math.round((avail - live) / 2);
+  const fit = Math.round(avail - answered);
+  quizPad = Math.max(BASE_PAD, Math.min(centred, fit)) + 'px';
   m.style.paddingTop = quizPad;
 }
 
@@ -651,6 +808,9 @@ function nextFrom(list, i){
 function draw(){
   if(D.tab!=='quiz') return;
   $('#band').classList.toggle('off', !!(S.reviewing || S.done));
+  // The box belongs to a question on screen. The end card and the review list have none, so
+  // it goes away there rather than floating under a score.
+  showResearch(!(S.reviewing || S.done));
   if(S.reviewing) return review();
   if(S.done) return end();
   const act = runList();
@@ -666,6 +826,7 @@ function buildQ(i, picked, fresh, en){
   const answered = picked !== undefined;
   const act = runList(), pos = act.indexOf(i);
   const starred = !!S.starred[q.qid];
+  const unsure = !!(S.unsure||{})[q.qid];
   en = en || '';
 
   // The counter sits top-left above the question, the way the notebook does it, rather than
@@ -677,6 +838,10 @@ function buildQ(i, picked, fresh, en){
         + (q.topic ? '<span class="dot">·</span><span>' + esc(q.topic) + '</span>' : '')
         + '</p>'
         + '<h1 class="q">' + esc(q.q) + '</h1></div>'
+        // ? BEFORE ☆, because it is the one pressed while the question is still unanswered:
+        // "no idea" is a thing he knows before he picks, and starring is usually after.
+        + '<button class="qmark' + (unsure?' on':'') + '" id="qmark" '
+        + 'title="No idea — needs work" aria-label="No idea, needs work">?</button>'
         + '<button class="star' + (starred?' on':'') + '" id="star" aria-label="Star">'
         + (starred?'★':'☆') + '</button>'
         + '<div class="more"><button class="dots" id="dots" aria-label="More">⋮</button></div>'
@@ -725,6 +890,7 @@ function question(fresh){
     };
   });
   $('#star').onclick = ()=> toggleStar(i);
+  $('#qmark').onclick = ()=> toggleUnsure(i);
   $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
 
   // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
@@ -744,9 +910,10 @@ function question(fresh){
   $('#next').disabled = !answered;
   $('#next').textContent = (pos === act.length-1) ? 'Finish' : 'Next';
   $('#footer').classList.remove('hide');
+  mountResearch(q.qid);
   // Only when the question changes, and always against the ANSWERED height, so the layout
   // he lands on is the one he will still be looking at after he picks.
-  if(isNew) centreBlock(answeredHeight(i));
+  if(isNew) centreBlock(i);
 }
 
 /* THE HINT, from the button or from `h`. One path for both, and the BUTTON'S OWN VISIBILITY
@@ -757,6 +924,11 @@ function toggleHint(){
   if(hb.classList.contains('hide')) return;
   S.hintOpen = !S.hintOpen;
   ht.classList.toggle('hide', !S.hintOpen);
+  /* RECORDED PER QUESTION, NOT PER PRESS, and only on the way open. Closing and reopening
+     the same hint is one hint used — the number is meant to say how many questions he
+     needed help on, and counting keystrokes would make a fidget look like a gap. It rides
+     in S, so a Retake clears it: it describes this attempt, unlike ☆ and ?. */
+  if(S.hintOpen){ if(!S.hints) S.hints = {}; S.hints[qk(S.i)] = true; save(); }
 }
 
 /* STARRING is not the same thing as skipping and the two maps never mix. Starred = worth
@@ -769,6 +941,167 @@ function toggleStar(i){
   save(); syncTabs();
   const b = $('#star');
   if(b){ b.textContent = S.starred[k] ? '★' : '☆'; b.classList.toggle('on', !!S.starred[k]); }
+}
+
+/* ? IS NOT ☆ AND IT IS NOT WRONG EITHER. His words: "I have no idea and whether or not I get
+   this right or wrong, it still needs work." So it is a third map beside `starred` and
+   `skipped`, it changes no score, and it survives a Retake and a rebuild exactly as the
+   other two do — a guess that happened to land right is the case it exists for, and that
+   question would otherwise leave no trace anywhere. */
+function toggleUnsure(i){
+  const k = qk(i);
+  if(!S.unsure) S.unsure = {};
+  if(S.unsure[k]) delete S.unsure[k]; else S.unsure[k] = true;
+  save();
+  const b = $('#qmark');
+  if(b) b.classList.toggle('on', !!S.unsure[k]);
+}
+
+/* ---- the research box ----------------------------------------------------------------
+   One box per question, opened from a row under the options. It holds pasted text and
+   pasted images, and both come back out at the bottom of the study sheet, grouped under the
+   question that sent him looking — which is what the Copy hands to Notion.
+
+   OPEN/SHUT IS STICKY ACROSS QUESTIONS, deliberately: an evening spent looking things up
+   should not need the box reopening fifteen times. The CONTENT is per question. */
+const rpanel = $('#research'), rtoggle = $('#rtoggle'), rbody = $('#rbody');
+const rtext = $('#rtext'), rshots = $('#rshots'), rsay = $('#rsay');
+let rOpen = false;
+let rFor = null;          // the qid the box currently holds
+let rTimer = null;
+
+function showResearch(on){ if(rpanel) rpanel.classList.toggle('hide', !on); }
+
+/* Write the textarea back to the question it belongs to. Called before the box is pointed
+   at a different question, on blur, on a debounce while typing, and on the way out of the
+   page — the textarea is the live copy and everything else reads from R. */
+function flushResearch(){
+  if(rFor === null || !rtext) return;
+  const cur = rget(rFor);
+  if(!rput(rFor, rtext.value, cur.i)) warnFull();
+  paintToggle();
+}
+function mountResearch(id){
+  if(!rpanel) return;
+  if(rFor !== null && rFor !== id) flushResearch();
+  rFor = id;
+  rtext.value = rget(id).t;
+  rbody.classList.toggle('hide', !rOpen);
+  rsay.textContent = ''; rsay.classList.remove('warn');
+  drawShots();
+  paintToggle();
+}
+/* The row says what is behind it, so a question he has already researched is visible
+   without opening anything. */
+function paintToggle(){
+  if(!rtoggle) return;
+  const r = rget(rFor), n = r.i.length, bits = [];
+  if(r.t.trim()) bits.push('notes');
+  if(n) bits.push(n + (n > 1 ? ' images' : ' image'));
+  rtoggle.textContent = bits.length ? ('My research · ' + bits.join(', ')) : '+ Add research';
+  rtoggle.classList.toggle('has', !!bits.length);
+}
+function drawShots(){
+  const imgs = rget(rFor).i;
+  rshots.classList.toggle('hide', !imgs.length);
+  rshots.innerHTML = imgs.map((src, n) =>
+    '<span class="shot"><img src="' + src + '" alt="Pasted image ' + (n+1) + '">'
+    + '<button class="x" data-rm="' + n + '" aria-label="Remove image">×</button></span>').join('');
+  rshots.querySelectorAll('[data-rm]').forEach(b => {
+    b.onclick = () => {
+      const imgs2 = rget(rFor).i.slice();
+      imgs2.splice(+b.dataset.rm, 1);
+      rput(rFor, rtext.value, imgs2);
+      drawShots(); paintToggle();
+      rsay.textContent = ''; rsay.classList.remove('warn');
+    };
+  });
+}
+
+/* IMAGES ARE SHRUNK BEFORE THEY ARE STORED, and that is not a nicety — localStorage is a
+   few megabytes for the whole origin, and one full-size screenshot off a web page is
+   comfortably a megabyte of base64. Long edge 1100px, WebP where the browser has it,
+   JPEG where it does not. A diagram is still readable and a page's worth of them fits. */
+function shrink(file, cb){
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  img.onload = () => {
+    const max = 1100;
+    const s = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+    const c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round(img.naturalWidth * s));
+    c.height = Math.max(1, Math.round(img.naturalHeight * s));
+    const ctx = c.getContext('2d');
+    // JPEG has no transparency and paints it black, so a white plate goes down first —
+    // most diagrams he will paste are black line art on a transparent background.
+    ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, c.width, c.height);
+    ctx.drawImage(img, 0, 0, c.width, c.height);
+    URL.revokeObjectURL(url);
+    let out = '';
+    try{ out = c.toDataURL('image/webp', 0.72); }catch(e){}
+    if(out.slice(0, 15) !== 'data:image/webp') out = c.toDataURL('image/jpeg', 0.78);
+    cb(out);
+  };
+  img.onerror = () => { URL.revokeObjectURL(url); cb(null); };
+  img.src = url;
+}
+function warnFull(){
+  rsay.textContent = 'This browser is out of room — remove an image and try again.';
+  rsay.classList.add('warn');
+}
+
+/* ONE WAY IN, from the row or from `r`, and it lands him in the box ready to paste:
+   scrolled to, focused, caret at the end. `block:'center'` rather than `'nearest'` because
+   the box opens below the fold on a long question and 'nearest' stops the moment its top
+   edge is visible — which is not far enough to type in. */
+function openResearch(){
+  if(!rpanel || rpanel.classList.contains('hide')) return;
+  rOpen = true;
+  rbody.classList.remove('hide');
+  rtext.focus();
+  rtext.setSelectionRange(rtext.value.length, rtext.value.length);
+  rbody.scrollIntoView({block:'center', behavior:'smooth'});
+}
+
+if(rpanel){
+  rtoggle.onclick = () => {
+    if(rbody.classList.contains('hide')) return openResearch();
+    rOpen = false;
+    rbody.classList.add('hide');
+  };
+  rtext.addEventListener('input', () => { clearTimeout(rTimer); rTimer = setTimeout(flushResearch, 400); });
+  rtext.addEventListener('blur', flushResearch);
+
+  /* NO preventDefault. A copied web selection puts BOTH a text flavour and an image file on
+     the clipboard; swallowing the event to grab the image would throw the text away. The
+     text lands in the textarea by itself and the files are picked off beside it. */
+  rbody.addEventListener('paste', e => {
+    const items = (e.clipboardData && e.clipboardData.items) || [];
+    const files = [];
+    for(let n = 0; n < items.length; n++){
+      if(items[n].kind === 'file' && /^image\//.test(items[n].type)){
+        const f = items[n].getAsFile();
+        if(f) files.push(f);
+      }
+    }
+    if(!files.length) return;
+    const target = rFor;
+    rsay.textContent = 'Adding ' + files.length + ' image' + (files.length > 1 ? 's' : '') + '…';
+    rsay.classList.remove('warn');
+    let left = files.length;
+    files.forEach(f => shrink(f, data => {
+      left--;
+      if(data && target === rFor){
+        // Hold the list as it was: a failed rput has already written the oversized entry
+        // into R, so the revert needs a copy taken BEFORE the attempt, not after it.
+        const prev = rget(target).i.slice();
+        if(rput(target, rtext.value, prev.concat([data]))){ drawShots(); paintToggle(); }
+        else { rput(target, rtext.value, prev); warnFull(); return; }
+      }
+      if(left === 0 && !rsay.classList.contains('warn')) rsay.textContent = '';
+    }));
+  });
+  addEventListener('beforeunload', flushResearch);
 }
 
 /* One question can be dropped from the run, the way the notebook lets him delete one —
@@ -793,6 +1126,7 @@ function openMenu(){
     delete S.answers[qk(S.i)];
     delete S.pass2[qk(S.i)];
     delete S.starred[qk(S.i)];                     // a deleted question is not a starred one
+    if(S.unsure) delete S.unsure[qk(S.i)];         // nor one that still needs work
     closeMenu();
     syncTabs();
     if(wasLast){ finish(); return; }
@@ -861,6 +1195,7 @@ function end(){
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
   $('#rail').style.width = '100%';
   $('#band').classList.add('off');
+  showResearch(false);
   $('#footer').classList.remove('hide');
   $('#back').classList.add('hide');
   $('#hintbtn').classList.add('hide');
@@ -905,6 +1240,7 @@ function review(){
   h += '</div>';
   $('#quizview').innerHTML = h;
   $('#band').classList.add('off');
+  showResearch(false);
   $('#footer').classList.remove('hide');
   $('#back').classList.add('hide');
   $('#hintbtn').classList.add('hide');
@@ -942,17 +1278,33 @@ function drawStarred(){
 }
 
 /* ---- the score, written where he copies from ---------------------------------------- */
+/* THE PROJECTED SCORE DOCKS A MARK FOR EVERY HINT, which is his rule and his reasoning:
+   a high score with a lot of hints "is actually a sign that you didn't know them very
+   well". So `(right − hints) / total`, floored at zero — the number he would have got
+   with the hints shut. It never touches the real score; both are printed, and the gap
+   between them is the thing worth looking at.
+
+   Hints are counted per question, so this cannot go more negative than the score itself. */
 function scoreParts(){
   const act = active(S), n = score(S), t = act.length, red = redeemed().length;
+  const hints = act.filter(i => (S.hints || {})[qk(i)]).length;
+  const proj = Math.max(0, n - hints);
   return {n:n, t:t, pct: t ? Math.round(n/t*100) : 0, red:red, first:n-red, wrong:t-n,
-          skipped: Object.keys(S.skipped||{}).length};
+          skipped: Object.keys(S.skipped||{}).length,
+          hints:hints, proj:proj, projpct: t ? Math.round(proj/t*100) : 0};
+}
+function hintLine(p){
+  if(!p.hints) return 'No hints used';
+  return p.hints + ' hint' + (p.hints > 1 ? 's' : '') + ' used · projected '
+       + p.proj + ' / ' + p.t + ' (' + p.projpct + '%) with the hints docked';
 }
 function scoreMarkdown(){
   if(!S.done) return '';
   const p = scoreParts();
   return '**Quiz:** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
        + (p.red ? ', +' + p.red + ' redeemed' : '') + ', ' + p.wrong + ' wrong'
-       + (p.skipped ? ', ' + p.skipped + ' skipped' : '') + ' · ' + when(S.at);
+       + (p.skipped ? ', ' + p.skipped + ' skipped' : '') + ' · ' + when(S.at)
+       + '\n**Hints:** ' + hintLine(p);
 }
 function renderScore(){
   const el = $('#scorecard');
@@ -962,7 +1314,8 @@ function renderScore(){
   const p = scoreParts();
   el.innerHTML = '<b>'+p.n+' / '+p.t+'</b><span>'+p.pct+'% · '+p.first+' right'
     + (p.red ? ', +'+p.red+' on the second pass' : '') + ', '+p.wrong+' wrong'
-    + (p.skipped ? ' · '+p.skipped+' skipped' : '') + ' · '+when(S.at)+'</span>';
+    + (p.skipped ? ' · '+p.skipped+' skipped' : '') + ' · '+when(S.at)+'</span>'
+    + '<span class="proj">'+hintLine(p)+'</span>';
 }
 
 function when(iso){
@@ -999,8 +1352,8 @@ $('#pass2').onclick = ()=>{
    they are decisions about the quiz, not part of one attempt at it. */
 $('#retake').onclick = ()=>{
   if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length});
-  const hist = S.history, skipped = S.skipped, starred = S.starred;
-  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred;
+  const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
+  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
   lastShown = -1;
   save(); syncTabs(); renderScore(); draw();
 };
@@ -1044,15 +1397,158 @@ function noteMarkdown(){
   });
   return out.join('\n');
 }
+/* ---- ☆ and ? read back on the sheet --------------------------------------------------
+   Both marks end up in the same place for the same reason he gave: he stopped and marked
+   the question, so it is worth having beside the sheet when he pastes it into Notion — and
+   the ? ones especially, because a lucky guess leaves no other trace. Each entry is the
+   full record from `itemHTML`, so the sheet and the review list can never disagree. */
+function markedList(map){
+  const out = [];
+  D.questions.forEach((q, i) => { if((map || {})[q.qid]) out.push({n: i + 1, i: i, q: q}); });
+  return out;
+}
+function renderMarked(sel, list, head, say){
+  const box = $(sel);
+  if(!box) return;
+  box.classList.toggle('hide', !list.length);
+  if(!list.length) return;
+  let h = '<h3>' + head + ' · ' + list.length + '</h3><p class="say">' + say + '</p>';
+  list.forEach(x => { h += itemHTML(x.i, x.n - 1); });
+  box.innerHTML = h;
+}
+function markedMarkdown(list, head){
+  if(!list.length) return '';
+  let out = '\n\n## ' + head + '\n';
+  list.forEach(x => {
+    const q = x.q, why = q.rationales ? q.rationales[q.correct] : '';
+    out += '\n### ' + x.n + '. ' + q.q + '\n\n'
+         + '**Answer:** ' + q.options[q.correct] + '\n'
+         + (why ? '\n' + why + '\n' : '');
+  });
+  return out;
+}
+function markedHTML(list, head){
+  if(!list.length) return '';
+  let h = '<h2>' + head + '</h2>';
+  list.forEach(x => {
+    const q = x.q, why = q.rationales ? q.rationales[q.correct] : '';
+    h += '<h3>' + x.n + '. ' + esc(q.q) + '</h3>'
+       + '<p><strong>Answer:</strong> ' + esc(q.options[q.correct]) + '</p>'
+       + (why ? '<p>' + esc(why) + '</p>' : '');
+  });
+  return h;
+}
+
+/* ---- what he found, read back on the sheet ------------------------------------------
+   Grouped by the question, in question order, and NOT filtered by anything: a question he
+   skipped still keeps its research, because the research is his and the skip was about the
+   question. Numbering is the question's own position, so it does not move when the run does. */
+function researchList(){
+  const out = [];
+  D.questions.forEach((q, i) => {
+    const r = rget(q.qid);
+    if(r.t.trim() || r.i.length) out.push({n: i + 1, q: q, r: r});
+  });
+  return out;
+}
+function paras(t){
+  return t.trim().split(/\n{2,}/)
+          .map(p => '<p>' + esc(p).replace(/\n/g, '<br>') + '</p>').join('');
+}
+/* Everything the sheet grows below the book's own material, in the order the Copy writes
+   it: what he marked, then what he went and found. */
+function renderSheetExtras(){
+  renderMarked('#starredsheet', markedList(S.starred), 'Starred',
+               'Marked while answering, right or wrong.');
+  renderMarked('#unsuresheet', markedList(S.unsure), 'Needs work',
+               'Marked ? — no idea at the time, so the answer is not proof of anything.');
+  renderResearch();
+}
+function renderResearch(){
+  const el = $('#researchview');
+  if(!el) return;
+  // The textarea is the live copy while a question is on screen, so write it back before
+  // reading R — otherwise the sheet shows everything except the paragraph he just typed.
+  flushResearch();
+  const list = researchList();
+  el.classList.toggle('hide', !list.length);
+  if(!list.length) return;
+  let h = '<h3>My research</h3><p class="say">What you pasted while answering, under the '
+        + 'question that sent you looking. Copy takes this with the sheet.</p>';
+  list.forEach(x => {
+    h += '<div class="ritem"><p class="rq">' + x.n + '. ' + esc(x.q.q) + '</p>';
+    if(x.r.t.trim()) h += '<div class="rtxt">' + paras(x.r.t) + '</div>';
+    x.r.i.forEach((src, k) => {
+      h += '<img class="rimg" src="' + src + '" alt="Pasted image ' + (k+1) + '">';
+    });
+    h += '</div>';
+  });
+  el.innerHTML = h;
+}
+
+/* THE IMAGES DO NOT GO IN THE PLAIN TEXT, and that is the point of the two flavours below.
+   A pasted screenshot is a couple of hundred kilobytes of base64; dropping that into the
+   markdown would make one Notion row unreadable and the paste enormous. So the text
+   flavour names each image and the HTML flavour carries it. */
+function researchMarkdown(){
+  const list = researchList();
+  if(!list.length) return '';
+  let out = '\n\n## My research\n';
+  list.forEach(x => {
+    out += '\n### ' + x.n + '. ' + x.q.q + '\n\n';
+    const t = x.r.t.trim();
+    if(t) out += t + '\n\n';
+    if(x.r.i.length){
+      x.r.i.forEach((_, k) => { out += '_[image ' + (k+1) + ' — on the quiz page]_\n'; });
+      out += '\n';
+    }
+  });
+  return out.replace(/\n+$/, '\n');
+}
+
 /* THE SCORE RIDES ALONG WITH THE COPY. One press still takes score + sheet + his own notes
    as a single markdown block, which is what Notion parses on paste — so the row that the
    week's exam is built from also records how the quiz went, and he can see later whether
-   this section needs testing again. */
+   this section needs testing again. His research is last, so the shape of the paste he
+   already knows is unchanged and the new material is appended under it. */
 function fullMarkdown(){
   const mine = noteMarkdown();
   const sc = scoreMarkdown();
   return (sc ? sc + '\n\n' : '') + (D.sheet || '')
-       + (mine ? '\n\n## My notes\n\n' + mine + '\n' : '');
+       + (mine ? '\n\n## My notes\n\n' + mine + '\n' : '')
+       + markedMarkdown(markedList(S.starred), 'Starred')
+       + markedMarkdown(markedList(S.unsure), 'Needs work')
+       + researchMarkdown();
+}
+
+/* THE HTML FLAVOUR EXISTS ONLY FOR THE IMAGES, and it is only put on the clipboard when
+   there is one. That rule is what protects the paste he already relies on: with no images
+   the clipboard holds plain markdown and Notion parses it exactly as it does today. With
+   images there is no other way — no clipboard format carries markdown AND a picture — so
+   the whole document goes over as HTML, which Notion also turns into real blocks.
+
+   The sheet's own HTML is reused rather than re-rendered: #sheetmd already holds what
+   md_to_html produced, so the two can never drift. */
+function fullHTML(){
+  let h = '';
+  const sc = scoreMarkdown();
+  if(sc) h += tinyMd(sc);
+  const md = $('#sheetmd');
+  if(md) h += md.innerHTML;
+  const mine = noteMarkdown();
+  if(mine) h += '<h2>My notes</h2>' + tinyMd(mine);
+  h += markedHTML(markedList(S.starred), 'Starred');
+  h += markedHTML(markedList(S.unsure), 'Needs work');
+  const list = researchList();
+  if(list.length){
+    h += '<h2>My research</h2>';
+    list.forEach(x => {
+      h += '<h3>' + x.n + '. ' + esc(x.q.q) + '</h3>';
+      if(x.r.t.trim()) h += paras(x.r.t);
+      x.r.i.forEach(src => { h += '<p><img src="' + src + '"></p>'; });
+    });
+  }
+  return '<meta charset="utf-8">' + h;
 }
 
 /* A 25-line renderer so Preview shows the same shape the paste will have. Lists and bold
@@ -1098,16 +1594,34 @@ if(ta){
    Notion blocks. Copying the visible text would paste one flat wall. */
 const cp = $('#copysheet');
 if(cp) cp.onclick = async ()=>{
+  flushResearch();
+  // Both strings are built BEFORE the first await: Safari only honours a clipboard write
+  // inside the gesture that asked for it, and work done after an await is outside it.
   const md = fullMarkdown();
-  try{ await navigator.clipboard.writeText(md); }
-  catch(e){
-    const t = document.createElement('textarea');
-    t.value = md; t.style.position='fixed'; t.style.opacity='0';
-    document.body.appendChild(t); t.select();
-    try{ document.execCommand('copy'); }catch(_){}
-    t.remove();
+  const shots = researchList().some(x => x.r.i.length);
+  const html = shots ? fullHTML() : '';
+  let done = false;
+  if(shots && window.ClipboardItem && navigator.clipboard && navigator.clipboard.write){
+    try{
+      await navigator.clipboard.write([new ClipboardItem({
+        'text/html':  new Blob([html], {type: 'text/html'}),
+        'text/plain': new Blob([md],   {type: 'text/plain'})
+      })]);
+      done = true;
+    }catch(e){}                      // fall through to the plain paste rather than nothing
   }
-  cp.textContent = 'Copied'; cp.classList.add('copied');
+  if(!done){
+    try{ await navigator.clipboard.writeText(md); done = true; }
+    catch(e){
+      const t = document.createElement('textarea');
+      t.value = md; t.style.position='fixed'; t.style.opacity='0';
+      document.body.appendChild(t); t.select();
+      try{ document.execCommand('copy'); }catch(_){}
+      t.remove();
+    }
+  }
+  cp.textContent = shots ? 'Copied + images' : 'Copied';
+  cp.classList.add('copied');
   setTimeout(()=>{ cp.textContent = 'Copy'; cp.classList.remove('copied'); }, 1600);
 };
 
@@ -1115,17 +1629,47 @@ if(cp) cp.onclick = async ()=>{
 // Against the ANSWERED height, like every other call — measuring what is on screen is the
 // bug this file already fixed once.
 addEventListener('resize', ()=>{
-  if(D.tab==='quiz' && !S.reviewing && !S.done) centreBlock(answeredHeight(S.i));
+  if(D.tab==='quiz' && !S.reviewing && !S.done) centreBlock(S.i);
 });
 
 document.addEventListener('keydown', e=>{
-  if(D.tab!=='quiz' || S.done || S.reviewing) return;
+  /* TYPING IS NOT ANSWERING. The research box is a textarea ON THE QUIZ TAB, so without
+     this every letter he types would be read as an option key and `h` would open the hint —
+     the notes box on the sheet tab was only safe because that tab returns above. */
+  const t = e.target;
+  if(t && (t.tagName === 'TEXTAREA' || t.tagName === 'INPUT' || t.isContentEditable)) return;
+
+  /* THE WHOLE END OF A QUIZ IS ONE KEY. Enter walks it in the order he works in — second
+     pass, then the review list, then the sheet — and `c` on the sheet copies. Enter already
+     meant "next" all the way through the questions, so it just carries on meaning it past
+     the last one instead of stopping dead at the end card.
+
+     Each step is taken by CLICKING THE REAL BUTTON, so there is one path into a second pass
+     and one into the review list, whether he pressed the key or the button. A step with no
+     button on screen is skipped rather than faked: no wrong answers means no 2nd Pass, so
+     Enter goes straight to the review list. */
+  if(D.tab === 'sheet'){
+    if(e.key === 'c' || e.key === 'C'){ const b = $('#copysheet'); if(b) b.click(); }
+    return;
+  }
+  if(D.tab !== 'quiz') return;
+  if(S.done || S.reviewing){
+    if(e.key !== 'Enter') return;
+    e.preventDefault();
+    if(!S.reviewing && pending2().length){ $('#pass2').click(); return; }
+    if(!S.reviewing){ $('#review').click(); return; }
+    if(D.hasSheet) setTab('sheet');
+    return;
+  }
   const q = D.questions[S.i];
   if(e.key === 'Enter' || e.key === 'ArrowRight'){ if(!$('#next').disabled) step(1); return; }
   if(e.key === 'ArrowLeft'){ if(!$('#back').disabled) step(-1); return; }
   // `h` IS THE HINT, not option H. Every quiz here has four options, so H as an option key
   // has never been reachable; if one ever has eight, the eighth is still `8`.
   if(e.key === 'h' || e.key === 'H'){ toggleHint(); return; }
+  // `r` OPENS THE RESEARCH BOX and puts him in it — it does not close it, because the point
+  // of the key is "I want to paste this now". R is past H, so it can never be an option key.
+  if(e.key === 'r' || e.key === 'R'){ e.preventDefault(); openResearch(); return; }
   let k = -1;
   if(/^[1-9]$/.test(e.key)) k = +e.key - 1;
   else if(/^[a-gA-G]$/.test(e.key)) k = D.letters.indexOf(e.key.toUpperCase());
