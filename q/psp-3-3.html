@@ -355,7 +355,10 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
     <span class="title">3.3 Emotions, Stress, and Well-Being</span>
     <span class="tabs" id="tabs"><button class="tab" data-tab="quiz" aria-selected="true">Quiz</button><button class="tab hide" data-tab="starred" aria-selected="false">Starred</button><button class="tab" data-tab="sheet" aria-selected="false">Study sheet</button></span>
   </div>
-  <div class="rail"><i id="rail"></i></div>
+  <!-- In the same .wrap as the title and the tabs: the progress track used to run the full
+       width of the window under a centred column, which is the one thing up here that was
+       not lined up with everything else. -->
+  <div class="wrap"><div class="rail"><i id="rail"></i></div></div>
 </header>
 
 <main class="wrap">
@@ -704,12 +707,13 @@ function centreBlock(reserve){
   // The band's own padding is part of the block now, so it has to be inside the measurement
   // or the box lands low by exactly one padding.
   const bp = parseFloat(getComputedStyle($('#band')).paddingTop) || 0;
-  // The research toggle row is part of the block and its height is CONSTANT — the body is
-  // what collapses, the row never does. So it can be measured whether the box is open or
-  // shut, and opening it moves nothing above it.
-  const rp = $('#research');
-  const rh = (rp && !rp.classList.contains('hide')) ? $('#rtoggle').offsetHeight + 31 : 0;
-  const h = (reserve || $('#quizview').getBoundingClientRect().height) + bp * 2 + rh;
+  /* THE RESEARCH ROW IS NOT IN THE MEASUREMENT, and that is his call (08-11). Counting it
+     centres the whole band and so lifts the question by half the row's height; he tried it
+     and preferred the position the questions had before the box existed — *"if research is
+     opened I can scroll down to add it in"*. So the question sits exactly where it always
+     did and the band simply hangs a little lower than centre. Do not "fix" this by adding
+     the row back. */
+  const h = (reserve || $('#quizview').getBoundingClientRect().height) + bp * 2;
   quizPad = Math.max(BASE_PAD, Math.round((avail - h) / 2)) + 'px';
   m.style.paddingTop = quizPad;
 }
