@@ -128,6 +128,65 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
 .opt.enter,.qhead.enter{animation:fadein .24s ease both}
 @keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 
+/* ---- SELECTABLE TEXT, and it is timed rather than global ----
+   He searches the web while he works, so the wording has to leave the page. Two different
+   problems, one each side of the answer:
+
+   THE QUESTION was never selectable because the browser's own stylesheet turns selection
+   off inside a <button>, and the whole question head sits in one. `user-select:text` on the
+   text itself puts it back; it costs nothing, because nothing up there is a click target
+   except the ☆ and the ⋮, which are excluded below.
+
+   THE OPTIONS STAY LOCKED UNTIL HE HAS ANSWERED, and that is deliberate, not an oversight.
+   An option IS the button — drag across one to select it and the mouseup answers the
+   question with whatever he happened to start the drag on. So selection is enabled on
+   `:disabled`, which is exactly the set of options that can no longer be clicked: every
+   option, the moment the answer is in. On a second pass the pending question re-enables and
+   locks again, which is right — it is live again. */
+.q,.qq,.why,.lab,.hinttext,.rline,.tag,.sheet,.topics,.legend{
+ user-select:text;-webkit-user-select:text}
+.opt{user-select:none;-webkit-user-select:none}
+.opt:disabled,.opt:disabled *{user-select:text;-webkit-user-select:text;cursor:auto}
+.star,.dots,.tab,button.pill{user-select:none;-webkit-user-select:none}
+
+/* ---- HIS RESEARCH, one box per question ----
+   Under the options, inside the band, and OUTSIDE #quizview — so answering re-renders the
+   question without touching what he is halfway through typing, the same reason the hint
+   lives in the footer.
+
+   THE TOGGLE ROW IS ALWAYS VISIBLE AND THE BODY IS WHAT COLLAPSES. That is what keeps the
+   centring honest: the block's minimum height is a constant the measurement can include,
+   whether the box is open or shut. Opening it only ever grows the page downward, which is
+   the one direction this page allows. */
+.research{margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+.rtoggle{display:inline-flex;align-items:center;gap:7px;background:none;border:0;padding:0;
+ color:var(--muted);font:inherit;font-size:.82rem;cursor:pointer;text-decoration:underline;
+ text-underline-offset:3px;user-select:none;-webkit-user-select:none}
+.rtoggle:hover{color:var(--text)}
+.rtoggle.has{color:var(--text)}
+.rbody{margin:12px 0 0}
+#rtext{width:100%;min-height:104px;resize:vertical;background:var(--surface);
+ color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
+ padding:11px 13px;font:inherit;font-size:.9rem;line-height:1.55;outline:none}
+#rtext:focus{border-color:var(--accent)}
+#rtext::placeholder{color:var(--muted);opacity:.7}
+.rshots{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
+.shot{position:relative;display:block;line-height:0}
+.shot img{max-height:88px;max-width:150px;border-radius:9px;border:1px solid var(--line)}
+.shot .x{position:absolute;top:-6px;right:-6px;width:20px;height:20px;line-height:18px;
+ text-align:center;border-radius:999px;border:1px solid var(--line);background:var(--surface-hi);
+ color:var(--text);font:inherit;font-size:.8rem;cursor:pointer;padding:0}
+.rsay{color:var(--muted);font-size:.76rem;margin:9px 0 0;min-height:1em}
+.rsay.warn{color:var(--wrong)}
+
+/* the same material, read back on the study sheet */
+.ritem{border-top:1px solid var(--line);padding:16px 0 4px}
+.ritem:first-of-type{border-top:0;padding-top:6px}
+.rq{font-size:.95rem;font-weight:600;margin:0 0 8px}
+.rtxt p{margin:0 0 9px;color:var(--muted)}
+.rimg{display:block;max-width:100%;border-radius:10px;border:1px solid var(--line);
+ margin:0 0 10px}
+
 /* ---- starring ----
    A visible toggle rather than a menu item: it is used on questions he got RIGHT as often as
    wrong, so it has to be one press. Outline vs filled is a shape difference, so it reads in
@@ -136,6 +195,16 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
  padding:4px 6px;border-radius:999px;cursor:pointer;flex:0 0 auto}
 .star:hover{background:var(--surface);color:var(--text)}
 .star.on{color:var(--text)}
+
+/* ---- ? "no idea, needs work" ----
+   Beside the star and read the same way. GRAYSCALE-SAFE like everything else on this page:
+   on/off is a RING appearing, not a colour changing, so it reads with the colour off and at
+   a glance in a screenshot. */
+.qmark{background:none;border:1px solid transparent;color:var(--muted);font:inherit;
+ font-size:.9rem;font-weight:600;line-height:1;width:26px;height:26px;padding:0;
+ border-radius:999px;cursor:pointer;flex:0 0 auto;user-select:none;-webkit-user-select:none}
+.qmark:hover{background:var(--surface);color:var(--text)}
+.qmark.on{color:var(--text);border-color:var(--accent);background:var(--surface-hi)}
 
 /* ---- the ⋮ menu ---- */
 .more{position:relative;flex:0 0 auto}
@@ -235,11 +304,19 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
  margin:16px 0 6px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
 .scorecard b{font-size:1.35rem;font-weight:500;font-variant-numeric:tabular-nums}
 .scorecard span{color:var(--muted);font-size:.88rem}
+/* Its own row under the score, never beside it — the projected number is a second reading
+   of the same quiz and putting it inline would read as more of the first one. */
+.scorecard .proj{flex-basis:100%;padding-top:2px;border-top:1px solid var(--line);
+ margin-top:4px;font-size:.84rem}
 
 /* ---- his own additions ---- */
-.mine{margin:34px 0 0;padding-top:18px;border-top:1px solid var(--line)}
-.mine h3{margin:0 0 4px;padding:0;border:0}
-.mine .say{color:var(--muted);font-size:.85rem;margin:0 0 12px}
+/* SCOPED TO .sheet, because `.mine` is also the review list's "you chose this" modifier
+   (`.rline.mine`) and this block sits later in the file — unscoped, it was handing every
+   wrong-answer line in the review list a 34px gap and a rule above it. */
+.own{margin:34px 0 0;padding-top:18px;border-top:1px solid var(--line)}
+.own h3{margin:0 0 4px;padding:0;border:0}
+.own .say{color:var(--muted);font-size:.85rem;margin:0 0 12px}
+.own .item:first-of-type{border-top:0;padding-top:6px}
 #mynotes{width:100%;min-height:180px;resize:vertical;background:var(--surface);
  color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
  padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.6;outline:none}
