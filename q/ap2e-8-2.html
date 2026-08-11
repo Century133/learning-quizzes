@@ -1,0 +1,1098 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#131314">
+<title>8.2 Bones of the Upper Limb</title>
+<style>
+:root{--bg:#131314;--surface:#1e1f20;--surface-hi:#26282a;--text:#e3e3e3;
+--muted:#9aa0a6;--line:#3c4043;--accent:#8ab4f8;--right:#81c995;--wrong:#f28b82;
+--radius:14px;--maxw:660px;--qsize:1.25rem;--qweight:600;
+--osize:0.95rem;--opad:12px 16px;--ogap:7px;--qgap:18px;
+--barh:46px;--band:#191a1b;--bandr:20px;--bandpad:20px;
+--font:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font);
+ font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+ min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+a{color:var(--accent)}
+/* Longhands, NOT `padding:0 22px`. `main` and `footer` also carry .wrap, and a class beats
+   an element selector — the shorthand here was silently zeroing their vertical padding. */
+.wrap{width:100%;max-width:var(--maxw);margin:0 auto;
+ padding-left:22px;padding-right:22px}
+
+/* ---- top bar: title, tabs, progress. Nothing else lives up here. ---- */
+header{position:sticky;top:0;z-index:5;background:var(--bg);
+ border-bottom:1px solid var(--line)}
+.bar{display:flex;align-items:center;gap:14px;height:var(--barh)}
+.title{font-size:.9rem;font-weight:500;white-space:nowrap;overflow:hidden;
+ text-overflow:ellipsis;flex:1}
+.tabs{display:flex;gap:2px}
+.tab{background:none;border:0;color:var(--muted);font:inherit;font-size:.82rem;
+ padding:5px 12px;border-radius:999px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--surface-hi);color:var(--text)}
+.rail{height:2px;background:var(--line)}
+.rail>i{display:block;height:100%;background:var(--accent);width:0;
+ transition:width .25s ease}
+
+/* TOP-ANCHORED, NOT CENTRED, and that is a fix rather than a preference. With
+   justify-content:center the question drifted upward the moment an answer opened a
+   rationale, because the block got taller and the centring recomputed — "the question
+   shifts… it should stay stationary". Anchored to the top it cannot move: only the cards
+   below the one he clicked ever change position. */
+main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;padding:16px 0 6px}
+
+/* ---- THE BAND ----
+   Flat black under the question made it hard to read; the notebook's lighter middle band is
+   what he wanted instead. So the question and EVERY option sit inside one surface.
+
+   IT CLOSES AT THE BOTTOM AND HUGS THE CONTENT. The first version ran off the bottom of the
+   screen — "kind of weirdly big at the bottom", and he was right: with the block centred, an
+   open band left a lot of empty surface under the last option. It is a card now, sized to
+   what is in it.
+
+   THREE TONES, and the order matters: page (--bg) → band (--band) → option card (--surface).
+   Set --band lighter than --surface and the cards vanish into it. */
+.band{background:var(--band);border:1px solid var(--line);border-radius:var(--bandr);
+ padding:var(--bandpad)}
+/* Off for the end card, the review list and the sheet — a long scrolling list does not want
+   to be in a box. */
+.band.off{background:none;border:0;padding:0}
+/* A short window pays for the band's padding out of the space the options need, so it gives
+   most of it back below 780px. Measured: at 800px all 14 questions of PSP 3.6 still fit
+   answered-wrong with no scrolling. */
+@media (max-height:780px){
+  .band{padding:12px 16px}
+}
+
+/* ---- the question ---- */
+.qhead{display:flex;align-items:flex-start;gap:10px;margin:0 0 var(--qgap)}
+.qhead .qcol{flex:1;min-width:0}
+.meta{display:flex;align-items:center;gap:8px;margin:0 0 7px;font-size:.7rem;
+ color:var(--muted);letter-spacing:.07em;text-transform:uppercase}
+.meta .num{font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.meta .dot{opacity:.55}
+.topic{margin:0 0 6px;font-size:.7rem;color:var(--muted);letter-spacing:.07em;
+ text-transform:uppercase}
+.q{font-size:var(--qsize);line-height:1.35;font-weight:var(--qweight);margin:0;
+ letter-spacing:-.005em}
+.link{background:none;border:0;padding:0;color:var(--muted);font:inherit;
+ font-size:.85rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.link:hover{color:var(--text)}
+/* The hint lives in the FOOTER, as Gemini's does. Opening it there grows the sticky bar
+   upward and leaves the question and every option exactly where they were; under the
+   question it would have shoved all four cards down. */
+.hinttext{margin:0 0 12px;color:var(--muted);font-size:.88rem;line-height:1.5;
+ border-left:2px solid var(--line);padding-left:12px}
+
+/* ---- options ---- */
+.opts{display:flex;flex-direction:column;gap:var(--ogap)}
+.opt{display:block;width:100%;text-align:left;background:var(--surface);
+ border:1px solid transparent;border-radius:var(--radius);padding:var(--opad);
+ color:var(--text);font:inherit;font-size:var(--osize);cursor:pointer;
+ transition:background .16s ease,border-color .16s ease,opacity .16s ease}
+.opt:hover:not(:disabled){background:var(--surface-hi)}
+.opt:disabled{cursor:default}
+.line{display:flex;gap:12px;align-items:flex-start;line-height:1.4}
+.line .k{color:var(--muted);min-width:1.25em}
+.line .t{flex:1}
+.line .mark{font-size:1.05rem;line-height:1.45;min-width:1.05em;text-align:right;opacity:0}
+
+/* GRAYSCALE-SAFE STATES — three signals, never colour alone: the ✓/✕ glyph, the WORD in
+   .lab, and luminance (bright solid border vs dimmed dashed). Turn the display to
+   grayscale and every state still reads. */
+.opt.is-right{background:var(--surface-hi);border-color:var(--right);
+ box-shadow:inset 0 0 0 1px var(--right)}
+.opt.is-right .mark{opacity:1;color:var(--right)}
+.opt.is-wrong{background:transparent;border-style:dashed;border-color:var(--wrong);
+ opacity:.8}
+.opt.is-wrong .mark{opacity:1;color:var(--wrong)}
+.opt.is-muted{opacity:.42}
+
+/* THE FEEDBACK LIVES INSIDE THE CARD, as Gemini's does — that is what he asked for, and it
+   is also why nothing has to scroll: the explanation appears where he is already looking.
+   The 0fr→1fr grid trick animates an unknown height with no JS measuring. If a browser
+   refuses to animate it, the row still ends at 1fr, so the text is visible either way. */
+.rat{display:grid;grid-template-rows:1fr;opacity:1}
+.rat>.ratin{overflow:hidden;min-height:0}
+.opt.fresh .rat{animation:reveal .3s ease}
+@keyframes reveal{from{grid-template-rows:0fr;opacity:0}to{grid-template-rows:1fr;opacity:1}}
+.lab{display:flex;align-items:center;gap:8px;font-size:.86rem;font-weight:600;
+ margin:9px 0 0;padding-left:calc(1.25em + 12px)}
+.opt.is-right .lab{color:var(--right)}
+.opt.is-wrong .lab{color:var(--wrong)}
+.why{margin:4px 0 0;padding-left:calc(1.25em + 12px);color:var(--muted);
+ font-size:.86rem;line-height:1.4}
+
+.opt.enter,.qhead.enter{animation:fadein .24s ease both}
+@keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* ---- starring ----
+   A visible toggle rather than a menu item: it is used on questions he got RIGHT as often as
+   wrong, so it has to be one press. Outline vs filled is a shape difference, so it reads in
+   grayscale without needing colour. */
+.star{background:none;border:0;color:var(--muted);font-size:1.05rem;line-height:1;
+ padding:4px 6px;border-radius:999px;cursor:pointer;flex:0 0 auto}
+.star:hover{background:var(--surface);color:var(--text)}
+.star.on{color:var(--text)}
+
+/* ---- the ⋮ menu ---- */
+.more{position:relative;flex:0 0 auto}
+.dots{background:none;border:0;color:var(--muted);font-size:1.15rem;line-height:1;
+ padding:4px 8px;border-radius:999px;cursor:pointer}
+.dots:hover{background:var(--surface);color:var(--text)}
+.menu{position:absolute;right:0;top:32px;background:var(--surface-hi);
+ border:1px solid var(--line);border-radius:10px;padding:5px;min-width:170px;z-index:6;
+ box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.menu button{display:block;width:100%;text-align:left;background:none;border:0;
+ color:var(--text);font:inherit;font-size:.88rem;padding:8px 10px;border-radius:7px;
+ cursor:pointer;white-space:nowrap}
+.menu button:hover{background:var(--surface)}
+
+/* ---- bottom bar ---- */
+footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg) 30%);
+ padding:8px 0 10px}
+.acts{display:flex;gap:10px;align-items:center}
+.spacer{flex:1}
+button.pill{font:inherit;font-size:.9rem;border-radius:999px;padding:9px 22px;
+ cursor:pointer;border:1px solid var(--line);background:none;color:var(--text)}
+button.pill:disabled{opacity:.32;cursor:default}
+button.pill.primary{background:var(--accent);color:#0b0b0c;border-color:var(--accent);
+ font-weight:500}
+button.pill.ghost{border-color:transparent;color:var(--muted)}
+
+/* ---- end card ---- */
+.score{font-size:3.1rem;font-weight:400;letter-spacing:-.03em;margin:0}
+.score small{font-size:.95rem;color:var(--muted);font-weight:400;letter-spacing:0}
+.sub{color:var(--muted);margin:5px 0 26px;font-size:.92rem}
+.chart{display:flex;height:11px;border-radius:999px;overflow:hidden;
+ background:var(--line);margin:0 0 9px}
+.chart i{display:block;height:100%}
+.chart i.r{background:var(--right)}
+/* hatched as well as coloured, so the split reads with the colour off */
+.chart i.w{background:var(--wrong);
+ background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,
+ rgba(0,0,0,.45) 3px,rgba(0,0,0,.45) 6px)}
+.legend{display:flex;gap:16px;color:var(--muted);font-size:.84rem;margin:0 0 30px}
+.legend b{color:var(--text);font-weight:500}
+.topics{margin:0 0 30px}
+.topics h3,.rev h3{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;
+ color:var(--muted);font-weight:500;margin:0 0 12px}
+.trow{display:grid;grid-template-columns:1fr auto;gap:5px 14px;align-items:center;
+ padding:8px 0;border-top:1px solid var(--line)}
+.trow .n{font-variant-numeric:tabular-nums;color:var(--muted);font-size:.88rem}
+.tbar{grid-column:1/-1;height:3px;background:var(--line);border-radius:999px;
+ overflow:hidden}
+.tbar i{display:block;height:100%;background:var(--text)}
+
+/* ---- review list ---- */
+.rev{padding:6px 0 36px}
+.item{border-top:1px solid var(--line);padding:20px 0}
+.item .qq{font-size:1rem;margin:0 0 12px}
+.rline{display:flex;gap:10px;align-items:flex-start;padding:3px 0;font-size:.92rem}
+.rline .g{min-width:1.2em}
+.rline.mine{color:var(--muted)}
+.tag{display:inline-block;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;
+ color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 9px;
+ margin:0 0 9px}
+
+/* ---- study sheet ----
+   THREE DISTINCT LEVELS, because two of them used to look the same: he could not tell the
+   topic from the "Key terms" heading under it. Topic = large, over a rule. Key terms /
+   Names and studies = a small uppercase label, the same treatment the quiz gives its topic
+   tag. Entries = a numbered list with the term in bold, which is the shape of his own
+   Notion notes, so his shorthand sits beside this instead of clashing with it. */
+.sheet{padding:2px 0 56px;font-size:.95rem}
+.sheet h2{font-size:1.3rem;font-weight:600;margin:34px 0 10px;letter-spacing:-.01em}
+.sheet h3{font-size:1.15rem;font-weight:600;margin:34px 0 4px;letter-spacing:-.01em;
+ padding-top:18px;border-top:1px solid var(--line)}
+/* first-of-type, not first-child: .sheettools is the first child, so first-child never
+   matched and the opening topic carried a stray rule above it */
+.sheet h3:first-of-type{margin-top:0;padding-top:0;border-top:0}
+.sheet h4,.sheet h5{font-size:.7rem;font-weight:600;margin:18px 0 8px;color:var(--muted);
+ letter-spacing:.09em;text-transform:uppercase}
+.sheet p{margin:0 0 10px;color:var(--muted)}
+.sheet h3+p{color:var(--text);margin-bottom:4px}
+.sheet ul,.sheet ol{margin:0 0 4px;padding-left:24px}
+.sheet ol{list-style:decimal}
+.sheet ol ol{list-style:lower-alpha;margin:4px 0 6px}
+.sheet ul ul,.sheet ol ul{margin:4px 0 6px}
+.sheet li{margin:0 0 6px;padding-left:2px}
+.sheet li::marker{color:var(--muted)}
+.sheet li>strong:first-child{color:var(--text)}
+.sheet strong{font-weight:600}
+.sheet hr{border:0;border-top:1px solid var(--line);margin:26px 0}
+.sheet code{background:var(--surface);padding:1px 6px;border-radius:6px;font-size:.9em}
+.sheettools{display:flex;justify-content:flex-end;gap:18px;padding:10px 0 4px}
+.copied{color:var(--right)}
+
+/* ---- the score, on the sheet ----
+   It sits at the top of the sheet and Copy takes it, so the paste that lands in the Notion
+   row carries what he scored beside what the section says — which is what tells him later
+   whether this one needs testing again. */
+.scorecard{border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;
+ margin:16px 0 6px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.scorecard b{font-size:1.35rem;font-weight:500;font-variant-numeric:tabular-nums}
+.scorecard span{color:var(--muted);font-size:.88rem}
+
+/* ---- his own additions ---- */
+.mine{margin:34px 0 0;padding-top:18px;border-top:1px solid var(--line)}
+.mine h3{margin:0 0 4px;padding:0;border:0}
+.mine .say{color:var(--muted);font-size:.85rem;margin:0 0 12px}
+#mynotes{width:100%;min-height:180px;resize:vertical;background:var(--surface);
+ color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
+ padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.6;outline:none}
+#mynotes:focus{border-color:var(--accent)}
+#mynotes::placeholder{color:var(--muted);opacity:.7}
+.saved{color:var(--muted);font-size:.78rem;margin:8px 0 0;height:1em}
+#minepreview{margin:14px 0 0}
+
+.empty{color:var(--muted);padding:8px 0 30px}
+.hist{color:var(--muted);font-size:.84rem;margin:22px 0 0}
+.hist span{white-space:nowrap}
+.note{color:var(--muted);font-size:.84rem;margin:16px 0 0}
+.hide{display:none !important}
+
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  .q{font-size:1.22rem}
+  main{padding:22px 0 14px}
+  .score{font-size:2.5rem}
+  .bar{gap:8px}
+  .tab{padding:5px 10px}
+  button.pill{padding:11px 18px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important}
+}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap bar">
+    <span class="title">8.2 Bones of the Upper Limb</span>
+    <span class="tabs" id="tabs"><button class="tab" data-tab="quiz" aria-selected="true">Quiz</button><button class="tab hide" data-tab="starred" aria-selected="false">Starred</button><button class="tab" data-tab="sheet" aria-selected="false">Study sheet</button></span>
+  </div>
+  <div class="rail"><i id="rail"></i></div>
+</header>
+
+<main class="wrap">
+  <div class="band" id="band"><div id="quizview"></div></div>
+  <div id="starredview" class="rev hide"></div>
+  <div id="sheetview" class="sheet hide">
+    <div class="scorecard hide" id="scorecard"></div>
+    <div class="sheettools">
+      <button class="link" id="previewnotes">Preview</button>
+      <button class="link" id="copysheet">Copy</button>
+    </div>
+    <h3>Proximal humerus features</h3>
+<p>This section identifies the landmarks of the upper humerus including the head, necks, and tubercles.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Head of the humerus</strong> — The large, round, smooth region that faces medially and articulates with the glenoid cavity of the scapula.</li>
+<li><strong>Anatomical neck</strong> — The narrow margin located immediately around the smooth articular surface of the humeral head.</li>
+<li><strong>Greater tubercle</strong> — An expanded bony area located on the lateral side of the proximal humerus that serves as a muscle attachment site.</li>
+<li><strong>Lesser tubercle</strong> — A smaller bony area found on the anterior aspect of the proximal humerus for muscle attachment.</li>
+<li><strong>Surgical neck</strong> — The region at the base of the proximal end of the humerus that is a common site for arm fractures.</li>
+</ol>
+<h3>Muscle tendon pathways</h3>
+<p>This section describes the specific bony groove on the humerus that facilitates the passage of muscle tendons.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Intertubercular groove (bicipital groove)</strong> — A narrow space passing between the greater and lesser tubercles of the humerus.</li>
+</ol>
+<p>1.1 <strong>Biceps brachii tendon</strong> — The specific connective tissue structure that passes through the intertubercular groove to reach the arm.</p>
+<h3>Elbow joint mechanics</h3>
+<p>This section details the articulations between the humerus, radius, and ulna, including the depressions that accommodate movement.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Trochlea</strong> — A spindle- or pulley-shaped region on the distal humerus that articulates with the ulna.</li>
+<li><strong>Capitulum</strong> — A knob-like structure on the anterior surface of the distal humerus that articulates with the radius.</li>
+<li><strong>Coronoid fossa</strong> — A depression above the trochlea that receives the coronoid process of the ulna when the elbow is flexed.</li>
+<li><strong>Radial fossa</strong> — A small depression above the capitulum that receives the head of the radius during elbow flexion.</li>
+<li><strong>Olecranon fossa</strong> — A large depression on the posterior humerus that receives the olecranon process of the ulna during full extension.</li>
+<li><strong>Trochlear notch</strong> — A large, C-shaped region on the proximal ulna that resembles a crescent wrench and articulates with the trochlea.</li>
+</ol>
+<h3>Upper limb fractures</h3>
+<p>This section summarizes common fractures of the humerus, radius, and carpal bones as described in clinical contexts.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Impacted fracture</strong> — An injury often caused by a fall onto the hand or elbow that drives the humeral shaft into the surgical neck.</li>
+<li><strong>Supracondylar fracture</strong> — A fracture across the distal humerus above the epicondyles, common in children who fall on the tip of the elbow.</li>
+<li><strong>Intercondylar fracture</strong> — A break between the epicondyles that separates one or both from the main body of the humerus.</li>
+<li><strong>Colles fracture</strong> — A complete transverse fracture of the distal radius that drives the separated fragment posteriorly and superiorly.</li>
+</ol>
+<p>4.1 <strong>&quot;Dinner fork&quot; bend</strong> — A characteristic forearm deformity caused by the posterior displacement of the hand during a distal radius fracture.</p>
+<ol>
+<li><strong>Scaphoid fracture</strong> — A break in the most commonly injured carpal bone, often initially misdiagnosed as a wrist sprain.</li>
+</ol>
+<p>5.1 <strong>Bone necrosis</strong> — The death of bone tissue that may occur following a scaphoid fracture due to a naturally poor blood supply.</p>
+<h3>Muscle attachment sites</h3>
+<p>This section lists the specific roughened regions and processes where muscles and ligaments anchor to the upper limb bones.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Deltoid tuberosity</strong> — A roughened, V-shaped region on the lateral side of the humeral shaft where the deltoid muscle attaches.</li>
+<li><strong>Medial epicondyle</strong> — A prominent projection on the distal humerus that serves as the origin for powerful anterior forearm grasping muscles.</li>
+<li><strong>Lateral epicondyle</strong> — A small projection on the distal humerus where the weaker posterior forearm muscles attach.</li>
+<li><strong>Ulnar tuberosity</strong> — A roughened area on the anterior ulna located just below the coronoid process.</li>
+<li><strong>Radial tuberosity</strong> — An oval-shaped bony protuberance on the medial side of the proximal radius that serves as a muscle attachment point.</li>
+<li><strong>Styloid process of the radius</strong> — A pointed projection that provides ligament attachment and limits the range of motion for lateral deviations.</li>
+</ol>
+<h3>Forearm bone stability</h3>
+<p>This section explains the structural components that keep the radius and ulna united along their length.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Interosseous border</strong> — A small ridge running along the medial side of the radius and the lateral side of the ulna.</li>
+<li><strong>Interosseous membrane of the forearm</strong> — A sheet of dense connective tissue that unites the radius and ulna bones along their shafts.</li>
+</ol>
+<h3>Wrist joint movement</h3>
+<p>This section defines the specific joints and carpal bone groups responsible for hand movement at the wrist.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Radiocarpal joint</strong> — The articulation between the distal radius and specific proximal carpal bones that forms the wrist joint.</li>
+</ol>
+<p>1.1 <strong>Scaphoid, lunate, and triquetrum</strong> — Carpal bones where the radius articulates with the first two directly and the third via a fibrocartilaginous pad.</p>
+<ol>
+<li><strong>Midcarpal joint</strong> — The articulation located between the proximal and distal rows of carpal bones.</li>
+</ol>
+<h3>Upper limb alignment</h3>
+<p>This section describes the anatomical deviation of the forearm relative to the arm in the anatomical position.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Carrying angle</strong> — A lateral deviation of 5–15 degrees of the forearm, which is larger in females to accommodate a wider pelvis.</li>
+</ol>
+<h3>Carpal tunnel function</h3>
+<p>This section defines the boundaries and the contents of the passageway into the hand through the wrist.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Flexor retinaculum</strong> — A strong ligament that spans the carpal bones to form the roof of the carpal tunnel.</li>
+<li><strong>Carpal tunnel</strong> — A passageway formed by carpal bones and a ligament through which nine muscle tendons and a major nerve enter the hand.</li>
+<li><strong>Carpal tunnel syndrome</strong> — A condition where inflammation within the carpal tunnel compresses the nerve, causing pain, numbness, and muscle weakness.</li>
+</ol>
+<h3>Hand gripping mechanics</h3>
+<p>This section details the role of the metacarpal bones in enhancing the strength and stability of the grip.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Metacarpal bones</strong> — Five elongated bones forming the palm of the hand, numbered 1–5 starting from the thumb side.</li>
+<li><strong>Power gripping</strong> — The action of pulling the medial metacarpal bones anteriorly to increase contact and strength during a firm grip.</li>
+</ol>
+<p>2.1 <strong>Fourth and fifth metacarpals</strong> — Palm bones with limited mobility, though the fifth bone exhibits significantly more motion than the fourth.</p>
+<h3>Thumb mobility</h3>
+<p>This section explains the anatomical uniqueness and skeletal structure of the first digit.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>First metacarpal bone</strong> — The bone at the base of the thumb that is separated from other metacarpals to allow independent movement.</li>
+<li><strong>Pollex</strong> — The anatomical term for the thumb, which is specifically identified as digit number 1.</li>
+</ol>
+<p>2.1 <strong>Proximal and distal phalanges</strong> — The two specific bones that make up the complete skeletal structure of the thumb.</p>
+<h3>Forearm joint articulation</h3>
+<p>This section identifies the specific joints where the radius and ulna articulate to allow rotation.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Proximal radioulnar joint</strong> — The articulation between the head of the radius and the radial notch of the ulna.</li>
+<li><strong>Distal radioulnar joint</strong> — The articulation between the head of the ulna and the ulnar notch of the radius.</li>
+</ol>
+    <div class="mine">
+      <h3>My notes</h3>
+      <p class="say">What the sheet missed. Write it however you write — one thing a line,
+      <code>Term: what it is</code>, indent to nest. Copy takes this with the sheet, formatted,
+      ready to paste into the Notion row. That row is what the week's exam is built from.</p>
+      <textarea id="mynotes" spellcheck="true" placeholder="Rebound effect: suppressed thought comes back stronger once you stop trying
+   ex. telling yourself not to check the score
+Self-control is finite - one hard task leaves less for the next"></textarea>
+      <p class="saved" id="savedmsg"></p>
+      <div id="minepreview" class="hide"></div>
+    </div>
+  </div>
+</main>
+
+<footer id="footer" class="wrap hide">
+  <p class="hinttext hide" id="hinttext"></p>
+  <div class="acts">
+    <button class="pill ghost" id="back">Back</button>
+    <button class="pill ghost hide" id="hintbtn">Hint</button>
+    <!-- Retake CLEARS, so it sits off to the side on its own, away from the two that keep
+         his progress. 2nd Pass is the primary one and takes the position Next held. -->
+    <button class="pill ghost hide" id="retake">Retake</button>
+    <span class="spacer"></span>
+    <button class="pill hide" id="review">Review quiz</button>
+    <button class="pill primary hide" id="pass2">2nd Pass</button>
+    <button class="pill primary" id="next">Next</button>
+  </div>
+</footer>
+
+<script id="quiz-data" type="application/json">{"id": "ap2e-8-2", "title": "8.2 Bones of the Upper Limb", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "hash": "645abecdb78a2875", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "Which specific bony landmarks of the proximal humerus serve as the primary attachment sites for the muscles that act across the shoulder joint to provide leverage?", "options": ["Surgical and anatomical necks", "Greater and lesser tubercles", "Trochlea and capitulum", "Medial and lateral epicondyles"], "rationales": ["While these define regional boundaries and margins of the articular surface, they do not serve as major muscle attachment projections.", "These expanded bony areas are positioned laterally and anteriorly to provide mechanical advantage for the muscles moving the arm.", "These are smooth articular surfaces designed for joint movement with the forearm bones rather than muscle attachment points.", "These features are located at the distal end of the humerus and provide attachments for muscles acting on the forearm and hand, not the shoulder."], "correct": 1, "hint": "look for the expanded bony areas named for their size and anterior/lateral positions.", "topic": "Proximal humerus features", "qid": "0b1a82227f"}, {"q": "The bicipital groove provides a necessary passage for a tendon of the biceps brachii muscle. Between which two structures is this groove located?", "options": ["Deltoid tuberosity and radial fossa", "Anatomical and surgical necks", "Greater and lesser tubercles", "Trochlea and capitulum"], "rationales": ["The deltoid tuberosity is on the mid-shaft and the radial fossa is at the distal end, far from the proximal path of the biceps tendon.", "The necks of the humerus represent horizontal divisions rather than a vertical channel for tendon passage.", "The intertubercular groove, or bicipital groove, is the narrow space situated between these two bony protuberances.", "These are distal articulation surfaces and do not form a groove for the proximal biceps tendon."], "correct": 2, "hint": "identify the landmarks that define the narrow sulcus on the anterior aspect of the proximal humerus.", "topic": "Muscle tendon pathways", "qid": "59450c6720"}, {"q": "To allow for a full range of elbow flexion, which humeral features must accommodate the coronoid process of the ulna and the head of the radius?", "options": ["Medial and lateral epicondyles", "Olecranon and coronoid fossae", "Coronoid and radial fossae", "Trochlear and radial notches"], "rationales": ["Epicondyles are projections for muscle attachment rather than depressions that accommodate bone movement.", "The olecranon fossa is located on the posterior side and accommodates the elbow only when it is fully extended.", "These anterior depressions are specifically shaped to receive the corresponding parts of the forearm bones when the elbow is fully bent.", "These are features of the ulna that articulate with the humerus and radius, not depressions on the humerus itself."], "correct": 2, "hint": "think about the depressions located superior to the trochlea and capitulum on the anterior surface.", "topic": "Elbow joint mechanics", "qid": "cce643408b"}, {"q": "The 'crescent wrench' shape of the proximal ulna is essential for creating a stable hinge at the elbow. Which humeral structure does it primarily articulate with?", "options": ["Trochlea", "Lateral epicondyle", "Olecranon fossa", "Capitulum"], "rationales": ["The spindle-shaped trochlea fits perfectly into the C-shaped trochlear notch of the ulna to allow for hinge-like movement.", "The lateral epicondyle is a site for muscle attachment and does not form part of the articular hinge with the ulna.", "The olecranon fossa is a depression that receives the olecranon process during extension, but it is not the main articulation surface.", "The capitulum is a knob-like structure on the lateral side that articulates specifically with the radius, not the ulna."], "correct": 0, "hint": "consider the pulley-shaped region that fits into the large notch of the medial forearm bone.", "topic": "Elbow joint mechanics", "qid": "405a72dfdc"}, {"q": "A fracture at which specific site on the humerus is most common because it represents the junction between the expanded proximal end and the narrow shaft?", "options": ["Deltoid tuberosity", "Anatomical neck", "Surgical neck", "Intertubercular sulcus"], "rationales": ["The tuberosity is a thickened, roughened area on the shaft and is not as vulnerable as the neck regions.", "This neck is the margin of the articular head and is less frequently fractured than the region lower down where the bone narrows.", "This region is a frequent site for fractures, particularly impacted ones, due to its structural transition and relative weakness.", "This groove is reinforced by the surrounding tubercles and is not the primary site for structural failure in the proximal humerus."], "correct": 2, "hint": "identify the narrowed region located at the base of the humerus head's expanded area.", "topic": "Upper limb fractures", "qid": "0c28ee17c0"}, {"q": "The deltoid muscle is the primary abductor of the arm. Where must this muscle attach to the humerus to provide the necessary mechanical leverage?", "options": ["Lesser tubercle", "Deltoid tuberosity", "Lateral supracondylar ridge", "Greater tubercle"], "rationales": ["The lesser tubercle is on the anterior side and is an attachment point for internal rotators, not the primary abductor.", "This roughened, V-shaped region on the lateral side of the middle shaft is the specific site for deltoid attachment.", "This ridge is located far distally near the elbow and serves muscles acting on the forearm and hand.", "While near the shoulder, the greater tubercle serves as an attachment for rotator cuff muscles rather than the large deltoid muscle."], "correct": 1, "hint": "locate the roughened, V-shaped landmark found mid-way down the lateral aspect of the humeral shaft.", "topic": "Muscle attachment sites", "qid": "9dcf4fca8e"}, {"q": "The radius and ulna must act as a coordinated unit during the rotation of the forearm. Which structure provides the primary connection along the length of their shafts?", "options": ["Interosseous membrane of the forearm", "Radial notch of the ulna", "Styloid process", "Flexor retinaculum"], "rationales": ["This sheet of dense connective tissue spans the gap between the bones, uniting them and allowing for the transmission of forces.", "This notch is a small articular area at the proximal end and does not unite the shafts over their entire length.", "Styloid processes are distal projections that provide ligament attachments for the wrist rather than uniting the bone shafts.", "The flexor retinaculum is a ligament that spans the carpal bones at the wrist, not the shafts of the forearm bones."], "correct": 0, "hint": "identify the connective tissue band that attaches to the medial border of the radius and lateral border of the ulna.", "topic": "Forearm bone stability", "qid": "e3686b9ff4"}, {"q": "Why is the range of motion for lateral deviation of the hand at the wrist significantly more limited than for medial deviation?", "options": ["The scaphoid bone is fused to the radius", "The styloid process of the radius projects further distally than that of the ulna", "The ulna articulates directly with more carpal bones than the radius", "The flexor retinaculum only covers the medial side of the wrist"], "rationales": ["The scaphoid articulates with the radius but is a separate, mobile bone within the wrist joint.", "The longer distal projection of the radial styloid process physically blocks the lateral movement of the carpal bones.", "The ulna does not articulate directly with any carpal bones, whereas the radius articulates with two.", "The retinaculum spans the entire carpal tunnel from the lateral trapezium to the medial pisiform."], "correct": 1, "hint": "compare the anatomical length and distal extent of the pointed projections on the lateral and medial forearm bones.", "topic": "Wrist joint movement", "qid": "03611332ac"}, {"q": "The 'carrying angle' allows the forearm and hand to swing freely without hitting the hip. Why is this angle typically larger in females?", "options": ["To increase the stability of the radiocarpal joint", "To provide more leverage for the biceps brachii", "To accommodate a wider pelvis", "Because the humerus is shorter in females"], "rationales": ["The carrying angle is a feature of the elbow joint's alignment and does not directly affect the stability of the wrist.", "Leverage is determined by muscle attachment points like the radial tuberosity rather than the carrying angle.", "The wider pelvic structure in females requires a greater lateral deviation of the forearm to ensure clearance during walking or carrying.", "The length of the humerus does not fundamentally determine the angle of lateral deviation at the elbow."], "correct": 2, "hint": "consider how the width of the lower trunk affects the necessary path of the swinging arms.", "topic": "Upper limb alignment", "qid": "80c9b00d14"}, {"q": "Carpal tunnel syndrome involves the compression of a major nerve. Which structure forms the 'roof' of this tunnel and is responsible for this compression when inflammation occurs?", "options": ["Flexor retinaculum", "Ulnar notch of the radius", "Hook of the hamate bone", "Interosseous membrane"], "rationales": ["This strong ligament spans the U-shaped carpal bone grouping, creating a confined space that can compress the nerve if contents swell.", "This is an articular depression on the distal radius and does not form the boundary of the carpal tunnel.", "The hook of the hamate forms part of the medial wall of the tunnel, not its roof.", "This membrane is located between the radius and ulna in the forearm, not at the base of the hand."], "correct": 0, "hint": "identify the connective tissue band that unites the lateral and medial carpal bones anteriorly.", "topic": "Carpal tunnel function", "qid": "f845ea3bc9"}, {"q": "During a power grip, the hand's contact strength on the medial side is increased. Which structural feature of the metacarpal bones allows for this improved firmness?", "options": ["The fourth and fifth metacarpal bones have limited anterior-posterior mobility", "The second and third metacarpal bones are highly mobile", "All metacarpal bones are united by a single synovial joint", "The phalanges are fused to the metacarpal heads"], "rationales": ["This mobility allows the medial side of the palm to wrap more effectively around an object during gripping.", "The second and third metacarpals are actually immobile and firmly anchored to provide a stable central pillar for the hand.", "Metacarpals have individual carpometacarpal joints with different degrees of mobility.", "The metacarpophalangeal joints are highly mobile joints that form the knuckles and are not fused."], "correct": 0, "hint": "focus on the differences in mobility between the medial metacarpals and the central metacarpals.", "topic": "Hand gripping mechanics", "qid": "8b6b08050e"}, {"q": "What anatomical feature is primarily responsible for the thumb's (pollex) ability to move independently of the other fingers?", "options": ["The thumb contains three phalanges instead of two", "The first metacarpal bone is separated from the other metacarpal bones", "The thumb is digit number 5", "It lacks a carpometacarpal joint"], "rationales": ["The thumb actually contains only two phalanges (proximal and distal), unlike the other digits which have three.", "This separation provides the first metacarpal with a freedom of motion that is not restricted by the ligaments uniting the other bones.", "The thumb is digit number 1; the little finger is digit number 5.", "The thumb has a very specialized carpometacarpal joint that is key to its wide range of motion."], "correct": 1, "hint": "consider the spacing and connections of the five elongated bones that form the palm of the hand.", "topic": "Thumb mobility", "qid": "ce7850de06"}, {"q": "Which set of carpal bones articulates directly with the radius to form the radiocarpal joint?", "options": ["Pisiform and triquetrum", "Capitate and hamate", "Scaphoid and lunate", "Trapezium and trapezoid"], "rationales": ["The pisiform does not articulate with the radius, and the triquetrum articulates with a fibrocartilaginous pad rather than the radius itself.", "These bones are part of the distal row and the midcarpal joint, located further from the radius.", "These two bones of the proximal row articulate directly with the smooth distal surface of the radius.", "These are in the distal row of carpals and articulate with the metacarpals and the proximal carpal row, not the radius."], "correct": 2, "hint": "identify the two bones in the lateral portion of the proximal carpal row that meet the distal forearm.", "topic": "Wrist joint movement", "qid": "1c6d273217"}, {"q": "In pediatric cases, a fall onto the tip of the elbow can lead to a supracondylar fracture. What is the most critical immediate concern for the health of the forearm following this injury?", "options": ["Over-activation of the deltoid muscle", "Fusion of the radiocarpal joint", "Compression of the artery leading to ischemia", "Rupture of the interosseous membrane"], "rationales": ["The deltoid is proximal to the injury site and its activation is not a primary concern in distal humeral fractures.", "Fractures near the elbow affect the elbow and forearm circulation, not the direct articulation of the wrist joint.", "Swelling from the fracture can compress the main artery to the forearm, causing a lack of oxygen that can permanently damage muscles.", "While painful, membrane damage is not as immediately life- or limb-threatening as arterial compression and ischemia."], "correct": 2, "hint": "consider the consequences of soft tissue swelling on the blood flow to the distal limb.", "topic": "Upper limb fractures", "qid": "a9cda8d84c"}, {"q": "Why does a fracture of the scaphoid bone often require a follow-up radiograph several weeks after the initial injury for a definitive diagnosis?", "options": ["Initial tissue swelling can obscure the fracture until it subsides", "The bone must begin to necrose before it is visible on X-ray", "The scaphoid only becomes mineralized in adulthood", "Ligaments must tear completely to reveal the bone's position"], "rationales": ["Swelling frequently hides the bone break on early X-rays, often leading to a mistaken initial diagnosis of a simple wrist sprain.", "While necrosis is a long-term risk, the fracture itself is visible once swelling is gone, not because of the necrosis.", "The scaphoid is fully mineralized long before the typical age of such injuries, and its visibility is a matter of clear imaging.", "The diagnosis is based on the integrity of the bone itself, not the state of the surrounding ligaments."], "correct": 0, "hint": "think about how the body's immediate inflammatory response to injury affects the clarity of medical imaging.", "topic": "Upper limb fractures", "qid": "394ad22900"}, {"q": "Which joint allows the head of the radius to rotate, facilitating the crossing of the radius over the ulna during forearm pronation?", "options": ["Humero-ulnar joint", "Midcarpal joint", "Glenohumeral joint", "Proximal radioulnar joint"], "rationales": ["This joint is the hinge part of the elbow that allows for flexion and extension, not rotation of the radius.", "The midcarpal joint is located between the two rows of carpal bones and facilitates hand movement at the wrist.", "The glenohumeral joint is the shoulder joint and does not participate in the rotation of the forearm bones.", "This joint, formed by the radial notch of the ulna and the head of the radius, is the pivot point for forearm rotation."], "correct": 3, "hint": "identify the joint where the disc-shaped proximal end of the lateral forearm bone meets the medial bone.", "topic": "Forearm joint articulation", "qid": "8c6c203429"}], "hasSheet": true, "notebook": "https://notebooklm.google.com/notebook/cf57202f-1a73-4c88-9b58-abfcd3f6cae1/artifact/f4a60dbe-89da-481a-8a85-ffc393967ab6", "root": "../index.html", "tab": "quiz", "sheet": "## Proximal humerus features\nThis section identifies the landmarks of the upper humerus including the head, necks, and tubercles.\n\n### Key terms\n1. **Head of the humerus** — The large, round, smooth region that faces medially and articulates with the glenoid cavity of the scapula.\n2. **Anatomical neck** — The narrow margin located immediately around the smooth articular surface of the humeral head.\n3. **Greater tubercle** — An expanded bony area located on the lateral side of the proximal humerus that serves as a muscle attachment site.\n4. **Lesser tubercle** — A smaller bony area found on the anterior aspect of the proximal humerus for muscle attachment.\n5. **Surgical neck** — The region at the base of the proximal end of the humerus that is a common site for arm fractures.\n\n## Muscle tendon pathways\nThis section describes the specific bony groove on the humerus that facilitates the passage of muscle tendons.\n\n### Key terms\n1. **Intertubercular groove (bicipital groove)** — A narrow space passing between the greater and lesser tubercles of the humerus.\n   1.1 **Biceps brachii tendon** — The specific connective tissue structure that passes through the intertubercular groove to reach the arm.\n\n## Elbow joint mechanics\nThis section details the articulations between the humerus, radius, and ulna, including the depressions that accommodate movement.\n\n### Key terms\n1. **Trochlea** — A spindle- or pulley-shaped region on the distal humerus that articulates with the ulna.\n2. **Capitulum** — A knob-like structure on the anterior surface of the distal humerus that articulates with the radius.\n3. **Coronoid fossa** — A depression above the trochlea that receives the coronoid process of the ulna when the elbow is flexed.\n4. **Radial fossa** — A small depression above the capitulum that receives the head of the radius during elbow flexion.\n5. **Olecranon fossa** — A large depression on the posterior humerus that receives the olecranon process of the ulna during full extension.\n6. **Trochlear notch** — A large, C-shaped region on the proximal ulna that resembles a crescent wrench and articulates with the trochlea.\n\n## Upper limb fractures\nThis section summarizes common fractures of the humerus, radius, and carpal bones as described in clinical contexts.\n\n### Key terms\n1. **Impacted fracture** — An injury often caused by a fall onto the hand or elbow that drives the humeral shaft into the surgical neck.\n2. **Supracondylar fracture** — A fracture across the distal humerus above the epicondyles, common in children who fall on the tip of the elbow.\n3. **Intercondylar fracture** — A break between the epicondyles that separates one or both from the main body of the humerus.\n4. **Colles fracture** — A complete transverse fracture of the distal radius that drives the separated fragment posteriorly and superiorly.\n   4.1 **\"Dinner fork\" bend** — A characteristic forearm deformity caused by the posterior displacement of the hand during a distal radius fracture.\n5. **Scaphoid fracture** — A break in the most commonly injured carpal bone, often initially misdiagnosed as a wrist sprain.\n   5.1 **Bone necrosis** — The death of bone tissue that may occur following a scaphoid fracture due to a naturally poor blood supply.\n\n## Muscle attachment sites\nThis section lists the specific roughened regions and processes where muscles and ligaments anchor to the upper limb bones.\n\n### Key terms\n1. **Deltoid tuberosity** — A roughened, V-shaped region on the lateral side of the humeral shaft where the deltoid muscle attaches.\n2. **Medial epicondyle** — A prominent projection on the distal humerus that serves as the origin for powerful anterior forearm grasping muscles.\n3. **Lateral epicondyle** — A small projection on the distal humerus where the weaker posterior forearm muscles attach.\n4. **Ulnar tuberosity** — A roughened area on the anterior ulna located just below the coronoid process.\n5. **Radial tuberosity** — An oval-shaped bony protuberance on the medial side of the proximal radius that serves as a muscle attachment point.\n6. **Styloid process of the radius** — A pointed projection that provides ligament attachment and limits the range of motion for lateral deviations.\n\n## Forearm bone stability\nThis section explains the structural components that keep the radius and ulna united along their length.\n\n### Key terms\n1. **Interosseous border** — A small ridge running along the medial side of the radius and the lateral side of the ulna.\n2. **Interosseous membrane of the forearm** — A sheet of dense connective tissue that unites the radius and ulna bones along their shafts.\n\n## Wrist joint movement\nThis section defines the specific joints and carpal bone groups responsible for hand movement at the wrist.\n\n### Key terms\n1. **Radiocarpal joint** — The articulation between the distal radius and specific proximal carpal bones that forms the wrist joint.\n   1.1 **Scaphoid, lunate, and triquetrum** — Carpal bones where the radius articulates with the first two directly and the third via a fibrocartilaginous pad.\n2. **Midcarpal joint** — The articulation located between the proximal and distal rows of carpal bones.\n\n## Upper limb alignment\nThis section describes the anatomical deviation of the forearm relative to the arm in the anatomical position.\n\n### Key terms\n1. **Carrying angle** — A lateral deviation of 5–15 degrees of the forearm, which is larger in females to accommodate a wider pelvis.\n\n## Carpal tunnel function\nThis section defines the boundaries and the contents of the passageway into the hand through the wrist.\n\n### Key terms\n1. **Flexor retinaculum** — A strong ligament that spans the carpal bones to form the roof of the carpal tunnel.\n2. **Carpal tunnel** — A passageway formed by carpal bones and a ligament through which nine muscle tendons and a major nerve enter the hand.\n3. **Carpal tunnel syndrome** — A condition where inflammation within the carpal tunnel compresses the nerve, causing pain, numbness, and muscle weakness.\n\n## Hand gripping mechanics\nThis section details the role of the metacarpal bones in enhancing the strength and stability of the grip.\n\n### Key terms\n1. **Metacarpal bones** — Five elongated bones forming the palm of the hand, numbered 1–5 starting from the thumb side.\n2. **Power gripping** — The action of pulling the medial metacarpal bones anteriorly to increase contact and strength during a firm grip.\n   2.1 **Fourth and fifth metacarpals** — Palm bones with limited mobility, though the fifth bone exhibits significantly more motion than the fourth.\n\n## Thumb mobility\nThis section explains the anatomical uniqueness and skeletal structure of the first digit.\n\n### Key terms\n1. **First metacarpal bone** — The bone at the base of the thumb that is separated from other metacarpals to allow independent movement.\n2. **Pollex** — The anatomical term for the thumb, which is specifically identified as digit number 1.\n   2.1 **Proximal and distal phalanges** — The two specific bones that make up the complete skeletal structure of the thumb.\n\n## Forearm joint articulation\nThis section identifies the specific joints where the radius and ulna articulate to allow rotation.\n\n### Key terms\n1. **Proximal radioulnar joint** — The articulation between the head of the radius and the radial notch of the ulna.\n2. **Distal radioulnar joint** — The articulation between the head of the ulna and the ulnar notch of the radius."}</script>
+<script>
+const D = JSON.parse(document.getElementById('quiz-data').textContent);
+const KEY = 'lq:' + D.id;
+const $ = s => document.querySelector(s);
+const esc = t => { const d=document.createElement('div'); d.textContent = t==null?'':t; return d.innerHTML; };
+const G_OK = '✓', G_NO = '✕';
+
+/* ---- saved state -------------------------------------------------------------
+   Everything lives in localStorage under the page id. `hash` fingerprints the question
+   set: a Redo regenerates the quiz, and when that happens the old answers describe
+   questions that no longer exist, so the attempt is retired into history rather than
+   shown against the new ones.
+
+   KEYED ON q.qid, NOT ON THE ARRAY INDEX (v2). Skipping and starring have to outlive a
+   rebuild: a question he deleted must stay deleted, and a question he starred must still be
+   starred, even after the quiz is regenerated and the order changes. That is also what makes
+   `skipped` usable later as a permanent exclusion list when exam reuse is built — see qid()
+   in quizpage.py. v1 states are migrated once, on load. */
+function qk(i){ return D.questions[i].qid; }
+function blank(){ return {v:2, hash:D.hash, i:0, answers:{}, pass2:{}, skipped:{}, starred:{},
+                          phase:1, p2list:null, done:false, at:null, history:[]}; }
+function migrate(s){
+  // v1 keyed every map on the array index. The hash matches, so the indices are still valid
+  // and this is a straight re-key — done once, then never again.
+  const re = m => { const o = {}; Object.keys(m||{}).forEach(k=>{
+    const i = +k; if(D.questions[i]) o[qk(i)] = m[k]; }); return o; };
+  s.answers = re(s.answers); s.skipped = re(s.skipped);
+  s.pass2 = {}; s.starred = {}; s.phase = 1; s.p2list = null; s.v = 2;
+  return s;
+}
+function load(){
+  try{
+    const s = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if(!s) return blank();
+    if(s.hash !== D.hash){
+      const b = blank();
+      b.history = (s.history||[]).slice();
+      // TAKE THE SCORE AS IT WAS RECORDED, never recompute it. These answers were given to
+      // questions that no longer exist, so scoring them against the new set is meaningless —
+      // it turned a real 8/10 into 2/10 in testing. `meta` is written on every save for
+      // exactly this moment.
+      if(s.done) b.history.push({
+        at: s.at,
+        score: (s.meta && typeof s.meta.score === 'number') ? s.meta.score : 0,
+        total: (s.meta && s.meta.total) || Object.keys(s.answers||{}).length,
+        stale: true});
+      b.rebuilt = true;
+      // A REBUILD DOES NOT RESURRECT A DELETED QUESTION. Answers are retired because they
+      // describe questions that may be gone; skipped and starred are decisions ABOUT
+      // questions, so they carry over on qid and simply miss anything no longer present.
+      if(s.v === 2){ b.skipped = s.skipped || {}; b.starred = s.starred || {}; }
+      return b;
+    }
+    if(!s.history) s.history = [];
+    if(s.v !== 2) return migrate(s);
+    if(!s.skipped) s.skipped = {};
+    if(!s.starred) s.starred = {};
+    if(!s.pass2) s.pass2 = {};
+    if(!s.phase) s.phase = 1;
+    return s;
+  }catch(e){ return blank(); }
+}
+function save(){
+  S.meta = {title:D.title, subtitle:D.subtitle, book:D.book, total:active(S).length,
+            at:S.at, done:S.done, score:score(S)};
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+}
+/* Skipped questions leave the run entirely — out of the count, out of the denominator,
+   out of the topic breakdown. Anything less makes "8 / 10" a lie about a quiz of nine. */
+function active(s){ return D.questions.map((_,i)=>i).filter(i => !(s.skipped||{})[qk(i)]); }
+function ans(i){ return S.answers[qk(i)]; }
+function ans2(i){ return S.pass2[qk(i)]; }
+function firstRight(i){ return ans(i) === D.questions[i].correct; }
+/* THE SECOND PASS REDEEMS. Wrong first, right second → the question counts as right; wrong
+   both times stays wrong, and there is no third pass. The first answer is never overwritten,
+   which is what lets the end card say "10 right, +2 redeemed" instead of quietly rewriting a
+   10 into a 12. */
+function finalRight(i){ return firstRight(i) || ans2(i) === D.questions[i].correct; }
+function score(s){ return active(s).reduce((n,i)=> n + (finalRight(i) ? 1 : 0), 0); }
+function redeemed(){ return active(S).filter(i => !firstRight(i) && ans2(i) === D.questions[i].correct); }
+/* What a second pass would still have to cover: wrong on the first pass and not yet
+   re-answered. Empty → no button, which is the "if there are no mistakes there is no second
+   pass" rule and also what ends the round rather than looping it. */
+function pending2(){
+  return active(S).filter(i => ans(i) !== undefined && !firstRight(i) && ans2(i) === undefined);
+}
+/* The questions THIS pass runs over. Frozen into p2list when the second pass starts, so
+   answering one correctly cannot shrink the list under his feet mid-run. */
+function runList(){
+  if(S.phase === 2 && S.p2list) return S.p2list.filter(i => !S.skipped[qk(i)]);
+  return active(S);
+}
+function pick(i){ return S.phase === 2 ? ans2(i) : ans(i); }
+let S = load();
+let lastShown = -1;
+
+/* ---- rendering ---------------------------------------------------------------- */
+/* The Starred tab only exists while something is starred, and the Study sheet tab only when
+   the quiz shipped with one — a linguistics quiz built before topic tags has none. If that
+   leaves one tab, the whole group goes: a lone "Quiz" button is chrome that says nothing. */
+function syncTabs(){
+  const nstar = Object.keys(S.starred||{}).length;
+  document.querySelector('.tab[data-tab="starred"]').classList.toggle('hide', !nstar);
+  document.querySelector('.tab[data-tab="sheet"]').classList.toggle('hide', !D.hasSheet);
+  $('#tabs').classList.toggle('hide', !nstar && !D.hasSheet);
+  if(D.tab === 'starred' && !nstar) setTab('quiz');
+}
+function setTab(name){
+  D.tab = name;
+  document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===name));
+  $('#band').classList.toggle('hide', name!=='quiz');
+  $('#starredview').classList.toggle('hide', name!=='starred');
+  $('#sheetview').classList.toggle('hide', name!=='sheet');
+  $('#footer').classList.toggle('hide', name!=='quiz');
+  if(name==='quiz'){
+    draw();
+    // Restore the frozen offset rather than recomputing it: answer, read the sheet, come
+    // back — the question must be exactly where he left it.
+    if(quizPad !== null) $('main').style.paddingTop = quizPad;
+  } else {
+    if(name==='starred') drawStarred();
+    if(name==='sheet') renderScore();
+    $('main').style.paddingTop = BASE_PAD + 'px';
+    window.scrollTo(0,0);
+  }
+}
+
+/* CENTRE THE BLOCK, BUT COMPUTE THE OFFSET ONLY WHEN THE QUESTION CHANGES.
+   `justify-content:center` was the original approach and it is what made the question jump:
+   opening a rationale made the block taller and the centring recomputed underneath him.
+   Measuring once per question and freezing the padding gives both — centred on arrival,
+   immovable afterwards, because answering only ever grows the page downward. */
+const BASE_PAD = 16;
+let quizPad = null;
+
+/* CENTRE ON THE ANSWERED HEIGHT, NOT THE HEIGHT ON SCREEN.
+   Centring on what is visible was wrong in a way that only showed up after answering: the
+   block grows by two rationales, so the top gap stayed large while the last option slid
+   under the footer. Coming back to the same question then looked right, because by then it
+   WAS the answered height being measured — the two states he photographed, from one bug.
+   `reserve` is the height with feedback open, measured off-screen before anything renders. */
+function centreBlock(reserve){
+  const m = $('main');
+  m.style.paddingTop = BASE_PAD + 'px';
+  const avail = innerHeight - $('header').offsetHeight - $('footer').offsetHeight;
+  // The band's own padding is part of the block now, so it has to be inside the measurement
+  // or the box lands low by exactly one padding.
+  const bp = parseFloat(getComputedStyle($('#band')).paddingTop) || 0;
+  const h = (reserve || $('#quizview').getBoundingClientRect().height) + bp * 2;
+  quizPad = Math.max(BASE_PAD, Math.round((avail - h) / 2)) + 'px';
+  m.style.paddingTop = quizPad;
+}
+
+/* The tallest this question can get: a WRONG pick, which opens two rationales rather than
+   one. Rendered into a hidden probe of the same width and thrown away. */
+function answeredHeight(i){
+  const q = D.questions[i];
+  const probe = document.createElement('div');
+  probe.style.cssText = 'position:absolute;left:-99999px;top:0;visibility:hidden';
+  probe.style.width = $('#quizview').getBoundingClientRect().width + 'px';
+  probe.innerHTML = buildQ(i, (q.correct + 1) % q.options.length, false);
+  $('main').appendChild(probe);
+  const h = probe.getBoundingClientRect().height;
+  probe.remove();
+  return h;
+}
+
+/* NEVER BACKWARDS. The old fallback here was `S.i = act[0]`, so skipping a question sent him
+   to question 1 — the whole way back to the start of the quiz. The nearest question AFTER
+   the one that just left is the only sensible landing place. */
+function nextFrom(list, i){
+  const nx = list.find(j => j > i);
+  return nx === undefined ? list[list.length-1] : nx;
+}
+function draw(){
+  if(D.tab!=='quiz') return;
+  $('#band').classList.toggle('off', !!(S.reviewing || S.done));
+  if(S.reviewing) return review();
+  if(S.done) return end();
+  const act = runList();
+  if(!act.length) return end();
+  if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
+  question();
+}
+
+/* Pure markup, no DOM writes and no state changes — so the same builder can render the
+   question and be measured off-screen for the centring reserve. */
+function buildQ(i, picked, fresh, en){
+  const q = D.questions[i];
+  const answered = picked !== undefined;
+  const act = runList(), pos = act.indexOf(i);
+  const starred = !!S.starred[q.qid];
+  en = en || '';
+
+  // The counter sits top-left above the question, the way the notebook does it, rather than
+  // up in the bar — it belongs with the thing it counts. On a second pass it counts the
+  // second pass, so four wrong answers read as "1 / 4" and not as a broken 16.
+  let h = '<div class="qhead' + en + '"><div class="qcol">'
+        + '<p class="meta"><span class="num">' + (pos+1) + ' / ' + act.length + '</span>'
+        + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        + (q.topic ? '<span class="dot">·</span><span>' + esc(q.topic) + '</span>' : '')
+        + '</p>'
+        + '<h1 class="q">' + esc(q.q) + '</h1></div>'
+        + '<button class="star' + (starred?' on':'') + '" id="star" aria-label="Star">'
+        + (starred?'★':'☆') + '</button>'
+        + '<div class="more"><button class="dots" id="dots" aria-label="More">⋮</button></div>'
+        + '</div>';
+
+  h += '<div class="opts">';
+  q.options.forEach((o,k)=>{
+    let cls = 'opt' + en, mark = '', lab = '', why = '';
+    if(answered){
+      if(k === q.correct){ cls += ' is-right'; mark = G_OK; lab = 'Right answer'; }
+      else if(k === picked){ cls += ' is-wrong'; mark = G_NO; lab = 'Not quite'; }
+      else cls += ' is-muted';
+      if(lab && fresh) cls += ' fresh';
+      why = q.rationales ? (q.rationales[k]||'') : '';
+    }
+    h += '<button class="'+cls+'" data-k="'+k+'"'+(answered?' disabled':'')+'>'
+       + '<span class="line"><span class="k">'+D.letters[k]+'.</span>'
+       + '<span class="t">'+esc(o)+'</span>'
+       + '<span class="mark">'+mark+'</span></span>';
+    if(lab){
+      h += '<span class="rat"><span class="ratin">'
+         + '<span class="lab"><span class="g">'+mark+'</span>'+lab+'</span>'
+         + (why ? '<span class="why" style="display:block">'+esc(why)+'</span>' : '')
+         + '</span></span>';
+    }
+    h += '</button>';
+  });
+  return h + '</div>';
+}
+
+function question(fresh){
+  const i = S.i, q = D.questions[i], picked = pick(i);
+  const answered = picked !== undefined;
+  const act = runList();
+  const pos = act.indexOf(i);
+  const isNew = i !== lastShown;
+  lastShown = i;
+
+  $('#rail').style.width = ((pos + (answered?1:0)) / act.length * 100) + '%';
+  $('#quizview').innerHTML = buildQ(i, picked, fresh, isNew ? ' enter' : '');
+  $('#quizview').querySelectorAll('.opt').forEach(b=>{
+    b.onclick = ()=>{
+      // The first pass is never overwritten — a second-pass answer goes in its own map.
+      if(S.phase === 2) S.pass2[qk(i)] = +b.dataset.k; else S.answers[qk(i)] = +b.dataset.k;
+      save(); question(true);
+    };
+  });
+  $('#star').onclick = ()=> toggleStar(i);
+  $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
+
+  // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
+  // touches it — and nothing above the options ever changes height.
+  const hb = $('#hintbtn'), ht = $('#hinttext');
+  hb.classList.toggle('hide', !q.hint || answered);
+  ht.classList.toggle('hide', !(S.hintOpen && q.hint && !answered));
+  ht.textContent = q.hint || '';
+  hb.onclick = toggleHint;
+
+  $('#back').classList.remove('hide');
+  $('#next').classList.remove('hide');
+  $('#review').classList.add('hide');
+  $('#retake').classList.add('hide');
+  $('#pass2').classList.add('hide');
+  $('#back').disabled = pos === 0;
+  $('#next').disabled = !answered;
+  $('#next').textContent = (pos === act.length-1) ? 'Finish' : 'Next';
+  $('#footer').classList.remove('hide');
+  // Only when the question changes, and always against the ANSWERED height, so the layout
+  // he lands on is the one he will still be looking at after he picks.
+  if(isNew) centreBlock(answeredHeight(i));
+}
+
+/* THE HINT, from the button or from `h`. One path for both, and the BUTTON'S OWN VISIBILITY
+   is the gate: it is already hidden when the question has no hint or has been answered, so
+   there is no second copy of that condition to fall out of step. */
+function toggleHint(){
+  const hb = $('#hintbtn'), ht = $('#hinttext');
+  if(hb.classList.contains('hide')) return;
+  S.hintOpen = !S.hintOpen;
+  ht.classList.toggle('hide', !S.hintOpen);
+}
+
+/* STARRING is not the same thing as skipping and the two maps never mix. Starred = worth
+   coming back to, right or wrong, still fully part of the run and the score. Skipped =
+   removed from it. Keeping them apart is what lets exam reuse later take the starred ones as
+   candidates and treat the skipped ones as permanently excluded. */
+function toggleStar(i){
+  const k = qk(i);
+  if(S.starred[k]) delete S.starred[k]; else S.starred[k] = true;
+  save(); syncTabs();
+  const b = $('#star');
+  if(b){ b.textContent = S.starred[k] ? '★' : '☆'; b.classList.toggle('on', !!S.starred[k]); }
+}
+
+/* One question can be dropped from the run, the way the notebook lets him delete one —
+   except nothing is deleted in NotebookLM, so a rebuild brings it back and the end card
+   can put it back at any time.
+
+   SKIPPING THE LAST QUESTION SUBMITS. It used to send him back to question 1, because the
+   skipped index left `active()` and draw()'s fallback was `act[0]`. Deleting the last item
+   in a list means the list is finished, so this does exactly what Finish does. */
+function openMenu(){
+  const host = $('.more');
+  if(host.querySelector('.menu')) return closeMenu();
+  const m = document.createElement('div');
+  m.className = 'menu';
+  m.innerHTML = '<button id="skipq">Skip this question</button>';
+  host.appendChild(m);
+  m.querySelector('#skipq').onclick = ()=>{
+    const list = runList(), pos = list.indexOf(S.i);
+    if(list.length <= 1) return closeMenu();        // never skip the last one standing
+    const wasLast = pos === list.length - 1;
+    S.skipped[qk(S.i)] = true;
+    delete S.answers[qk(S.i)];
+    delete S.pass2[qk(S.i)];
+    delete S.starred[qk(S.i)];                     // a deleted question is not a starred one
+    closeMenu();
+    syncTabs();
+    if(wasLast){ finish(); return; }
+    // After the removal the list has shrunk, so the item now AT `pos` is the one that
+    // followed the skipped question. Forwards, never back to the top.
+    S.i = runList()[pos];
+    S.hintOpen = false;
+    lastShown = -1;
+    save(); question(); window.scrollTo(0,0);
+  };
+  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
+}
+function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(); }
+
+function finish(){
+  S.done = true; S.at = new Date().toISOString();
+  save(); end(); window.scrollTo(0,0);
+}
+
+function end(){
+  const act = active(S), n = score(S), t = act.length;
+  const pct = t ? Math.round(n/t*100) : 0;
+  const red = redeemed().length;
+  let h = '<p class="score">'+n+' <small>/ '+t+'</small></p>'
+        + '<p class="sub">'+pct+'% · '+when(S.at)+'</p>'
+        + '<div class="chart"><i class="r" style="width:'+(t?n/t*100:0)+'%"></i>'
+        + '<i class="w" style="width:'+(t?(t-n)/t*100:0)+'%"></i></div>'
+        + '<p class="legend"><span>'+G_OK+' <b>'+n+'</b> correct</span>'
+        + '<span>'+G_NO+' <b>'+(t-n)+'</b> wrong</span>'
+        // The chart stays TWO segments. A third fill for redemptions would need its own
+        // grayscale-safe hatch and would make the one number he reads harder to read; the
+        // count says it in words instead.
+        + (red ? '<span>+<b>'+red+'</b> on the second pass</span>' : '') + '</p>';
+
+  const by = {};
+  act.forEach(i=>{
+    const q = D.questions[i], k = q.topic || '';
+    if(!k) return;
+    by[k] = by[k] || {n:0,t:0};
+    by[k].t++;
+    if(finalRight(i)) by[k].n++;
+  });
+  const keys = Object.keys(by);
+  if(keys.length){
+    h += '<div class="topics"><h3>Topics covered</h3>';
+    keys.forEach(k=>{
+      h += '<div class="trow"><span>'+esc(k)+'</span><span class="n">'+by[k].n+'/'+by[k].t+'</span>'
+         + '<span class="tbar"><i style="width:'+(by[k].n/by[k].t*100)+'%"></i></span></div>';
+    });
+    h += '</div>';
+  }
+
+  if(S.history.length){
+    h += '<p class="hist">Earlier attempts: ' + S.history.slice().reverse()
+        .map(a=>'<span>'+a.score+'/'+a.total+' on '+when(a.at)+'</span>').join(' · ') + '</p>';
+  }
+  const nskip = Object.keys(S.skipped||{}).length;
+  if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
+              + '<button class="link" id="unskip">put them back</button></p>';
+  if(S.rebuilt) h += '<p class="note">These questions were rebuilt since your last attempt.</p>';
+  h += '<p class="note"><a href="'+D.root+'">All my quizzes</a>'
+     + (D.notebook ? ' · <a href="'+D.notebook+'">Open in Gemini Notebook</a>' : '') + '</p>';
+
+  $('#quizview').innerHTML = h;
+  const u = $('#unskip');
+  if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  $('#rail').style.width = '100%';
+  $('#band').classList.add('off');
+  $('#footer').classList.remove('hide');
+  $('#back').classList.add('hide');
+  $('#hintbtn').classList.add('hide');
+  $('#hinttext').classList.add('hide');
+  $('#next').classList.add('hide');
+  $('#review').classList.remove('hide');
+  $('#review').textContent = 'Review quiz';
+  $('#retake').classList.remove('hide');
+  // No wrong answers left to retry → no button at all, which is also what stops the second
+  // pass looping into a third: anything answered on pass two leaves pending2() for good.
+  $('#pass2').classList.toggle('hide', pending2().length === 0);
+  renderScore();
+  lastShown = -1;
+  centreBlock();
+}
+
+/* One question's full record: the right answer, what he chose on each pass, the rationale.
+   Shared by the review list and the Starred tab so the two can never drift apart. */
+function itemHTML(i, n){
+  const q = D.questions[i], first = ans(i), second = ans2(i);
+  let h = '<div class="item">';
+  if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
+  h += '<p class="qq">'+(n===undefined?'':(n+1)+'. ')+esc(q.q)+'</p>'
+     + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
+  if(!firstRight(i)){
+    h += '<p class="rline mine"><span class="g">'+G_NO+'</span><span>You chose: '
+       + (first===undefined ? 'nothing' : esc(q.options[first])) + '</span></p>';
+    if(second !== undefined){
+      h += '<p class="rline mine"><span class="g">'+(second===q.correct?G_OK:G_NO)+'</span>'
+         + '<span>Second pass: '+esc(q.options[second])
+         + (second===q.correct ? ' — redeemed' : '') + '</span></p>';
+    }
+  }
+  const why = q.rationales ? q.rationales[q.correct] : '';
+  if(why) h += '<p class="why" style="padding-left:0">'+esc(why)+'</p>';
+  return h + '</div>';
+}
+
+function review(){
+  let h = '<div class="rev"><h3>Every question</h3>';
+  active(S).forEach((i,n)=>{ h += itemHTML(i, n); });
+  h += '</div>';
+  $('#quizview').innerHTML = h;
+  $('#band').classList.add('off');
+  $('#footer').classList.remove('hide');
+  $('#back').classList.add('hide');
+  $('#hintbtn').classList.add('hide');
+  $('#hinttext').classList.add('hide');
+  $('#next').classList.add('hide');
+  $('#pass2').classList.add('hide');
+  $('#review').classList.remove('hide');
+  $('#review').textContent = 'Summary';
+  $('#retake').classList.remove('hide');
+  quizPad = BASE_PAD + 'px';                      // a long list, never centred
+  $('main').style.paddingTop = quizPad;
+  window.scrollTo(0,0);
+}
+
+/* ---- the Starred tab ---------------------------------------------------------------
+   Its own view rather than a section of the review list, because the point is to find them
+   again quickly on a later visit — including on a quiz he has not retaken. Right or wrong
+   does not matter; "this one is important" is the only thing being recorded. */
+function drawStarred(){
+  const list = D.questions.map((_,i)=>i).filter(i => S.starred[qk(i)]);
+  if(!list.length){
+    $('#starredview').innerHTML = '<h3>Starred</h3><p class="empty">Nothing starred yet. '
+      + 'Use the ☆ beside a question.</p>';
+    return;
+  }
+  let h = '<h3>Starred · '+list.length+'</h3>';
+  list.forEach((i,n)=>{
+    h += itemHTML(i, n).replace('</div>',
+      '<p class="rline"><button class="link" data-unstar="'+i+'">Unstar</button></p></div>');
+  });
+  $('#starredview').innerHTML = h;
+  $('#starredview').querySelectorAll('[data-unstar]').forEach(b=>{
+    b.onclick = ()=>{ delete S.starred[qk(+b.dataset.unstar)]; save(); syncTabs(); drawStarred(); };
+  });
+}
+
+/* ---- the score, written where he copies from ---------------------------------------- */
+function scoreParts(){
+  const act = active(S), n = score(S), t = act.length, red = redeemed().length;
+  return {n:n, t:t, pct: t ? Math.round(n/t*100) : 0, red:red, first:n-red, wrong:t-n,
+          skipped: Object.keys(S.skipped||{}).length};
+}
+function scoreMarkdown(){
+  if(!S.done) return '';
+  const p = scoreParts();
+  return '**Quiz:** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
+       + (p.red ? ', +' + p.red + ' redeemed' : '') + ', ' + p.wrong + ' wrong'
+       + (p.skipped ? ', ' + p.skipped + ' skipped' : '') + ' · ' + when(S.at);
+}
+function renderScore(){
+  const el = $('#scorecard');
+  if(!el) return;
+  el.classList.toggle('hide', !S.done);
+  if(!S.done) return;
+  const p = scoreParts();
+  el.innerHTML = '<b>'+p.n+' / '+p.t+'</b><span>'+p.pct+'% · '+p.first+' right'
+    + (p.red ? ', +'+p.red+' on the second pass' : '') + ', '+p.wrong+' wrong'
+    + (p.skipped ? ' · '+p.skipped+' skipped' : '') + ' · '+when(S.at)+'</span>';
+}
+
+function when(iso){
+  if(!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString(undefined,{month:'short',day:'numeric'})
+       + ' ' + d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+}
+
+/* ---- controls ------------------------------------------------------------------ */
+function step(dir){
+  const act = runList(), pos = act.indexOf(S.i);
+  if(dir > 0 && pos === act.length-1){ finish(); return; }
+  const nx = act[pos + dir];
+  if(nx === undefined) return;
+  S.i = nx; S.hintOpen = false; save(); question(); window.scrollTo(0,0);
+}
+$('#next').onclick = ()=> step(1);
+$('#back').onclick = ()=> step(-1);
+$('#review').onclick = ()=>{ S.reviewing = !S.reviewing; draw(); };
+/* THE SECOND PASS — the preferred way out of the end card, and the one that keeps
+   everything. It re-runs only what he got wrong, on a list frozen at the moment he presses
+   it, and a right answer here redeems the question in the final score. */
+$('#pass2').onclick = ()=>{
+  const list = pending2();
+  if(!list.length) return;
+  S.phase = 2; S.p2list = list; S.i = list[0];
+  S.done = false; S.reviewing = false; S.hintOpen = false;
+  lastShown = -1;
+  save(); draw(); window.scrollTo(0,0);
+};
+/* RETAKE CLEARS, which is why it sits apart from the other two. The attempt goes into
+   history first so nothing is lost, and the questions he deleted or starred stay that way —
+   they are decisions about the quiz, not part of one attempt at it. */
+$('#retake').onclick = ()=>{
+  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length});
+  const hist = S.history, skipped = S.skipped, starred = S.starred;
+  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred;
+  lastShown = -1;
+  save(); syncTabs(); renderScore(); draw();
+};
+document.querySelectorAll('.tab').forEach(b=> b.onclick = ()=> setTab(b.dataset.tab));
+
+/* ---- his own additions -------------------------------------------------------------
+   A textarea, localStorage, and string work. NO API, no model, nothing paid — the
+   formatting below is deterministic, which is the whole reason it can be free.
+
+   The loop this closes: he pastes the result into the subchapter's Notion row, and the
+   weekly exam already scrapes that row first (board-notes.md → exam-notes.md). So anything
+   he adds here becomes exam content without touching the pipeline. */
+const NKEY = KEY + ':notes';
+const ta = $('#mynotes'), savedmsg = $('#savedmsg');
+
+function loadNotes(){ try{ return localStorage.getItem(NKEY) || ''; }catch(e){ return ''; } }
+function saveNotes(){
+  try{ localStorage.setItem(NKEY, ta.value); }catch(e){}
+  savedmsg.textContent = ta.value.trim() ? 'Saved in this browser' : '';
+}
+
+/* His shorthand → the sheet's own markdown shape, so the paste reads as one document
+   rather than a tidy half and a raw half. Bolds the term before a `:` or a dash, keeps his
+   indentation as nesting, and numbers everything (markdown renumbers `1.` itself, and
+   Notion honours that on paste). A line he already formatted is left alone. */
+function fmtLine(t){
+  if(/\*\*/.test(t)) return t;
+  let m = t.match(/^([^:]{1,60}?):\s+(.+)$/);
+  if(!m) m = t.match(/^(.{1,60}?)\s+[—–-]\s+(.+)$/);
+  return m ? '**' + m[1].trim() + '** — ' + m[2].trim() : t;
+}
+function noteMarkdown(){
+  const out = [];
+  (ta.value || '').split('\n').forEach(raw=>{
+    const line = raw.replace(/\t/g, '  ');
+    const m = line.match(/^(\s*)(?:[-*+]\s+|\d+[.)]\s+)?(.*)$/);
+    const text = m[2].trim();
+    if(!text) return;
+    const depth = Math.min(Math.floor(m[1].length / 2), 2);
+    out.push('   '.repeat(depth) + '1. ' + fmtLine(text));
+  });
+  return out.join('\n');
+}
+/* THE SCORE RIDES ALONG WITH THE COPY. One press still takes score + sheet + his own notes
+   as a single markdown block, which is what Notion parses on paste — so the row that the
+   week's exam is built from also records how the quiz went, and he can see later whether
+   this section needs testing again. */
+function fullMarkdown(){
+  const mine = noteMarkdown();
+  const sc = scoreMarkdown();
+  return (sc ? sc + '\n\n' : '') + (D.sheet || '')
+       + (mine ? '\n\n## My notes\n\n' + mine + '\n' : '');
+}
+
+/* A 25-line renderer so Preview shows the same shape the paste will have. Lists and bold
+   only — anything more and this would be a markdown library, which is the dependency the
+   whole file exists to avoid. */
+function tinyMd(md){
+  const esc2 = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const inline = s => esc2(s).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  let html = '', stack = [];
+  md.split('\n').forEach(line=>{
+    if(!line.trim()) return;
+    const h = line.match(/^(#{1,4})\s+(.*)$/);
+    if(h){ while(stack.length){ html += '</ol>'; stack.pop(); }
+           html += '<h' + Math.min(h[1].length+1,5) + '>' + inline(h[2]) + '</h' + Math.min(h[1].length+1,5) + '>'; return; }
+    const m = line.match(/^(\s*)(?:[-*+]|\d+[.)])\s+(.*)$/);
+    if(!m){ while(stack.length){ html += '</ol>'; stack.pop(); } html += '<p>' + inline(line.trim()) + '</p>'; return; }
+    const d = Math.floor(m[1].length / 3);
+    while(stack.length > d + 1){ html += '</ol>'; stack.pop(); }
+    while(stack.length < d + 1){ html += '<ol>'; stack.push(1); }
+    html += '<li>' + inline(m[2]) + '</li>';
+  });
+  while(stack.length){ html += '</ol>'; stack.pop(); }
+  return html;
+}
+
+if(ta){
+  ta.value = loadNotes();
+  saveNotes();
+  let t = null;
+  ta.addEventListener('input', ()=>{ clearTimeout(t); t = setTimeout(saveNotes, 400); });
+  ta.addEventListener('blur', saveNotes);
+  $('#previewnotes').onclick = ()=>{
+    const p = $('#minepreview'), on = p.classList.contains('hide');
+    p.innerHTML = on ? (noteMarkdown() ? tinyMd(noteMarkdown())
+                                       : '<p>Nothing written yet.</p>') : '';
+    p.classList.toggle('hide', !on);
+    $('#previewnotes').textContent = on ? 'Hide preview' : 'Preview';
+  };
+}
+
+/* COPIES THE MARKDOWN, NOT THE RENDERED TEXT. He pastes this into Notion, and Notion parses
+   markdown on paste — so the headings, the numbering and the bold terms all survive as real
+   Notion blocks. Copying the visible text would paste one flat wall. */
+const cp = $('#copysheet');
+if(cp) cp.onclick = async ()=>{
+  const md = fullMarkdown();
+  try{ await navigator.clipboard.writeText(md); }
+  catch(e){
+    const t = document.createElement('textarea');
+    t.value = md; t.style.position='fixed'; t.style.opacity='0';
+    document.body.appendChild(t); t.select();
+    try{ document.execCommand('copy'); }catch(_){}
+    t.remove();
+  }
+  cp.textContent = 'Copied'; cp.classList.add('copied');
+  setTimeout(()=>{ cp.textContent = 'Copy'; cp.classList.remove('copied'); }, 1600);
+};
+
+// Re-centre when the window changes shape; the frozen padding would be wrong afterwards.
+// Against the ANSWERED height, like every other call — measuring what is on screen is the
+// bug this file already fixed once.
+addEventListener('resize', ()=>{
+  if(D.tab==='quiz' && !S.reviewing && !S.done) centreBlock(answeredHeight(S.i));
+});
+
+document.addEventListener('keydown', e=>{
+  if(D.tab!=='quiz' || S.done || S.reviewing) return;
+  const q = D.questions[S.i];
+  if(e.key === 'Enter' || e.key === 'ArrowRight'){ if(!$('#next').disabled) step(1); return; }
+  if(e.key === 'ArrowLeft'){ if(!$('#back').disabled) step(-1); return; }
+  // `h` IS THE HINT, not option H. Every quiz here has four options, so H as an option key
+  // has never been reachable; if one ever has eight, the eighth is still `8`.
+  if(e.key === 'h' || e.key === 'H'){ toggleHint(); return; }
+  let k = -1;
+  if(/^[1-9]$/.test(e.key)) k = +e.key - 1;
+  else if(/^[a-gA-G]$/.test(e.key)) k = D.letters.indexOf(e.key.toUpperCase());
+  if(k >= 0 && k < q.options.length && pick(S.i) === undefined){
+    // click the real button rather than repeating its handler — one path for answering
+    const btn = $('#quizview').querySelector('.opt[data-k="' + k + '"]');
+    if(btn) btn.click();
+  }
+});
+
+save();
+syncTabs();
+renderScore();
+setTab(D.tab || 'quiz');
+</script>
+</body>
+</html>
