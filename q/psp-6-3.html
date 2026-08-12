@@ -28,7 +28,15 @@ a{color:var(--accent)}
 /* ---- top bar: title, tabs, progress. Nothing else lives up here. ---- */
 header{position:sticky;top:0;z-index:5;background:var(--bg);
  border-bottom:1px solid var(--line)}
-.bar{display:flex;align-items:center;gap:14px;height:var(--barh);position:relative}
+/* THE BAR IS WIDER THAN THE COLUMN, and that is what makes a centred title possible at all.
+   The reading column is 660px and the tab strip is ~300 of it once an exam shows Starred and
+   Written — so inside the column there is no width at which a real title can be centred with
+   the tabs still on the row. Letting only the bar run to 1080 pushes the tabs out to the
+   window and leaves the middle free. THE CENTRE IS UNCHANGED by this: the bar, the rail, the
+   band and the card are all centred on the same axis, so the title still lines up with the
+   question under it — only the tabs moved outward. */
+.bar{display:flex;align-items:center;gap:14px;height:var(--barh);position:relative;
+ max-width:min(1080px, 100%)}
 /* DEAD-CENTRE WHENEVER IT FITS (08-12, his ask), and centred in the space beside the tabs
    when it does not. The fallback is not caution: the column is 660px, the tabs eat ~235 of
    it, and dead-centre needs an empty gutter the same width on the left — which leaves about
