@@ -70,5 +70,13 @@
   "book": "PSP",
   "url": "q/psp-3-3.html",
   "total": 12
+ },
+ {
+  "id": "el-6-1",
+  "title": "6.1 Syntactic knowledge and grammaticality judgements",
+  "subtitle": "Chapter 6 · Syntax",
+  "book": "EL",
+  "url": "q/el-6-1.html",
+  "total": 12
  }
 ]

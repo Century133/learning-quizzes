@@ -337,6 +337,56 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .saved{color:var(--muted);font-size:.78rem;margin:8px 0 0;height:1em}
 #minepreview{margin:14px 0 0}
 
+/* ---- the exam's two extra tags, and the written half ----
+   The section and the glyph ride the existing .meta line rather than becoming chips of their
+   own: they belong with the counter and the topic, which is already the line that says what
+   you are looking at. Colour is not used to tell the five glyphs apart — each one IS a
+   distinct character, so the page stays readable in grayscale without a legend. */
+.meta .sec{color:var(--text)}
+.meta .src{font-size:.85rem;line-height:1;text-transform:none;letter-spacing:0;cursor:help}
+
+.frqs{padding:2px 0 56px}
+.frqs > .say{color:var(--muted);font-size:.88rem;margin:0 0 26px;max-width:60ch}
+.frq{margin:0 0 42px;padding:0 0 34px;border-bottom:1px solid var(--line)}
+.frq:last-child{border-bottom:0;padding-bottom:0}
+.frq .q{font-size:1.08rem;line-height:1.45;font-weight:600;margin:0 0 6px}
+.frq .say{color:var(--muted);font-size:.84rem;margin:6px 0 0}
+.stim{margin:0 0 14px;padding:11px 16px;background:var(--surface);
+ border-left:2px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;
+ font-size:.95rem;line-height:1.55;color:var(--text)}
+.frqin{width:100%;min-height:190px;resize:vertical;background:var(--surface);
+ color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
+ padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.6;outline:none;margin-top:16px}
+.frqin:focus{border-color:var(--accent)}
+.frqin::placeholder{color:var(--muted);opacity:.7}
+.acts.inline{margin-top:12px}
+.rubric{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
+.rubric h3{margin:0 0 10px;padding:0;border:0;font-size:.7rem;letter-spacing:.09em;
+ text-transform:uppercase;color:var(--muted)}
+.rrow{display:flex;gap:12px;align-items:flex-start;padding:9px 10px;margin:0 -10px;
+ border-radius:10px;cursor:pointer}
+.rrow:hover{background:var(--surface)}
+.rmark{flex:0 0 auto;width:22px;height:22px;border-radius:6px;border:1px solid var(--line);
+ display:grid;place-items:center;font-size:.78rem;background:var(--surface);
+ color:var(--muted);margin-top:2px}
+.rrow.hit .rmark{border-color:var(--right);color:var(--right)}
+.rbody{flex:1;min-width:0}
+.rlab{font-size:.93rem;line-height:1.45;color:var(--muted)}
+.rrow.hit .rlab{color:var(--text)}
+.rnote{display:block;font-size:.78rem;color:var(--muted);opacity:.85;margin-top:2px}
+.judge{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);
+ border:1px solid var(--accent);border-radius:999px;padding:1px 7px;margin-left:7px;
+ white-space:nowrap;vertical-align:1px}
+.rfoot{display:flex;align-items:baseline;gap:14px;margin-top:16px;padding-top:14px;
+ border-top:1px solid var(--line)}
+.rscore{font-size:1.35rem;font-weight:600;font-variant-numeric:tabular-nums}
+.rscore small{color:var(--muted);font-size:.75em;font-weight:400}
+.rverdict{font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.spacer{flex:1}
+.model{margin-top:14px;background:var(--surface);border-radius:var(--radius);
+ padding:14px 16px;font-size:.9rem;line-height:1.65;color:var(--muted)}
+.model strong{color:var(--text)}
+
 .empty{color:var(--muted);padding:8px 0 30px}
 .hist{color:var(--muted);font-size:.84rem;margin:22px 0 0}
 .hist span{white-space:nowrap}
@@ -394,7 +444,7 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
   <p class="foot">Scores are saved in this browser. A quiz taken on your phone keeps its
   own history there.</p>
 </main>
-<script id="manifest" type="application/json">[{"id": "psp-3-6", "title": "3.6 How to Feel Better: Coping With Negative Emotions", "subtitle": "Chapter 3 · Social Affect", "book": "PSP", "url": "q/psp-3-6.html", "total": 14}, {"id": "ap2e-9-4", "title": "9.4 Synovial Joints", "subtitle": "Chapter 9 · Joints", "book": "A&P 2e", "url": "q/ap2e-9-4.html", "total": 16}, {"id": "ap2e-9-5", "title": "9.5 Types of Body Movements", "subtitle": "Chapter 9 · Joints", "book": "A&P 2e", "url": "q/ap2e-9-5.html", "total": 16}, {"id": "psp-6-2", "title": "6.2 Inferring Dispositions Using Causal Attribution", "subtitle": "Chapter 6 · Perceiving Others", "book": "PSP", "url": "q/psp-6-2.html", "total": 10}, {"id": "ap2e-8-2", "title": "8.2 Bones of the Upper Limb", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "url": "q/ap2e-8-2.html", "total": 16}, {"id": "ap2e-8-3", "title": "8.3 The Pelvic Girdle and Pelvis", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "url": "q/ap2e-8-3.html", "total": 16}, {"id": "ap2e-8-4", "title": "8.4 Bones of the Lower Limb", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "url": "q/ap2e-8-4.html", "total": 16}, {"id": "ap2e-8-1", "title": "8.1 The Pectoral Girdle", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "url": "q/ap2e-8-1.html", "total": 16}, {"id": "psp-3-3", "title": "3.3 Emotions, Stress, and Well-Being", "subtitle": "Chapter 3 · Social Affect", "book": "PSP", "url": "q/psp-3-3.html", "total": 12}]</script>
+<script id="manifest" type="application/json">[{"id": "psp-3-6", "title": "3.6 How to Feel Better: Coping With Negative Emotions", "subtitle": "Chapter 3 · Social Affect", "book": "PSP", "url": "q/psp-3-6.html", "total": 14}, {"id": "ap2e-9-4", "title": "9.4 Synovial Joints", "subtitle": "Chapter 9 · Joints", "book": "A&P 2e", "url": "q/ap2e-9-4.html", "total": 16}, {"id": "ap2e-9-5", "title": "9.5 Types of Body Movements", "subtitle": "Chapter 9 · Joints", "book": "A&P 2e", "url": "q/ap2e-9-5.html", "total": 16}, {"id": "psp-6-2", "title": "6.2 Inferring Dispositions Using Causal Attribution", "subtitle": "Chapter 6 · Perceiving Others", "book": "PSP", "url": "q/psp-6-2.html", "total": 10}, {"id": "ap2e-8-2", "title": "8.2 Bones of the Upper Limb", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "url": "q/ap2e-8-2.html", "total": 16}, {"id": "ap2e-8-3", "title": "8.3 The Pelvic Girdle and Pelvis", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "url": "q/ap2e-8-3.html", "total": 16}, {"id": "ap2e-8-4", "title": "8.4 Bones of the Lower Limb", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "url": "q/ap2e-8-4.html", "total": 16}, {"id": "ap2e-8-1", "title": "8.1 The Pectoral Girdle", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "url": "q/ap2e-8-1.html", "total": 16}, {"id": "psp-3-3", "title": "3.3 Emotions, Stress, and Well-Being", "subtitle": "Chapter 3 · Social Affect", "book": "PSP", "url": "q/psp-3-3.html", "total": 12}, {"id": "el-6-1", "title": "6.1 Syntactic knowledge and grammaticality judgements", "subtitle": "Chapter 6 · Syntax", "book": "EL", "url": "q/el-6-1.html", "total": 12}]</script>
 <script>
 const M = JSON.parse(document.getElementById('manifest').textContent);
 const esc = t => { const d=document.createElement('div'); d.textContent=t==null?'':t; return d.innerHTML; };
