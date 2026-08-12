@@ -177,11 +177,17 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
 .rtoggle:hover{color:var(--text)}
 .rtoggle.has{color:var(--text)}
 .rbody{margin:12px 0 0}
-#rtext{width:100%;min-height:104px;resize:vertical;background:var(--surface);
+/* HALF EACH, and they collapse to stacked well before the panes get too narrow to read a
+   pasted paragraph in. The label sits inside the <label> so clicking it lands the caret. */
+.rcols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:720px){.rcols{grid-template-columns:1fr}}
+.rcol{display:flex;flex-direction:column;gap:6px;min-width:0}
+.rlab{color:var(--muted);font-size:.74rem;letter-spacing:.04em;text-transform:uppercase}
+#rtext,#rfix{width:100%;min-height:104px;resize:vertical;background:var(--surface);
  color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
  padding:11px 13px;font:inherit;font-size:.9rem;line-height:1.55;outline:none}
-#rtext:focus{border-color:var(--accent)}
-#rtext::placeholder{color:var(--muted);opacity:.7}
+#rtext:focus,#rfix:focus{border-color:var(--accent)}
+#rtext::placeholder,#rfix::placeholder{color:var(--muted);opacity:.7}
 .rshots{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
 .shot{position:relative;display:block;line-height:0}
 .shot img{max-height:88px;max-width:150px;border-radius:9px;border:1px solid var(--line)}
@@ -195,6 +201,7 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
 .ritem{border-top:1px solid var(--line);padding:16px 0 4px}
 .ritem:first-of-type{border-top:0;padding-top:6px}
 .rq{font-size:.95rem;font-weight:600;margin:0 0 8px}
+.rans{font-size:.88rem;color:var(--muted);margin:0 0 8px}
 .rtxt p{margin:0 0 9px;color:var(--muted)}
 .rimg{display:block;max-width:100%;border-radius:10px;border:1px solid var(--line);
  margin:0 0 10px}
@@ -447,7 +454,7 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
   <p class="foot">Scores are saved in this browser. A quiz taken on your phone keeps its
   own history there.</p>
 </main>
-<script id="manifest" type="application/json">[{"id": "psp-3-6", "title": "3.6 How to Feel Better: Coping With Negative Emotions", "subtitle": "Chapter 3 · Social Affect", "book": "PSP", "url": "q/psp-3-6.html", "total": 14}, {"id": "ap2e-9-4", "title": "9.4 Synovial Joints", "subtitle": "Chapter 9 · Joints", "book": "A&P 2e", "url": "q/ap2e-9-4.html", "total": 16}, {"id": "ap2e-9-5", "title": "9.5 Types of Body Movements", "subtitle": "Chapter 9 · Joints", "book": "A&P 2e", "url": "q/ap2e-9-5.html", "total": 16}, {"id": "psp-6-2", "title": "6.2 Inferring Dispositions Using Causal Attribution", "subtitle": "Chapter 6 · Perceiving Others", "book": "PSP", "url": "q/psp-6-2.html", "total": 10}, {"id": "ap2e-8-2", "title": "8.2 Bones of the Upper Limb", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "url": "q/ap2e-8-2.html", "total": 16}, {"id": "ap2e-8-3", "title": "8.3 The Pelvic Girdle and Pelvis", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "url": "q/ap2e-8-3.html", "total": 16}, {"id": "ap2e-8-4", "title": "8.4 Bones of the Lower Limb", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "url": "q/ap2e-8-4.html", "total": 16}, {"id": "ap2e-8-1", "title": "8.1 The Pectoral Girdle", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "url": "q/ap2e-8-1.html", "total": 16}, {"id": "psp-3-3", "title": "3.3 Emotions, Stress, and Well-Being", "subtitle": "Chapter 3 · Social Affect", "book": "PSP", "url": "q/psp-3-3.html", "total": 12}, {"id": "el-6-1", "title": "6.1 Syntactic knowledge and grammaticality judgements", "subtitle": "Chapter 6 · Syntax", "book": "EL", "url": "q/el-6-1.html", "total": 12}, {"id": "el-6-2", "title": "6.2 Word order", "subtitle": "Chapter 6 · Syntax", "book": "EL", "url": "q/el-6-2.html", "total": 16}, {"id": "el-6-3", "title": "6.3 Structure within the sentence: Phrases, heads, and selection", "subtitle": "Chapter 6 · Syntax", "book": "EL", "url": "q/el-6-3.html", "total": 12}, {"id": "el-ch6-6-1_6-2_6-3", "title": "Ch6 Exam · 6.1–6.3", "subtitle": "Syntax", "book": "EL", "url": "q/el-ch6-6-1_6-2_6-3.html", "total": 30}]</script>
+<script id="manifest" type="application/json">[{"id": "psp-3-6", "title": "3.6 How to Feel Better: Coping With Negative Emotions", "subtitle": "Chapter 3 · Social Affect", "book": "PSP", "url": "q/psp-3-6.html", "total": 14}, {"id": "ap2e-9-4", "title": "9.4 Synovial Joints", "subtitle": "Chapter 9 · Joints", "book": "A&P 2e", "url": "q/ap2e-9-4.html", "total": 16}, {"id": "ap2e-9-5", "title": "9.5 Types of Body Movements", "subtitle": "Chapter 9 · Joints", "book": "A&P 2e", "url": "q/ap2e-9-5.html", "total": 16}, {"id": "psp-6-2", "title": "6.2 Inferring Dispositions Using Causal Attribution", "subtitle": "Chapter 6 · Perceiving Others", "book": "PSP", "url": "q/psp-6-2.html", "total": 10}, {"id": "ap2e-8-2", "title": "8.2 Bones of the Upper Limb", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "url": "q/ap2e-8-2.html", "total": 16}, {"id": "ap2e-8-3", "title": "8.3 The Pelvic Girdle and Pelvis", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "url": "q/ap2e-8-3.html", "total": 16}, {"id": "ap2e-8-4", "title": "8.4 Bones of the Lower Limb", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "url": "q/ap2e-8-4.html", "total": 16}, {"id": "ap2e-8-1", "title": "8.1 The Pectoral Girdle", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "url": "q/ap2e-8-1.html", "total": 16}, {"id": "psp-3-3", "title": "3.3 Emotions, Stress, and Well-Being", "subtitle": "Chapter 3 · Social Affect", "book": "PSP", "url": "q/psp-3-3.html", "total": 12}, {"id": "el-6-1", "title": "6.1 Syntactic knowledge and grammaticality judgements", "subtitle": "Chapter 6 · Syntax", "book": "EL", "url": "q/el-6-1.html", "total": 12}, {"id": "el-6-2", "title": "6.2 Word order", "subtitle": "Chapter 6 · Syntax", "book": "EL", "url": "q/el-6-2.html", "total": 16}, {"id": "el-6-3", "title": "6.3 Structure within the sentence: Phrases, heads, and selection", "subtitle": "Chapter 6 · Syntax", "book": "EL", "url": "q/el-6-3.html", "total": 12}, {"id": "el-ch6-6-1_6-2_6-3", "title": "Ch6 Exam · 6.1–6.3", "subtitle": "Syntax", "book": "EL", "url": "q/el-ch6-6-1_6-2_6-3.html", "total": 30}, {"id": "psp-5-1", "title": "5.1 Exploring Attitudes", "subtitle": "Chapter 5 · Attitudes, Behavior, and Persuasion", "book": "PSP", "url": "q/psp-5-1.html", "total": 12}]</script>
 <script>
 const M = JSON.parse(document.getElementById('manifest').textContent);
 const esc = t => { const d=document.createElement('div'); d.textContent=t==null?'':t; return d.innerHTML; };
