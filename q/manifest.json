@@ -94,5 +94,13 @@
   "book": "EL",
   "url": "q/el-6-3.html",
   "total": 12
+ },
+ {
+  "id": "el-ch6-6-1_6-2_6-3",
+  "title": "Ch6 Exam · 6.1–6.3",
+  "subtitle": "Syntax",
+  "book": "EL",
+  "url": "q/el-ch6-6-1_6-2_6-3.html",
+  "total": 30
  }
 ]
