@@ -340,6 +340,59 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .saved{color:var(--muted);font-size:.78rem;margin:8px 0 0;height:1em}
 #minepreview{margin:14px 0 0}
 
+/* ---- the exam's two extra tags, and the written half ----
+   The section and the glyph ride the existing .meta line rather than becoming chips of their
+   own: they belong with the counter and the topic, which is already the line that says what
+   you are looking at. Colour is not used to tell the five glyphs apart — each one IS a
+   distinct character, so the page stays readable in grayscale without a legend. */
+.meta .sec{color:var(--text)}
+/* The second section on a cross-section question. Smaller and dimmer than the first, because
+   the first is where the question is filed and this one says what it also reaches into. */
+.meta .lk{color:var(--muted);font-size:.9em;margin-left:1px}
+.meta .src{font-size:.85rem;line-height:1;text-transform:none;letter-spacing:0;cursor:help}
+
+.frqs{padding:2px 0 56px}
+.frqs > .say{color:var(--muted);font-size:.88rem;margin:0 0 26px;max-width:60ch}
+.frq{margin:0 0 42px;padding:0 0 34px;border-bottom:1px solid var(--line)}
+.frq:last-child{border-bottom:0;padding-bottom:0}
+.frq .q{font-size:1.08rem;line-height:1.45;font-weight:600;margin:0 0 6px}
+.frq .say{color:var(--muted);font-size:.84rem;margin:6px 0 0}
+.stim{margin:0 0 14px;padding:11px 16px;background:var(--surface);
+ border-left:2px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;
+ font-size:.95rem;line-height:1.55;color:var(--text)}
+.frqin{width:100%;min-height:190px;resize:vertical;background:var(--surface);
+ color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
+ padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.6;outline:none;margin-top:16px}
+.frqin:focus{border-color:var(--accent)}
+.frqin::placeholder{color:var(--muted);opacity:.7}
+.acts.inline{margin-top:12px}
+.rubric{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
+.rubric h3{margin:0 0 10px;padding:0;border:0;font-size:.7rem;letter-spacing:.09em;
+ text-transform:uppercase;color:var(--muted)}
+.rrow{display:flex;gap:12px;align-items:flex-start;padding:9px 10px;margin:0 -10px;
+ border-radius:10px;cursor:pointer}
+.rrow:hover{background:var(--surface)}
+.rmark{flex:0 0 auto;width:22px;height:22px;border-radius:6px;border:1px solid var(--line);
+ display:grid;place-items:center;font-size:.78rem;background:var(--surface);
+ color:var(--muted);margin-top:2px}
+.rrow.hit .rmark{border-color:var(--right);color:var(--right)}
+.rbody{flex:1;min-width:0}
+.rlab{font-size:.93rem;line-height:1.45;color:var(--muted)}
+.rrow.hit .rlab{color:var(--text)}
+.rnote{display:block;font-size:.78rem;color:var(--muted);opacity:.85;margin-top:2px}
+.judge{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);
+ border:1px solid var(--accent);border-radius:999px;padding:1px 7px;margin-left:7px;
+ white-space:nowrap;vertical-align:1px}
+.rfoot{display:flex;align-items:baseline;gap:14px;margin-top:16px;padding-top:14px;
+ border-top:1px solid var(--line)}
+.rscore{font-size:1.35rem;font-weight:600;font-variant-numeric:tabular-nums}
+.rscore small{color:var(--muted);font-size:.75em;font-weight:400}
+.rverdict{font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.spacer{flex:1}
+.model{margin-top:14px;background:var(--surface);border-radius:var(--radius);
+ padding:14px 16px;font-size:.9rem;line-height:1.65;color:var(--muted)}
+.model strong{color:var(--text)}
+
 .empty{color:var(--muted);padding:8px 0 30px}
 .hist{color:var(--muted);font-size:.84rem;margin:22px 0 0}
 .hist span{white-space:nowrap}
@@ -365,7 +418,7 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 <header>
   <div class="wrap bar">
     <span class="title">8.1 The Pectoral Girdle</span>
-    <span class="tabs" id="tabs"><button class="tab" data-tab="quiz" aria-selected="true">Quiz</button><button class="tab hide" data-tab="starred" aria-selected="false">Starred</button><button class="tab" data-tab="sheet" aria-selected="false">Study sheet</button></span>
+    <span class="tabs" id="tabs"><button class="tab" data-tab="quiz" aria-selected="true">Quiz</button><button class="tab hide" data-tab="starred" aria-selected="false">Starred</button><button class="tab hide" data-tab="frq" aria-selected="false">Written</button><button class="tab" data-tab="sheet" aria-selected="false">Study sheet</button></span>
   </div>
   <!-- In the same .wrap as the title and the tabs: the progress track used to run the full
        width of the window under a centred column, which is the one thing up here that was
@@ -388,6 +441,7 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
     </div>
   </div>
   <div id="starredview" class="rev hide"></div>
+  <div id="frqview" class="frqs hide"></div>
   <div id="sheetview" class="sheet hide">
     <div class="scorecard hide" id="scorecard"></div>
     <div class="sheettools">
@@ -541,13 +595,28 @@ Self-control is finite - one hard task leaves less for the next"></textarea>
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "ap2e-8-1", "title": "8.1 The Pectoral Girdle", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "hash": "680571a90e44fb0f", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "Why are the right and left pectoral girdles not connected to each other anteriorly or posteriorly?", "options": ["To accommodate the expansion of the thoracic cage during deep inhalation.", "To prevent the transmission of muscle forces from one arm to the other.", "To provide a rigid frame that can support the full weight of the head and neck.", "To allow each girdle to operate and move independently, enhancing overall mobility."], "rationales": ["While the thoracic cage expands, the separation of the girdles specifically facilitates independent limb movement rather than respiratory volume.", "While it does isolate forces, the primary evolutionary advantage described is the independent range of motion.", "A rigid, connected frame would prioritize stability over the mobility required for upper limb function.", "The lack of connection between the two girdles allows for a greater range of motion and independent function for each upper limb."], "correct": 3, "hint": "consider how the range of motion for one arm would change if it were physically tied to the other side.", "topic": "Pectoral girdle mobility", "qid": "75048c315c"}, {"q": "How does the horizontal positioning of the clavicle facilitate the extensive range of motion found in the upper limb?", "options": ["By locking the scapula against the ribs to prevent shoulder dislocation.", "By acting as a lateral strut that holds the shoulder joint away from the body trunk.", "By serving as the primary attachment site for the muscles that rotate the neck.", "By providing a vertical column that transmits weight-bearing forces to the legs."], "rationales": ["The scapula does not articulate with the ribs, and locking it would severely limit shoulder mobility.", "The clavicle extends laterally to position the scapula and humerus away from the midline, maximizing freedom of motion.", "While neck muscles may attach nearby, the clavicle's horizontal 'strut' function is specifically for shoulder positioning.", "The clavicle is a horizontal bone, and the upper limbs are not primarily adapted for weight-bearing support."], "correct": 1, "hint": "think about the spatial relationship and distance between the arm and the central trunk.", "topic": "Clavicle function", "qid": "a6c7c4b66d"}, {"q": "If a person experiences a complete dislocation of the sternoclavicular joint, what is the consequence for the pectoral girdle's connection to the rest of the skeleton?", "options": ["The humerus will immediately detach from the scapula.", "The pectoral girdle loses its only bony articulation with the axial skeleton.", "The scapula will fuse with the ribs of the thoracic cage to maintain stability.", "The costoclavicular ligament will take over as the primary bony joint."], "rationales": ["The glenohumeral joint connects the humerus to the scapula, which is separate from the axial connection at the sternum.", "The sternoclavicular joint is the single point where the pectoral girdle makes a direct bony connection to the central axis of the body.", "The scapula is surrounded by muscles and does not articulate with the ribs, regardless of clavicle status.", "A ligament is soft tissue and cannot function as a bony articulation or joint."], "correct": 1, "hint": "identify the point where the girdle makes direct contact with the central chest bone.", "topic": "Sternoclavicular joint", "qid": "cf3afc6cf7"}, {"q": "The scapula is described as being 'supported by the clavicle' and surrounded by muscle. What does this imply about its relationship with the thoracic cage?", "options": ["The scapula does not articulate directly with the ribs of the thoracic cage.", "The scapula articulates with the vertebral column via the superior angle.", "The scapula is fused to the thoracic cage to provide a stable base for the arm.", "The scapula's medial border is the primary weight-bearing surface for the ribs."], "rationales": ["Because it is surrounded by muscle on both sides, the scapula remains mobile and does not form a joint with the ribs.", "The scapula does not articulate with the vertebral column; it is anchored to the axial skeleton only through the clavicle.", "Fusion would eliminate the mobility required for the high range of upper limb movements.", "The upper limb bones are not adapted for weight-bearing support, and the ribs are part of the axial skeleton."], "correct": 0, "hint": "consider the structural difference between a bone that floats in tissue versus one that forms a rigid joint with the cage.", "topic": "Scapular attachment", "qid": "61a4ec7fff"}, {"q": "When an individual catches themselves during a fall with an outstretched hand, how is the resulting force managed by the pectoral girdle?", "options": ["The force is directed into the infraglenoid tubercle to be dissipated by muscles.", "The force is absorbed entirely by the glenoid cavity to protect the collarbone.", "The force is transferred to the scapula, which then locks against the ribs.", "The force is transmitted through the clavicle to the sternum and the axial skeleton."], "rationales": ["While muscles help, the mechanical force must be transmitted through the bony structure of the clavicle to the axial skeleton.", "The glenoid cavity is a shallow depression that facilitates movement rather than absorbing the full force of an impact.", "The scapula lacks a bony articulation with the ribs, making it an inefficient path for direct force transmission to the axial skeleton.", "One of the clavicle's primary functions is to transmit forces acting on the upper limb to the central axis of the body."], "correct": 3, "hint": "trace the path of mechanical stress from the arm through the girdle to the sternum.", "topic": "Force transmission", "qid": "01e6afb73c"}, {"q": "The humerus articulates with which specific feature of the scapula to form the shoulder joint?", "options": ["The acromion, which forms the acromioclavicular joint.", "The glenoid cavity, which forms the glenohumeral joint.", "The coracoclavicular ligament, which provides vertical stability.", "The suprascapular notch, which allows for nerve passage."], "rationales": ["The acromion articulates with the lateral end of the clavicle, not the humerus.", "The glenoid cavity is the shallow depression on the scapula that receives the head of the humerus.", "Ligaments provide support but do not serve as the primary articulation surface for a joint.", "A notch is a passage for soft tissues rather than an articulation surface for a major limb bone."], "correct": 1, "hint": "look for the shallow depression that receives the head of the arm bone.", "topic": "Glenohumeral joint", "qid": "c5963da280"}, {"q": "In a complete fracture of the clavicle, why does the affected shoulder and the lateral fragment of the bone typically drop?", "options": ["The sternoclavicular joint is automatically dislocated during the fracture.", "The glenohumeral joint becomes dislocated due to the sudden loss of muscle tension.", "The weight of the upper limb is no longer supported by the clavicle acting as a strut.", "The costoclavicular ligament pulls the lateral fragment downward toward the first rib."], "rationales": ["The sternoclavicular joint is very strong and rarely dislocates; instead, the bone itself breaks under excessive force.", "While muscle tension changes, the dropping of the shoulder is a direct result of the loss of bony structural support.", "Once the clavicle breaks, it can no longer support the weight of the arm, causing the limb and the lateral bone fragment to sag.", "The costoclavicular ligament is located at the medial end of the clavicle and would not cause the lateral end to drop."], "correct": 2, "hint": "evaluate the effect of gravity on a limb that has lost its horizontal bony support.", "topic": "Clavicle fracture", "qid": "d809688ce3"}, {"q": "What is the functional importance of the inferior angle of the scapula during complex arm movements?", "options": ["It provides a bony articulation point for the lower ribs to stabilize the girdle.", "It forms the bony tip of the shoulder to protect the glenohumeral joint.", "It acts as a pivot point for the clavicle during shrugging movements.", "It serves as an attachment point for several powerful muscles involved in shoulder and limb motion."], "rationales": ["The scapula does not articulate with the ribs; it is supported by muscles.", "The acromion forms the bony tip of the shoulder, not the inferior angle.", "The clavicle pivots at the sternoclavicular joint, not at the inferior angle of the scapula.", "As the most inferior portion of the scapula, this angle provides a critical lever and anchor for major muscles."], "correct": 3, "hint": "look for the role of the lowest corner of the triangular bone in relation to soft tissue.", "topic": "Inferior scapular angle", "qid": "ac1ee9cf6b"}, {"q": "What structural benefit is provided to the upper limb by the clavicle's position over the gap between the trunk and the arm?", "options": ["It prevents the scapula from moving in an anterior or posterior direction.", "It protects the underlying nerves and blood vessels passing between the trunk and the limb.", "It increases the weight-bearing capacity of the upper limb during walking.", "It provides a rigid anchor for the lungs to expand against during exertion."], "rationales": ["The pectoral girdle is designed for high mobility, including anterior and posterior movements.", "The clavicle sits superior to critical neurovascular structures, acting as a shield for them as they enter the arm.", "The upper limbs are not required for weight-bearing or locomotion in humans.", "The lungs are contained within the thoracic cage, which is part of the axial skeleton, not the pectoral girdle."], "correct": 1, "hint": "consider what soft structures must travel safely from the neck and chest into the upper limb.", "topic": "Vascular protection", "qid": "f5e10f2c5e"}, {"q": "The sternal end of the clavicle is anchored to the thoracic cage by which structure to prevent it from shifting too far out of place?", "options": ["The glenoid labrum, which deepens the shoulder socket.", "The coracoclavicular ligament, which attaches to the acromion.", "The costoclavicular ligament, which spans between the clavicle and the first rib.", "The suprascapular notch, which houses the anchoring tendons."], "rationales": ["The glenoid labrum is associated with the glenohumeral joint, not the sternal articulation.", "The coracoclavicular ligament is located at the lateral end of the clavicle, not the sternal (medial) end.", "This ligament provides indirect support to the sternoclavicular joint by tethering the clavicle to the underlying rib.", "The suprascapular notch is a landmark on the scapula's superior border, not a ligament or anchoring site for the sternal end."], "correct": 2, "hint": "search for the connection between the medial collarbone and the ribs.", "topic": "Costoclavicular ligament", "qid": "757aa0060a"}, {"q": "In forensic anthropology, which set of clavicular features would most likely indicate a male individual who performed heavy manual labor?", "options": ["A bone that is highly flexible and lacks a sternoclavicular joint.", "A shorter and thinner bone with a smoother surface and minimal curvature.", "A bone with a perfectly straight shaft to maximize force transmission to the ribs.", "A heavier and longer bone with a greater curvature and rougher muscle attachment surfaces."], "rationales": ["All human clavicles have a sternoclavicular joint, and bone is generally a rigid tissue rather than a flexible one.", "These features are more characteristic of female clavicles, which tend to be lighter and less curved.", "The clavicle is naturally S-shaped; a perfectly straight shaft is not a normal morphological variation.", "Sex differences and mechanical stress from manual work result in a thicker, more curved clavicle with pronounced muscle markings in men."], "correct": 3, "hint": "look for the intersection of biological sex and the physical effects of labor on bone structure.", "topic": "Clavicle morphology", "qid": "919ff40752"}, {"q": "The lateral or acromial end of the clavicle articulates with which specific part of the scapula?", "options": ["The acromion, which forms the bony tip of the shoulder.", "The medial border, which lies closest to the vertebral column.", "The coracoid process, which provides attachment for muscles.", "The glenoid cavity, located between the superior and lateral borders."], "rationales": ["The acromial end of the clavicle and the acromion of the scapula join to form the acromioclavicular joint at the shoulder's peak.", "The clavicle articulates with the lateral portion of the scapula, far from the medial border.", "While nearby, the primary bony articulation for the lateral clavicle is the acromion.", "The glenoid cavity articulates with the humerus, not the clavicle."], "correct": 0, "hint": "focus on the structure that forms the outermost bony point of the shoulder.", "topic": "Acromial end", "qid": "1ab89aa3f1"}, {"q": "What is the function of the supraglenoid and infraglenoid tubercles located on the scapula?", "options": ["They provide attachment points for the muscles of the arm.", "They act as stoppers to prevent the humerus from rotating too far.", "They house the nerves that pass through the suprascapular notch.", "They articulate with the clavicle to stabilize the acromioclavicular joint."], "rationales": ["These small bony bumps are situated specifically to serve as anchors for arm muscles near the shoulder joint.", "These structures are attachment points for soft tissue rather than mechanical bony blocks for rotation.", "Tubercles are solid bony projections for muscle attachment, not hollow spaces for housing nerves.", "The acromioclavicular joint involves the acromion and the clavicle, not these tubercles."], "correct": 0, "hint": "identify the role of small bony projections located immediately adjacent to a joint cavity.", "topic": "Scapular tubercles", "qid": "2b5e6effea"}, {"q": "The scapula is described as a flat, triangular bone with three distinct borders. What is the functional purpose of these broad surfaces and margins?", "options": ["To articulate with the vertebral column to support the body's weight.", "To provide a rigid, non-moving base for the head and neck muscles.", "To protect the heart and lungs from posterior impacts.", "To serve as extensive attachment sites for muscles that move the shoulder and arm."], "rationales": ["The scapula has no bony articulation with the vertebral column and is not a weight-bearing bone.", "The scapula is highly mobile and moves together with the clavicle as a unit during arm movements.", "While it provides some coverage, the ribs and thoracic cage are the primary structures for protecting vital organs.", "The large surface area and defined borders of the scapula are essential for anchoring the many muscles required for limb mobility."], "correct": 3, "hint": "consider why a bone might evolve to have a wide, flat surface area covered by tissue.", "topic": "Scapular borders", "qid": "b9ca9bca95"}, {"q": "Which directional movements of the pectoral girdle are facilitated by the highly mobile sternoclavicular joint?", "options": ["Rotational movement of the individual ribs during breathing.", "Inward compression of the thoracic cage to increase pressure.", "Upward/downward and anterior/posterior directions.", "Medial rotation of the sternum relative to the vertebral column."], "rationales": ["The sternoclavicular joint moves the pectoral girdle, not the axial ribs themselves.", "The joint's purpose is to facilitate limb movement, not to compress the central chest cavity.", "This joint allows the clavicle and scapula to move in multiple planes, which is necessary for shrugging and reaching.", "The sternum is part of the axial skeleton and does not rotate medially via the sternoclavicular joint."], "correct": 2, "hint": "think about the directions your shoulder moves when you shrug or pull your shoulders back.", "topic": "Sternoclavicular joint", "qid": "eaf7872a4a"}, {"q": "In comparison to the bones of the lower limbs, how have the bones of the pectoral girdle and upper limbs adapted to human functional demands?", "options": ["They have developed fused joints to prevent the transmission of forces during manual labor.", "They have prioritized high mobility and the ability to manipulate objects over weight-bearing stability.", "They have lost their bony connections to the axial skeleton to maximize flexibility.", "They have become heavier and thicker to support the upright stance of the body."], "rationales": ["Fused joints would limit mobility, which is the primary functional advantage of the upper limb.", "Human upper limbs are adapted for a wide variety of activities and object manipulation rather than locomotion and support.", "The upper limb remains attached to the axial skeleton via the sternoclavicular joint.", "The lower limbs carry the weight of the body; the upper limbs are lighter to facilitate mobility."], "correct": 1, "hint": "reflect on how humans use their hands to interact with and build their environment.", "topic": "Limb functional demands", "qid": "bd9bd811c1"}], "hasSheet": true, "notebook": "https://notebooklm.google.com/notebook/cf57202f-1a73-4c88-9b58-abfcd3f6cae1/artifact/eb321058-46c5-4a9e-92d4-d46c902d91b3", "root": "../index.html", "tab": "quiz", "sheet": "### 1. Pectoral girdle mobility\nThe structural independence of the two pectoral girdles and their single, mobile attachment to the axial skeleton provide the upper limbs with an extensive and versatile range of motion.\n\n**Key terms**\n1. **Pectoral girdle** — The two-bone structure, consisting of the scapula and clavicle, that attaches the upper limb to the axial skeleton.\n2. **Mobility** — The extensive range of motion enabled by the independent operation of each girdle and a single, mobile joint connection.\n\n### 2. Clavicle function\nThe clavicle acts as a lateral strut supported by superior muscles to position the shoulder joint away from the body trunk, providing maximal freedom of motion for the limb while protecting underlying structures.\n\n**Key terms**\n1. **Strut** — A lateral extension supported by muscles that holds the shoulder joint away from the body trunk.\n    1. **Maximal freedom of motion** — The lateral positioning provided by the clavicle allows the upper limb a wide range of movement and manipulation.\n\n### 3. Sternoclavicular joint\nThis joint serves as the primary anchor point between the appendicular and axial skeletons and is the sole bony articulation for the upper limb.\n\n**Key terms**\n1. **Sternal end of the clavicle** — The triangular medial end of the bone that articulates with the manubrium of the sternum.\n2. **Sternoclavicular joint** — The only bony articulation between the pectoral girdle and the axial skeleton.\n    1. **Upward/downward and anterior/posterior** — The specific directions of movement permitted by this joint during shoulder activity.\n\n### 4. Scapular attachment\nThe scapula is suspended on the posterior thorax through complex muscular attachments rather than through direct articulation with the ribs of the thoracic cage.\n\n**Key terms**\n1. **Scapula** — A flat, triangular bone located on the posterior aspect of the shoulder.\n2. **Muscular attachment** — The method of support where the bone is surrounded by muscle and does not join the ribs.\n\n### 5. Force transmission\nThe clavicle serves as a vital conduit that conducts physical stress and impact from the upper limb directly to the sternum and the central axial skeleton.\n\n**Key terms**\n1. **Force transmission** — The process of sending physical impact from the upper limb to the sternum.\n\n### 6. Glenohumeral joint\nThe glenohumeral joint, commonly known as the shoulder joint, is the articulation formed where the scapula receives the head of the humerus.\n\n**Key terms**\n1. **Glenoid cavity** — The shallow depression on the scapula that receives the humerus.\n2. **Glenohumeral joint** — The articulation between the scapula and the arm bone (humerus).\n\n### 7. Clavicle fracture\nCommonly caused by falls on outstretched arms or lateral shoulder impacts, a clavicular fracture causes the shoulder to drop and be pulled anteriorly and medially.\n\n**Key terms**\n1. **Fracture mechanism** — A break resulting from force exerted when falling on outstretched arms or receiving a strong blow to the lateral shoulder.\n2. **Complete fracture** — A total break where the weight of the limb causes the shoulder to drop and muscles pull the shoulder and lateral fragment anteriorly and medially.\n\n### 8. Inferior scapular angle\nThe inferior angle is the lowest point of the scapula and serves as a critical attachment site for powerful muscles that move the shoulder and upper limb.\n\n**Key terms**\n1. **Inferior angle of the scapula** — The lowest corner of the bone, located where the medial and lateral borders meet.\n    1. **Muscle attachment point** — A site for several powerful muscles involved in executing intensive shoulder and limb movements.\n\n### 9. Vascular protection\nThe clavicle is positioned to safeguard the essential nerves and blood vessels as they pass from the body trunk into the upper limb.\n\n**Key terms**\n1. **Protective positioning** — The location of the clavicle overlying the neurovascular structures that serve the upper limb.\n\n### 10. Costoclavicular ligament\nThe costoclavicular ligament provides indirect support to the medial pectoral girdle by anchoring the clavicle to the first rib.\n\n**Key terms**\n1. **Costoclavicular ligament** — The tissue spanning the sternal end of the clavicle and the underlying first rib.\n\n### 11. Clavicle morphology\nThe clavicle is a horizontal, S-shaped bone that displays physical variations based on sex and the musculoskeletal demands of manual labor.\n\n**Key terms**\n1. **S-shape** — The horizontal, curved long bone morphology of the clavicle.\n2. **Sex differences** — Morphological variations where male clavicles are typically heavier, longer, and more curved than female clavicles.\n    1. **Manual workers** — Individuals who often exhibit more pronounced muscle attachment features and rougher bone surfaces where muscles attach.\n\n### 12. Acromial end\nThe acromial end is the lateral articulation point of the collarbone that joins with the scapula to form the bony tip of the shoulder.\n\n**Key terms**\n1. **Acromial end of the clavicle** — The lateral end of the bone that joins with the acromion of the scapula.\n2. **Bony tip of the shoulder** — The palpable landmark formed by the acromion where it joins the lateral end of the clavicle.\n\n### 13. Scapular tubercles\nThese small bony projections are located immediately above and below the glenoid cavity to serve as anchors for the muscles of the arm.\n\n**Key terms**\n1. **Supraglenoid tubercle** — The small bump located immediately above the glenoid cavity.\n2. **Infraglenoid tubercle** — The small bump located immediately below the glenoid cavity.\n\n### 14. Scapular borders\nThe triangular shape of the scapula is defined by three margins that designate its spatial orientation on the posterior shoulder.\n\n**Key terms**\n1. **Superior border** — The top margin of the scapula, which contains the suprascapular notch.\n2. **Medial border** — The inner margin of the scapula.\n3. **Lateral border** — The outer margin of the scapula.\n\n### 15. Limb functional demands\nHuman evolutionary stance has dictated that the lower limbs specialize in weight-bearing stability while the upper limbs are adapted for high mobility and object manipulation.\n\n**Key terms**\n1. **Weight-bearing support** — The primary function of the lower limb bones, which are adapted for stability and locomotion.\n2. **High mobility** — The primary demand for the upper limbs, allowing for a wide variety of activities and manipulation."}</script>
+<script id="quiz-data" type="application/json">{"id": "ap2e-8-1", "title": "8.1 The Pectoral Girdle", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "hash": "680571a90e44fb0f", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "Why are the right and left pectoral girdles not connected to each other anteriorly or posteriorly?", "options": ["To accommodate the expansion of the thoracic cage during deep inhalation.", "To prevent the transmission of muscle forces from one arm to the other.", "To provide a rigid frame that can support the full weight of the head and neck.", "To allow each girdle to operate and move independently, enhancing overall mobility."], "rationales": ["While the thoracic cage expands, the separation of the girdles specifically facilitates independent limb movement rather than respiratory volume.", "While it does isolate forces, the primary evolutionary advantage described is the independent range of motion.", "A rigid, connected frame would prioritize stability over the mobility required for upper limb function.", "The lack of connection between the two girdles allows for a greater range of motion and independent function for each upper limb."], "correct": 3, "hint": "consider how the range of motion for one arm would change if it were physically tied to the other side.", "topic": "Pectoral girdle mobility", "sec": "", "src": "", "link": "", "qid": "75048c315c"}, {"q": "How does the horizontal positioning of the clavicle facilitate the extensive range of motion found in the upper limb?", "options": ["By locking the scapula against the ribs to prevent shoulder dislocation.", "By acting as a lateral strut that holds the shoulder joint away from the body trunk.", "By serving as the primary attachment site for the muscles that rotate the neck.", "By providing a vertical column that transmits weight-bearing forces to the legs."], "rationales": ["The scapula does not articulate with the ribs, and locking it would severely limit shoulder mobility.", "The clavicle extends laterally to position the scapula and humerus away from the midline, maximizing freedom of motion.", "While neck muscles may attach nearby, the clavicle's horizontal 'strut' function is specifically for shoulder positioning.", "The clavicle is a horizontal bone, and the upper limbs are not primarily adapted for weight-bearing support."], "correct": 1, "hint": "think about the spatial relationship and distance between the arm and the central trunk.", "topic": "Clavicle function", "sec": "", "src": "", "link": "", "qid": "a6c7c4b66d"}, {"q": "If a person experiences a complete dislocation of the sternoclavicular joint, what is the consequence for the pectoral girdle's connection to the rest of the skeleton?", "options": ["The humerus will immediately detach from the scapula.", "The pectoral girdle loses its only bony articulation with the axial skeleton.", "The scapula will fuse with the ribs of the thoracic cage to maintain stability.", "The costoclavicular ligament will take over as the primary bony joint."], "rationales": ["The glenohumeral joint connects the humerus to the scapula, which is separate from the axial connection at the sternum.", "The sternoclavicular joint is the single point where the pectoral girdle makes a direct bony connection to the central axis of the body.", "The scapula is surrounded by muscles and does not articulate with the ribs, regardless of clavicle status.", "A ligament is soft tissue and cannot function as a bony articulation or joint."], "correct": 1, "hint": "identify the point where the girdle makes direct contact with the central chest bone.", "topic": "Sternoclavicular joint", "sec": "", "src": "", "link": "", "qid": "cf3afc6cf7"}, {"q": "The scapula is described as being 'supported by the clavicle' and surrounded by muscle. What does this imply about its relationship with the thoracic cage?", "options": ["The scapula does not articulate directly with the ribs of the thoracic cage.", "The scapula articulates with the vertebral column via the superior angle.", "The scapula is fused to the thoracic cage to provide a stable base for the arm.", "The scapula's medial border is the primary weight-bearing surface for the ribs."], "rationales": ["Because it is surrounded by muscle on both sides, the scapula remains mobile and does not form a joint with the ribs.", "The scapula does not articulate with the vertebral column; it is anchored to the axial skeleton only through the clavicle.", "Fusion would eliminate the mobility required for the high range of upper limb movements.", "The upper limb bones are not adapted for weight-bearing support, and the ribs are part of the axial skeleton."], "correct": 0, "hint": "consider the structural difference between a bone that floats in tissue versus one that forms a rigid joint with the cage.", "topic": "Scapular attachment", "sec": "", "src": "", "link": "", "qid": "61a4ec7fff"}, {"q": "When an individual catches themselves during a fall with an outstretched hand, how is the resulting force managed by the pectoral girdle?", "options": ["The force is directed into the infraglenoid tubercle to be dissipated by muscles.", "The force is absorbed entirely by the glenoid cavity to protect the collarbone.", "The force is transferred to the scapula, which then locks against the ribs.", "The force is transmitted through the clavicle to the sternum and the axial skeleton."], "rationales": ["While muscles help, the mechanical force must be transmitted through the bony structure of the clavicle to the axial skeleton.", "The glenoid cavity is a shallow depression that facilitates movement rather than absorbing the full force of an impact.", "The scapula lacks a bony articulation with the ribs, making it an inefficient path for direct force transmission to the axial skeleton.", "One of the clavicle's primary functions is to transmit forces acting on the upper limb to the central axis of the body."], "correct": 3, "hint": "trace the path of mechanical stress from the arm through the girdle to the sternum.", "topic": "Force transmission", "sec": "", "src": "", "link": "", "qid": "01e6afb73c"}, {"q": "The humerus articulates with which specific feature of the scapula to form the shoulder joint?", "options": ["The acromion, which forms the acromioclavicular joint.", "The glenoid cavity, which forms the glenohumeral joint.", "The coracoclavicular ligament, which provides vertical stability.", "The suprascapular notch, which allows for nerve passage."], "rationales": ["The acromion articulates with the lateral end of the clavicle, not the humerus.", "The glenoid cavity is the shallow depression on the scapula that receives the head of the humerus.", "Ligaments provide support but do not serve as the primary articulation surface for a joint.", "A notch is a passage for soft tissues rather than an articulation surface for a major limb bone."], "correct": 1, "hint": "look for the shallow depression that receives the head of the arm bone.", "topic": "Glenohumeral joint", "sec": "", "src": "", "link": "", "qid": "c5963da280"}, {"q": "In a complete fracture of the clavicle, why does the affected shoulder and the lateral fragment of the bone typically drop?", "options": ["The sternoclavicular joint is automatically dislocated during the fracture.", "The glenohumeral joint becomes dislocated due to the sudden loss of muscle tension.", "The weight of the upper limb is no longer supported by the clavicle acting as a strut.", "The costoclavicular ligament pulls the lateral fragment downward toward the first rib."], "rationales": ["The sternoclavicular joint is very strong and rarely dislocates; instead, the bone itself breaks under excessive force.", "While muscle tension changes, the dropping of the shoulder is a direct result of the loss of bony structural support.", "Once the clavicle breaks, it can no longer support the weight of the arm, causing the limb and the lateral bone fragment to sag.", "The costoclavicular ligament is located at the medial end of the clavicle and would not cause the lateral end to drop."], "correct": 2, "hint": "evaluate the effect of gravity on a limb that has lost its horizontal bony support.", "topic": "Clavicle fracture", "sec": "", "src": "", "link": "", "qid": "d809688ce3"}, {"q": "What is the functional importance of the inferior angle of the scapula during complex arm movements?", "options": ["It provides a bony articulation point for the lower ribs to stabilize the girdle.", "It forms the bony tip of the shoulder to protect the glenohumeral joint.", "It acts as a pivot point for the clavicle during shrugging movements.", "It serves as an attachment point for several powerful muscles involved in shoulder and limb motion."], "rationales": ["The scapula does not articulate with the ribs; it is supported by muscles.", "The acromion forms the bony tip of the shoulder, not the inferior angle.", "The clavicle pivots at the sternoclavicular joint, not at the inferior angle of the scapula.", "As the most inferior portion of the scapula, this angle provides a critical lever and anchor for major muscles."], "correct": 3, "hint": "look for the role of the lowest corner of the triangular bone in relation to soft tissue.", "topic": "Inferior scapular angle", "sec": "", "src": "", "link": "", "qid": "ac1ee9cf6b"}, {"q": "What structural benefit is provided to the upper limb by the clavicle's position over the gap between the trunk and the arm?", "options": ["It prevents the scapula from moving in an anterior or posterior direction.", "It protects the underlying nerves and blood vessels passing between the trunk and the limb.", "It increases the weight-bearing capacity of the upper limb during walking.", "It provides a rigid anchor for the lungs to expand against during exertion."], "rationales": ["The pectoral girdle is designed for high mobility, including anterior and posterior movements.", "The clavicle sits superior to critical neurovascular structures, acting as a shield for them as they enter the arm.", "The upper limbs are not required for weight-bearing or locomotion in humans.", "The lungs are contained within the thoracic cage, which is part of the axial skeleton, not the pectoral girdle."], "correct": 1, "hint": "consider what soft structures must travel safely from the neck and chest into the upper limb.", "topic": "Vascular protection", "sec": "", "src": "", "link": "", "qid": "f5e10f2c5e"}, {"q": "The sternal end of the clavicle is anchored to the thoracic cage by which structure to prevent it from shifting too far out of place?", "options": ["The glenoid labrum, which deepens the shoulder socket.", "The coracoclavicular ligament, which attaches to the acromion.", "The costoclavicular ligament, which spans between the clavicle and the first rib.", "The suprascapular notch, which houses the anchoring tendons."], "rationales": ["The glenoid labrum is associated with the glenohumeral joint, not the sternal articulation.", "The coracoclavicular ligament is located at the lateral end of the clavicle, not the sternal (medial) end.", "This ligament provides indirect support to the sternoclavicular joint by tethering the clavicle to the underlying rib.", "The suprascapular notch is a landmark on the scapula's superior border, not a ligament or anchoring site for the sternal end."], "correct": 2, "hint": "search for the connection between the medial collarbone and the ribs.", "topic": "Costoclavicular ligament", "sec": "", "src": "", "link": "", "qid": "757aa0060a"}, {"q": "In forensic anthropology, which set of clavicular features would most likely indicate a male individual who performed heavy manual labor?", "options": ["A bone that is highly flexible and lacks a sternoclavicular joint.", "A shorter and thinner bone with a smoother surface and minimal curvature.", "A bone with a perfectly straight shaft to maximize force transmission to the ribs.", "A heavier and longer bone with a greater curvature and rougher muscle attachment surfaces."], "rationales": ["All human clavicles have a sternoclavicular joint, and bone is generally a rigid tissue rather than a flexible one.", "These features are more characteristic of female clavicles, which tend to be lighter and less curved.", "The clavicle is naturally S-shaped; a perfectly straight shaft is not a normal morphological variation.", "Sex differences and mechanical stress from manual work result in a thicker, more curved clavicle with pronounced muscle markings in men."], "correct": 3, "hint": "look for the intersection of biological sex and the physical effects of labor on bone structure.", "topic": "Clavicle morphology", "sec": "", "src": "", "link": "", "qid": "919ff40752"}, {"q": "The lateral or acromial end of the clavicle articulates with which specific part of the scapula?", "options": ["The acromion, which forms the bony tip of the shoulder.", "The medial border, which lies closest to the vertebral column.", "The coracoid process, which provides attachment for muscles.", "The glenoid cavity, located between the superior and lateral borders."], "rationales": ["The acromial end of the clavicle and the acromion of the scapula join to form the acromioclavicular joint at the shoulder's peak.", "The clavicle articulates with the lateral portion of the scapula, far from the medial border.", "While nearby, the primary bony articulation for the lateral clavicle is the acromion.", "The glenoid cavity articulates with the humerus, not the clavicle."], "correct": 0, "hint": "focus on the structure that forms the outermost bony point of the shoulder.", "topic": "Acromial end", "sec": "", "src": "", "link": "", "qid": "1ab89aa3f1"}, {"q": "What is the function of the supraglenoid and infraglenoid tubercles located on the scapula?", "options": ["They provide attachment points for the muscles of the arm.", "They act as stoppers to prevent the humerus from rotating too far.", "They house the nerves that pass through the suprascapular notch.", "They articulate with the clavicle to stabilize the acromioclavicular joint."], "rationales": ["These small bony bumps are situated specifically to serve as anchors for arm muscles near the shoulder joint.", "These structures are attachment points for soft tissue rather than mechanical bony blocks for rotation.", "Tubercles are solid bony projections for muscle attachment, not hollow spaces for housing nerves.", "The acromioclavicular joint involves the acromion and the clavicle, not these tubercles."], "correct": 0, "hint": "identify the role of small bony projections located immediately adjacent to a joint cavity.", "topic": "Scapular tubercles", "sec": "", "src": "", "link": "", "qid": "2b5e6effea"}, {"q": "The scapula is described as a flat, triangular bone with three distinct borders. What is the functional purpose of these broad surfaces and margins?", "options": ["To articulate with the vertebral column to support the body's weight.", "To provide a rigid, non-moving base for the head and neck muscles.", "To protect the heart and lungs from posterior impacts.", "To serve as extensive attachment sites for muscles that move the shoulder and arm."], "rationales": ["The scapula has no bony articulation with the vertebral column and is not a weight-bearing bone.", "The scapula is highly mobile and moves together with the clavicle as a unit during arm movements.", "While it provides some coverage, the ribs and thoracic cage are the primary structures for protecting vital organs.", "The large surface area and defined borders of the scapula are essential for anchoring the many muscles required for limb mobility."], "correct": 3, "hint": "consider why a bone might evolve to have a wide, flat surface area covered by tissue.", "topic": "Scapular borders", "sec": "", "src": "", "link": "", "qid": "b9ca9bca95"}, {"q": "Which directional movements of the pectoral girdle are facilitated by the highly mobile sternoclavicular joint?", "options": ["Rotational movement of the individual ribs during breathing.", "Inward compression of the thoracic cage to increase pressure.", "Upward/downward and anterior/posterior directions.", "Medial rotation of the sternum relative to the vertebral column."], "rationales": ["The sternoclavicular joint moves the pectoral girdle, not the axial ribs themselves.", "The joint's purpose is to facilitate limb movement, not to compress the central chest cavity.", "This joint allows the clavicle and scapula to move in multiple planes, which is necessary for shrugging and reaching.", "The sternum is part of the axial skeleton and does not rotate medially via the sternoclavicular joint."], "correct": 2, "hint": "think about the directions your shoulder moves when you shrug or pull your shoulders back.", "topic": "Sternoclavicular joint", "sec": "", "src": "", "link": "", "qid": "eaf7872a4a"}, {"q": "In comparison to the bones of the lower limbs, how have the bones of the pectoral girdle and upper limbs adapted to human functional demands?", "options": ["They have developed fused joints to prevent the transmission of forces during manual labor.", "They have prioritized high mobility and the ability to manipulate objects over weight-bearing stability.", "They have lost their bony connections to the axial skeleton to maximize flexibility.", "They have become heavier and thicker to support the upright stance of the body."], "rationales": ["Fused joints would limit mobility, which is the primary functional advantage of the upper limb.", "Human upper limbs are adapted for a wide variety of activities and object manipulation rather than locomotion and support.", "The upper limb remains attached to the axial skeleton via the sternoclavicular joint.", "The lower limbs carry the weight of the body; the upper limbs are lighter to facilitate mobility."], "correct": 1, "hint": "reflect on how humans use their hands to interact with and build their environment.", "topic": "Limb functional demands", "sec": "", "src": "", "link": "", "qid": "bd9bd811c1"}], "hasSheet": true, "frq": [], "notebook": "https://notebooklm.google.com/notebook/cf57202f-1a73-4c88-9b58-abfcd3f6cae1/artifact/eb321058-46c5-4a9e-92d4-d46c902d91b3", "root": "../index.html", "tab": "quiz", "sheet": "### 1. Pectoral girdle mobility\nThe structural independence of the two pectoral girdles and their single, mobile attachment to the axial skeleton provide the upper limbs with an extensive and versatile range of motion.\n\n**Key terms**\n1. **Pectoral girdle** — The two-bone structure, consisting of the scapula and clavicle, that attaches the upper limb to the axial skeleton.\n2. **Mobility** — The extensive range of motion enabled by the independent operation of each girdle and a single, mobile joint connection.\n\n### 2. Clavicle function\nThe clavicle acts as a lateral strut supported by superior muscles to position the shoulder joint away from the body trunk, providing maximal freedom of motion for the limb while protecting underlying structures.\n\n**Key terms**\n1. **Strut** — A lateral extension supported by muscles that holds the shoulder joint away from the body trunk.\n    1. **Maximal freedom of motion** — The lateral positioning provided by the clavicle allows the upper limb a wide range of movement and manipulation.\n\n### 3. Sternoclavicular joint\nThis joint serves as the primary anchor point between the appendicular and axial skeletons and is the sole bony articulation for the upper limb.\n\n**Key terms**\n1. **Sternal end of the clavicle** — The triangular medial end of the bone that articulates with the manubrium of the sternum.\n2. **Sternoclavicular joint** — The only bony articulation between the pectoral girdle and the axial skeleton.\n    1. **Upward/downward and anterior/posterior** — The specific directions of movement permitted by this joint during shoulder activity.\n\n### 4. Scapular attachment\nThe scapula is suspended on the posterior thorax through complex muscular attachments rather than through direct articulation with the ribs of the thoracic cage.\n\n**Key terms**\n1. **Scapula** — A flat, triangular bone located on the posterior aspect of the shoulder.\n2. **Muscular attachment** — The method of support where the bone is surrounded by muscle and does not join the ribs.\n\n### 5. Force transmission\nThe clavicle serves as a vital conduit that conducts physical stress and impact from the upper limb directly to the sternum and the central axial skeleton.\n\n**Key terms**\n1. **Force transmission** — The process of sending physical impact from the upper limb to the sternum.\n\n### 6. Glenohumeral joint\nThe glenohumeral joint, commonly known as the shoulder joint, is the articulation formed where the scapula receives the head of the humerus.\n\n**Key terms**\n1. **Glenoid cavity** — The shallow depression on the scapula that receives the humerus.\n2. **Glenohumeral joint** — The articulation between the scapula and the arm bone (humerus).\n\n### 7. Clavicle fracture\nCommonly caused by falls on outstretched arms or lateral shoulder impacts, a clavicular fracture causes the shoulder to drop and be pulled anteriorly and medially.\n\n**Key terms**\n1. **Fracture mechanism** — A break resulting from force exerted when falling on outstretched arms or receiving a strong blow to the lateral shoulder.\n2. **Complete fracture** — A total break where the weight of the limb causes the shoulder to drop and muscles pull the shoulder and lateral fragment anteriorly and medially.\n\n### 8. Inferior scapular angle\nThe inferior angle is the lowest point of the scapula and serves as a critical attachment site for powerful muscles that move the shoulder and upper limb.\n\n**Key terms**\n1. **Inferior angle of the scapula** — The lowest corner of the bone, located where the medial and lateral borders meet.\n    1. **Muscle attachment point** — A site for several powerful muscles involved in executing intensive shoulder and limb movements.\n\n### 9. Vascular protection\nThe clavicle is positioned to safeguard the essential nerves and blood vessels as they pass from the body trunk into the upper limb.\n\n**Key terms**\n1. **Protective positioning** — The location of the clavicle overlying the neurovascular structures that serve the upper limb.\n\n### 10. Costoclavicular ligament\nThe costoclavicular ligament provides indirect support to the medial pectoral girdle by anchoring the clavicle to the first rib.\n\n**Key terms**\n1. **Costoclavicular ligament** — The tissue spanning the sternal end of the clavicle and the underlying first rib.\n\n### 11. Clavicle morphology\nThe clavicle is a horizontal, S-shaped bone that displays physical variations based on sex and the musculoskeletal demands of manual labor.\n\n**Key terms**\n1. **S-shape** — The horizontal, curved long bone morphology of the clavicle.\n2. **Sex differences** — Morphological variations where male clavicles are typically heavier, longer, and more curved than female clavicles.\n    1. **Manual workers** — Individuals who often exhibit more pronounced muscle attachment features and rougher bone surfaces where muscles attach.\n\n### 12. Acromial end\nThe acromial end is the lateral articulation point of the collarbone that joins with the scapula to form the bony tip of the shoulder.\n\n**Key terms**\n1. **Acromial end of the clavicle** — The lateral end of the bone that joins with the acromion of the scapula.\n2. **Bony tip of the shoulder** — The palpable landmark formed by the acromion where it joins the lateral end of the clavicle.\n\n### 13. Scapular tubercles\nThese small bony projections are located immediately above and below the glenoid cavity to serve as anchors for the muscles of the arm.\n\n**Key terms**\n1. **Supraglenoid tubercle** — The small bump located immediately above the glenoid cavity.\n2. **Infraglenoid tubercle** — The small bump located immediately below the glenoid cavity.\n\n### 14. Scapular borders\nThe triangular shape of the scapula is defined by three margins that designate its spatial orientation on the posterior shoulder.\n\n**Key terms**\n1. **Superior border** — The top margin of the scapula, which contains the suprascapular notch.\n2. **Medial border** — The inner margin of the scapula.\n3. **Lateral border** — The outer margin of the scapula.\n\n### 15. Limb functional demands\nHuman evolutionary stance has dictated that the lower limbs specialize in weight-bearing stability while the upper limbs are adapted for high mobility and object manipulation.\n\n**Key terms**\n1. **Weight-bearing support** — The primary function of the lower limb bones, which are adapted for stability and locomotion.\n2. **High mobility** — The primary demand for the upper limbs, allowing for a wide variety of activities and manipulation."}</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
 const $ = s => document.querySelector(s);
 const esc = t => { const d=document.createElement('div'); d.textContent = t==null?'':t; return d.innerHTML; };
 const G_OK = '✓', G_NO = '✕';
+
+/* WHY A QUESTION IS ON THE EXAM. One glyph, set by the generator in the topic tag, and the
+   only thing the page does with it is show it and group by it. The ORDER of this object is
+   his priority order (08-11) and the tables below read it, so re-ordering here re-orders the
+   report: starred first, then missed, then flagged, then his own research, then the ones he
+   got right and is being asked again from a harder angle. */
+const SRC = {
+  '☆': 'Starred in the subchapter quiz',
+  '✕': 'You got this wrong',
+  '?': 'You flagged it — no idea at the time',
+  'R': 'Built from your own research',
+  '$': 'You got it right before — asked a different way'
+};
+const SRC_ORDER = Object.keys(SRC);
+function srcName(g){ return SRC[g] || ''; }
 
 /* ---- saved state -------------------------------------------------------------
    Everything lives in localStorage under the page id. `hash` fingerprints the question
@@ -665,24 +734,208 @@ function rput(id, t, imgs){
   catch(e){ return false; }                       // quota — the caller puts it back
 }
 
+/* ---- the written half ------------------------------------------------------------------
+   Three long-form questions on their own tab, generated with the exam by NotebookLM and
+   marked ON THIS PAGE with no network, no key and no credit. His constraint: *"its
+   subjective and hard to do but it needs to be no code, I dont mind comparing them manually
+   if need be but it wold be best if automated somehow."*
+
+   HOW THE MARKING IS HONEST. Each point carries a list of ways of saying it, written by the
+   generator alongside the question. A point whose wording is found is ticked; a point that
+   cannot be settled by wording at all is marked JUDGEMENT and left for him. The page never
+   guesses at the second kind — a marker that quietly awarded them would flatter every
+   answer, which is worse than one that asks.
+
+   ITS OWN STORAGE KEY, like the research box and for the same reason: S is one attempt and a
+   Retake clears it. What he wrote is material, and it outlives the attempt. */
+const FKEY = KEY + ':frq';
+let F = (function(){ try{ return JSON.parse(localStorage.getItem(FKEY) || '{}') || {}; }
+                     catch(e){ return {}; } })();
+function fput(){ try{ localStorage.setItem(FKEY, JSON.stringify(F)); }catch(e){} }
+function fget(i){ const f = F[i] || {}; return {t: f.t || '', m: f.m || {}, done: !!f.done}; }
+
+/* WORD BOUNDARIES, NOT SUBSTRINGS, and this is the difference between marking and
+   flattering: a bare substring search awards "recovers the verb" for the word `implement`
+   sitting inside `implementation`, which is the exact thing the answer was asked to undo.
+   A key ending in `*` keeps its open end on purpose, for stems like `pluralis*`. */
+function keyRe(k){
+  const open = /\*$/.test(k), base = open ? k.slice(0,-1) : k;
+  const lit = base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const head = /^[a-z0-9]/i.test(base) ? '\\b' : '';
+  const tail = (!open && /[a-z0-9]$/i.test(base)) ? '\\b' : '';
+  return new RegExp(head + lit + tail, 'i');
+}
+function findHit(text, keys){
+  const t = ' ' + String(text||'').toLowerCase().replace(/[’']/g, "'").replace(/\s+/g,' ') + ' ';
+  for(let i=0;i<(keys||[]).length;i++){ if(keyRe(keys[i]).test(t)) return keys[i]; }
+  return null;
+}
+function frqHit(fi, ri){
+  const f = D.frq[fi], r = f.rubric[ri], st = fget(fi);
+  if(st.m[ri] !== undefined) return {on: !!st.m[ri], why: 'set'};
+  if(r.judge) return {on: false, why: 'judge'};
+  const found = findHit(st.t, r.k);
+  return {on: !!found, why: found ? found.replace(/\*$/,'') : ''};
+}
+function frqScore(fi){
+  const f = D.frq[fi];
+  let n = 0;
+  f.rubric.forEach((_r, ri) => { if(frqHit(fi, ri).on) n++; });
+  return {n: n, t: f.rubric.length};
+}
+function flushFrq(){
+  document.querySelectorAll('#frqview textarea').forEach(ta => {
+    const i = +ta.dataset.f;
+    F[i] = F[i] || {}; F[i].t = ta.value;
+  });
+  fput();
+}
+function drawFrq(){
+  const box = $('#frqview');
+  if(!box || !(D.frq||[]).length) return;
+  let h = '<p class="say">Three written answers, from the same sources as the paper. Write '
+        + 'one, then mark it: every point that can be settled by what you wrote is checked '
+        + 'for you, and the ones that need judgement are handed back. Click any row to '
+        + 'overrule it.</p>';
+  D.frq.forEach((f, fi) => {
+    const st = fget(fi);
+    h += '<section class="frq"><p class="meta"><span class="num">' + (fi+1) + ' / '
+       + D.frq.length + '</span>'
+       + (f.tag ? '<span class="dot">·</span><span>' + esc(f.tag) + '</span>' : '')
+       + (f.secs ? '<span class="dot">·</span><span class="sec">' + esc(f.secs) + '</span>' : '')
+       + '</p>';
+    if(f.prompt) h += '<blockquote class="stim">' + esc(f.prompt) + '</blockquote>';
+    h += '<h1 class="q">' + esc(f.ask) + '</h1>';
+    if(f.words) h += '<p class="say">About ' + esc(f.words) + ' words.</p>';
+    h += '<textarea class="frqin" data-f="' + fi + '" spellcheck="true" '
+       + 'placeholder="Write your answer.">' + esc(st.t) + '</textarea>'
+       + '<p class="saved" data-wc="' + fi + '"></p>'
+       + '<div class="acts inline"><button class="pill primary" data-mark="' + fi
+       + '">Mark my answer</button>'
+       + '<button class="pill ghost" data-fcopy="' + fi + '">Copy</button></div>'
+       + '<div class="rubric hide" data-rub="' + fi + '"></div></section>';
+  });
+  box.innerHTML = h;
+
+  box.querySelectorAll('textarea').forEach(ta => {
+    const fi = +ta.dataset.f;
+    const count = () => {
+      const n = ta.value.trim() ? ta.value.trim().split(/\s+/).length : 0;
+      const el = box.querySelector('[data-wc="' + fi + '"]');
+      if(el) el.textContent = n + (n === 1 ? ' word' : ' words');
+    };
+    ta.addEventListener('input', () => {
+      F[fi] = F[fi] || {}; F[fi].t = ta.value; fput(); count();
+      if(fget(fi).done) markFrq(fi);
+    });
+    count();
+  });
+  box.querySelectorAll('[data-mark]').forEach(b => {
+    b.onclick = () => { const fi = +b.dataset.mark; F[fi] = F[fi] || {};
+                        F[fi].done = true; fput(); markFrq(fi); };
+  });
+  box.querySelectorAll('[data-fcopy]').forEach(b => {
+    b.onclick = () => copyText(oneFrqMarkdown(+b.dataset.fcopy), b, 'Copy');
+  });
+  D.frq.forEach((_f, fi) => { if(fget(fi).done) markFrq(fi); });
+}
+function markFrq(fi){
+  const f = D.frq[fi], st = fget(fi), box = $('#frqview [data-rub="' + fi + '"]');
+  if(!box) return;
+  box.classList.remove('hide');
+  if(!st.t.trim()){
+    box.innerHTML = '<p class="say">Nothing to mark yet — write an answer first.</p>';
+    return;
+  }
+  let h = '<h3>Marking</h3>';
+  f.rubric.forEach((r, ri) => {
+    const hit = frqHit(fi, ri);
+    let note;
+    if(hit.why === 'set') note = 'Set by you.';
+    else if(hit.why === 'judge') note = 'Nothing here can be settled by wording — read it and decide.';
+    else if(hit.on) note = 'Found “' + esc(hit.why) + '”.';
+    else note = 'Not found. If you said it another way, click to award it.';
+    h += '<div class="rrow ' + (hit.on ? 'hit' : 'miss') + '" data-ri="' + ri + '">'
+       + '<span class="rmark">' + (hit.on ? G_OK : '–') + '</span>'
+       + '<span class="rbody"><span class="rlab">' + esc(r.t)
+       + (r.judge ? '<span class="judge">your call</span>' : '') + '</span>'
+       + '<span class="rnote">' + note + '</span></span></div>';
+  });
+  const s = frqScore(fi);
+  const word = s.n >= s.t - 1 ? 'Strong' : s.n >= s.t - 2 ? 'Solid'
+             : s.n >= 2 ? 'Thin' : 'Missed the question';
+  h += '<div class="rfoot"><span class="rscore">' + s.n + ' <small>/ ' + s.t + '</small></span>'
+     + '<span class="rverdict">' + word + '</span><span class="spacer"></span>'
+     + (f.model ? '<button class="link" data-model="' + fi + '">Model answer</button>' : '')
+     + '</div>';
+  if(f.model) h += '<div class="model hide" data-mv="' + fi + '">' + tinyMd(f.model) + '</div>';
+  box.innerHTML = h;
+
+  box.querySelectorAll('.rrow').forEach(row => {
+    row.onclick = () => {
+      const ri = +row.dataset.ri;
+      F[fi] = F[fi] || {}; F[fi].m = F[fi].m || {};
+      F[fi].m[ri] = !row.classList.contains('hit');
+      fput(); markFrq(fi);
+    };
+  });
+  const mb = box.querySelector('[data-model]');
+  if(mb) mb.onclick = () => {
+    const mv = box.querySelector('[data-mv="' + fi + '"]');
+    mv.classList.toggle('hide');
+    mb.textContent = mv.classList.contains('hide') ? 'Model answer' : 'Hide model answer';
+  };
+}
+function oneFrqMarkdown(fi){
+  const f = D.frq[fi], st = fget(fi), s = frqScore(fi);
+  let out = '### Written ' + (fi+1) + (f.tag ? ' — ' + f.tag : '')
+          + (f.secs ? ' (' + f.secs + ')' : '') + '\n\n';
+  if(f.prompt) out += '> ' + f.prompt + '\n\n';
+  out += '**' + f.ask + '**\n\n' + (st.t.trim() || '_(not answered)_') + '\n\n'
+       + '**Marked ' + s.n + '/' + s.t + '**\n\n';
+  f.rubric.forEach((r, ri) => {
+    out += '- [' + (frqHit(fi, ri).on ? 'x' : ' ') + '] ' + r.t
+         + (r.judge ? ' _(judgement)_' : '') + '\n';
+  });
+  return out;
+}
+/* Only answered ones ride the Copy. An untouched written half would otherwise put three
+   empty questions and eighteen unticked boxes onto the Notion row every week. */
+function frqMarkdown(){
+  const done = (D.frq || []).map((_f, i) => i).filter(i => fget(i).t.trim());
+  if(!done.length) return '';
+  return '\n\n## Written\n\n' + done.map(oneFrqMarkdown).join('\n');
+}
+function copyText(text, btn, back){
+  navigator.clipboard.writeText(text).then(()=>{
+    const old = btn.textContent;
+    btn.textContent = 'Copied';
+    setTimeout(()=>{ btn.textContent = back || old; }, 1400);
+  });
+}
+
 /* ---- rendering ---------------------------------------------------------------- */
 /* The Starred tab only exists while something is starred, and the Study sheet tab only when
    the quiz shipped with one — a linguistics quiz built before topic tags has none. If that
    leaves one tab, the whole group goes: a lone "Quiz" button is chrome that says nothing. */
 function syncTabs(){
   const nstar = Object.keys(S.starred||{}).length;
+  const nfrq = (D.frq || []).length;
   document.querySelector('.tab[data-tab="starred"]').classList.toggle('hide', !nstar);
   document.querySelector('.tab[data-tab="sheet"]').classList.toggle('hide', !D.hasSheet);
-  $('#tabs').classList.toggle('hide', !nstar && !D.hasSheet);
+  document.querySelector('.tab[data-tab="frq"]').classList.toggle('hide', !nfrq);
+  $('#tabs').classList.toggle('hide', !nstar && !D.hasSheet && !nfrq);
   if(D.tab === 'starred' && !nstar) setTab('quiz');
 }
 function setTab(name){
   if(D.tab === 'quiz' && name !== 'quiz') flushResearch();
+  if(D.tab === 'frq' && name !== 'frq') flushFrq();
   D.tab = name;
   document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===name));
   $('#band').classList.toggle('hide', name!=='quiz');
   $('#starredview').classList.toggle('hide', name!=='starred');
   $('#sheetview').classList.toggle('hide', name!=='sheet');
+  $('#frqview').classList.toggle('hide', name!=='frq');
   $('#footer').classList.toggle('hide', name!=='quiz');
   if(name==='quiz'){
     draw();
@@ -692,6 +945,7 @@ function setTab(name){
   } else {
     if(name==='starred') drawStarred();
     if(name==='sheet'){ renderScore(); renderSheetExtras(); }
+    if(name==='frq') drawFrq();
     $('main').style.paddingTop = BASE_PAD + 'px';
     window.scrollTo(0,0);
   }
@@ -794,7 +1048,17 @@ function buildQ(i, picked, fresh, en){
   let h = '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta"><span class="num">' + (pos+1) + ' / ' + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        // THE SECTION AND THE GLYPH, on the exam only — a subchapter quiz carries neither and
+        // this line is byte-for-byte what it always was. The section is what it says; the
+        // glyph is why this question is on the paper at all, and it is deliberately JUST the
+        // glyph. His instruction: "the blurb needs to be shortened to just the symbol : in
+        // that its either has them as a tag or it doesnt."
+        + (q.sec ? '<span class="dot">·</span><span class="sec">' + esc(q.sec)
+                 + (q.link ? '<span class="lk">+' + esc(q.link) + '</span>' : '')
+                 + '</span>' : '')
         + (q.topic ? '<span class="dot">·</span><span>' + esc(q.topic) + '</span>' : '')
+        + (q.src ? '<span class="dot">·</span><span class="src" title="' + srcName(q.src)
+                 + '">' + esc(q.src) + '</span>' : '')
         + '</p>'
         + '<h1 class="q">' + esc(q.q) + '</h1></div>'
         // ? BEFORE ☆, because it is the one pressed while the question is still unanswered:
@@ -1105,6 +1369,39 @@ function finish(){
   save(); end(); window.scrollTo(0,0);
 }
 
+/* One scored breakdown, keyed by whatever `keyOf` pulls off a question. Returns '' when no
+   question carries the field, which is what keeps the subchapter quiz's end card identical.
+   Rows come out in SRC_ORDER when the key is a glyph and in natural order otherwise, so the
+   provenance table always reads down his priority ladder even if the paper is shuffled. */
+function group(act, keyOf, head, label){
+  const by = {};
+  act.forEach(i=>{
+    // A CROSS-SECTION QUESTION COUNTS IN BOTH SECTIONS, because it tested both. It is one
+    // question on the paper and two lines in the report, so the column does not add up to
+    // the total — which is correct, and the alternative is worse: filing it under whichever
+    // section happened to be written first would hide the other one's weakness entirely.
+    const ks = [].concat(keyOf(i) || []);
+    ks.forEach(k=>{
+      if(!k) return;
+      by[k] = by[k] || {n:0,t:0};
+      by[k].t++;
+      if(finalRight(i)) by[k].n++;
+    });
+  });
+  let keys = Object.keys(by);
+  if(!keys.length) return '';
+  const ranked = keys.filter(k => SRC_ORDER.indexOf(k) >= 0).length === keys.length;
+  keys = ranked ? SRC_ORDER.filter(k => by[k])
+                : keys.sort((a,b)=>a.localeCompare(b, undefined, {numeric:true}));
+  let h = '<div class="topics"><h3>'+esc(head)+'</h3>';
+  keys.forEach(k=>{
+    h += '<div class="trow"><span>'+(label ? label(k) : esc(k))+'</span>'
+       + '<span class="n">'+by[k].n+'/'+by[k].t+'</span>'
+       + '<span class="tbar"><i style="width:'+(by[k].n/by[k].t*100)+'%"></i></span></div>';
+  });
+  return h + '</div>';
+}
+
 function end(){
   const act = active(S), n = score(S), t = act.length;
   const pct = t ? Math.round(n/t*100) : 0;
@@ -1137,6 +1434,18 @@ function end(){
     });
     h += '</div>';
   }
+
+  /* THE TWO EXAM-ONLY TABLES. Both are built from fields a subchapter quiz never carries, so
+     both are simply absent there — no flag, no branch anywhere else, and nothing about the
+     quiz page changed the day these were added.
+
+     BY SUBCHAPTER is the one he asked for by name: a paper spanning seven sections that can
+     only report one number tells him he scored 78% and nothing about where to go back to.
+     BY WHY IT WAS ASKED is the one that closes the loop — it is the only place that answers
+     whether the thing he got wrong last week actually stuck. */
+  h += group(act, i => [D.questions[i].sec, D.questions[i].link], 'By subchapter', null);
+  h += group(act, i => D.questions[i].src, 'Why it was asked',
+             g => SRC[g] ? esc(g) + '  ' + esc(SRC[g]) : esc(g));
 
   if(S.history.length){
     h += '<p class="hist">Earlier attempts: ' + S.history.slice().reverse()
@@ -1366,6 +1675,23 @@ function markedList(map){
   D.questions.forEach((q, i) => { if((map || {})[q.qid]) out.push({n: i + 1, i: i, q: q}); });
   return out;
 }
+
+/* WHAT HE GOT WRONG — the one part of the record that never left the browser.
+   Starred, Needs work and My research have ridden the Copy into Notion since 08-11, and the
+   week's exam is built from that Notion row; the wrong answers were the missing rung, so the
+   exam could prefer a question he flagged but not one he actually failed. This is that rung,
+   and it costs one section in a paste he already makes.
+
+   FINAL verdicts, so a question redeemed on the second pass is NOT listed — he ended the
+   attempt knowing it. Skipped questions are excluded for the same reason as everywhere else:
+   they were taken out of the run. */
+function missedList(){
+  const out = [];
+  active(S).forEach(i => {
+    if(ans(i) !== undefined && !finalRight(i)) out.push({n: i + 1, i: i, q: D.questions[i]});
+  });
+  return out.sort((a,b)=>a.n-b.n);
+}
 function renderMarked(sel, list, head, say){
   const box = $(sel);
   if(!box) return;
@@ -1476,8 +1802,10 @@ function fullMarkdown(){
   return (sc ? sc + '\n\n' : '') + (D.sheet || '')
        + (mine ? '\n\n## My notes\n\n' + mine + '\n' : '')
        + markedMarkdown(markedList(S.starred), 'Starred')
+       + markedMarkdown(missedList(), 'Missed')
        + markedMarkdown(markedList(S.unsure), 'Needs work')
-       + researchMarkdown();
+       + researchMarkdown()
+       + frqMarkdown();
 }
 
 /* THE HTML FLAVOUR EXISTS ONLY FOR THE IMAGES, and it is only put on the clipboard when
@@ -1497,6 +1825,7 @@ function fullHTML(){
   const mine = noteMarkdown();
   if(mine) h += '<h2>My notes</h2>' + tinyMd(mine);
   h += markedHTML(markedList(S.starred), 'Starred');
+  h += markedHTML(missedList(), 'Missed');
   h += markedHTML(markedList(S.unsure), 'Needs work');
   const list = researchList();
   if(list.length){
@@ -1507,6 +1836,8 @@ function fullHTML(){
       x.r.i.forEach(src => { h += '<p><img src="' + src + '"></p>'; });
     });
   }
+  const fm = frqMarkdown();
+  if(fm) h += tinyMd(fm);
   return '<meta charset="utf-8">' + h;
 }
 

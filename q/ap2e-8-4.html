@@ -340,6 +340,59 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .saved{color:var(--muted);font-size:.78rem;margin:8px 0 0;height:1em}
 #minepreview{margin:14px 0 0}
 
+/* ---- the exam's two extra tags, and the written half ----
+   The section and the glyph ride the existing .meta line rather than becoming chips of their
+   own: they belong with the counter and the topic, which is already the line that says what
+   you are looking at. Colour is not used to tell the five glyphs apart — each one IS a
+   distinct character, so the page stays readable in grayscale without a legend. */
+.meta .sec{color:var(--text)}
+/* The second section on a cross-section question. Smaller and dimmer than the first, because
+   the first is where the question is filed and this one says what it also reaches into. */
+.meta .lk{color:var(--muted);font-size:.9em;margin-left:1px}
+.meta .src{font-size:.85rem;line-height:1;text-transform:none;letter-spacing:0;cursor:help}
+
+.frqs{padding:2px 0 56px}
+.frqs > .say{color:var(--muted);font-size:.88rem;margin:0 0 26px;max-width:60ch}
+.frq{margin:0 0 42px;padding:0 0 34px;border-bottom:1px solid var(--line)}
+.frq:last-child{border-bottom:0;padding-bottom:0}
+.frq .q{font-size:1.08rem;line-height:1.45;font-weight:600;margin:0 0 6px}
+.frq .say{color:var(--muted);font-size:.84rem;margin:6px 0 0}
+.stim{margin:0 0 14px;padding:11px 16px;background:var(--surface);
+ border-left:2px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;
+ font-size:.95rem;line-height:1.55;color:var(--text)}
+.frqin{width:100%;min-height:190px;resize:vertical;background:var(--surface);
+ color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
+ padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.6;outline:none;margin-top:16px}
+.frqin:focus{border-color:var(--accent)}
+.frqin::placeholder{color:var(--muted);opacity:.7}
+.acts.inline{margin-top:12px}
+.rubric{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
+.rubric h3{margin:0 0 10px;padding:0;border:0;font-size:.7rem;letter-spacing:.09em;
+ text-transform:uppercase;color:var(--muted)}
+.rrow{display:flex;gap:12px;align-items:flex-start;padding:9px 10px;margin:0 -10px;
+ border-radius:10px;cursor:pointer}
+.rrow:hover{background:var(--surface)}
+.rmark{flex:0 0 auto;width:22px;height:22px;border-radius:6px;border:1px solid var(--line);
+ display:grid;place-items:center;font-size:.78rem;background:var(--surface);
+ color:var(--muted);margin-top:2px}
+.rrow.hit .rmark{border-color:var(--right);color:var(--right)}
+.rbody{flex:1;min-width:0}
+.rlab{font-size:.93rem;line-height:1.45;color:var(--muted)}
+.rrow.hit .rlab{color:var(--text)}
+.rnote{display:block;font-size:.78rem;color:var(--muted);opacity:.85;margin-top:2px}
+.judge{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);
+ border:1px solid var(--accent);border-radius:999px;padding:1px 7px;margin-left:7px;
+ white-space:nowrap;vertical-align:1px}
+.rfoot{display:flex;align-items:baseline;gap:14px;margin-top:16px;padding-top:14px;
+ border-top:1px solid var(--line)}
+.rscore{font-size:1.35rem;font-weight:600;font-variant-numeric:tabular-nums}
+.rscore small{color:var(--muted);font-size:.75em;font-weight:400}
+.rverdict{font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.spacer{flex:1}
+.model{margin-top:14px;background:var(--surface);border-radius:var(--radius);
+ padding:14px 16px;font-size:.9rem;line-height:1.65;color:var(--muted)}
+.model strong{color:var(--text)}
+
 .empty{color:var(--muted);padding:8px 0 30px}
 .hist{color:var(--muted);font-size:.84rem;margin:22px 0 0}
 .hist span{white-space:nowrap}
@@ -365,7 +418,7 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 <header>
   <div class="wrap bar">
     <span class="title">8.4 Bones of the Lower Limb</span>
-    <span class="tabs" id="tabs"><button class="tab" data-tab="quiz" aria-selected="true">Quiz</button><button class="tab hide" data-tab="starred" aria-selected="false">Starred</button><button class="tab" data-tab="sheet" aria-selected="false">Study sheet</button></span>
+    <span class="tabs" id="tabs"><button class="tab" data-tab="quiz" aria-selected="true">Quiz</button><button class="tab hide" data-tab="starred" aria-selected="false">Starred</button><button class="tab hide" data-tab="frq" aria-selected="false">Written</button><button class="tab" data-tab="sheet" aria-selected="false">Study sheet</button></span>
   </div>
   <!-- In the same .wrap as the title and the tabs: the progress track used to run the full
        width of the window under a centred column, which is the one thing up here that was
@@ -388,6 +441,7 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
     </div>
   </div>
   <div id="starredview" class="rev hide"></div>
+  <div id="frqview" class="frqs hide"></div>
   <div id="sheetview" class="sheet hide">
     <div class="scorecard hide" id="scorecard"></div>
     <div class="sheettools">
@@ -567,13 +621,28 @@ Self-control is finite - one hard task leaves less for the next"></textarea>
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "ap2e-8-4", "title": "8.4 Bones of the Lower Limb", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "hash": "6f28db191c06f25a", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "What is the primary physiological importance of the small indentation, known as the fovea capitis, located on the head of the femur?", "options": ["It allows the femur to articulate directly with the sacrum.", "It provides the main structural stability for the hip joint.", "It acts as a primary lever for the powerful gluteal muscles.", "It serves as the attachment point for an artery that supplies the femoral head."], "rationales": ["The head of the femur articulates with the acetabulum of the hip bone, not the sacrum.", "The source notes that the ligament attaching here is weak and provides little support for the hip joint.", "Leverage for hip muscles is provided by the trochanters, not the medial indentation of the head.", "The ligament of the head of the femur spans this area and carries an important artery to the bone."], "correct": 3, "hint": "focus on what the weak ligament at the proximal end actually carries.", "topic": "Femoral blood supply", "qid": "a6d1676d4d"}, {"q": "Why does the greater trochanter project so far laterally and superiorly from the neck of the femur?", "options": ["To prevent the hip joint from dislocating in a medial direction.", "To house the bone marrow responsible for leg muscle metabolism.", "To provide a smooth surface for the patella to glide during movement.", "To increase the mechanical leverage for muscles acting across the hip joint."], "rationales": ["Stability is primarily maintained by the deep socket of the acetabulum and ligaments, not the trochanter's shape.", "Bone marrow is found within the shaft and spongy bone, while the trochanter is a site for muscle attachment.", "The patella glides on the patellar surface at the distal end of the femur, not the proximal end.", "The outward projection allows muscles to pull from a better angle, increasing their power."], "correct": 3, "hint": "consider how a longer moment arm affects the force of a muscle pull.", "topic": "Muscle leverage", "qid": "7be4842144"}, {"q": "What is the functional purpose of the linea aspera located on the posterior shaft of the femur?", "options": ["It serves as the exit point for the main femoral artery into the lower leg.", "It reinforces the bone against the anterior bowing caused by body weight.", "It acts as a hinge point for the flexion of the knee joint.", "It provides a roughened ridge for the long, thin attachments of multiple hip and thigh muscles."], "rationales": ["The linea aspera is a bony ridge for muscle anchoring, not a vascular passageway.", "While the shaft has a slight anterior curve, the linea aspera's primary documented role is for muscle attachment.", "The knee hinge is formed by the condyles at the distal end, while the linea aspera is on the mid-shaft.", "The linea aspera is the primary site on the posterior femur where various muscles secure themselves along the bone's length."], "correct": 3, "hint": "think about the role of roughened ridges on a long bone's shaft.", "topic": "Femoral muscle attachment", "qid": "70c31f04ab"}, {"q": "How does the patella contribute to the mechanical efficiency of the quadriceps femoris muscle?", "options": ["It decreases the friction between the tibia and the fibula during running.", "It allows the quadriceps to pull the leg medially rather than superiorly.", "It shortens the length of the quadriceps tendon to allow for faster firing.", "It lifts the tendon away from the knee joint, increasing the leverage of the muscle."], "rationales": ["The patella does not articulate with the tibia or fibula; it articulates with the femur.", "The patella primarily assists in knee extension (superior pull), while lateral pull is an unwanted side effect of the Q-angle.", "The patella is embedded in the tendon; it doesn't significantly shorten it but rather changes its path.", "By moving the tendon further from the joint's axis, the patella allows the quadriceps to generate more torque."], "correct": 3, "hint": "consider how changing the angle or distance of a tendon's pull affects power.", "topic": "Patellar function", "qid": "80569f5d88"}, {"q": "In the context of patellofemoral syndrome, how does the lateral lip of the femoral patellar surface function to prevent injury?", "options": ["It compensates for the natural lateral pull on the patella to maintain proper tracking.", "It provides an attachment point for the medial collateral ligament.", "It prevents the patella from articulating with the tibia during squatting.", "It increases the Q-angle to allow for a wider range of hip motion."], "rationales": ["The large lateral lip acts as a physical barrier to keep the patella from being pulled too far out of its groove.", "Ligaments attach to the epicondyles, whereas the lip is part of the articulating surface for the kneecap.", "The patella normally does not articulate with the tibia at all; the lip is on the femur.", "A larger Q-angle actually increases the risk of the syndrome; the lip helps counteract this effect."], "correct": 0, "hint": "think about how the shape of the femur's groove counteracts the muscle's pull.", "topic": "Patellar tracking", "qid": "ef6b7874e7"}, {"q": "Why are females statistically more vulnerable to developing Runner's Knee (patellofemoral syndrome) than males?", "options": ["The quadriceps muscle in females only attaches to the fibula.", "A wider pelvis leads to a larger Q-angle, which increases the lateral pull on the patella.", "They lack a medial malleolus, which reduces ankle stability.", "Their patella is generally smaller and cannot articulate with the femur."], "rationales": ["The quadriceps tendon attaches to the tibia via the patellar ligament in all humans.", "The diagonal orientation of the femur is more pronounced in females, pulling the kneecap laterally during extension.", "Both males and females possess a medial malleolus; this is not a gender difference.", "The patella is present and functional in both genders; size is proportional and not the primary cause of syndrome."], "correct": 1, "hint": "connect the width of the hips to the angle of the thigh bone.", "topic": "Pelvic width influence", "qid": "97b11ee5e6"}, {"q": "Which bone of the leg is responsible for the vast majority of weight-bearing and is the second longest bone in the body?", "options": ["Fibula", "Calcaneus", "Femur", "Tibia"], "rationales": ["The fibula is a slender, lateral bone that does not bear weight.", "The calcaneus is a bone of the foot, not the leg, though it does receive weight from the leg bones.", "While the femur is the longest bone, it is the bone of the thigh, not the leg region.", "The tibia is the large, medial bone of the leg that carries the body's weight to the foot."], "correct": 3, "hint": "distinguish between the two bones of the region below the knee.", "topic": "Weight bearing", "qid": "a4ec85492f"}, {"q": "What is the functional significance of the tibial tuberosity located on the anterior side of the proximal tibia?", "options": ["It serves as the final attachment site for the quadriceps muscle tendon.", "It provides an articulation point for the lateral malleolus of the fibula.", "It houses the nerve that triggers the 'knee-jerk' reflex.", "It acts as a pivot point for the rotation of the ankle joint."], "rationales": ["The patellar ligament connects the patella to this elevation, allowing the quadriceps to extend the knee.", "The fibula articulates with the fibular notch at the distal end and the lateral condyle at the proximal end, not the tuberosity.", "While the reflex is triggered by tapping the ligament here, the tuberosity is a bony attachment point, not a nerve housing.", "Rotation and movement of the ankle occur at the distal end of the tibia and fibula with the talus."], "correct": 0, "hint": "identify where the force of the anterior thigh muscles is finally delivered.", "topic": "Tibial landmarks", "qid": "244205fb84"}, {"q": "What role does the interosseous membrane play in the anatomy of the leg?", "options": ["It provides a smooth lubricating surface for the ankle joint.", "It acts as the primary weight-bearing structure between the knee and ankle.", "It allows the fibula to rotate freely around the tibia during walking.", "It serves as a sheet of connective tissue that unites the tibia and fibula bones."], "rationales": ["The ankle joint is lubricated by synovial fluid within a joint capsule, not by the interosseous membrane.", "Weight is primarily borne by the shaft of the tibia, not the membrane between the bones.", "The membrane is composed of dense connective tissue that unites and stabilizes the bones rather than allowing free rotation.", "The interosseous membrane spans the gap between the two bones, providing stability and surface area for muscle attachment."], "correct": 3, "hint": "consider how the two bones of the leg are held together along their shafts.", "topic": "Leg bone union", "qid": "31056eef87"}, {"q": "Which statement best describes the functional relationship between the fibula and the weight of the body?", "options": ["The fibula bears weight only when the knee is in a flexed position.", "The fibula carries approximately half of the body weight to the lateral side of the foot.", "The fibula does not bear weight and serves primarily for muscle attachments.", "The fibula transfers weight from the femur to the talus bone."], "rationales": ["The tibia remains the weight-bearing bone regardless of knee flexion or extension.", "The source explicitly states that the fibula does not bear weight.", "Because it is not needed for weight-bearing, the fibula is slender and mostly surrounded by muscles.", "The fibula articulates with the tibia at the top and the talus at the bottom, but the tibia transfers the weight."], "correct": 2, "hint": "look for why a bone might be very slender compared to its partner.", "topic": "Fibular function", "qid": "e2788fbd54"}, {"q": "The ankle joint is formed by the articulation of the talus with which specific bony structures?", "options": ["The heads of the five metatarsal bones.", "The medial and lateral condyles of the femur.", "The calcaneus and the cuboid bones.", "The medial malleolus, the distal end of the tibia, and the lateral malleolus."], "rationales": ["The metatarsal heads form the ball of the foot at the anterior end, far from the ankle.", "The femoral condyles form the knee joint, not the ankle joint.", "While these are foot bones, the ankle joint specifically involves the leg bones meeting the foot.", "These three areas create a socket-like fit for the upper surface of the talus bone."], "correct": 3, "hint": "identify the specific 'bumps' on the inner and outer ankle.", "topic": "Ankle joint articulation", "qid": "d9aef38e21"}, {"q": "How is body weight traditionally transferred through the bones of the foot when a person is standing?", "options": ["From the navicular to the three cuneiform bones and then the heel.", "From the tibia to the talus and then to the calcaneus.", "From the patella directly to the metatarsals.", "From the fibula to the cuboid and then to the phalanges."], "rationales": ["The heel (calcaneus) is posterior to the navicular and cuneiforms in the weight-bearing sequence.", "The talus sits atop the calcaneus (heel bone), which then rests on the ground.", "The patella does not articulate with the foot bones and does not transfer body weight.", "The fibula is not weight-bearing; weight travels through the tibia."], "correct": 1, "hint": "trace the path of force from the leg down to the heel.", "topic": "Weight distribution", "qid": "9938915355"}, {"q": "What is the function of the sustentaculum tali found on the medial side of the calcaneus?", "options": ["It serves as the main pivot for the big toe (hallux).", "It acts as a bony shelf that supports the medial side of the talus bone.", "It provides a groove for the passage of the Achilles tendon.", "It forms the primary articulation with the cuboid bone."], "rationales": ["The hallux moves at the metatarsophalangeal joint, far anterior to the calcaneus.", "Its name literally translates to 'support for the talus,' highlighting its role in foot stability.", "The calcaneal tuberosity is the main attachment for the Achilles tendon, not the sustentaculum tali.", "The cuboid articulates with the anterior end of the calcaneus, not the medial sustentaculum tali."], "correct": 1, "hint": "focus on the meaning of the Latin name for this bony extension.", "topic": "Tarsal support", "qid": "d9103eaab3"}, {"q": "Which group of bones is primarily responsible for creating the transverse (medial-lateral) curvature of the foot?", "options": ["The head and neck of the femur.", "The phalanges of the five toes.", "The three cuneiform bones and the cuboid bone.", "The proximal and distal tibiofibular joints."], "rationales": ["These structures are part of the hip joint and have no role in foot curvature.", "The phalanges form the toes and do not significantly contribute to the arch of the mid-foot.", "The cuneiforms are wedge-shaped (broad superiorly, narrow inferiorly), which naturally forms the arch.", "These joints are in the leg and ankle region, not the mid-foot where the transverse arch is located."], "correct": 2, "hint": "look for bones described as 'wedge-shaped' in the mid-foot region.", "topic": "Foot curvature", "qid": "d6c7c1a120"}, {"q": "What anatomical structures form the 'ball' of the foot that rests on the ground at the anterior end of the sole?", "options": ["The bases of the five metatarsal bones.", "The intermediate and distal phalanges.", "The distal ends (heads) of the metatarsal bones.", "The sustenaculum tali of the calcaneus."], "rationales": ["The bases are the proximal ends that articulate with the tarsal bones, closer to the ankle.", "These bones form the tips and middle segments of the toes, which are anterior to the ball of the foot.", "The expanded heads of the metatarsals support weight at the front of the foot before the toes begin.", "This structure is in the heel/posterior region of the foot."], "correct": 2, "hint": "differentiate between the 'base' and the 'head' of the mid-foot bones.", "topic": "Metatarsal structure", "qid": "891bd4f9dd"}, {"q": "How does the bone count of the hallux (big toe) differ from that of the second through fifth toes?", "options": ["The hallux has only two phalanges (proximal and distal) while the others have three.", "The hallux lacks a metatarsophalangeal joint.", "The hallux has three phalanges while the others only have two.", "The hallux is formed by a single sesamoid bone rather than phalanges."], "rationales": ["The big toe lacks a middle phalanx, a pattern mirrored in the thumb of the hand.", "The hallux has a prominent metatarsophalangeal joint, which is the site where bunions typically form.", "This is the reverse of the actual anatomy; the hallux is the one with fewer bones.", "While sesamoids may be nearby, the hallux itself consists of two phalanx bones."], "correct": 0, "hint": "consider which segment is missing in the largest toe compared to the smaller ones.", "topic": "Phalanx count", "qid": "9608c430d6"}], "hasSheet": true, "notebook": "https://notebooklm.google.com/notebook/cf57202f-1a73-4c88-9b58-abfcd3f6cae1/artifact/a4b22671-e20d-4e55-96fb-f4b4db117bb4", "root": "../index.html", "tab": "quiz", "sheet": "## Femoral blood supply\nThe proximal femur receives vital vascularization through a dedicated artery traveling within a supporting ligamentous structure.\n\n### Key terms\n1. **Fovea capitis** - A minor depression on the medial side of the femoral head that serves as a ligamentous attachment site.\n2. **Ligament of the head of the femur** - A weak intracapsular band spanning the femur and acetabulum that houses a nutrient vessel.\n   2.1 **Artery to the head of the femur** - The specific vascular structure carried by the ligament to supply the proximal end of the bone.\n\n## Muscle leverage\nBony projections of the femur and the sesamoid kneecap serve as mechanical levers to increase the torque generated by leg muscles.\n\n### Key terms\n1. **Greater trochanter** - A large lateral projection that provides a mechanical lever for muscles acting across the hip joint.\n2. **Patella** - A bone that increases the leverage of the quadriceps femoris by lifting the tendon away from the knee joint axis.\n\n## Femoral muscle attachment\nThe femur contains several specialized ridges and tuberosities that provide extensive surface area for the anchoring of hip and thigh muscles.\n\n### Key terms\n1. **Greater trochanter** - The large, upward projection above the base of the femoral neck where multiple hip muscles attach.\n2. **Lesser trochanter** - A small bony prominence on the medial aspect of the femur for the attachment of a single, powerful muscle.\n3. **Gluteal tuberosity** - A roughened area on the posterior proximal shaft extending inferiorly from the greater trochanter for muscle anchoring.\n4. **Linea aspera** - A prominent roughened ridge passing distally along the posterior side of the middle third of the femoral shaft.\n   4.1 **Muscle attachments** - The long, thin anchoring sites for multiple muscles of the hip and thigh regions along the ridge.\n5. **Epicondyles** - Medial and lateral irregular areas on the outer sides of the condyles that provide attachment for muscles and ligaments.\n\n## Patellar function\nThe patella is a specialized bone that protects the quadriceps tendon and optimizes the mechanical efficiency of the knee extensor mechanism.\n\n### Key terms\n1. **Patella** - The largest sesamoid bone in the body, found within the quadriceps tendon to prevent friction against the distal femur.\n2. **Sesamoid bone** - A bone incorporated into a muscle tendon where it crosses a joint to protect the tendon from wear and tear.\n3. **Quadriceps femoris muscle** - The large anterior thigh muscle whose tendon incorporates the patella and inserts onto the tibial tuberosity.\n\n## Patellar tracking\nProper patellar movement within the femoral groove is maintained by the structural morphology of the femur and balanced muscular pull.\n\n### Key terms\n1. **Patellar surface** - A wide groove on the anterior distal femur formed by the union of the medial and lateral condyles.\n2. **Abnormal tracking** - A clinical condition where the patella deviates laterally from its proper path on the femoral patellar surface.\n3. **Lateral lip** - A large expansion on the lateral side of the femoral patellar surface that prevents the patella from shifting laterally.\n\n## Pelvic width influence\nThe anatomical width of the pelvis dictates the femoral angle, which directly influences the lateral vector forces acting on the patella.\n\n### Key terms\n1. **Q-angle** - A measurement of the lateral deviation of the femur from the vertical line of the tibia, normally 10–15 degrees.\n2. **Wider pelvis** - A female skeletal characteristic that results in a larger Q-angle and increased lateral pull on the patella.\n\n## Weight bearing\nThe structural integrity of the lower limb is supported by two primary long bones that transmit the weight of the axial skeleton.\n\n### Key terms\n1. **Femur** - The longest and strongest bone of the body, which bears weight and constitutes one-quarter of a person's total height.\n2. **Tibia** - The medial bone of the leg and the second longest bone of the body, serving as the primary weight-bearer of the leg.\n\n## Tibial landmarks\nThe tibia features expanded condyles for knee articulation and several ridges and processes for ligamentous and tendinous attachments.\n\n### Key terms\n1. **Medial condyle** - The medial expansion of the proximal tibia that articulates with the medial condyle of the femur.\n2. **Lateral condyle** - The lateral expansion of the proximal tibia that articulates with the lateral condyle of the femur.\n3. **Intercondylar eminence** - An elevated, irregular area between the tibial condyles that serves as an attachment for knee ligaments.\n   3.1 **Supporting ligaments** - The two intracapsular knee ligaments that anchor to this elevated region of the proximal tibia.\n4. **Tibial tuberosity** - An anterior elevation on the proximal tibia that serves as the final insertion point for the patellar tendon.\n5. **Anterior border** - The subcutaneous anterior apex of the triangular tibial shaft extending inferiorly from the tibial tuberosity.\n6. **Medial malleolus** - A large medial expansion of the distal tibia that forms the palpable bony bump of the medial ankle.\n\n## Leg bone union\nThe tibia and fibula are held in close proximity by a fibrous syndesmosis and a strong sheet of connective tissue.\n\n### Key terms\n1. **Interosseous border** - A ridge running down the lateral tibial shaft and medial fibular shaft for connective tissue attachment.\n2. **Interosseous membrane of the leg** - A sheet of dense connective tissue that spans the distance between and unites the tibia and fibula.\n3. **Distal tibiofibular joint** - The articulation point between the distal end of the fibula and the fibular notch of the tibia.\n\n## Fibular function\nThe fibula functions as a non-weight-bearing lateral support that provides surface area for muscle attachment and stabilizes the ankle.\n\n### Key terms\n1. **Fibula** - The slender lateral bone of the leg that serves primarily for muscle attachments and does not transmit body weight.\n2. **Lateral malleolus** - The distal end of the fibula that forms the lateral bony bump of the ankle and articulates with the talus.\n\n## Ankle joint articulation\nThe ankle joint is a hinge articulation formed by the union of the talus bone with the distal configurations of the tibia and fibula.\n\n### Key terms\n1. **Talus** - The most superior tarsal bone, featuring a square-shaped upper surface that articulates with the leg bones.\n2. **Medial malleolus** - The distal tibial process that articulates with the superomedial surface of the talus bone.\n3. **Lateral malleolus** - The distal fibular process that articulates with the lateral side of the talus bone.\n4. **Distal end of the tibia** - The superior articulating surface of the ankle joint that meets the top of the talus.\n\n## Weight distribution\nThe body's mass is transferred in a linear sequence from the leg through the tarsal bones to the ground.\n\n### Key terms\n1. **Tibia to talus** - The initial transfer of body weight from the main weight-bearing leg bone to the superior tarsal bone.\n2. **Talus to calcaneus** - The subsequent transfer of weight from the talus to the heel bone which rests on the ground.\n\n## Tarsal support\nThe posterior foot is stabilized by specific tarsal bones that form the heel and provide a shelf for the ankle joint.\n\n### Key terms\n1. **Calcaneus** - The largest bone of the foot, situated inferiorly to the talus to form the heel of the foot.\n2. **Sustentaculum tali** - A prominent bony extension on the medial calcaneus that supports the medial aspect of the talus bone.\n3. **Navicular** - A tarsal bone that articulates with the anterior talus and the three cuneiform bones.\n4. **Cuboid** - A tarsal bone articulating with the anterior calcaneus that features a groove for a muscle tendon.\n\n## Foot curvature\nThe transverse arch of the foot is formed by the wedge-like geometry of the cuneiform bones and their distal articulations.\n\n### Key terms\n1. **Cuneiform bones** - A group of three wedge-shaped bones known as the medial, intermediate, and lateral cuneiforms.\n2. **Wedge-shape** - The structural configuration of cuneiforms with broad superior and narrow inferior surfaces to create curvature.\n\n## Metatarsal structure\nThe mid-foot is composed of five elongated bones that connect the tarsal region to the phalanges of the toes.\n\n### Key terms\n1. **Metatarsal bones** - Five elongated bones numbered 1–5 starting from the medial side of the mid-foot.\n2. **Base** - The proximal end of a metatarsal bone that articulates with the cuboid or cuneiform bones.\n3. **Head** - The expanded distal end of a metatarsal bone that forms the ball of the foot and articulates with a phalanx.\n4. **Metatarsophalangeal joint** - The articulation point between the head of a metatarsal and the proximal phalanx of a toe.\n\n## Phalanx count\nThe toes contain fourteen phalanges arranged in segments, with the first digit presenting a different anatomical count than the others.\n\n### Key terms\n1. **Phalanges** - The fourteen small bones found within the toes, numbered 1–5 starting from the medial side.\n2. **Hallux** - The first digit or big toe, which is shorter and thicker than the other digits of the foot.\n   2.1 **Phalanx bones** - The two specific bones, proximal and distal, that comprise the skeletal structure of the big toe.\n3. **Proximal, middle, and distal phalanges** - The three individual bones found in each of the toes numbered two through five."}</script>
+<script id="quiz-data" type="application/json">{"id": "ap2e-8-4", "title": "8.4 Bones of the Lower Limb", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "hash": "6f28db191c06f25a", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "What is the primary physiological importance of the small indentation, known as the fovea capitis, located on the head of the femur?", "options": ["It allows the femur to articulate directly with the sacrum.", "It provides the main structural stability for the hip joint.", "It acts as a primary lever for the powerful gluteal muscles.", "It serves as the attachment point for an artery that supplies the femoral head."], "rationales": ["The head of the femur articulates with the acetabulum of the hip bone, not the sacrum.", "The source notes that the ligament attaching here is weak and provides little support for the hip joint.", "Leverage for hip muscles is provided by the trochanters, not the medial indentation of the head.", "The ligament of the head of the femur spans this area and carries an important artery to the bone."], "correct": 3, "hint": "focus on what the weak ligament at the proximal end actually carries.", "topic": "Femoral blood supply", "sec": "", "src": "", "link": "", "qid": "a6d1676d4d"}, {"q": "Why does the greater trochanter project so far laterally and superiorly from the neck of the femur?", "options": ["To prevent the hip joint from dislocating in a medial direction.", "To house the bone marrow responsible for leg muscle metabolism.", "To provide a smooth surface for the patella to glide during movement.", "To increase the mechanical leverage for muscles acting across the hip joint."], "rationales": ["Stability is primarily maintained by the deep socket of the acetabulum and ligaments, not the trochanter's shape.", "Bone marrow is found within the shaft and spongy bone, while the trochanter is a site for muscle attachment.", "The patella glides on the patellar surface at the distal end of the femur, not the proximal end.", "The outward projection allows muscles to pull from a better angle, increasing their power."], "correct": 3, "hint": "consider how a longer moment arm affects the force of a muscle pull.", "topic": "Muscle leverage", "sec": "", "src": "", "link": "", "qid": "7be4842144"}, {"q": "What is the functional purpose of the linea aspera located on the posterior shaft of the femur?", "options": ["It serves as the exit point for the main femoral artery into the lower leg.", "It reinforces the bone against the anterior bowing caused by body weight.", "It acts as a hinge point for the flexion of the knee joint.", "It provides a roughened ridge for the long, thin attachments of multiple hip and thigh muscles."], "rationales": ["The linea aspera is a bony ridge for muscle anchoring, not a vascular passageway.", "While the shaft has a slight anterior curve, the linea aspera's primary documented role is for muscle attachment.", "The knee hinge is formed by the condyles at the distal end, while the linea aspera is on the mid-shaft.", "The linea aspera is the primary site on the posterior femur where various muscles secure themselves along the bone's length."], "correct": 3, "hint": "think about the role of roughened ridges on a long bone's shaft.", "topic": "Femoral muscle attachment", "sec": "", "src": "", "link": "", "qid": "70c31f04ab"}, {"q": "How does the patella contribute to the mechanical efficiency of the quadriceps femoris muscle?", "options": ["It decreases the friction between the tibia and the fibula during running.", "It allows the quadriceps to pull the leg medially rather than superiorly.", "It shortens the length of the quadriceps tendon to allow for faster firing.", "It lifts the tendon away from the knee joint, increasing the leverage of the muscle."], "rationales": ["The patella does not articulate with the tibia or fibula; it articulates with the femur.", "The patella primarily assists in knee extension (superior pull), while lateral pull is an unwanted side effect of the Q-angle.", "The patella is embedded in the tendon; it doesn't significantly shorten it but rather changes its path.", "By moving the tendon further from the joint's axis, the patella allows the quadriceps to generate more torque."], "correct": 3, "hint": "consider how changing the angle or distance of a tendon's pull affects power.", "topic": "Patellar function", "sec": "", "src": "", "link": "", "qid": "80569f5d88"}, {"q": "In the context of patellofemoral syndrome, how does the lateral lip of the femoral patellar surface function to prevent injury?", "options": ["It compensates for the natural lateral pull on the patella to maintain proper tracking.", "It provides an attachment point for the medial collateral ligament.", "It prevents the patella from articulating with the tibia during squatting.", "It increases the Q-angle to allow for a wider range of hip motion."], "rationales": ["The large lateral lip acts as a physical barrier to keep the patella from being pulled too far out of its groove.", "Ligaments attach to the epicondyles, whereas the lip is part of the articulating surface for the kneecap.", "The patella normally does not articulate with the tibia at all; the lip is on the femur.", "A larger Q-angle actually increases the risk of the syndrome; the lip helps counteract this effect."], "correct": 0, "hint": "think about how the shape of the femur's groove counteracts the muscle's pull.", "topic": "Patellar tracking", "sec": "", "src": "", "link": "", "qid": "ef6b7874e7"}, {"q": "Why are females statistically more vulnerable to developing Runner's Knee (patellofemoral syndrome) than males?", "options": ["The quadriceps muscle in females only attaches to the fibula.", "A wider pelvis leads to a larger Q-angle, which increases the lateral pull on the patella.", "They lack a medial malleolus, which reduces ankle stability.", "Their patella is generally smaller and cannot articulate with the femur."], "rationales": ["The quadriceps tendon attaches to the tibia via the patellar ligament in all humans.", "The diagonal orientation of the femur is more pronounced in females, pulling the kneecap laterally during extension.", "Both males and females possess a medial malleolus; this is not a gender difference.", "The patella is present and functional in both genders; size is proportional and not the primary cause of syndrome."], "correct": 1, "hint": "connect the width of the hips to the angle of the thigh bone.", "topic": "Pelvic width influence", "sec": "", "src": "", "link": "", "qid": "97b11ee5e6"}, {"q": "Which bone of the leg is responsible for the vast majority of weight-bearing and is the second longest bone in the body?", "options": ["Fibula", "Calcaneus", "Femur", "Tibia"], "rationales": ["The fibula is a slender, lateral bone that does not bear weight.", "The calcaneus is a bone of the foot, not the leg, though it does receive weight from the leg bones.", "While the femur is the longest bone, it is the bone of the thigh, not the leg region.", "The tibia is the large, medial bone of the leg that carries the body's weight to the foot."], "correct": 3, "hint": "distinguish between the two bones of the region below the knee.", "topic": "Weight bearing", "sec": "", "src": "", "link": "", "qid": "a4ec85492f"}, {"q": "What is the functional significance of the tibial tuberosity located on the anterior side of the proximal tibia?", "options": ["It serves as the final attachment site for the quadriceps muscle tendon.", "It provides an articulation point for the lateral malleolus of the fibula.", "It houses the nerve that triggers the 'knee-jerk' reflex.", "It acts as a pivot point for the rotation of the ankle joint."], "rationales": ["The patellar ligament connects the patella to this elevation, allowing the quadriceps to extend the knee.", "The fibula articulates with the fibular notch at the distal end and the lateral condyle at the proximal end, not the tuberosity.", "While the reflex is triggered by tapping the ligament here, the tuberosity is a bony attachment point, not a nerve housing.", "Rotation and movement of the ankle occur at the distal end of the tibia and fibula with the talus."], "correct": 0, "hint": "identify where the force of the anterior thigh muscles is finally delivered.", "topic": "Tibial landmarks", "sec": "", "src": "", "link": "", "qid": "244205fb84"}, {"q": "What role does the interosseous membrane play in the anatomy of the leg?", "options": ["It provides a smooth lubricating surface for the ankle joint.", "It acts as the primary weight-bearing structure between the knee and ankle.", "It allows the fibula to rotate freely around the tibia during walking.", "It serves as a sheet of connective tissue that unites the tibia and fibula bones."], "rationales": ["The ankle joint is lubricated by synovial fluid within a joint capsule, not by the interosseous membrane.", "Weight is primarily borne by the shaft of the tibia, not the membrane between the bones.", "The membrane is composed of dense connective tissue that unites and stabilizes the bones rather than allowing free rotation.", "The interosseous membrane spans the gap between the two bones, providing stability and surface area for muscle attachment."], "correct": 3, "hint": "consider how the two bones of the leg are held together along their shafts.", "topic": "Leg bone union", "sec": "", "src": "", "link": "", "qid": "31056eef87"}, {"q": "Which statement best describes the functional relationship between the fibula and the weight of the body?", "options": ["The fibula bears weight only when the knee is in a flexed position.", "The fibula carries approximately half of the body weight to the lateral side of the foot.", "The fibula does not bear weight and serves primarily for muscle attachments.", "The fibula transfers weight from the femur to the talus bone."], "rationales": ["The tibia remains the weight-bearing bone regardless of knee flexion or extension.", "The source explicitly states that the fibula does not bear weight.", "Because it is not needed for weight-bearing, the fibula is slender and mostly surrounded by muscles.", "The fibula articulates with the tibia at the top and the talus at the bottom, but the tibia transfers the weight."], "correct": 2, "hint": "look for why a bone might be very slender compared to its partner.", "topic": "Fibular function", "sec": "", "src": "", "link": "", "qid": "e2788fbd54"}, {"q": "The ankle joint is formed by the articulation of the talus with which specific bony structures?", "options": ["The heads of the five metatarsal bones.", "The medial and lateral condyles of the femur.", "The calcaneus and the cuboid bones.", "The medial malleolus, the distal end of the tibia, and the lateral malleolus."], "rationales": ["The metatarsal heads form the ball of the foot at the anterior end, far from the ankle.", "The femoral condyles form the knee joint, not the ankle joint.", "While these are foot bones, the ankle joint specifically involves the leg bones meeting the foot.", "These three areas create a socket-like fit for the upper surface of the talus bone."], "correct": 3, "hint": "identify the specific 'bumps' on the inner and outer ankle.", "topic": "Ankle joint articulation", "sec": "", "src": "", "link": "", "qid": "d9aef38e21"}, {"q": "How is body weight traditionally transferred through the bones of the foot when a person is standing?", "options": ["From the navicular to the three cuneiform bones and then the heel.", "From the tibia to the talus and then to the calcaneus.", "From the patella directly to the metatarsals.", "From the fibula to the cuboid and then to the phalanges."], "rationales": ["The heel (calcaneus) is posterior to the navicular and cuneiforms in the weight-bearing sequence.", "The talus sits atop the calcaneus (heel bone), which then rests on the ground.", "The patella does not articulate with the foot bones and does not transfer body weight.", "The fibula is not weight-bearing; weight travels through the tibia."], "correct": 1, "hint": "trace the path of force from the leg down to the heel.", "topic": "Weight distribution", "sec": "", "src": "", "link": "", "qid": "9938915355"}, {"q": "What is the function of the sustentaculum tali found on the medial side of the calcaneus?", "options": ["It serves as the main pivot for the big toe (hallux).", "It acts as a bony shelf that supports the medial side of the talus bone.", "It provides a groove for the passage of the Achilles tendon.", "It forms the primary articulation with the cuboid bone."], "rationales": ["The hallux moves at the metatarsophalangeal joint, far anterior to the calcaneus.", "Its name literally translates to 'support for the talus,' highlighting its role in foot stability.", "The calcaneal tuberosity is the main attachment for the Achilles tendon, not the sustentaculum tali.", "The cuboid articulates with the anterior end of the calcaneus, not the medial sustentaculum tali."], "correct": 1, "hint": "focus on the meaning of the Latin name for this bony extension.", "topic": "Tarsal support", "sec": "", "src": "", "link": "", "qid": "d9103eaab3"}, {"q": "Which group of bones is primarily responsible for creating the transverse (medial-lateral) curvature of the foot?", "options": ["The head and neck of the femur.", "The phalanges of the five toes.", "The three cuneiform bones and the cuboid bone.", "The proximal and distal tibiofibular joints."], "rationales": ["These structures are part of the hip joint and have no role in foot curvature.", "The phalanges form the toes and do not significantly contribute to the arch of the mid-foot.", "The cuneiforms are wedge-shaped (broad superiorly, narrow inferiorly), which naturally forms the arch.", "These joints are in the leg and ankle region, not the mid-foot where the transverse arch is located."], "correct": 2, "hint": "look for bones described as 'wedge-shaped' in the mid-foot region.", "topic": "Foot curvature", "sec": "", "src": "", "link": "", "qid": "d6c7c1a120"}, {"q": "What anatomical structures form the 'ball' of the foot that rests on the ground at the anterior end of the sole?", "options": ["The bases of the five metatarsal bones.", "The intermediate and distal phalanges.", "The distal ends (heads) of the metatarsal bones.", "The sustenaculum tali of the calcaneus."], "rationales": ["The bases are the proximal ends that articulate with the tarsal bones, closer to the ankle.", "These bones form the tips and middle segments of the toes, which are anterior to the ball of the foot.", "The expanded heads of the metatarsals support weight at the front of the foot before the toes begin.", "This structure is in the heel/posterior region of the foot."], "correct": 2, "hint": "differentiate between the 'base' and the 'head' of the mid-foot bones.", "topic": "Metatarsal structure", "sec": "", "src": "", "link": "", "qid": "891bd4f9dd"}, {"q": "How does the bone count of the hallux (big toe) differ from that of the second through fifth toes?", "options": ["The hallux has only two phalanges (proximal and distal) while the others have three.", "The hallux lacks a metatarsophalangeal joint.", "The hallux has three phalanges while the others only have two.", "The hallux is formed by a single sesamoid bone rather than phalanges."], "rationales": ["The big toe lacks a middle phalanx, a pattern mirrored in the thumb of the hand.", "The hallux has a prominent metatarsophalangeal joint, which is the site where bunions typically form.", "This is the reverse of the actual anatomy; the hallux is the one with fewer bones.", "While sesamoids may be nearby, the hallux itself consists of two phalanx bones."], "correct": 0, "hint": "consider which segment is missing in the largest toe compared to the smaller ones.", "topic": "Phalanx count", "sec": "", "src": "", "link": "", "qid": "9608c430d6"}], "hasSheet": true, "frq": [], "notebook": "https://notebooklm.google.com/notebook/cf57202f-1a73-4c88-9b58-abfcd3f6cae1/artifact/a4b22671-e20d-4e55-96fb-f4b4db117bb4", "root": "../index.html", "tab": "quiz", "sheet": "## Femoral blood supply\nThe proximal femur receives vital vascularization through a dedicated artery traveling within a supporting ligamentous structure.\n\n### Key terms\n1. **Fovea capitis** - A minor depression on the medial side of the femoral head that serves as a ligamentous attachment site.\n2. **Ligament of the head of the femur** - A weak intracapsular band spanning the femur and acetabulum that houses a nutrient vessel.\n   2.1 **Artery to the head of the femur** - The specific vascular structure carried by the ligament to supply the proximal end of the bone.\n\n## Muscle leverage\nBony projections of the femur and the sesamoid kneecap serve as mechanical levers to increase the torque generated by leg muscles.\n\n### Key terms\n1. **Greater trochanter** - A large lateral projection that provides a mechanical lever for muscles acting across the hip joint.\n2. **Patella** - A bone that increases the leverage of the quadriceps femoris by lifting the tendon away from the knee joint axis.\n\n## Femoral muscle attachment\nThe femur contains several specialized ridges and tuberosities that provide extensive surface area for the anchoring of hip and thigh muscles.\n\n### Key terms\n1. **Greater trochanter** - The large, upward projection above the base of the femoral neck where multiple hip muscles attach.\n2. **Lesser trochanter** - A small bony prominence on the medial aspect of the femur for the attachment of a single, powerful muscle.\n3. **Gluteal tuberosity** - A roughened area on the posterior proximal shaft extending inferiorly from the greater trochanter for muscle anchoring.\n4. **Linea aspera** - A prominent roughened ridge passing distally along the posterior side of the middle third of the femoral shaft.\n   4.1 **Muscle attachments** - The long, thin anchoring sites for multiple muscles of the hip and thigh regions along the ridge.\n5. **Epicondyles** - Medial and lateral irregular areas on the outer sides of the condyles that provide attachment for muscles and ligaments.\n\n## Patellar function\nThe patella is a specialized bone that protects the quadriceps tendon and optimizes the mechanical efficiency of the knee extensor mechanism.\n\n### Key terms\n1. **Patella** - The largest sesamoid bone in the body, found within the quadriceps tendon to prevent friction against the distal femur.\n2. **Sesamoid bone** - A bone incorporated into a muscle tendon where it crosses a joint to protect the tendon from wear and tear.\n3. **Quadriceps femoris muscle** - The large anterior thigh muscle whose tendon incorporates the patella and inserts onto the tibial tuberosity.\n\n## Patellar tracking\nProper patellar movement within the femoral groove is maintained by the structural morphology of the femur and balanced muscular pull.\n\n### Key terms\n1. **Patellar surface** - A wide groove on the anterior distal femur formed by the union of the medial and lateral condyles.\n2. **Abnormal tracking** - A clinical condition where the patella deviates laterally from its proper path on the femoral patellar surface.\n3. **Lateral lip** - A large expansion on the lateral side of the femoral patellar surface that prevents the patella from shifting laterally.\n\n## Pelvic width influence\nThe anatomical width of the pelvis dictates the femoral angle, which directly influences the lateral vector forces acting on the patella.\n\n### Key terms\n1. **Q-angle** - A measurement of the lateral deviation of the femur from the vertical line of the tibia, normally 10–15 degrees.\n2. **Wider pelvis** - A female skeletal characteristic that results in a larger Q-angle and increased lateral pull on the patella.\n\n## Weight bearing\nThe structural integrity of the lower limb is supported by two primary long bones that transmit the weight of the axial skeleton.\n\n### Key terms\n1. **Femur** - The longest and strongest bone of the body, which bears weight and constitutes one-quarter of a person's total height.\n2. **Tibia** - The medial bone of the leg and the second longest bone of the body, serving as the primary weight-bearer of the leg.\n\n## Tibial landmarks\nThe tibia features expanded condyles for knee articulation and several ridges and processes for ligamentous and tendinous attachments.\n\n### Key terms\n1. **Medial condyle** - The medial expansion of the proximal tibia that articulates with the medial condyle of the femur.\n2. **Lateral condyle** - The lateral expansion of the proximal tibia that articulates with the lateral condyle of the femur.\n3. **Intercondylar eminence** - An elevated, irregular area between the tibial condyles that serves as an attachment for knee ligaments.\n   3.1 **Supporting ligaments** - The two intracapsular knee ligaments that anchor to this elevated region of the proximal tibia.\n4. **Tibial tuberosity** - An anterior elevation on the proximal tibia that serves as the final insertion point for the patellar tendon.\n5. **Anterior border** - The subcutaneous anterior apex of the triangular tibial shaft extending inferiorly from the tibial tuberosity.\n6. **Medial malleolus** - A large medial expansion of the distal tibia that forms the palpable bony bump of the medial ankle.\n\n## Leg bone union\nThe tibia and fibula are held in close proximity by a fibrous syndesmosis and a strong sheet of connective tissue.\n\n### Key terms\n1. **Interosseous border** - A ridge running down the lateral tibial shaft and medial fibular shaft for connective tissue attachment.\n2. **Interosseous membrane of the leg** - A sheet of dense connective tissue that spans the distance between and unites the tibia and fibula.\n3. **Distal tibiofibular joint** - The articulation point between the distal end of the fibula and the fibular notch of the tibia.\n\n## Fibular function\nThe fibula functions as a non-weight-bearing lateral support that provides surface area for muscle attachment and stabilizes the ankle.\n\n### Key terms\n1. **Fibula** - The slender lateral bone of the leg that serves primarily for muscle attachments and does not transmit body weight.\n2. **Lateral malleolus** - The distal end of the fibula that forms the lateral bony bump of the ankle and articulates with the talus.\n\n## Ankle joint articulation\nThe ankle joint is a hinge articulation formed by the union of the talus bone with the distal configurations of the tibia and fibula.\n\n### Key terms\n1. **Talus** - The most superior tarsal bone, featuring a square-shaped upper surface that articulates with the leg bones.\n2. **Medial malleolus** - The distal tibial process that articulates with the superomedial surface of the talus bone.\n3. **Lateral malleolus** - The distal fibular process that articulates with the lateral side of the talus bone.\n4. **Distal end of the tibia** - The superior articulating surface of the ankle joint that meets the top of the talus.\n\n## Weight distribution\nThe body's mass is transferred in a linear sequence from the leg through the tarsal bones to the ground.\n\n### Key terms\n1. **Tibia to talus** - The initial transfer of body weight from the main weight-bearing leg bone to the superior tarsal bone.\n2. **Talus to calcaneus** - The subsequent transfer of weight from the talus to the heel bone which rests on the ground.\n\n## Tarsal support\nThe posterior foot is stabilized by specific tarsal bones that form the heel and provide a shelf for the ankle joint.\n\n### Key terms\n1. **Calcaneus** - The largest bone of the foot, situated inferiorly to the talus to form the heel of the foot.\n2. **Sustentaculum tali** - A prominent bony extension on the medial calcaneus that supports the medial aspect of the talus bone.\n3. **Navicular** - A tarsal bone that articulates with the anterior talus and the three cuneiform bones.\n4. **Cuboid** - A tarsal bone articulating with the anterior calcaneus that features a groove for a muscle tendon.\n\n## Foot curvature\nThe transverse arch of the foot is formed by the wedge-like geometry of the cuneiform bones and their distal articulations.\n\n### Key terms\n1. **Cuneiform bones** - A group of three wedge-shaped bones known as the medial, intermediate, and lateral cuneiforms.\n2. **Wedge-shape** - The structural configuration of cuneiforms with broad superior and narrow inferior surfaces to create curvature.\n\n## Metatarsal structure\nThe mid-foot is composed of five elongated bones that connect the tarsal region to the phalanges of the toes.\n\n### Key terms\n1. **Metatarsal bones** - Five elongated bones numbered 1–5 starting from the medial side of the mid-foot.\n2. **Base** - The proximal end of a metatarsal bone that articulates with the cuboid or cuneiform bones.\n3. **Head** - The expanded distal end of a metatarsal bone that forms the ball of the foot and articulates with a phalanx.\n4. **Metatarsophalangeal joint** - The articulation point between the head of a metatarsal and the proximal phalanx of a toe.\n\n## Phalanx count\nThe toes contain fourteen phalanges arranged in segments, with the first digit presenting a different anatomical count than the others.\n\n### Key terms\n1. **Phalanges** - The fourteen small bones found within the toes, numbered 1–5 starting from the medial side.\n2. **Hallux** - The first digit or big toe, which is shorter and thicker than the other digits of the foot.\n   2.1 **Phalanx bones** - The two specific bones, proximal and distal, that comprise the skeletal structure of the big toe.\n3. **Proximal, middle, and distal phalanges** - The three individual bones found in each of the toes numbered two through five."}</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
 const $ = s => document.querySelector(s);
 const esc = t => { const d=document.createElement('div'); d.textContent = t==null?'':t; return d.innerHTML; };
 const G_OK = '✓', G_NO = '✕';
+
+/* WHY A QUESTION IS ON THE EXAM. One glyph, set by the generator in the topic tag, and the
+   only thing the page does with it is show it and group by it. The ORDER of this object is
+   his priority order (08-11) and the tables below read it, so re-ordering here re-orders the
+   report: starred first, then missed, then flagged, then his own research, then the ones he
+   got right and is being asked again from a harder angle. */
+const SRC = {
+  '☆': 'Starred in the subchapter quiz',
+  '✕': 'You got this wrong',
+  '?': 'You flagged it — no idea at the time',
+  'R': 'Built from your own research',
+  '$': 'You got it right before — asked a different way'
+};
+const SRC_ORDER = Object.keys(SRC);
+function srcName(g){ return SRC[g] || ''; }
 
 /* ---- saved state -------------------------------------------------------------
    Everything lives in localStorage under the page id. `hash` fingerprints the question
@@ -691,24 +760,208 @@ function rput(id, t, imgs){
   catch(e){ return false; }                       // quota — the caller puts it back
 }
 
+/* ---- the written half ------------------------------------------------------------------
+   Three long-form questions on their own tab, generated with the exam by NotebookLM and
+   marked ON THIS PAGE with no network, no key and no credit. His constraint: *"its
+   subjective and hard to do but it needs to be no code, I dont mind comparing them manually
+   if need be but it wold be best if automated somehow."*
+
+   HOW THE MARKING IS HONEST. Each point carries a list of ways of saying it, written by the
+   generator alongside the question. A point whose wording is found is ticked; a point that
+   cannot be settled by wording at all is marked JUDGEMENT and left for him. The page never
+   guesses at the second kind — a marker that quietly awarded them would flatter every
+   answer, which is worse than one that asks.
+
+   ITS OWN STORAGE KEY, like the research box and for the same reason: S is one attempt and a
+   Retake clears it. What he wrote is material, and it outlives the attempt. */
+const FKEY = KEY + ':frq';
+let F = (function(){ try{ return JSON.parse(localStorage.getItem(FKEY) || '{}') || {}; }
+                     catch(e){ return {}; } })();
+function fput(){ try{ localStorage.setItem(FKEY, JSON.stringify(F)); }catch(e){} }
+function fget(i){ const f = F[i] || {}; return {t: f.t || '', m: f.m || {}, done: !!f.done}; }
+
+/* WORD BOUNDARIES, NOT SUBSTRINGS, and this is the difference between marking and
+   flattering: a bare substring search awards "recovers the verb" for the word `implement`
+   sitting inside `implementation`, which is the exact thing the answer was asked to undo.
+   A key ending in `*` keeps its open end on purpose, for stems like `pluralis*`. */
+function keyRe(k){
+  const open = /\*$/.test(k), base = open ? k.slice(0,-1) : k;
+  const lit = base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const head = /^[a-z0-9]/i.test(base) ? '\\b' : '';
+  const tail = (!open && /[a-z0-9]$/i.test(base)) ? '\\b' : '';
+  return new RegExp(head + lit + tail, 'i');
+}
+function findHit(text, keys){
+  const t = ' ' + String(text||'').toLowerCase().replace(/[’']/g, "'").replace(/\s+/g,' ') + ' ';
+  for(let i=0;i<(keys||[]).length;i++){ if(keyRe(keys[i]).test(t)) return keys[i]; }
+  return null;
+}
+function frqHit(fi, ri){
+  const f = D.frq[fi], r = f.rubric[ri], st = fget(fi);
+  if(st.m[ri] !== undefined) return {on: !!st.m[ri], why: 'set'};
+  if(r.judge) return {on: false, why: 'judge'};
+  const found = findHit(st.t, r.k);
+  return {on: !!found, why: found ? found.replace(/\*$/,'') : ''};
+}
+function frqScore(fi){
+  const f = D.frq[fi];
+  let n = 0;
+  f.rubric.forEach((_r, ri) => { if(frqHit(fi, ri).on) n++; });
+  return {n: n, t: f.rubric.length};
+}
+function flushFrq(){
+  document.querySelectorAll('#frqview textarea').forEach(ta => {
+    const i = +ta.dataset.f;
+    F[i] = F[i] || {}; F[i].t = ta.value;
+  });
+  fput();
+}
+function drawFrq(){
+  const box = $('#frqview');
+  if(!box || !(D.frq||[]).length) return;
+  let h = '<p class="say">Three written answers, from the same sources as the paper. Write '
+        + 'one, then mark it: every point that can be settled by what you wrote is checked '
+        + 'for you, and the ones that need judgement are handed back. Click any row to '
+        + 'overrule it.</p>';
+  D.frq.forEach((f, fi) => {
+    const st = fget(fi);
+    h += '<section class="frq"><p class="meta"><span class="num">' + (fi+1) + ' / '
+       + D.frq.length + '</span>'
+       + (f.tag ? '<span class="dot">·</span><span>' + esc(f.tag) + '</span>' : '')
+       + (f.secs ? '<span class="dot">·</span><span class="sec">' + esc(f.secs) + '</span>' : '')
+       + '</p>';
+    if(f.prompt) h += '<blockquote class="stim">' + esc(f.prompt) + '</blockquote>';
+    h += '<h1 class="q">' + esc(f.ask) + '</h1>';
+    if(f.words) h += '<p class="say">About ' + esc(f.words) + ' words.</p>';
+    h += '<textarea class="frqin" data-f="' + fi + '" spellcheck="true" '
+       + 'placeholder="Write your answer.">' + esc(st.t) + '</textarea>'
+       + '<p class="saved" data-wc="' + fi + '"></p>'
+       + '<div class="acts inline"><button class="pill primary" data-mark="' + fi
+       + '">Mark my answer</button>'
+       + '<button class="pill ghost" data-fcopy="' + fi + '">Copy</button></div>'
+       + '<div class="rubric hide" data-rub="' + fi + '"></div></section>';
+  });
+  box.innerHTML = h;
+
+  box.querySelectorAll('textarea').forEach(ta => {
+    const fi = +ta.dataset.f;
+    const count = () => {
+      const n = ta.value.trim() ? ta.value.trim().split(/\s+/).length : 0;
+      const el = box.querySelector('[data-wc="' + fi + '"]');
+      if(el) el.textContent = n + (n === 1 ? ' word' : ' words');
+    };
+    ta.addEventListener('input', () => {
+      F[fi] = F[fi] || {}; F[fi].t = ta.value; fput(); count();
+      if(fget(fi).done) markFrq(fi);
+    });
+    count();
+  });
+  box.querySelectorAll('[data-mark]').forEach(b => {
+    b.onclick = () => { const fi = +b.dataset.mark; F[fi] = F[fi] || {};
+                        F[fi].done = true; fput(); markFrq(fi); };
+  });
+  box.querySelectorAll('[data-fcopy]').forEach(b => {
+    b.onclick = () => copyText(oneFrqMarkdown(+b.dataset.fcopy), b, 'Copy');
+  });
+  D.frq.forEach((_f, fi) => { if(fget(fi).done) markFrq(fi); });
+}
+function markFrq(fi){
+  const f = D.frq[fi], st = fget(fi), box = $('#frqview [data-rub="' + fi + '"]');
+  if(!box) return;
+  box.classList.remove('hide');
+  if(!st.t.trim()){
+    box.innerHTML = '<p class="say">Nothing to mark yet — write an answer first.</p>';
+    return;
+  }
+  let h = '<h3>Marking</h3>';
+  f.rubric.forEach((r, ri) => {
+    const hit = frqHit(fi, ri);
+    let note;
+    if(hit.why === 'set') note = 'Set by you.';
+    else if(hit.why === 'judge') note = 'Nothing here can be settled by wording — read it and decide.';
+    else if(hit.on) note = 'Found “' + esc(hit.why) + '”.';
+    else note = 'Not found. If you said it another way, click to award it.';
+    h += '<div class="rrow ' + (hit.on ? 'hit' : 'miss') + '" data-ri="' + ri + '">'
+       + '<span class="rmark">' + (hit.on ? G_OK : '–') + '</span>'
+       + '<span class="rbody"><span class="rlab">' + esc(r.t)
+       + (r.judge ? '<span class="judge">your call</span>' : '') + '</span>'
+       + '<span class="rnote">' + note + '</span></span></div>';
+  });
+  const s = frqScore(fi);
+  const word = s.n >= s.t - 1 ? 'Strong' : s.n >= s.t - 2 ? 'Solid'
+             : s.n >= 2 ? 'Thin' : 'Missed the question';
+  h += '<div class="rfoot"><span class="rscore">' + s.n + ' <small>/ ' + s.t + '</small></span>'
+     + '<span class="rverdict">' + word + '</span><span class="spacer"></span>'
+     + (f.model ? '<button class="link" data-model="' + fi + '">Model answer</button>' : '')
+     + '</div>';
+  if(f.model) h += '<div class="model hide" data-mv="' + fi + '">' + tinyMd(f.model) + '</div>';
+  box.innerHTML = h;
+
+  box.querySelectorAll('.rrow').forEach(row => {
+    row.onclick = () => {
+      const ri = +row.dataset.ri;
+      F[fi] = F[fi] || {}; F[fi].m = F[fi].m || {};
+      F[fi].m[ri] = !row.classList.contains('hit');
+      fput(); markFrq(fi);
+    };
+  });
+  const mb = box.querySelector('[data-model]');
+  if(mb) mb.onclick = () => {
+    const mv = box.querySelector('[data-mv="' + fi + '"]');
+    mv.classList.toggle('hide');
+    mb.textContent = mv.classList.contains('hide') ? 'Model answer' : 'Hide model answer';
+  };
+}
+function oneFrqMarkdown(fi){
+  const f = D.frq[fi], st = fget(fi), s = frqScore(fi);
+  let out = '### Written ' + (fi+1) + (f.tag ? ' — ' + f.tag : '')
+          + (f.secs ? ' (' + f.secs + ')' : '') + '\n\n';
+  if(f.prompt) out += '> ' + f.prompt + '\n\n';
+  out += '**' + f.ask + '**\n\n' + (st.t.trim() || '_(not answered)_') + '\n\n'
+       + '**Marked ' + s.n + '/' + s.t + '**\n\n';
+  f.rubric.forEach((r, ri) => {
+    out += '- [' + (frqHit(fi, ri).on ? 'x' : ' ') + '] ' + r.t
+         + (r.judge ? ' _(judgement)_' : '') + '\n';
+  });
+  return out;
+}
+/* Only answered ones ride the Copy. An untouched written half would otherwise put three
+   empty questions and eighteen unticked boxes onto the Notion row every week. */
+function frqMarkdown(){
+  const done = (D.frq || []).map((_f, i) => i).filter(i => fget(i).t.trim());
+  if(!done.length) return '';
+  return '\n\n## Written\n\n' + done.map(oneFrqMarkdown).join('\n');
+}
+function copyText(text, btn, back){
+  navigator.clipboard.writeText(text).then(()=>{
+    const old = btn.textContent;
+    btn.textContent = 'Copied';
+    setTimeout(()=>{ btn.textContent = back || old; }, 1400);
+  });
+}
+
 /* ---- rendering ---------------------------------------------------------------- */
 /* The Starred tab only exists while something is starred, and the Study sheet tab only when
    the quiz shipped with one — a linguistics quiz built before topic tags has none. If that
    leaves one tab, the whole group goes: a lone "Quiz" button is chrome that says nothing. */
 function syncTabs(){
   const nstar = Object.keys(S.starred||{}).length;
+  const nfrq = (D.frq || []).length;
   document.querySelector('.tab[data-tab="starred"]').classList.toggle('hide', !nstar);
   document.querySelector('.tab[data-tab="sheet"]').classList.toggle('hide', !D.hasSheet);
-  $('#tabs').classList.toggle('hide', !nstar && !D.hasSheet);
+  document.querySelector('.tab[data-tab="frq"]').classList.toggle('hide', !nfrq);
+  $('#tabs').classList.toggle('hide', !nstar && !D.hasSheet && !nfrq);
   if(D.tab === 'starred' && !nstar) setTab('quiz');
 }
 function setTab(name){
   if(D.tab === 'quiz' && name !== 'quiz') flushResearch();
+  if(D.tab === 'frq' && name !== 'frq') flushFrq();
   D.tab = name;
   document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===name));
   $('#band').classList.toggle('hide', name!=='quiz');
   $('#starredview').classList.toggle('hide', name!=='starred');
   $('#sheetview').classList.toggle('hide', name!=='sheet');
+  $('#frqview').classList.toggle('hide', name!=='frq');
   $('#footer').classList.toggle('hide', name!=='quiz');
   if(name==='quiz'){
     draw();
@@ -718,6 +971,7 @@ function setTab(name){
   } else {
     if(name==='starred') drawStarred();
     if(name==='sheet'){ renderScore(); renderSheetExtras(); }
+    if(name==='frq') drawFrq();
     $('main').style.paddingTop = BASE_PAD + 'px';
     window.scrollTo(0,0);
   }
@@ -820,7 +1074,17 @@ function buildQ(i, picked, fresh, en){
   let h = '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta"><span class="num">' + (pos+1) + ' / ' + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        // THE SECTION AND THE GLYPH, on the exam only — a subchapter quiz carries neither and
+        // this line is byte-for-byte what it always was. The section is what it says; the
+        // glyph is why this question is on the paper at all, and it is deliberately JUST the
+        // glyph. His instruction: "the blurb needs to be shortened to just the symbol : in
+        // that its either has them as a tag or it doesnt."
+        + (q.sec ? '<span class="dot">·</span><span class="sec">' + esc(q.sec)
+                 + (q.link ? '<span class="lk">+' + esc(q.link) + '</span>' : '')
+                 + '</span>' : '')
         + (q.topic ? '<span class="dot">·</span><span>' + esc(q.topic) + '</span>' : '')
+        + (q.src ? '<span class="dot">·</span><span class="src" title="' + srcName(q.src)
+                 + '">' + esc(q.src) + '</span>' : '')
         + '</p>'
         + '<h1 class="q">' + esc(q.q) + '</h1></div>'
         // ? BEFORE ☆, because it is the one pressed while the question is still unanswered:
@@ -1131,6 +1395,39 @@ function finish(){
   save(); end(); window.scrollTo(0,0);
 }
 
+/* One scored breakdown, keyed by whatever `keyOf` pulls off a question. Returns '' when no
+   question carries the field, which is what keeps the subchapter quiz's end card identical.
+   Rows come out in SRC_ORDER when the key is a glyph and in natural order otherwise, so the
+   provenance table always reads down his priority ladder even if the paper is shuffled. */
+function group(act, keyOf, head, label){
+  const by = {};
+  act.forEach(i=>{
+    // A CROSS-SECTION QUESTION COUNTS IN BOTH SECTIONS, because it tested both. It is one
+    // question on the paper and two lines in the report, so the column does not add up to
+    // the total — which is correct, and the alternative is worse: filing it under whichever
+    // section happened to be written first would hide the other one's weakness entirely.
+    const ks = [].concat(keyOf(i) || []);
+    ks.forEach(k=>{
+      if(!k) return;
+      by[k] = by[k] || {n:0,t:0};
+      by[k].t++;
+      if(finalRight(i)) by[k].n++;
+    });
+  });
+  let keys = Object.keys(by);
+  if(!keys.length) return '';
+  const ranked = keys.filter(k => SRC_ORDER.indexOf(k) >= 0).length === keys.length;
+  keys = ranked ? SRC_ORDER.filter(k => by[k])
+                : keys.sort((a,b)=>a.localeCompare(b, undefined, {numeric:true}));
+  let h = '<div class="topics"><h3>'+esc(head)+'</h3>';
+  keys.forEach(k=>{
+    h += '<div class="trow"><span>'+(label ? label(k) : esc(k))+'</span>'
+       + '<span class="n">'+by[k].n+'/'+by[k].t+'</span>'
+       + '<span class="tbar"><i style="width:'+(by[k].n/by[k].t*100)+'%"></i></span></div>';
+  });
+  return h + '</div>';
+}
+
 function end(){
   const act = active(S), n = score(S), t = act.length;
   const pct = t ? Math.round(n/t*100) : 0;
@@ -1163,6 +1460,18 @@ function end(){
     });
     h += '</div>';
   }
+
+  /* THE TWO EXAM-ONLY TABLES. Both are built from fields a subchapter quiz never carries, so
+     both are simply absent there — no flag, no branch anywhere else, and nothing about the
+     quiz page changed the day these were added.
+
+     BY SUBCHAPTER is the one he asked for by name: a paper spanning seven sections that can
+     only report one number tells him he scored 78% and nothing about where to go back to.
+     BY WHY IT WAS ASKED is the one that closes the loop — it is the only place that answers
+     whether the thing he got wrong last week actually stuck. */
+  h += group(act, i => [D.questions[i].sec, D.questions[i].link], 'By subchapter', null);
+  h += group(act, i => D.questions[i].src, 'Why it was asked',
+             g => SRC[g] ? esc(g) + '  ' + esc(SRC[g]) : esc(g));
 
   if(S.history.length){
     h += '<p class="hist">Earlier attempts: ' + S.history.slice().reverse()
@@ -1392,6 +1701,23 @@ function markedList(map){
   D.questions.forEach((q, i) => { if((map || {})[q.qid]) out.push({n: i + 1, i: i, q: q}); });
   return out;
 }
+
+/* WHAT HE GOT WRONG — the one part of the record that never left the browser.
+   Starred, Needs work and My research have ridden the Copy into Notion since 08-11, and the
+   week's exam is built from that Notion row; the wrong answers were the missing rung, so the
+   exam could prefer a question he flagged but not one he actually failed. This is that rung,
+   and it costs one section in a paste he already makes.
+
+   FINAL verdicts, so a question redeemed on the second pass is NOT listed — he ended the
+   attempt knowing it. Skipped questions are excluded for the same reason as everywhere else:
+   they were taken out of the run. */
+function missedList(){
+  const out = [];
+  active(S).forEach(i => {
+    if(ans(i) !== undefined && !finalRight(i)) out.push({n: i + 1, i: i, q: D.questions[i]});
+  });
+  return out.sort((a,b)=>a.n-b.n);
+}
 function renderMarked(sel, list, head, say){
   const box = $(sel);
   if(!box) return;
@@ -1502,8 +1828,10 @@ function fullMarkdown(){
   return (sc ? sc + '\n\n' : '') + (D.sheet || '')
        + (mine ? '\n\n## My notes\n\n' + mine + '\n' : '')
        + markedMarkdown(markedList(S.starred), 'Starred')
+       + markedMarkdown(missedList(), 'Missed')
        + markedMarkdown(markedList(S.unsure), 'Needs work')
-       + researchMarkdown();
+       + researchMarkdown()
+       + frqMarkdown();
 }
 
 /* THE HTML FLAVOUR EXISTS ONLY FOR THE IMAGES, and it is only put on the clipboard when
@@ -1523,6 +1851,7 @@ function fullHTML(){
   const mine = noteMarkdown();
   if(mine) h += '<h2>My notes</h2>' + tinyMd(mine);
   h += markedHTML(markedList(S.starred), 'Starred');
+  h += markedHTML(missedList(), 'Missed');
   h += markedHTML(markedList(S.unsure), 'Needs work');
   const list = researchList();
   if(list.length){
@@ -1533,6 +1862,8 @@ function fullHTML(){
       x.r.i.forEach(src => { h += '<p><img src="' + src + '"></p>'; });
     });
   }
+  const fm = frqMarkdown();
+  if(fm) h += tinyMd(fm);
   return '<meta charset="utf-8">' + h;
 }
 

@@ -340,6 +340,59 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .saved{color:var(--muted);font-size:.78rem;margin:8px 0 0;height:1em}
 #minepreview{margin:14px 0 0}
 
+/* ---- the exam's two extra tags, and the written half ----
+   The section and the glyph ride the existing .meta line rather than becoming chips of their
+   own: they belong with the counter and the topic, which is already the line that says what
+   you are looking at. Colour is not used to tell the five glyphs apart — each one IS a
+   distinct character, so the page stays readable in grayscale without a legend. */
+.meta .sec{color:var(--text)}
+/* The second section on a cross-section question. Smaller and dimmer than the first, because
+   the first is where the question is filed and this one says what it also reaches into. */
+.meta .lk{color:var(--muted);font-size:.9em;margin-left:1px}
+.meta .src{font-size:.85rem;line-height:1;text-transform:none;letter-spacing:0;cursor:help}
+
+.frqs{padding:2px 0 56px}
+.frqs > .say{color:var(--muted);font-size:.88rem;margin:0 0 26px;max-width:60ch}
+.frq{margin:0 0 42px;padding:0 0 34px;border-bottom:1px solid var(--line)}
+.frq:last-child{border-bottom:0;padding-bottom:0}
+.frq .q{font-size:1.08rem;line-height:1.45;font-weight:600;margin:0 0 6px}
+.frq .say{color:var(--muted);font-size:.84rem;margin:6px 0 0}
+.stim{margin:0 0 14px;padding:11px 16px;background:var(--surface);
+ border-left:2px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;
+ font-size:.95rem;line-height:1.55;color:var(--text)}
+.frqin{width:100%;min-height:190px;resize:vertical;background:var(--surface);
+ color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
+ padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.6;outline:none;margin-top:16px}
+.frqin:focus{border-color:var(--accent)}
+.frqin::placeholder{color:var(--muted);opacity:.7}
+.acts.inline{margin-top:12px}
+.rubric{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
+.rubric h3{margin:0 0 10px;padding:0;border:0;font-size:.7rem;letter-spacing:.09em;
+ text-transform:uppercase;color:var(--muted)}
+.rrow{display:flex;gap:12px;align-items:flex-start;padding:9px 10px;margin:0 -10px;
+ border-radius:10px;cursor:pointer}
+.rrow:hover{background:var(--surface)}
+.rmark{flex:0 0 auto;width:22px;height:22px;border-radius:6px;border:1px solid var(--line);
+ display:grid;place-items:center;font-size:.78rem;background:var(--surface);
+ color:var(--muted);margin-top:2px}
+.rrow.hit .rmark{border-color:var(--right);color:var(--right)}
+.rbody{flex:1;min-width:0}
+.rlab{font-size:.93rem;line-height:1.45;color:var(--muted)}
+.rrow.hit .rlab{color:var(--text)}
+.rnote{display:block;font-size:.78rem;color:var(--muted);opacity:.85;margin-top:2px}
+.judge{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);
+ border:1px solid var(--accent);border-radius:999px;padding:1px 7px;margin-left:7px;
+ white-space:nowrap;vertical-align:1px}
+.rfoot{display:flex;align-items:baseline;gap:14px;margin-top:16px;padding-top:14px;
+ border-top:1px solid var(--line)}
+.rscore{font-size:1.35rem;font-weight:600;font-variant-numeric:tabular-nums}
+.rscore small{color:var(--muted);font-size:.75em;font-weight:400}
+.rverdict{font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.spacer{flex:1}
+.model{margin-top:14px;background:var(--surface);border-radius:var(--radius);
+ padding:14px 16px;font-size:.9rem;line-height:1.65;color:var(--muted)}
+.model strong{color:var(--text)}
+
 .empty{color:var(--muted);padding:8px 0 30px}
 .hist{color:var(--muted);font-size:.84rem;margin:22px 0 0}
 .hist span{white-space:nowrap}
@@ -365,7 +418,7 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 <header>
   <div class="wrap bar">
     <span class="title">6.2 Inferring Dispositions Using Causal Attribution</span>
-    <span class="tabs" id="tabs"><button class="tab" data-tab="quiz" aria-selected="true">Quiz</button><button class="tab hide" data-tab="starred" aria-selected="false">Starred</button><button class="tab" data-tab="sheet" aria-selected="false">Study sheet</button></span>
+    <span class="tabs" id="tabs"><button class="tab" data-tab="quiz" aria-selected="true">Quiz</button><button class="tab hide" data-tab="starred" aria-selected="false">Starred</button><button class="tab hide" data-tab="frq" aria-selected="false">Written</button><button class="tab" data-tab="sheet" aria-selected="false">Study sheet</button></span>
   </div>
   <!-- In the same .wrap as the title and the tabs: the progress track used to run the full
        width of the window under a centred column, which is the one thing up here that was
@@ -388,6 +441,7 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
     </div>
   </div>
   <div id="starredview" class="rev hide"></div>
+  <div id="frqview" class="frqs hide"></div>
   <div id="sheetview" class="sheet hide">
     <div class="scorecard hide" id="scorecard"></div>
     <div class="sheettools">
@@ -537,13 +591,28 @@ Self-control is finite - one hard task leaves less for the next"></textarea>
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "psp-6-2", "title": "6.2 Inferring Dispositions Using Causal Attribution", "subtitle": "Chapter 6 · Perceiving Others", "book": "PSP", "hash": "fe4c037513c68ff1", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "In the 1961 study by Jones, Davis, and Gergen, participants viewed job applicants for roles as either an astronaut (introverted) or a submariner (extroverted). What happened when an applicant for the astronaut position acted in an extroverted manner?", "options": ["Participants rated the applicant as more introverted to match the job requirements.", "Participants dismissed the behavior as a situational lie intended to impress the interviewers.", "Participants made stronger personal attributions because the behavior was unexpected for the situation.", "Participants were unable to draw any conclusions because the behavior was considered irrational."], "rationales": ["Observers tended to believe the extroverted behavior reflected the applicant's real personality more strongly when it defied role expectations.", "The study found that unexpected behaviors were actually seen as more indicative of true personality, not less.", "When behavior contradicts situational expectations, it is more easily attributed to the person's true disposition rather than social pressure.", "Observers typically use unexpected behavior as a diagnostic tool for identifying underlying traits."], "correct": 2, "hint": "consider how we interpret actions that defy what a specific social context normally requires.", "topic": "Role expectations", "qid": "bba768a591"}, {"q": "According to the covariation principle, if your friend loves a specific movie but typically dislikes most other movies they see, which factor is high, and what attribution is likely?", "options": ["Distinctiveness is high, suggesting the cause is the movie itself.", "Consistency is high, suggesting the cause is the friend's personality.", "Distinctiveness is low, suggesting the cause is the friend's generally positive attitude.", "Consensus is high, suggesting the cause is the friend's unique taste."], "rationales": ["High distinctiveness occurs when a behavior happens only in a specific situation, leading to a situational attribution.", "Consistency refers to the behavior occurring every time that specific situation is present, not how it compares to other situations.", "Low distinctiveness would mean the friend likes all movies, but here they only like this specific one.", "High consensus would mean most other people also like the movie, which is not described in this specific scenario."], "correct": 0, "hint": "focus on whether the behavior is unique to this specific stimulus or happens across all stimuli.", "topic": "Covariation principle", "qid": "0cfd2c5c1a"}, {"q": "In Weiner's model of success and failure, how is 'task difficulty' classified as a cause for an outcome?", "options": ["External and unstable.", "External and stable.", "Internal and stable.", "Internal and unstable."], "rationales": ["External unstable causes refer to factors like luck, which can change significantly from one moment to the next.", "The model assumes that the difficulty of a specific task remains relatively constant and is determined by the situation rather than the person.", "Internal stable causes refer to personal traits like ability or intelligence rather than the nature of the task.", "Internal unstable causes refer to effort or motivation, which the person can change depending on the day."], "correct": 1, "hint": "think about whether the difficulty of a test resides in the person or the exam, and if it is likely to change tomorrow.", "topic": "Weiner’s model", "qid": "e982abe9e5"}, {"q": "Skitka and colleagues (2002) conducted a study where a 'quizmaster' created difficult questions for a 'contestant.' Why did observers rate the quizmaster as more intelligent despite knowing the roles were assigned by drawing straws?", "options": ["They exhibited the actor-observer difference by focusing on the contestant's stress.", "They committed the fundamental attribution error by ignoring the quizmaster's situational advantage.", "They assumed the quizmaster's knowledge was unstable and subject to luck.", "They utilized high consensus information to determine the quizmaster's superior ability."], "rationales": ["The actor-observer difference involves how one views themselves versus others, while this error focused on judging another person's traits.", "Observers often fail to account for how situational roles, like getting to pick the questions, facilitate a person's performance.", "The error was in attributing the performance to a stable internal trait (intelligence) rather than the unstable situational role.", "Consensus would involve comparing the quizmaster to other quizmasters, which was not the focus of the observer's bias here."], "correct": 1, "hint": "consider why we might focus on a person's visible knowledge while ignoring the rules that let them show it.", "topic": "Fundamental attribution error", "qid": "1adb7507c6"}, {"q": "In the study by Nisbett and colleagues (1973), participants were asked to describe themselves and others using trait terms or the phrase 'depends on the situation.' What was the primary finding?", "options": ["Participants used situational explanations for everyone they knew personally but trait terms for strangers.", "Participants were more likely to assign stable traits to themselves to maintain a sense of identity.", "Participants assigned more traits to their fathers and best friends than to distant figures like Walter Cronkite.", "Participants used 'depends on the situation' significantly more often for themselves than for others."], "rationales": ["The bias was specifically centered on the 'self' versus 'everyone else,' regardless of how well the other person was known.", "Contrary to this, the study showed that people are more hesitant to apply fixed traits to their own varying behaviors.", "The study found that trait attributions were high for all 'others,' including well-known media figures, compared to the self.", "The actor-observer difference suggests we see our own behavior as flexible and situationally driven, while others' behavior is seen as trait-based."], "correct": 3, "hint": "think about which person in the study had the most 'flexible' personality according to the participants.", "topic": "Actor-observer difference", "qid": "c0feb4c2a6"}, {"q": "Research indicates that personal attributions are often made spontaneously and without effort. What happens to our attributional accuracy when we are tired or distracted?", "options": ["We stop making causal attributions entirely and rely on luck to explain events.", "We overcompensate by making extreme situational attributions for everyone.", "We are more likely to commit the fundamental attribution error because situational correction requires cognitive effort.", "We become more accurate because our brain defaults to situational logic when energy is low."], "rationales": ["We still make attributions, but they lean more heavily toward the easiest, most spontaneous personal explanations.", "Overcompensation is unlikely because situational attributions are more complex and effortful to construct than personal ones.", "Adjusting a spontaneous personal judgment to account for the situation is an effortful secondary step that fails under cognitive load.", "Accuracy decreases because the default is the personal attribution, and we lack the energy to challenge it."], "correct": 2, "hint": "consider which type of explanation 'pops into mind' first and whether the second step of thinking is easy or hard.", "topic": "Attributional accuracy", "qid": "745b063375"}, {"q": "A student who attributes their high grade on a math test to their natural brilliance but blames a low grade on a history test on 'unfair' questions is demonstrating which phenomenon?", "options": ["The fundamental attribution error.", "Self-serving attributions.", "High consistency information.", "The actor-observer difference."], "rationales": ["The fundamental attribution error typically refers to judging others' behaviors, not explaining one's own outcomes.", "This bias involves taking internal credit for successes while blaming external situational factors for failures to protect self-esteem.", "The student is actually showing low consistency across different subjects, which should lead to a situational attribution, but they are distorting it for self-enhancement.", "While related to self-perception, the specific pattern of taking credit for good and blaming others for bad is the hallmark of self-serving bias."], "correct": 1, "hint": "look for a pattern where the explanation changes specifically to make the individual look better.", "topic": "Self-serving attributions", "qid": "393b7b97a7"}, {"q": "If most people cry at a specific wedding (high consensus), and I only cry at weddings (high distinctiveness), but I cry at every wedding I attend (high consistency), what is the most likely causal attribution according to Kelley?", "options": ["The attribution is impossible to determine without more information.", "My personality (being a 'crier') is the cause.", "The situation (the wedding) is the cause.", "Luck and unstable motivation are the causes."], "rationales": ["Kelley's model provides a clear framework for situational attribution when all three types of information are present and high.", "A personal attribution would be more likely if consensus and distinctiveness were low, meaning only I cried and I cried everywhere.", "When consensus, distinctiveness, and consistency are all high, the behavior is attributed to the external situation or stimulus.", "The covariation principle focuses on person vs. situation rather than the luck/motivation categories found in Weiner's model."], "correct": 2, "hint": "evaluate if the cause seems to reside in the specific event or in the individual's general nature.", "topic": "Covariation principle", "qid": "1a26450e4f"}, {"q": "Jones and Harris (1967) found that even when participants were told a student was assigned to write a pro-Castro essay, they still believed the student actually supported Castro. What does this imply about the role of choice in attribution?", "options": ["We tend to ignore the lack of choice and assume behavior reflects internal attitudes.", "Choice is the only factor people use when making personal attributions.", "Participants only make personal attributions when they personally agree with the essay.", "People are highly sensitive to external pressure and always discount assigned behaviors."], "rationales": ["This is a classic demonstration of the correspondence bias, where situational constraints like 'being assigned' are underweighted.", "The study showed that people make personal attributions even when choice is clearly absent.", "The attribution was made regardless of the participant's own beliefs, focusing instead on the writer's perceived disposition.", "The findings showed the opposite; people did not sufficiently discount the assigned behavior."], "correct": 0, "hint": "reflect on whether knowing someone was 'forced' to do something prevents us from judging their character.", "topic": "Choice and attribution", "qid": "335929ed29"}, {"q": "According to the text, why is 'salience' a reason for the fundamental attribution error?", "options": ["We are more focused on our own internal states when observing others.", "Situational factors are usually more vivid and colorful than the people in them.", "Salience helps us remember situational details better than personality traits.", "Other people are the focus of our visual attention, making them seem like the primary cause of their actions."], "rationales": ["When observing others, our focus is external (on them), which prevents us from considering their situational constraints.", "The text states the opposite: people are more salient in our social environments than the abstract situational context.", "Salience actually leads us to ignore situational details in favor of easy-to-see person factors.", "We attribute causality to what we are looking at; since we see others but not the situation or ourselves, we over-attribute to them."], "correct": 3, "hint": "think about the direction of your eyes when you are watching another person behave.", "topic": "Fundamental attribution error", "qid": "95599a27ce"}], "hasSheet": true, "notebook": "https://notebooklm.google.com/notebook/415ea099-d230-407a-9f00-9d6cae2ced32/artifact/2d9c9664-8532-4353-84d6-a2ed1af6fb50", "root": "../index.html", "tab": "quiz", "sheet": "## 1. Role Expectations\nPersonality inferences are significantly easier to make when we observe behaviors that either violate established social norms or contradict the specific requirements of a social role.\n\n### Key Terms\n*   **Causal attribution**: The social-cognitive process of attempting to determine the underlying causes of an individual's behavior.\n*   **Personal (internal or dispositional) attribution**: The inference that a behavior was caused primarily by the person’s internal traits or characteristics rather than by the environment.\n    *   Example: If Tess sticks her tongue out at you instead of shaking your hand, the violation of social expectations makes it easier to infer she is an unfriendly person.\n\n### Names and Studies\n**Jones, Davis, & Gergen (1961)**\n*   **Method**: Participants viewed one of four videos of a job applicant. The role was either for a submariner (requiring an extrovert) or an astronaut (requiring an introvert). The applicant then acted either extroverted or introverted.\n*   **Finding**: When the applicant's behavior violated role expectations (e.g., an extroverted astronaut candidate), participants made much stronger personality attributions. Specifically, participants believed the applicant's extraverted responses represented their true personality **91%** of the time when applying for the introvert-coded astronaut role, compared to only **45%** of the time when the same responses were expected for the submariner role.\n\n## 2. Covariation Principle\nThe covariation principle suggests that we determine if a behavior is situational by observing how that behavior changes or \"covaries\" across different social contexts and time.\n\n### Key Terms\n*   **Consistency information**: Determining whether a specific situation always produces the same behavior from the individual (e.g., a person cries at every wedding they attend).\n*   **Distinctiveness information**: Determining whether the behavior occurs only in a specific situation and nowhere else (e.g., a person who only cries at weddings but remains composed in all other emotional settings).\n*   **Consensus information**: Determining whether most people behave in the same way when faced with that specific situation (e.g., observing that many other guests are also crying at the wedding).\n\n## 3. Weiner’s Model\nThis model categorizes the perceived causes of success and failure based on two primary dimensions: **Locus** (Internal vs. External) and **Stability** (Stable vs. Unstable).\n\n### Key Terms\n*   **Locus**: The determination of whether the cause of an event is internal to the person or external to the situation.\n    *   **Personal causes**: Internal factors, such as ability and motivation.\n*   **Stability**: The determination of whether a cause is likely to stay the same over time or change.\n    *   **Situational causes**: External factors, such as luck and task difficulty.\n\n### The 2x2 Attribution Framework\n*   **Ability [Internal / Stable]**: An internal cause of success perceived as a fixed trait (e.g., natural intelligence).\n*   **Motivation [Internal / Unstable]**: An internal cause of success that can fluctuate (e.g., working hard for one specific exam).\n*   **Task Difficulty [External / Stable]**: A situational cause that remains constant (e.g., a consistently easy or hard course).\n*   **Luck [External / Unstable]**: A situational cause that is unpredictable and subject to change (e.g., guessing correctly on a multiple-choice test).\n\n## 4. Fundamental Attribution Error\nThe fundamental attribution error is the pervasive human tendency to overestimate the influence of personal factors while simultaneously underestimating the impact of the social situation when judging others.\n\n### Key Terms\n*   **Fundamental attribution error (correspondence bias)**: The systematic bias of overemphasizing internal person factors when explaining the behavior of others.\n    *   Example: Assuming a diner who leaves a large tip is naturally generous, without considering they may be using the tip to impress their companions.\n\n### Names and Studies\n**Skitka, Mullen, Griffin, Hutchinson, & Chamberlin (2002)**\n*   **Method**: In a trivia game study, participants were randomly assigned to be \"quizmasters\" or \"contestants.\" Quizmasters were instructed to generate difficult questions based on their own **idiosyncratic or esoteric knowledge**.\n*   **Result**: Despite knowing the roles were randomly assigned, observers rated the quizmasters as significantly more intelligent than the contestants, failing to account for the massive situational advantage provided by the quizmasters' ability to choose the topics.\n\n## 5. Actor-Observer Difference\nThe actor-observer difference explains why individuals tend to attribute their own behaviors to situational requirements while attributing the exact same behaviors in others to stable internal traits.\n\n### Key Terms\n*   **Actor-observer difference**: The tendency to make more situational attributions for oneself than for others.\n    *   Example: Describing oneself as \"shy depending on the situation\" (situational), while labeling a friend as simply \"shy\" (personal trait).\n\n### Names and Studies\n**Nisbett, Caputo, Legant, & Marecek (1973)**\n*   **Method**: College students were asked to choose trait terms (e.g., \"energetic,\" \"relaxed\") to describe themselves, their best friend, their father, and the newscaster Walter Cronkite.\n*   **Result**: Participants selected the \"depends on the situation\" option significantly more often for themselves than they did for any of the other three people, demonstrating a bias toward situational explanations for their own behavior.\n\n## 6. Attributional Accuracy\nWhile human attributional skills are generally \"good enough\" for social navigation, the process is highly prone to spontaneous biases, particularly when cognitive resources are low.\n\n### Key Terms\n*   **Salience**: The degree to which a person stands out as the focus of attention in an environment.\n    *   **Effect**: Because we are \"directly watching\" the person, our visual orientation makes them seem like the primary cause of an action. When we act, we look outward at the situation; when we observe others, we look at the person, making their traits more salient than their context.\n*   **Spontaneous processing**: The effortless, automatic, and rapid nature of making personal attributions without conscious deliberation.\n*   **Cognitive load**: A state of being tired, distracted, or busy. This increases attribution errors because the \"adjustment\" phase—where we try to account for the situation—requires effortful thought and is frequently insufficient or skipped entirely.\n\n## 7. Self-Serving Attributions\nIndividuals frequently distort their causal attributions to protect their self-esteem or maintain a positive self-image.\n\n### Key Terms\n*   **Self-serving attributions**: Attributions designed to meet the desire to see oneself in a positive light.\n    *   Example: A teacher taking personal credit for a class's high test scores (\"I am a great teacher\") while blaming the students' lack of effort for poor scores.\n\n## 8. Choice and Attribution\nPersonal attributions are far more likely to be made when an observer perceives that the actor chose their behavior freely without external coercion.\n\n### Key Terms\n*   **Situational attribution**: The decision that a behavior was caused primarily by environmental pressures or external threats.\n    *   Example: Handing over a wallet to a gunman is attributed to the situation (the threat) rather than a person's inherent \"generosity.\"\n\n### Names and Studies\n**Jones & Harris (1967)**\n*   **Method**: Participants read student essays (regarding political topics like Fidel Castro) and were told the authors either chose their own stance or were assigned a topic by a professor.\n*   **Result**: Participants attributed the essay's viewpoints to the authors' true beliefs when they believed the author had a choice. However, even when told the topic was assigned, many participants still committed the fundamental attribution error by assuming the author's real beliefs matched the essay."}</script>
+<script id="quiz-data" type="application/json">{"id": "psp-6-2", "title": "6.2 Inferring Dispositions Using Causal Attribution", "subtitle": "Chapter 6 · Perceiving Others", "book": "PSP", "hash": "fe4c037513c68ff1", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "In the 1961 study by Jones, Davis, and Gergen, participants viewed job applicants for roles as either an astronaut (introverted) or a submariner (extroverted). What happened when an applicant for the astronaut position acted in an extroverted manner?", "options": ["Participants rated the applicant as more introverted to match the job requirements.", "Participants dismissed the behavior as a situational lie intended to impress the interviewers.", "Participants made stronger personal attributions because the behavior was unexpected for the situation.", "Participants were unable to draw any conclusions because the behavior was considered irrational."], "rationales": ["Observers tended to believe the extroverted behavior reflected the applicant's real personality more strongly when it defied role expectations.", "The study found that unexpected behaviors were actually seen as more indicative of true personality, not less.", "When behavior contradicts situational expectations, it is more easily attributed to the person's true disposition rather than social pressure.", "Observers typically use unexpected behavior as a diagnostic tool for identifying underlying traits."], "correct": 2, "hint": "consider how we interpret actions that defy what a specific social context normally requires.", "topic": "Role expectations", "sec": "", "src": "", "link": "", "qid": "bba768a591"}, {"q": "According to the covariation principle, if your friend loves a specific movie but typically dislikes most other movies they see, which factor is high, and what attribution is likely?", "options": ["Distinctiveness is high, suggesting the cause is the movie itself.", "Consistency is high, suggesting the cause is the friend's personality.", "Distinctiveness is low, suggesting the cause is the friend's generally positive attitude.", "Consensus is high, suggesting the cause is the friend's unique taste."], "rationales": ["High distinctiveness occurs when a behavior happens only in a specific situation, leading to a situational attribution.", "Consistency refers to the behavior occurring every time that specific situation is present, not how it compares to other situations.", "Low distinctiveness would mean the friend likes all movies, but here they only like this specific one.", "High consensus would mean most other people also like the movie, which is not described in this specific scenario."], "correct": 0, "hint": "focus on whether the behavior is unique to this specific stimulus or happens across all stimuli.", "topic": "Covariation principle", "sec": "", "src": "", "link": "", "qid": "0cfd2c5c1a"}, {"q": "In Weiner's model of success and failure, how is 'task difficulty' classified as a cause for an outcome?", "options": ["External and unstable.", "External and stable.", "Internal and stable.", "Internal and unstable."], "rationales": ["External unstable causes refer to factors like luck, which can change significantly from one moment to the next.", "The model assumes that the difficulty of a specific task remains relatively constant and is determined by the situation rather than the person.", "Internal stable causes refer to personal traits like ability or intelligence rather than the nature of the task.", "Internal unstable causes refer to effort or motivation, which the person can change depending on the day."], "correct": 1, "hint": "think about whether the difficulty of a test resides in the person or the exam, and if it is likely to change tomorrow.", "topic": "Weiner’s model", "sec": "", "src": "", "link": "", "qid": "e982abe9e5"}, {"q": "Skitka and colleagues (2002) conducted a study where a 'quizmaster' created difficult questions for a 'contestant.' Why did observers rate the quizmaster as more intelligent despite knowing the roles were assigned by drawing straws?", "options": ["They exhibited the actor-observer difference by focusing on the contestant's stress.", "They committed the fundamental attribution error by ignoring the quizmaster's situational advantage.", "They assumed the quizmaster's knowledge was unstable and subject to luck.", "They utilized high consensus information to determine the quizmaster's superior ability."], "rationales": ["The actor-observer difference involves how one views themselves versus others, while this error focused on judging another person's traits.", "Observers often fail to account for how situational roles, like getting to pick the questions, facilitate a person's performance.", "The error was in attributing the performance to a stable internal trait (intelligence) rather than the unstable situational role.", "Consensus would involve comparing the quizmaster to other quizmasters, which was not the focus of the observer's bias here."], "correct": 1, "hint": "consider why we might focus on a person's visible knowledge while ignoring the rules that let them show it.", "topic": "Fundamental attribution error", "sec": "", "src": "", "link": "", "qid": "1adb7507c6"}, {"q": "In the study by Nisbett and colleagues (1973), participants were asked to describe themselves and others using trait terms or the phrase 'depends on the situation.' What was the primary finding?", "options": ["Participants used situational explanations for everyone they knew personally but trait terms for strangers.", "Participants were more likely to assign stable traits to themselves to maintain a sense of identity.", "Participants assigned more traits to their fathers and best friends than to distant figures like Walter Cronkite.", "Participants used 'depends on the situation' significantly more often for themselves than for others."], "rationales": ["The bias was specifically centered on the 'self' versus 'everyone else,' regardless of how well the other person was known.", "Contrary to this, the study showed that people are more hesitant to apply fixed traits to their own varying behaviors.", "The study found that trait attributions were high for all 'others,' including well-known media figures, compared to the self.", "The actor-observer difference suggests we see our own behavior as flexible and situationally driven, while others' behavior is seen as trait-based."], "correct": 3, "hint": "think about which person in the study had the most 'flexible' personality according to the participants.", "topic": "Actor-observer difference", "sec": "", "src": "", "link": "", "qid": "c0feb4c2a6"}, {"q": "Research indicates that personal attributions are often made spontaneously and without effort. What happens to our attributional accuracy when we are tired or distracted?", "options": ["We stop making causal attributions entirely and rely on luck to explain events.", "We overcompensate by making extreme situational attributions for everyone.", "We are more likely to commit the fundamental attribution error because situational correction requires cognitive effort.", "We become more accurate because our brain defaults to situational logic when energy is low."], "rationales": ["We still make attributions, but they lean more heavily toward the easiest, most spontaneous personal explanations.", "Overcompensation is unlikely because situational attributions are more complex and effortful to construct than personal ones.", "Adjusting a spontaneous personal judgment to account for the situation is an effortful secondary step that fails under cognitive load.", "Accuracy decreases because the default is the personal attribution, and we lack the energy to challenge it."], "correct": 2, "hint": "consider which type of explanation 'pops into mind' first and whether the second step of thinking is easy or hard.", "topic": "Attributional accuracy", "sec": "", "src": "", "link": "", "qid": "745b063375"}, {"q": "A student who attributes their high grade on a math test to their natural brilliance but blames a low grade on a history test on 'unfair' questions is demonstrating which phenomenon?", "options": ["The fundamental attribution error.", "Self-serving attributions.", "High consistency information.", "The actor-observer difference."], "rationales": ["The fundamental attribution error typically refers to judging others' behaviors, not explaining one's own outcomes.", "This bias involves taking internal credit for successes while blaming external situational factors for failures to protect self-esteem.", "The student is actually showing low consistency across different subjects, which should lead to a situational attribution, but they are distorting it for self-enhancement.", "While related to self-perception, the specific pattern of taking credit for good and blaming others for bad is the hallmark of self-serving bias."], "correct": 1, "hint": "look for a pattern where the explanation changes specifically to make the individual look better.", "topic": "Self-serving attributions", "sec": "", "src": "", "link": "", "qid": "393b7b97a7"}, {"q": "If most people cry at a specific wedding (high consensus), and I only cry at weddings (high distinctiveness), but I cry at every wedding I attend (high consistency), what is the most likely causal attribution according to Kelley?", "options": ["The attribution is impossible to determine without more information.", "My personality (being a 'crier') is the cause.", "The situation (the wedding) is the cause.", "Luck and unstable motivation are the causes."], "rationales": ["Kelley's model provides a clear framework for situational attribution when all three types of information are present and high.", "A personal attribution would be more likely if consensus and distinctiveness were low, meaning only I cried and I cried everywhere.", "When consensus, distinctiveness, and consistency are all high, the behavior is attributed to the external situation or stimulus.", "The covariation principle focuses on person vs. situation rather than the luck/motivation categories found in Weiner's model."], "correct": 2, "hint": "evaluate if the cause seems to reside in the specific event or in the individual's general nature.", "topic": "Covariation principle", "sec": "", "src": "", "link": "", "qid": "1a26450e4f"}, {"q": "Jones and Harris (1967) found that even when participants were told a student was assigned to write a pro-Castro essay, they still believed the student actually supported Castro. What does this imply about the role of choice in attribution?", "options": ["We tend to ignore the lack of choice and assume behavior reflects internal attitudes.", "Choice is the only factor people use when making personal attributions.", "Participants only make personal attributions when they personally agree with the essay.", "People are highly sensitive to external pressure and always discount assigned behaviors."], "rationales": ["This is a classic demonstration of the correspondence bias, where situational constraints like 'being assigned' are underweighted.", "The study showed that people make personal attributions even when choice is clearly absent.", "The attribution was made regardless of the participant's own beliefs, focusing instead on the writer's perceived disposition.", "The findings showed the opposite; people did not sufficiently discount the assigned behavior."], "correct": 0, "hint": "reflect on whether knowing someone was 'forced' to do something prevents us from judging their character.", "topic": "Choice and attribution", "sec": "", "src": "", "link": "", "qid": "335929ed29"}, {"q": "According to the text, why is 'salience' a reason for the fundamental attribution error?", "options": ["We are more focused on our own internal states when observing others.", "Situational factors are usually more vivid and colorful than the people in them.", "Salience helps us remember situational details better than personality traits.", "Other people are the focus of our visual attention, making them seem like the primary cause of their actions."], "rationales": ["When observing others, our focus is external (on them), which prevents us from considering their situational constraints.", "The text states the opposite: people are more salient in our social environments than the abstract situational context.", "Salience actually leads us to ignore situational details in favor of easy-to-see person factors.", "We attribute causality to what we are looking at; since we see others but not the situation or ourselves, we over-attribute to them."], "correct": 3, "hint": "think about the direction of your eyes when you are watching another person behave.", "topic": "Fundamental attribution error", "sec": "", "src": "", "link": "", "qid": "95599a27ce"}], "hasSheet": true, "frq": [], "notebook": "https://notebooklm.google.com/notebook/415ea099-d230-407a-9f00-9d6cae2ced32/artifact/2d9c9664-8532-4353-84d6-a2ed1af6fb50", "root": "../index.html", "tab": "quiz", "sheet": "## 1. Role Expectations\nPersonality inferences are significantly easier to make when we observe behaviors that either violate established social norms or contradict the specific requirements of a social role.\n\n### Key Terms\n*   **Causal attribution**: The social-cognitive process of attempting to determine the underlying causes of an individual's behavior.\n*   **Personal (internal or dispositional) attribution**: The inference that a behavior was caused primarily by the person’s internal traits or characteristics rather than by the environment.\n    *   Example: If Tess sticks her tongue out at you instead of shaking your hand, the violation of social expectations makes it easier to infer she is an unfriendly person.\n\n### Names and Studies\n**Jones, Davis, & Gergen (1961)**\n*   **Method**: Participants viewed one of four videos of a job applicant. The role was either for a submariner (requiring an extrovert) or an astronaut (requiring an introvert). The applicant then acted either extroverted or introverted.\n*   **Finding**: When the applicant's behavior violated role expectations (e.g., an extroverted astronaut candidate), participants made much stronger personality attributions. Specifically, participants believed the applicant's extraverted responses represented their true personality **91%** of the time when applying for the introvert-coded astronaut role, compared to only **45%** of the time when the same responses were expected for the submariner role.\n\n## 2. Covariation Principle\nThe covariation principle suggests that we determine if a behavior is situational by observing how that behavior changes or \"covaries\" across different social contexts and time.\n\n### Key Terms\n*   **Consistency information**: Determining whether a specific situation always produces the same behavior from the individual (e.g., a person cries at every wedding they attend).\n*   **Distinctiveness information**: Determining whether the behavior occurs only in a specific situation and nowhere else (e.g., a person who only cries at weddings but remains composed in all other emotional settings).\n*   **Consensus information**: Determining whether most people behave in the same way when faced with that specific situation (e.g., observing that many other guests are also crying at the wedding).\n\n## 3. Weiner’s Model\nThis model categorizes the perceived causes of success and failure based on two primary dimensions: **Locus** (Internal vs. External) and **Stability** (Stable vs. Unstable).\n\n### Key Terms\n*   **Locus**: The determination of whether the cause of an event is internal to the person or external to the situation.\n    *   **Personal causes**: Internal factors, such as ability and motivation.\n*   **Stability**: The determination of whether a cause is likely to stay the same over time or change.\n    *   **Situational causes**: External factors, such as luck and task difficulty.\n\n### The 2x2 Attribution Framework\n*   **Ability [Internal / Stable]**: An internal cause of success perceived as a fixed trait (e.g., natural intelligence).\n*   **Motivation [Internal / Unstable]**: An internal cause of success that can fluctuate (e.g., working hard for one specific exam).\n*   **Task Difficulty [External / Stable]**: A situational cause that remains constant (e.g., a consistently easy or hard course).\n*   **Luck [External / Unstable]**: A situational cause that is unpredictable and subject to change (e.g., guessing correctly on a multiple-choice test).\n\n## 4. Fundamental Attribution Error\nThe fundamental attribution error is the pervasive human tendency to overestimate the influence of personal factors while simultaneously underestimating the impact of the social situation when judging others.\n\n### Key Terms\n*   **Fundamental attribution error (correspondence bias)**: The systematic bias of overemphasizing internal person factors when explaining the behavior of others.\n    *   Example: Assuming a diner who leaves a large tip is naturally generous, without considering they may be using the tip to impress their companions.\n\n### Names and Studies\n**Skitka, Mullen, Griffin, Hutchinson, & Chamberlin (2002)**\n*   **Method**: In a trivia game study, participants were randomly assigned to be \"quizmasters\" or \"contestants.\" Quizmasters were instructed to generate difficult questions based on their own **idiosyncratic or esoteric knowledge**.\n*   **Result**: Despite knowing the roles were randomly assigned, observers rated the quizmasters as significantly more intelligent than the contestants, failing to account for the massive situational advantage provided by the quizmasters' ability to choose the topics.\n\n## 5. Actor-Observer Difference\nThe actor-observer difference explains why individuals tend to attribute their own behaviors to situational requirements while attributing the exact same behaviors in others to stable internal traits.\n\n### Key Terms\n*   **Actor-observer difference**: The tendency to make more situational attributions for oneself than for others.\n    *   Example: Describing oneself as \"shy depending on the situation\" (situational), while labeling a friend as simply \"shy\" (personal trait).\n\n### Names and Studies\n**Nisbett, Caputo, Legant, & Marecek (1973)**\n*   **Method**: College students were asked to choose trait terms (e.g., \"energetic,\" \"relaxed\") to describe themselves, their best friend, their father, and the newscaster Walter Cronkite.\n*   **Result**: Participants selected the \"depends on the situation\" option significantly more often for themselves than they did for any of the other three people, demonstrating a bias toward situational explanations for their own behavior.\n\n## 6. Attributional Accuracy\nWhile human attributional skills are generally \"good enough\" for social navigation, the process is highly prone to spontaneous biases, particularly when cognitive resources are low.\n\n### Key Terms\n*   **Salience**: The degree to which a person stands out as the focus of attention in an environment.\n    *   **Effect**: Because we are \"directly watching\" the person, our visual orientation makes them seem like the primary cause of an action. When we act, we look outward at the situation; when we observe others, we look at the person, making their traits more salient than their context.\n*   **Spontaneous processing**: The effortless, automatic, and rapid nature of making personal attributions without conscious deliberation.\n*   **Cognitive load**: A state of being tired, distracted, or busy. This increases attribution errors because the \"adjustment\" phase—where we try to account for the situation—requires effortful thought and is frequently insufficient or skipped entirely.\n\n## 7. Self-Serving Attributions\nIndividuals frequently distort their causal attributions to protect their self-esteem or maintain a positive self-image.\n\n### Key Terms\n*   **Self-serving attributions**: Attributions designed to meet the desire to see oneself in a positive light.\n    *   Example: A teacher taking personal credit for a class's high test scores (\"I am a great teacher\") while blaming the students' lack of effort for poor scores.\n\n## 8. Choice and Attribution\nPersonal attributions are far more likely to be made when an observer perceives that the actor chose their behavior freely without external coercion.\n\n### Key Terms\n*   **Situational attribution**: The decision that a behavior was caused primarily by environmental pressures or external threats.\n    *   Example: Handing over a wallet to a gunman is attributed to the situation (the threat) rather than a person's inherent \"generosity.\"\n\n### Names and Studies\n**Jones & Harris (1967)**\n*   **Method**: Participants read student essays (regarding political topics like Fidel Castro) and were told the authors either chose their own stance or were assigned a topic by a professor.\n*   **Result**: Participants attributed the essay's viewpoints to the authors' true beliefs when they believed the author had a choice. However, even when told the topic was assigned, many participants still committed the fundamental attribution error by assuming the author's real beliefs matched the essay."}</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
 const $ = s => document.querySelector(s);
 const esc = t => { const d=document.createElement('div'); d.textContent = t==null?'':t; return d.innerHTML; };
 const G_OK = '✓', G_NO = '✕';
+
+/* WHY A QUESTION IS ON THE EXAM. One glyph, set by the generator in the topic tag, and the
+   only thing the page does with it is show it and group by it. The ORDER of this object is
+   his priority order (08-11) and the tables below read it, so re-ordering here re-orders the
+   report: starred first, then missed, then flagged, then his own research, then the ones he
+   got right and is being asked again from a harder angle. */
+const SRC = {
+  '☆': 'Starred in the subchapter quiz',
+  '✕': 'You got this wrong',
+  '?': 'You flagged it — no idea at the time',
+  'R': 'Built from your own research',
+  '$': 'You got it right before — asked a different way'
+};
+const SRC_ORDER = Object.keys(SRC);
+function srcName(g){ return SRC[g] || ''; }
 
 /* ---- saved state -------------------------------------------------------------
    Everything lives in localStorage under the page id. `hash` fingerprints the question
@@ -661,24 +730,208 @@ function rput(id, t, imgs){
   catch(e){ return false; }                       // quota — the caller puts it back
 }
 
+/* ---- the written half ------------------------------------------------------------------
+   Three long-form questions on their own tab, generated with the exam by NotebookLM and
+   marked ON THIS PAGE with no network, no key and no credit. His constraint: *"its
+   subjective and hard to do but it needs to be no code, I dont mind comparing them manually
+   if need be but it wold be best if automated somehow."*
+
+   HOW THE MARKING IS HONEST. Each point carries a list of ways of saying it, written by the
+   generator alongside the question. A point whose wording is found is ticked; a point that
+   cannot be settled by wording at all is marked JUDGEMENT and left for him. The page never
+   guesses at the second kind — a marker that quietly awarded them would flatter every
+   answer, which is worse than one that asks.
+
+   ITS OWN STORAGE KEY, like the research box and for the same reason: S is one attempt and a
+   Retake clears it. What he wrote is material, and it outlives the attempt. */
+const FKEY = KEY + ':frq';
+let F = (function(){ try{ return JSON.parse(localStorage.getItem(FKEY) || '{}') || {}; }
+                     catch(e){ return {}; } })();
+function fput(){ try{ localStorage.setItem(FKEY, JSON.stringify(F)); }catch(e){} }
+function fget(i){ const f = F[i] || {}; return {t: f.t || '', m: f.m || {}, done: !!f.done}; }
+
+/* WORD BOUNDARIES, NOT SUBSTRINGS, and this is the difference between marking and
+   flattering: a bare substring search awards "recovers the verb" for the word `implement`
+   sitting inside `implementation`, which is the exact thing the answer was asked to undo.
+   A key ending in `*` keeps its open end on purpose, for stems like `pluralis*`. */
+function keyRe(k){
+  const open = /\*$/.test(k), base = open ? k.slice(0,-1) : k;
+  const lit = base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const head = /^[a-z0-9]/i.test(base) ? '\\b' : '';
+  const tail = (!open && /[a-z0-9]$/i.test(base)) ? '\\b' : '';
+  return new RegExp(head + lit + tail, 'i');
+}
+function findHit(text, keys){
+  const t = ' ' + String(text||'').toLowerCase().replace(/[’']/g, "'").replace(/\s+/g,' ') + ' ';
+  for(let i=0;i<(keys||[]).length;i++){ if(keyRe(keys[i]).test(t)) return keys[i]; }
+  return null;
+}
+function frqHit(fi, ri){
+  const f = D.frq[fi], r = f.rubric[ri], st = fget(fi);
+  if(st.m[ri] !== undefined) return {on: !!st.m[ri], why: 'set'};
+  if(r.judge) return {on: false, why: 'judge'};
+  const found = findHit(st.t, r.k);
+  return {on: !!found, why: found ? found.replace(/\*$/,'') : ''};
+}
+function frqScore(fi){
+  const f = D.frq[fi];
+  let n = 0;
+  f.rubric.forEach((_r, ri) => { if(frqHit(fi, ri).on) n++; });
+  return {n: n, t: f.rubric.length};
+}
+function flushFrq(){
+  document.querySelectorAll('#frqview textarea').forEach(ta => {
+    const i = +ta.dataset.f;
+    F[i] = F[i] || {}; F[i].t = ta.value;
+  });
+  fput();
+}
+function drawFrq(){
+  const box = $('#frqview');
+  if(!box || !(D.frq||[]).length) return;
+  let h = '<p class="say">Three written answers, from the same sources as the paper. Write '
+        + 'one, then mark it: every point that can be settled by what you wrote is checked '
+        + 'for you, and the ones that need judgement are handed back. Click any row to '
+        + 'overrule it.</p>';
+  D.frq.forEach((f, fi) => {
+    const st = fget(fi);
+    h += '<section class="frq"><p class="meta"><span class="num">' + (fi+1) + ' / '
+       + D.frq.length + '</span>'
+       + (f.tag ? '<span class="dot">·</span><span>' + esc(f.tag) + '</span>' : '')
+       + (f.secs ? '<span class="dot">·</span><span class="sec">' + esc(f.secs) + '</span>' : '')
+       + '</p>';
+    if(f.prompt) h += '<blockquote class="stim">' + esc(f.prompt) + '</blockquote>';
+    h += '<h1 class="q">' + esc(f.ask) + '</h1>';
+    if(f.words) h += '<p class="say">About ' + esc(f.words) + ' words.</p>';
+    h += '<textarea class="frqin" data-f="' + fi + '" spellcheck="true" '
+       + 'placeholder="Write your answer.">' + esc(st.t) + '</textarea>'
+       + '<p class="saved" data-wc="' + fi + '"></p>'
+       + '<div class="acts inline"><button class="pill primary" data-mark="' + fi
+       + '">Mark my answer</button>'
+       + '<button class="pill ghost" data-fcopy="' + fi + '">Copy</button></div>'
+       + '<div class="rubric hide" data-rub="' + fi + '"></div></section>';
+  });
+  box.innerHTML = h;
+
+  box.querySelectorAll('textarea').forEach(ta => {
+    const fi = +ta.dataset.f;
+    const count = () => {
+      const n = ta.value.trim() ? ta.value.trim().split(/\s+/).length : 0;
+      const el = box.querySelector('[data-wc="' + fi + '"]');
+      if(el) el.textContent = n + (n === 1 ? ' word' : ' words');
+    };
+    ta.addEventListener('input', () => {
+      F[fi] = F[fi] || {}; F[fi].t = ta.value; fput(); count();
+      if(fget(fi).done) markFrq(fi);
+    });
+    count();
+  });
+  box.querySelectorAll('[data-mark]').forEach(b => {
+    b.onclick = () => { const fi = +b.dataset.mark; F[fi] = F[fi] || {};
+                        F[fi].done = true; fput(); markFrq(fi); };
+  });
+  box.querySelectorAll('[data-fcopy]').forEach(b => {
+    b.onclick = () => copyText(oneFrqMarkdown(+b.dataset.fcopy), b, 'Copy');
+  });
+  D.frq.forEach((_f, fi) => { if(fget(fi).done) markFrq(fi); });
+}
+function markFrq(fi){
+  const f = D.frq[fi], st = fget(fi), box = $('#frqview [data-rub="' + fi + '"]');
+  if(!box) return;
+  box.classList.remove('hide');
+  if(!st.t.trim()){
+    box.innerHTML = '<p class="say">Nothing to mark yet — write an answer first.</p>';
+    return;
+  }
+  let h = '<h3>Marking</h3>';
+  f.rubric.forEach((r, ri) => {
+    const hit = frqHit(fi, ri);
+    let note;
+    if(hit.why === 'set') note = 'Set by you.';
+    else if(hit.why === 'judge') note = 'Nothing here can be settled by wording — read it and decide.';
+    else if(hit.on) note = 'Found “' + esc(hit.why) + '”.';
+    else note = 'Not found. If you said it another way, click to award it.';
+    h += '<div class="rrow ' + (hit.on ? 'hit' : 'miss') + '" data-ri="' + ri + '">'
+       + '<span class="rmark">' + (hit.on ? G_OK : '–') + '</span>'
+       + '<span class="rbody"><span class="rlab">' + esc(r.t)
+       + (r.judge ? '<span class="judge">your call</span>' : '') + '</span>'
+       + '<span class="rnote">' + note + '</span></span></div>';
+  });
+  const s = frqScore(fi);
+  const word = s.n >= s.t - 1 ? 'Strong' : s.n >= s.t - 2 ? 'Solid'
+             : s.n >= 2 ? 'Thin' : 'Missed the question';
+  h += '<div class="rfoot"><span class="rscore">' + s.n + ' <small>/ ' + s.t + '</small></span>'
+     + '<span class="rverdict">' + word + '</span><span class="spacer"></span>'
+     + (f.model ? '<button class="link" data-model="' + fi + '">Model answer</button>' : '')
+     + '</div>';
+  if(f.model) h += '<div class="model hide" data-mv="' + fi + '">' + tinyMd(f.model) + '</div>';
+  box.innerHTML = h;
+
+  box.querySelectorAll('.rrow').forEach(row => {
+    row.onclick = () => {
+      const ri = +row.dataset.ri;
+      F[fi] = F[fi] || {}; F[fi].m = F[fi].m || {};
+      F[fi].m[ri] = !row.classList.contains('hit');
+      fput(); markFrq(fi);
+    };
+  });
+  const mb = box.querySelector('[data-model]');
+  if(mb) mb.onclick = () => {
+    const mv = box.querySelector('[data-mv="' + fi + '"]');
+    mv.classList.toggle('hide');
+    mb.textContent = mv.classList.contains('hide') ? 'Model answer' : 'Hide model answer';
+  };
+}
+function oneFrqMarkdown(fi){
+  const f = D.frq[fi], st = fget(fi), s = frqScore(fi);
+  let out = '### Written ' + (fi+1) + (f.tag ? ' — ' + f.tag : '')
+          + (f.secs ? ' (' + f.secs + ')' : '') + '\n\n';
+  if(f.prompt) out += '> ' + f.prompt + '\n\n';
+  out += '**' + f.ask + '**\n\n' + (st.t.trim() || '_(not answered)_') + '\n\n'
+       + '**Marked ' + s.n + '/' + s.t + '**\n\n';
+  f.rubric.forEach((r, ri) => {
+    out += '- [' + (frqHit(fi, ri).on ? 'x' : ' ') + '] ' + r.t
+         + (r.judge ? ' _(judgement)_' : '') + '\n';
+  });
+  return out;
+}
+/* Only answered ones ride the Copy. An untouched written half would otherwise put three
+   empty questions and eighteen unticked boxes onto the Notion row every week. */
+function frqMarkdown(){
+  const done = (D.frq || []).map((_f, i) => i).filter(i => fget(i).t.trim());
+  if(!done.length) return '';
+  return '\n\n## Written\n\n' + done.map(oneFrqMarkdown).join('\n');
+}
+function copyText(text, btn, back){
+  navigator.clipboard.writeText(text).then(()=>{
+    const old = btn.textContent;
+    btn.textContent = 'Copied';
+    setTimeout(()=>{ btn.textContent = back || old; }, 1400);
+  });
+}
+
 /* ---- rendering ---------------------------------------------------------------- */
 /* The Starred tab only exists while something is starred, and the Study sheet tab only when
    the quiz shipped with one — a linguistics quiz built before topic tags has none. If that
    leaves one tab, the whole group goes: a lone "Quiz" button is chrome that says nothing. */
 function syncTabs(){
   const nstar = Object.keys(S.starred||{}).length;
+  const nfrq = (D.frq || []).length;
   document.querySelector('.tab[data-tab="starred"]').classList.toggle('hide', !nstar);
   document.querySelector('.tab[data-tab="sheet"]').classList.toggle('hide', !D.hasSheet);
-  $('#tabs').classList.toggle('hide', !nstar && !D.hasSheet);
+  document.querySelector('.tab[data-tab="frq"]').classList.toggle('hide', !nfrq);
+  $('#tabs').classList.toggle('hide', !nstar && !D.hasSheet && !nfrq);
   if(D.tab === 'starred' && !nstar) setTab('quiz');
 }
 function setTab(name){
   if(D.tab === 'quiz' && name !== 'quiz') flushResearch();
+  if(D.tab === 'frq' && name !== 'frq') flushFrq();
   D.tab = name;
   document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===name));
   $('#band').classList.toggle('hide', name!=='quiz');
   $('#starredview').classList.toggle('hide', name!=='starred');
   $('#sheetview').classList.toggle('hide', name!=='sheet');
+  $('#frqview').classList.toggle('hide', name!=='frq');
   $('#footer').classList.toggle('hide', name!=='quiz');
   if(name==='quiz'){
     draw();
@@ -688,6 +941,7 @@ function setTab(name){
   } else {
     if(name==='starred') drawStarred();
     if(name==='sheet'){ renderScore(); renderSheetExtras(); }
+    if(name==='frq') drawFrq();
     $('main').style.paddingTop = BASE_PAD + 'px';
     window.scrollTo(0,0);
   }
@@ -790,7 +1044,17 @@ function buildQ(i, picked, fresh, en){
   let h = '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta"><span class="num">' + (pos+1) + ' / ' + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        // THE SECTION AND THE GLYPH, on the exam only — a subchapter quiz carries neither and
+        // this line is byte-for-byte what it always was. The section is what it says; the
+        // glyph is why this question is on the paper at all, and it is deliberately JUST the
+        // glyph. His instruction: "the blurb needs to be shortened to just the symbol : in
+        // that its either has them as a tag or it doesnt."
+        + (q.sec ? '<span class="dot">·</span><span class="sec">' + esc(q.sec)
+                 + (q.link ? '<span class="lk">+' + esc(q.link) + '</span>' : '')
+                 + '</span>' : '')
         + (q.topic ? '<span class="dot">·</span><span>' + esc(q.topic) + '</span>' : '')
+        + (q.src ? '<span class="dot">·</span><span class="src" title="' + srcName(q.src)
+                 + '">' + esc(q.src) + '</span>' : '')
         + '</p>'
         + '<h1 class="q">' + esc(q.q) + '</h1></div>'
         // ? BEFORE ☆, because it is the one pressed while the question is still unanswered:
@@ -1101,6 +1365,39 @@ function finish(){
   save(); end(); window.scrollTo(0,0);
 }
 
+/* One scored breakdown, keyed by whatever `keyOf` pulls off a question. Returns '' when no
+   question carries the field, which is what keeps the subchapter quiz's end card identical.
+   Rows come out in SRC_ORDER when the key is a glyph and in natural order otherwise, so the
+   provenance table always reads down his priority ladder even if the paper is shuffled. */
+function group(act, keyOf, head, label){
+  const by = {};
+  act.forEach(i=>{
+    // A CROSS-SECTION QUESTION COUNTS IN BOTH SECTIONS, because it tested both. It is one
+    // question on the paper and two lines in the report, so the column does not add up to
+    // the total — which is correct, and the alternative is worse: filing it under whichever
+    // section happened to be written first would hide the other one's weakness entirely.
+    const ks = [].concat(keyOf(i) || []);
+    ks.forEach(k=>{
+      if(!k) return;
+      by[k] = by[k] || {n:0,t:0};
+      by[k].t++;
+      if(finalRight(i)) by[k].n++;
+    });
+  });
+  let keys = Object.keys(by);
+  if(!keys.length) return '';
+  const ranked = keys.filter(k => SRC_ORDER.indexOf(k) >= 0).length === keys.length;
+  keys = ranked ? SRC_ORDER.filter(k => by[k])
+                : keys.sort((a,b)=>a.localeCompare(b, undefined, {numeric:true}));
+  let h = '<div class="topics"><h3>'+esc(head)+'</h3>';
+  keys.forEach(k=>{
+    h += '<div class="trow"><span>'+(label ? label(k) : esc(k))+'</span>'
+       + '<span class="n">'+by[k].n+'/'+by[k].t+'</span>'
+       + '<span class="tbar"><i style="width:'+(by[k].n/by[k].t*100)+'%"></i></span></div>';
+  });
+  return h + '</div>';
+}
+
 function end(){
   const act = active(S), n = score(S), t = act.length;
   const pct = t ? Math.round(n/t*100) : 0;
@@ -1133,6 +1430,18 @@ function end(){
     });
     h += '</div>';
   }
+
+  /* THE TWO EXAM-ONLY TABLES. Both are built from fields a subchapter quiz never carries, so
+     both are simply absent there — no flag, no branch anywhere else, and nothing about the
+     quiz page changed the day these were added.
+
+     BY SUBCHAPTER is the one he asked for by name: a paper spanning seven sections that can
+     only report one number tells him he scored 78% and nothing about where to go back to.
+     BY WHY IT WAS ASKED is the one that closes the loop — it is the only place that answers
+     whether the thing he got wrong last week actually stuck. */
+  h += group(act, i => [D.questions[i].sec, D.questions[i].link], 'By subchapter', null);
+  h += group(act, i => D.questions[i].src, 'Why it was asked',
+             g => SRC[g] ? esc(g) + '  ' + esc(SRC[g]) : esc(g));
 
   if(S.history.length){
     h += '<p class="hist">Earlier attempts: ' + S.history.slice().reverse()
@@ -1362,6 +1671,23 @@ function markedList(map){
   D.questions.forEach((q, i) => { if((map || {})[q.qid]) out.push({n: i + 1, i: i, q: q}); });
   return out;
 }
+
+/* WHAT HE GOT WRONG — the one part of the record that never left the browser.
+   Starred, Needs work and My research have ridden the Copy into Notion since 08-11, and the
+   week's exam is built from that Notion row; the wrong answers were the missing rung, so the
+   exam could prefer a question he flagged but not one he actually failed. This is that rung,
+   and it costs one section in a paste he already makes.
+
+   FINAL verdicts, so a question redeemed on the second pass is NOT listed — he ended the
+   attempt knowing it. Skipped questions are excluded for the same reason as everywhere else:
+   they were taken out of the run. */
+function missedList(){
+  const out = [];
+  active(S).forEach(i => {
+    if(ans(i) !== undefined && !finalRight(i)) out.push({n: i + 1, i: i, q: D.questions[i]});
+  });
+  return out.sort((a,b)=>a.n-b.n);
+}
 function renderMarked(sel, list, head, say){
   const box = $(sel);
   if(!box) return;
@@ -1472,8 +1798,10 @@ function fullMarkdown(){
   return (sc ? sc + '\n\n' : '') + (D.sheet || '')
        + (mine ? '\n\n## My notes\n\n' + mine + '\n' : '')
        + markedMarkdown(markedList(S.starred), 'Starred')
+       + markedMarkdown(missedList(), 'Missed')
        + markedMarkdown(markedList(S.unsure), 'Needs work')
-       + researchMarkdown();
+       + researchMarkdown()
+       + frqMarkdown();
 }
 
 /* THE HTML FLAVOUR EXISTS ONLY FOR THE IMAGES, and it is only put on the clipboard when
@@ -1493,6 +1821,7 @@ function fullHTML(){
   const mine = noteMarkdown();
   if(mine) h += '<h2>My notes</h2>' + tinyMd(mine);
   h += markedHTML(markedList(S.starred), 'Starred');
+  h += markedHTML(missedList(), 'Missed');
   h += markedHTML(markedList(S.unsure), 'Needs work');
   const list = researchList();
   if(list.length){
@@ -1503,6 +1832,8 @@ function fullHTML(){
       x.r.i.forEach(src => { h += '<p><img src="' + src + '"></p>'; });
     });
   }
+  const fm = frqMarkdown();
+  if(fm) h += tinyMd(fm);
   return '<meta charset="utf-8">' + h;
 }
 

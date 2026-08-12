@@ -340,6 +340,59 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .saved{color:var(--muted);font-size:.78rem;margin:8px 0 0;height:1em}
 #minepreview{margin:14px 0 0}
 
+/* ---- the exam's two extra tags, and the written half ----
+   The section and the glyph ride the existing .meta line rather than becoming chips of their
+   own: they belong with the counter and the topic, which is already the line that says what
+   you are looking at. Colour is not used to tell the five glyphs apart — each one IS a
+   distinct character, so the page stays readable in grayscale without a legend. */
+.meta .sec{color:var(--text)}
+/* The second section on a cross-section question. Smaller and dimmer than the first, because
+   the first is where the question is filed and this one says what it also reaches into. */
+.meta .lk{color:var(--muted);font-size:.9em;margin-left:1px}
+.meta .src{font-size:.85rem;line-height:1;text-transform:none;letter-spacing:0;cursor:help}
+
+.frqs{padding:2px 0 56px}
+.frqs > .say{color:var(--muted);font-size:.88rem;margin:0 0 26px;max-width:60ch}
+.frq{margin:0 0 42px;padding:0 0 34px;border-bottom:1px solid var(--line)}
+.frq:last-child{border-bottom:0;padding-bottom:0}
+.frq .q{font-size:1.08rem;line-height:1.45;font-weight:600;margin:0 0 6px}
+.frq .say{color:var(--muted);font-size:.84rem;margin:6px 0 0}
+.stim{margin:0 0 14px;padding:11px 16px;background:var(--surface);
+ border-left:2px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;
+ font-size:.95rem;line-height:1.55;color:var(--text)}
+.frqin{width:100%;min-height:190px;resize:vertical;background:var(--surface);
+ color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
+ padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.6;outline:none;margin-top:16px}
+.frqin:focus{border-color:var(--accent)}
+.frqin::placeholder{color:var(--muted);opacity:.7}
+.acts.inline{margin-top:12px}
+.rubric{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
+.rubric h3{margin:0 0 10px;padding:0;border:0;font-size:.7rem;letter-spacing:.09em;
+ text-transform:uppercase;color:var(--muted)}
+.rrow{display:flex;gap:12px;align-items:flex-start;padding:9px 10px;margin:0 -10px;
+ border-radius:10px;cursor:pointer}
+.rrow:hover{background:var(--surface)}
+.rmark{flex:0 0 auto;width:22px;height:22px;border-radius:6px;border:1px solid var(--line);
+ display:grid;place-items:center;font-size:.78rem;background:var(--surface);
+ color:var(--muted);margin-top:2px}
+.rrow.hit .rmark{border-color:var(--right);color:var(--right)}
+.rbody{flex:1;min-width:0}
+.rlab{font-size:.93rem;line-height:1.45;color:var(--muted)}
+.rrow.hit .rlab{color:var(--text)}
+.rnote{display:block;font-size:.78rem;color:var(--muted);opacity:.85;margin-top:2px}
+.judge{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);
+ border:1px solid var(--accent);border-radius:999px;padding:1px 7px;margin-left:7px;
+ white-space:nowrap;vertical-align:1px}
+.rfoot{display:flex;align-items:baseline;gap:14px;margin-top:16px;padding-top:14px;
+ border-top:1px solid var(--line)}
+.rscore{font-size:1.35rem;font-weight:600;font-variant-numeric:tabular-nums}
+.rscore small{color:var(--muted);font-size:.75em;font-weight:400}
+.rverdict{font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.spacer{flex:1}
+.model{margin-top:14px;background:var(--surface);border-radius:var(--radius);
+ padding:14px 16px;font-size:.9rem;line-height:1.65;color:var(--muted)}
+.model strong{color:var(--text)}
+
 .empty{color:var(--muted);padding:8px 0 30px}
 .hist{color:var(--muted);font-size:.84rem;margin:22px 0 0}
 .hist span{white-space:nowrap}
@@ -365,7 +418,7 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 <header>
   <div class="wrap bar">
     <span class="title">8.2 Bones of the Upper Limb</span>
-    <span class="tabs" id="tabs"><button class="tab" data-tab="quiz" aria-selected="true">Quiz</button><button class="tab hide" data-tab="starred" aria-selected="false">Starred</button><button class="tab" data-tab="sheet" aria-selected="false">Study sheet</button></span>
+    <span class="tabs" id="tabs"><button class="tab" data-tab="quiz" aria-selected="true">Quiz</button><button class="tab hide" data-tab="starred" aria-selected="false">Starred</button><button class="tab hide" data-tab="frq" aria-selected="false">Written</button><button class="tab" data-tab="sheet" aria-selected="false">Study sheet</button></span>
   </div>
   <!-- In the same .wrap as the title and the tabs: the progress track used to run the full
        width of the window under a centred column, which is the one thing up here that was
@@ -388,6 +441,7 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
     </div>
   </div>
   <div id="starredview" class="rev hide"></div>
+  <div id="frqview" class="frqs hide"></div>
   <div id="sheetview" class="sheet hide">
     <div class="scorecard hide" id="scorecard"></div>
     <div class="sheettools">
@@ -535,13 +589,28 @@ Self-control is finite - one hard task leaves less for the next"></textarea>
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "ap2e-8-2", "title": "8.2 Bones of the Upper Limb", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "hash": "645abecdb78a2875", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "Which specific bony landmarks of the proximal humerus serve as the primary attachment sites for the muscles that act across the shoulder joint to provide leverage?", "options": ["Surgical and anatomical necks", "Greater and lesser tubercles", "Trochlea and capitulum", "Medial and lateral epicondyles"], "rationales": ["While these define regional boundaries and margins of the articular surface, they do not serve as major muscle attachment projections.", "These expanded bony areas are positioned laterally and anteriorly to provide mechanical advantage for the muscles moving the arm.", "These are smooth articular surfaces designed for joint movement with the forearm bones rather than muscle attachment points.", "These features are located at the distal end of the humerus and provide attachments for muscles acting on the forearm and hand, not the shoulder."], "correct": 1, "hint": "look for the expanded bony areas named for their size and anterior/lateral positions.", "topic": "Proximal humerus features", "qid": "0b1a82227f"}, {"q": "The bicipital groove provides a necessary passage for a tendon of the biceps brachii muscle. Between which two structures is this groove located?", "options": ["Deltoid tuberosity and radial fossa", "Anatomical and surgical necks", "Greater and lesser tubercles", "Trochlea and capitulum"], "rationales": ["The deltoid tuberosity is on the mid-shaft and the radial fossa is at the distal end, far from the proximal path of the biceps tendon.", "The necks of the humerus represent horizontal divisions rather than a vertical channel for tendon passage.", "The intertubercular groove, or bicipital groove, is the narrow space situated between these two bony protuberances.", "These are distal articulation surfaces and do not form a groove for the proximal biceps tendon."], "correct": 2, "hint": "identify the landmarks that define the narrow sulcus on the anterior aspect of the proximal humerus.", "topic": "Muscle tendon pathways", "qid": "59450c6720"}, {"q": "To allow for a full range of elbow flexion, which humeral features must accommodate the coronoid process of the ulna and the head of the radius?", "options": ["Medial and lateral epicondyles", "Olecranon and coronoid fossae", "Coronoid and radial fossae", "Trochlear and radial notches"], "rationales": ["Epicondyles are projections for muscle attachment rather than depressions that accommodate bone movement.", "The olecranon fossa is located on the posterior side and accommodates the elbow only when it is fully extended.", "These anterior depressions are specifically shaped to receive the corresponding parts of the forearm bones when the elbow is fully bent.", "These are features of the ulna that articulate with the humerus and radius, not depressions on the humerus itself."], "correct": 2, "hint": "think about the depressions located superior to the trochlea and capitulum on the anterior surface.", "topic": "Elbow joint mechanics", "qid": "cce643408b"}, {"q": "The 'crescent wrench' shape of the proximal ulna is essential for creating a stable hinge at the elbow. Which humeral structure does it primarily articulate with?", "options": ["Trochlea", "Lateral epicondyle", "Olecranon fossa", "Capitulum"], "rationales": ["The spindle-shaped trochlea fits perfectly into the C-shaped trochlear notch of the ulna to allow for hinge-like movement.", "The lateral epicondyle is a site for muscle attachment and does not form part of the articular hinge with the ulna.", "The olecranon fossa is a depression that receives the olecranon process during extension, but it is not the main articulation surface.", "The capitulum is a knob-like structure on the lateral side that articulates specifically with the radius, not the ulna."], "correct": 0, "hint": "consider the pulley-shaped region that fits into the large notch of the medial forearm bone.", "topic": "Elbow joint mechanics", "qid": "405a72dfdc"}, {"q": "A fracture at which specific site on the humerus is most common because it represents the junction between the expanded proximal end and the narrow shaft?", "options": ["Deltoid tuberosity", "Anatomical neck", "Surgical neck", "Intertubercular sulcus"], "rationales": ["The tuberosity is a thickened, roughened area on the shaft and is not as vulnerable as the neck regions.", "This neck is the margin of the articular head and is less frequently fractured than the region lower down where the bone narrows.", "This region is a frequent site for fractures, particularly impacted ones, due to its structural transition and relative weakness.", "This groove is reinforced by the surrounding tubercles and is not the primary site for structural failure in the proximal humerus."], "correct": 2, "hint": "identify the narrowed region located at the base of the humerus head's expanded area.", "topic": "Upper limb fractures", "qid": "0c28ee17c0"}, {"q": "The deltoid muscle is the primary abductor of the arm. Where must this muscle attach to the humerus to provide the necessary mechanical leverage?", "options": ["Lesser tubercle", "Deltoid tuberosity", "Lateral supracondylar ridge", "Greater tubercle"], "rationales": ["The lesser tubercle is on the anterior side and is an attachment point for internal rotators, not the primary abductor.", "This roughened, V-shaped region on the lateral side of the middle shaft is the specific site for deltoid attachment.", "This ridge is located far distally near the elbow and serves muscles acting on the forearm and hand.", "While near the shoulder, the greater tubercle serves as an attachment for rotator cuff muscles rather than the large deltoid muscle."], "correct": 1, "hint": "locate the roughened, V-shaped landmark found mid-way down the lateral aspect of the humeral shaft.", "topic": "Muscle attachment sites", "qid": "9dcf4fca8e"}, {"q": "The radius and ulna must act as a coordinated unit during the rotation of the forearm. Which structure provides the primary connection along the length of their shafts?", "options": ["Interosseous membrane of the forearm", "Radial notch of the ulna", "Styloid process", "Flexor retinaculum"], "rationales": ["This sheet of dense connective tissue spans the gap between the bones, uniting them and allowing for the transmission of forces.", "This notch is a small articular area at the proximal end and does not unite the shafts over their entire length.", "Styloid processes are distal projections that provide ligament attachments for the wrist rather than uniting the bone shafts.", "The flexor retinaculum is a ligament that spans the carpal bones at the wrist, not the shafts of the forearm bones."], "correct": 0, "hint": "identify the connective tissue band that attaches to the medial border of the radius and lateral border of the ulna.", "topic": "Forearm bone stability", "qid": "e3686b9ff4"}, {"q": "Why is the range of motion for lateral deviation of the hand at the wrist significantly more limited than for medial deviation?", "options": ["The scaphoid bone is fused to the radius", "The styloid process of the radius projects further distally than that of the ulna", "The ulna articulates directly with more carpal bones than the radius", "The flexor retinaculum only covers the medial side of the wrist"], "rationales": ["The scaphoid articulates with the radius but is a separate, mobile bone within the wrist joint.", "The longer distal projection of the radial styloid process physically blocks the lateral movement of the carpal bones.", "The ulna does not articulate directly with any carpal bones, whereas the radius articulates with two.", "The retinaculum spans the entire carpal tunnel from the lateral trapezium to the medial pisiform."], "correct": 1, "hint": "compare the anatomical length and distal extent of the pointed projections on the lateral and medial forearm bones.", "topic": "Wrist joint movement", "qid": "03611332ac"}, {"q": "The 'carrying angle' allows the forearm and hand to swing freely without hitting the hip. Why is this angle typically larger in females?", "options": ["To increase the stability of the radiocarpal joint", "To provide more leverage for the biceps brachii", "To accommodate a wider pelvis", "Because the humerus is shorter in females"], "rationales": ["The carrying angle is a feature of the elbow joint's alignment and does not directly affect the stability of the wrist.", "Leverage is determined by muscle attachment points like the radial tuberosity rather than the carrying angle.", "The wider pelvic structure in females requires a greater lateral deviation of the forearm to ensure clearance during walking or carrying.", "The length of the humerus does not fundamentally determine the angle of lateral deviation at the elbow."], "correct": 2, "hint": "consider how the width of the lower trunk affects the necessary path of the swinging arms.", "topic": "Upper limb alignment", "qid": "80c9b00d14"}, {"q": "Carpal tunnel syndrome involves the compression of a major nerve. Which structure forms the 'roof' of this tunnel and is responsible for this compression when inflammation occurs?", "options": ["Flexor retinaculum", "Ulnar notch of the radius", "Hook of the hamate bone", "Interosseous membrane"], "rationales": ["This strong ligament spans the U-shaped carpal bone grouping, creating a confined space that can compress the nerve if contents swell.", "This is an articular depression on the distal radius and does not form the boundary of the carpal tunnel.", "The hook of the hamate forms part of the medial wall of the tunnel, not its roof.", "This membrane is located between the radius and ulna in the forearm, not at the base of the hand."], "correct": 0, "hint": "identify the connective tissue band that unites the lateral and medial carpal bones anteriorly.", "topic": "Carpal tunnel function", "qid": "f845ea3bc9"}, {"q": "During a power grip, the hand's contact strength on the medial side is increased. Which structural feature of the metacarpal bones allows for this improved firmness?", "options": ["The fourth and fifth metacarpal bones have limited anterior-posterior mobility", "The second and third metacarpal bones are highly mobile", "All metacarpal bones are united by a single synovial joint", "The phalanges are fused to the metacarpal heads"], "rationales": ["This mobility allows the medial side of the palm to wrap more effectively around an object during gripping.", "The second and third metacarpals are actually immobile and firmly anchored to provide a stable central pillar for the hand.", "Metacarpals have individual carpometacarpal joints with different degrees of mobility.", "The metacarpophalangeal joints are highly mobile joints that form the knuckles and are not fused."], "correct": 0, "hint": "focus on the differences in mobility between the medial metacarpals and the central metacarpals.", "topic": "Hand gripping mechanics", "qid": "8b6b08050e"}, {"q": "What anatomical feature is primarily responsible for the thumb's (pollex) ability to move independently of the other fingers?", "options": ["The thumb contains three phalanges instead of two", "The first metacarpal bone is separated from the other metacarpal bones", "The thumb is digit number 5", "It lacks a carpometacarpal joint"], "rationales": ["The thumb actually contains only two phalanges (proximal and distal), unlike the other digits which have three.", "This separation provides the first metacarpal with a freedom of motion that is not restricted by the ligaments uniting the other bones.", "The thumb is digit number 1; the little finger is digit number 5.", "The thumb has a very specialized carpometacarpal joint that is key to its wide range of motion."], "correct": 1, "hint": "consider the spacing and connections of the five elongated bones that form the palm of the hand.", "topic": "Thumb mobility", "qid": "ce7850de06"}, {"q": "Which set of carpal bones articulates directly with the radius to form the radiocarpal joint?", "options": ["Pisiform and triquetrum", "Capitate and hamate", "Scaphoid and lunate", "Trapezium and trapezoid"], "rationales": ["The pisiform does not articulate with the radius, and the triquetrum articulates with a fibrocartilaginous pad rather than the radius itself.", "These bones are part of the distal row and the midcarpal joint, located further from the radius.", "These two bones of the proximal row articulate directly with the smooth distal surface of the radius.", "These are in the distal row of carpals and articulate with the metacarpals and the proximal carpal row, not the radius."], "correct": 2, "hint": "identify the two bones in the lateral portion of the proximal carpal row that meet the distal forearm.", "topic": "Wrist joint movement", "qid": "1c6d273217"}, {"q": "In pediatric cases, a fall onto the tip of the elbow can lead to a supracondylar fracture. What is the most critical immediate concern for the health of the forearm following this injury?", "options": ["Over-activation of the deltoid muscle", "Fusion of the radiocarpal joint", "Compression of the artery leading to ischemia", "Rupture of the interosseous membrane"], "rationales": ["The deltoid is proximal to the injury site and its activation is not a primary concern in distal humeral fractures.", "Fractures near the elbow affect the elbow and forearm circulation, not the direct articulation of the wrist joint.", "Swelling from the fracture can compress the main artery to the forearm, causing a lack of oxygen that can permanently damage muscles.", "While painful, membrane damage is not as immediately life- or limb-threatening as arterial compression and ischemia."], "correct": 2, "hint": "consider the consequences of soft tissue swelling on the blood flow to the distal limb.", "topic": "Upper limb fractures", "qid": "a9cda8d84c"}, {"q": "Why does a fracture of the scaphoid bone often require a follow-up radiograph several weeks after the initial injury for a definitive diagnosis?", "options": ["Initial tissue swelling can obscure the fracture until it subsides", "The bone must begin to necrose before it is visible on X-ray", "The scaphoid only becomes mineralized in adulthood", "Ligaments must tear completely to reveal the bone's position"], "rationales": ["Swelling frequently hides the bone break on early X-rays, often leading to a mistaken initial diagnosis of a simple wrist sprain.", "While necrosis is a long-term risk, the fracture itself is visible once swelling is gone, not because of the necrosis.", "The scaphoid is fully mineralized long before the typical age of such injuries, and its visibility is a matter of clear imaging.", "The diagnosis is based on the integrity of the bone itself, not the state of the surrounding ligaments."], "correct": 0, "hint": "think about how the body's immediate inflammatory response to injury affects the clarity of medical imaging.", "topic": "Upper limb fractures", "qid": "394ad22900"}, {"q": "Which joint allows the head of the radius to rotate, facilitating the crossing of the radius over the ulna during forearm pronation?", "options": ["Humero-ulnar joint", "Midcarpal joint", "Glenohumeral joint", "Proximal radioulnar joint"], "rationales": ["This joint is the hinge part of the elbow that allows for flexion and extension, not rotation of the radius.", "The midcarpal joint is located between the two rows of carpal bones and facilitates hand movement at the wrist.", "The glenohumeral joint is the shoulder joint and does not participate in the rotation of the forearm bones.", "This joint, formed by the radial notch of the ulna and the head of the radius, is the pivot point for forearm rotation."], "correct": 3, "hint": "identify the joint where the disc-shaped proximal end of the lateral forearm bone meets the medial bone.", "topic": "Forearm joint articulation", "qid": "8c6c203429"}], "hasSheet": true, "notebook": "https://notebooklm.google.com/notebook/cf57202f-1a73-4c88-9b58-abfcd3f6cae1/artifact/f4a60dbe-89da-481a-8a85-ffc393967ab6", "root": "../index.html", "tab": "quiz", "sheet": "## Proximal humerus features\nThis section identifies the landmarks of the upper humerus including the head, necks, and tubercles.\n\n### Key terms\n1. **Head of the humerus** — The large, round, smooth region that faces medially and articulates with the glenoid cavity of the scapula.\n2. **Anatomical neck** — The narrow margin located immediately around the smooth articular surface of the humeral head.\n3. **Greater tubercle** — An expanded bony area located on the lateral side of the proximal humerus that serves as a muscle attachment site.\n4. **Lesser tubercle** — A smaller bony area found on the anterior aspect of the proximal humerus for muscle attachment.\n5. **Surgical neck** — The region at the base of the proximal end of the humerus that is a common site for arm fractures.\n\n## Muscle tendon pathways\nThis section describes the specific bony groove on the humerus that facilitates the passage of muscle tendons.\n\n### Key terms\n1. **Intertubercular groove (bicipital groove)** — A narrow space passing between the greater and lesser tubercles of the humerus.\n   1.1 **Biceps brachii tendon** — The specific connective tissue structure that passes through the intertubercular groove to reach the arm.\n\n## Elbow joint mechanics\nThis section details the articulations between the humerus, radius, and ulna, including the depressions that accommodate movement.\n\n### Key terms\n1. **Trochlea** — A spindle- or pulley-shaped region on the distal humerus that articulates with the ulna.\n2. **Capitulum** — A knob-like structure on the anterior surface of the distal humerus that articulates with the radius.\n3. **Coronoid fossa** — A depression above the trochlea that receives the coronoid process of the ulna when the elbow is flexed.\n4. **Radial fossa** — A small depression above the capitulum that receives the head of the radius during elbow flexion.\n5. **Olecranon fossa** — A large depression on the posterior humerus that receives the olecranon process of the ulna during full extension.\n6. **Trochlear notch** — A large, C-shaped region on the proximal ulna that resembles a crescent wrench and articulates with the trochlea.\n\n## Upper limb fractures\nThis section summarizes common fractures of the humerus, radius, and carpal bones as described in clinical contexts.\n\n### Key terms\n1. **Impacted fracture** — An injury often caused by a fall onto the hand or elbow that drives the humeral shaft into the surgical neck.\n2. **Supracondylar fracture** — A fracture across the distal humerus above the epicondyles, common in children who fall on the tip of the elbow.\n3. **Intercondylar fracture** — A break between the epicondyles that separates one or both from the main body of the humerus.\n4. **Colles fracture** — A complete transverse fracture of the distal radius that drives the separated fragment posteriorly and superiorly.\n   4.1 **\"Dinner fork\" bend** — A characteristic forearm deformity caused by the posterior displacement of the hand during a distal radius fracture.\n5. **Scaphoid fracture** — A break in the most commonly injured carpal bone, often initially misdiagnosed as a wrist sprain.\n   5.1 **Bone necrosis** — The death of bone tissue that may occur following a scaphoid fracture due to a naturally poor blood supply.\n\n## Muscle attachment sites\nThis section lists the specific roughened regions and processes where muscles and ligaments anchor to the upper limb bones.\n\n### Key terms\n1. **Deltoid tuberosity** — A roughened, V-shaped region on the lateral side of the humeral shaft where the deltoid muscle attaches.\n2. **Medial epicondyle** — A prominent projection on the distal humerus that serves as the origin for powerful anterior forearm grasping muscles.\n3. **Lateral epicondyle** — A small projection on the distal humerus where the weaker posterior forearm muscles attach.\n4. **Ulnar tuberosity** — A roughened area on the anterior ulna located just below the coronoid process.\n5. **Radial tuberosity** — An oval-shaped bony protuberance on the medial side of the proximal radius that serves as a muscle attachment point.\n6. **Styloid process of the radius** — A pointed projection that provides ligament attachment and limits the range of motion for lateral deviations.\n\n## Forearm bone stability\nThis section explains the structural components that keep the radius and ulna united along their length.\n\n### Key terms\n1. **Interosseous border** — A small ridge running along the medial side of the radius and the lateral side of the ulna.\n2. **Interosseous membrane of the forearm** — A sheet of dense connective tissue that unites the radius and ulna bones along their shafts.\n\n## Wrist joint movement\nThis section defines the specific joints and carpal bone groups responsible for hand movement at the wrist.\n\n### Key terms\n1. **Radiocarpal joint** — The articulation between the distal radius and specific proximal carpal bones that forms the wrist joint.\n   1.1 **Scaphoid, lunate, and triquetrum** — Carpal bones where the radius articulates with the first two directly and the third via a fibrocartilaginous pad.\n2. **Midcarpal joint** — The articulation located between the proximal and distal rows of carpal bones.\n\n## Upper limb alignment\nThis section describes the anatomical deviation of the forearm relative to the arm in the anatomical position.\n\n### Key terms\n1. **Carrying angle** — A lateral deviation of 5–15 degrees of the forearm, which is larger in females to accommodate a wider pelvis.\n\n## Carpal tunnel function\nThis section defines the boundaries and the contents of the passageway into the hand through the wrist.\n\n### Key terms\n1. **Flexor retinaculum** — A strong ligament that spans the carpal bones to form the roof of the carpal tunnel.\n2. **Carpal tunnel** — A passageway formed by carpal bones and a ligament through which nine muscle tendons and a major nerve enter the hand.\n3. **Carpal tunnel syndrome** — A condition where inflammation within the carpal tunnel compresses the nerve, causing pain, numbness, and muscle weakness.\n\n## Hand gripping mechanics\nThis section details the role of the metacarpal bones in enhancing the strength and stability of the grip.\n\n### Key terms\n1. **Metacarpal bones** — Five elongated bones forming the palm of the hand, numbered 1–5 starting from the thumb side.\n2. **Power gripping** — The action of pulling the medial metacarpal bones anteriorly to increase contact and strength during a firm grip.\n   2.1 **Fourth and fifth metacarpals** — Palm bones with limited mobility, though the fifth bone exhibits significantly more motion than the fourth.\n\n## Thumb mobility\nThis section explains the anatomical uniqueness and skeletal structure of the first digit.\n\n### Key terms\n1. **First metacarpal bone** — The bone at the base of the thumb that is separated from other metacarpals to allow independent movement.\n2. **Pollex** — The anatomical term for the thumb, which is specifically identified as digit number 1.\n   2.1 **Proximal and distal phalanges** — The two specific bones that make up the complete skeletal structure of the thumb.\n\n## Forearm joint articulation\nThis section identifies the specific joints where the radius and ulna articulate to allow rotation.\n\n### Key terms\n1. **Proximal radioulnar joint** — The articulation between the head of the radius and the radial notch of the ulna.\n2. **Distal radioulnar joint** — The articulation between the head of the ulna and the ulnar notch of the radius."}</script>
+<script id="quiz-data" type="application/json">{"id": "ap2e-8-2", "title": "8.2 Bones of the Upper Limb", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "hash": "645abecdb78a2875", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "Which specific bony landmarks of the proximal humerus serve as the primary attachment sites for the muscles that act across the shoulder joint to provide leverage?", "options": ["Surgical and anatomical necks", "Greater and lesser tubercles", "Trochlea and capitulum", "Medial and lateral epicondyles"], "rationales": ["While these define regional boundaries and margins of the articular surface, they do not serve as major muscle attachment projections.", "These expanded bony areas are positioned laterally and anteriorly to provide mechanical advantage for the muscles moving the arm.", "These are smooth articular surfaces designed for joint movement with the forearm bones rather than muscle attachment points.", "These features are located at the distal end of the humerus and provide attachments for muscles acting on the forearm and hand, not the shoulder."], "correct": 1, "hint": "look for the expanded bony areas named for their size and anterior/lateral positions.", "topic": "Proximal humerus features", "sec": "", "src": "", "link": "", "qid": "0b1a82227f"}, {"q": "The bicipital groove provides a necessary passage for a tendon of the biceps brachii muscle. Between which two structures is this groove located?", "options": ["Deltoid tuberosity and radial fossa", "Anatomical and surgical necks", "Greater and lesser tubercles", "Trochlea and capitulum"], "rationales": ["The deltoid tuberosity is on the mid-shaft and the radial fossa is at the distal end, far from the proximal path of the biceps tendon.", "The necks of the humerus represent horizontal divisions rather than a vertical channel for tendon passage.", "The intertubercular groove, or bicipital groove, is the narrow space situated between these two bony protuberances.", "These are distal articulation surfaces and do not form a groove for the proximal biceps tendon."], "correct": 2, "hint": "identify the landmarks that define the narrow sulcus on the anterior aspect of the proximal humerus.", "topic": "Muscle tendon pathways", "sec": "", "src": "", "link": "", "qid": "59450c6720"}, {"q": "To allow for a full range of elbow flexion, which humeral features must accommodate the coronoid process of the ulna and the head of the radius?", "options": ["Medial and lateral epicondyles", "Olecranon and coronoid fossae", "Coronoid and radial fossae", "Trochlear and radial notches"], "rationales": ["Epicondyles are projections for muscle attachment rather than depressions that accommodate bone movement.", "The olecranon fossa is located on the posterior side and accommodates the elbow only when it is fully extended.", "These anterior depressions are specifically shaped to receive the corresponding parts of the forearm bones when the elbow is fully bent.", "These are features of the ulna that articulate with the humerus and radius, not depressions on the humerus itself."], "correct": 2, "hint": "think about the depressions located superior to the trochlea and capitulum on the anterior surface.", "topic": "Elbow joint mechanics", "sec": "", "src": "", "link": "", "qid": "cce643408b"}, {"q": "The 'crescent wrench' shape of the proximal ulna is essential for creating a stable hinge at the elbow. Which humeral structure does it primarily articulate with?", "options": ["Trochlea", "Lateral epicondyle", "Olecranon fossa", "Capitulum"], "rationales": ["The spindle-shaped trochlea fits perfectly into the C-shaped trochlear notch of the ulna to allow for hinge-like movement.", "The lateral epicondyle is a site for muscle attachment and does not form part of the articular hinge with the ulna.", "The olecranon fossa is a depression that receives the olecranon process during extension, but it is not the main articulation surface.", "The capitulum is a knob-like structure on the lateral side that articulates specifically with the radius, not the ulna."], "correct": 0, "hint": "consider the pulley-shaped region that fits into the large notch of the medial forearm bone.", "topic": "Elbow joint mechanics", "sec": "", "src": "", "link": "", "qid": "405a72dfdc"}, {"q": "A fracture at which specific site on the humerus is most common because it represents the junction between the expanded proximal end and the narrow shaft?", "options": ["Deltoid tuberosity", "Anatomical neck", "Surgical neck", "Intertubercular sulcus"], "rationales": ["The tuberosity is a thickened, roughened area on the shaft and is not as vulnerable as the neck regions.", "This neck is the margin of the articular head and is less frequently fractured than the region lower down where the bone narrows.", "This region is a frequent site for fractures, particularly impacted ones, due to its structural transition and relative weakness.", "This groove is reinforced by the surrounding tubercles and is not the primary site for structural failure in the proximal humerus."], "correct": 2, "hint": "identify the narrowed region located at the base of the humerus head's expanded area.", "topic": "Upper limb fractures", "sec": "", "src": "", "link": "", "qid": "0c28ee17c0"}, {"q": "The deltoid muscle is the primary abductor of the arm. Where must this muscle attach to the humerus to provide the necessary mechanical leverage?", "options": ["Lesser tubercle", "Deltoid tuberosity", "Lateral supracondylar ridge", "Greater tubercle"], "rationales": ["The lesser tubercle is on the anterior side and is an attachment point for internal rotators, not the primary abductor.", "This roughened, V-shaped region on the lateral side of the middle shaft is the specific site for deltoid attachment.", "This ridge is located far distally near the elbow and serves muscles acting on the forearm and hand.", "While near the shoulder, the greater tubercle serves as an attachment for rotator cuff muscles rather than the large deltoid muscle."], "correct": 1, "hint": "locate the roughened, V-shaped landmark found mid-way down the lateral aspect of the humeral shaft.", "topic": "Muscle attachment sites", "sec": "", "src": "", "link": "", "qid": "9dcf4fca8e"}, {"q": "The radius and ulna must act as a coordinated unit during the rotation of the forearm. Which structure provides the primary connection along the length of their shafts?", "options": ["Interosseous membrane of the forearm", "Radial notch of the ulna", "Styloid process", "Flexor retinaculum"], "rationales": ["This sheet of dense connective tissue spans the gap between the bones, uniting them and allowing for the transmission of forces.", "This notch is a small articular area at the proximal end and does not unite the shafts over their entire length.", "Styloid processes are distal projections that provide ligament attachments for the wrist rather than uniting the bone shafts.", "The flexor retinaculum is a ligament that spans the carpal bones at the wrist, not the shafts of the forearm bones."], "correct": 0, "hint": "identify the connective tissue band that attaches to the medial border of the radius and lateral border of the ulna.", "topic": "Forearm bone stability", "sec": "", "src": "", "link": "", "qid": "e3686b9ff4"}, {"q": "Why is the range of motion for lateral deviation of the hand at the wrist significantly more limited than for medial deviation?", "options": ["The scaphoid bone is fused to the radius", "The styloid process of the radius projects further distally than that of the ulna", "The ulna articulates directly with more carpal bones than the radius", "The flexor retinaculum only covers the medial side of the wrist"], "rationales": ["The scaphoid articulates with the radius but is a separate, mobile bone within the wrist joint.", "The longer distal projection of the radial styloid process physically blocks the lateral movement of the carpal bones.", "The ulna does not articulate directly with any carpal bones, whereas the radius articulates with two.", "The retinaculum spans the entire carpal tunnel from the lateral trapezium to the medial pisiform."], "correct": 1, "hint": "compare the anatomical length and distal extent of the pointed projections on the lateral and medial forearm bones.", "topic": "Wrist joint movement", "sec": "", "src": "", "link": "", "qid": "03611332ac"}, {"q": "The 'carrying angle' allows the forearm and hand to swing freely without hitting the hip. Why is this angle typically larger in females?", "options": ["To increase the stability of the radiocarpal joint", "To provide more leverage for the biceps brachii", "To accommodate a wider pelvis", "Because the humerus is shorter in females"], "rationales": ["The carrying angle is a feature of the elbow joint's alignment and does not directly affect the stability of the wrist.", "Leverage is determined by muscle attachment points like the radial tuberosity rather than the carrying angle.", "The wider pelvic structure in females requires a greater lateral deviation of the forearm to ensure clearance during walking or carrying.", "The length of the humerus does not fundamentally determine the angle of lateral deviation at the elbow."], "correct": 2, "hint": "consider how the width of the lower trunk affects the necessary path of the swinging arms.", "topic": "Upper limb alignment", "sec": "", "src": "", "link": "", "qid": "80c9b00d14"}, {"q": "Carpal tunnel syndrome involves the compression of a major nerve. Which structure forms the 'roof' of this tunnel and is responsible for this compression when inflammation occurs?", "options": ["Flexor retinaculum", "Ulnar notch of the radius", "Hook of the hamate bone", "Interosseous membrane"], "rationales": ["This strong ligament spans the U-shaped carpal bone grouping, creating a confined space that can compress the nerve if contents swell.", "This is an articular depression on the distal radius and does not form the boundary of the carpal tunnel.", "The hook of the hamate forms part of the medial wall of the tunnel, not its roof.", "This membrane is located between the radius and ulna in the forearm, not at the base of the hand."], "correct": 0, "hint": "identify the connective tissue band that unites the lateral and medial carpal bones anteriorly.", "topic": "Carpal tunnel function", "sec": "", "src": "", "link": "", "qid": "f845ea3bc9"}, {"q": "During a power grip, the hand's contact strength on the medial side is increased. Which structural feature of the metacarpal bones allows for this improved firmness?", "options": ["The fourth and fifth metacarpal bones have limited anterior-posterior mobility", "The second and third metacarpal bones are highly mobile", "All metacarpal bones are united by a single synovial joint", "The phalanges are fused to the metacarpal heads"], "rationales": ["This mobility allows the medial side of the palm to wrap more effectively around an object during gripping.", "The second and third metacarpals are actually immobile and firmly anchored to provide a stable central pillar for the hand.", "Metacarpals have individual carpometacarpal joints with different degrees of mobility.", "The metacarpophalangeal joints are highly mobile joints that form the knuckles and are not fused."], "correct": 0, "hint": "focus on the differences in mobility between the medial metacarpals and the central metacarpals.", "topic": "Hand gripping mechanics", "sec": "", "src": "", "link": "", "qid": "8b6b08050e"}, {"q": "What anatomical feature is primarily responsible for the thumb's (pollex) ability to move independently of the other fingers?", "options": ["The thumb contains three phalanges instead of two", "The first metacarpal bone is separated from the other metacarpal bones", "The thumb is digit number 5", "It lacks a carpometacarpal joint"], "rationales": ["The thumb actually contains only two phalanges (proximal and distal), unlike the other digits which have three.", "This separation provides the first metacarpal with a freedom of motion that is not restricted by the ligaments uniting the other bones.", "The thumb is digit number 1; the little finger is digit number 5.", "The thumb has a very specialized carpometacarpal joint that is key to its wide range of motion."], "correct": 1, "hint": "consider the spacing and connections of the five elongated bones that form the palm of the hand.", "topic": "Thumb mobility", "sec": "", "src": "", "link": "", "qid": "ce7850de06"}, {"q": "Which set of carpal bones articulates directly with the radius to form the radiocarpal joint?", "options": ["Pisiform and triquetrum", "Capitate and hamate", "Scaphoid and lunate", "Trapezium and trapezoid"], "rationales": ["The pisiform does not articulate with the radius, and the triquetrum articulates with a fibrocartilaginous pad rather than the radius itself.", "These bones are part of the distal row and the midcarpal joint, located further from the radius.", "These two bones of the proximal row articulate directly with the smooth distal surface of the radius.", "These are in the distal row of carpals and articulate with the metacarpals and the proximal carpal row, not the radius."], "correct": 2, "hint": "identify the two bones in the lateral portion of the proximal carpal row that meet the distal forearm.", "topic": "Wrist joint movement", "sec": "", "src": "", "link": "", "qid": "1c6d273217"}, {"q": "In pediatric cases, a fall onto the tip of the elbow can lead to a supracondylar fracture. What is the most critical immediate concern for the health of the forearm following this injury?", "options": ["Over-activation of the deltoid muscle", "Fusion of the radiocarpal joint", "Compression of the artery leading to ischemia", "Rupture of the interosseous membrane"], "rationales": ["The deltoid is proximal to the injury site and its activation is not a primary concern in distal humeral fractures.", "Fractures near the elbow affect the elbow and forearm circulation, not the direct articulation of the wrist joint.", "Swelling from the fracture can compress the main artery to the forearm, causing a lack of oxygen that can permanently damage muscles.", "While painful, membrane damage is not as immediately life- or limb-threatening as arterial compression and ischemia."], "correct": 2, "hint": "consider the consequences of soft tissue swelling on the blood flow to the distal limb.", "topic": "Upper limb fractures", "sec": "", "src": "", "link": "", "qid": "a9cda8d84c"}, {"q": "Why does a fracture of the scaphoid bone often require a follow-up radiograph several weeks after the initial injury for a definitive diagnosis?", "options": ["Initial tissue swelling can obscure the fracture until it subsides", "The bone must begin to necrose before it is visible on X-ray", "The scaphoid only becomes mineralized in adulthood", "Ligaments must tear completely to reveal the bone's position"], "rationales": ["Swelling frequently hides the bone break on early X-rays, often leading to a mistaken initial diagnosis of a simple wrist sprain.", "While necrosis is a long-term risk, the fracture itself is visible once swelling is gone, not because of the necrosis.", "The scaphoid is fully mineralized long before the typical age of such injuries, and its visibility is a matter of clear imaging.", "The diagnosis is based on the integrity of the bone itself, not the state of the surrounding ligaments."], "correct": 0, "hint": "think about how the body's immediate inflammatory response to injury affects the clarity of medical imaging.", "topic": "Upper limb fractures", "sec": "", "src": "", "link": "", "qid": "394ad22900"}, {"q": "Which joint allows the head of the radius to rotate, facilitating the crossing of the radius over the ulna during forearm pronation?", "options": ["Humero-ulnar joint", "Midcarpal joint", "Glenohumeral joint", "Proximal radioulnar joint"], "rationales": ["This joint is the hinge part of the elbow that allows for flexion and extension, not rotation of the radius.", "The midcarpal joint is located between the two rows of carpal bones and facilitates hand movement at the wrist.", "The glenohumeral joint is the shoulder joint and does not participate in the rotation of the forearm bones.", "This joint, formed by the radial notch of the ulna and the head of the radius, is the pivot point for forearm rotation."], "correct": 3, "hint": "identify the joint where the disc-shaped proximal end of the lateral forearm bone meets the medial bone.", "topic": "Forearm joint articulation", "sec": "", "src": "", "link": "", "qid": "8c6c203429"}], "hasSheet": true, "frq": [], "notebook": "https://notebooklm.google.com/notebook/cf57202f-1a73-4c88-9b58-abfcd3f6cae1/artifact/f4a60dbe-89da-481a-8a85-ffc393967ab6", "root": "../index.html", "tab": "quiz", "sheet": "## Proximal humerus features\nThis section identifies the landmarks of the upper humerus including the head, necks, and tubercles.\n\n### Key terms\n1. **Head of the humerus** — The large, round, smooth region that faces medially and articulates with the glenoid cavity of the scapula.\n2. **Anatomical neck** — The narrow margin located immediately around the smooth articular surface of the humeral head.\n3. **Greater tubercle** — An expanded bony area located on the lateral side of the proximal humerus that serves as a muscle attachment site.\n4. **Lesser tubercle** — A smaller bony area found on the anterior aspect of the proximal humerus for muscle attachment.\n5. **Surgical neck** — The region at the base of the proximal end of the humerus that is a common site for arm fractures.\n\n## Muscle tendon pathways\nThis section describes the specific bony groove on the humerus that facilitates the passage of muscle tendons.\n\n### Key terms\n1. **Intertubercular groove (bicipital groove)** — A narrow space passing between the greater and lesser tubercles of the humerus.\n   1.1 **Biceps brachii tendon** — The specific connective tissue structure that passes through the intertubercular groove to reach the arm.\n\n## Elbow joint mechanics\nThis section details the articulations between the humerus, radius, and ulna, including the depressions that accommodate movement.\n\n### Key terms\n1. **Trochlea** — A spindle- or pulley-shaped region on the distal humerus that articulates with the ulna.\n2. **Capitulum** — A knob-like structure on the anterior surface of the distal humerus that articulates with the radius.\n3. **Coronoid fossa** — A depression above the trochlea that receives the coronoid process of the ulna when the elbow is flexed.\n4. **Radial fossa** — A small depression above the capitulum that receives the head of the radius during elbow flexion.\n5. **Olecranon fossa** — A large depression on the posterior humerus that receives the olecranon process of the ulna during full extension.\n6. **Trochlear notch** — A large, C-shaped region on the proximal ulna that resembles a crescent wrench and articulates with the trochlea.\n\n## Upper limb fractures\nThis section summarizes common fractures of the humerus, radius, and carpal bones as described in clinical contexts.\n\n### Key terms\n1. **Impacted fracture** — An injury often caused by a fall onto the hand or elbow that drives the humeral shaft into the surgical neck.\n2. **Supracondylar fracture** — A fracture across the distal humerus above the epicondyles, common in children who fall on the tip of the elbow.\n3. **Intercondylar fracture** — A break between the epicondyles that separates one or both from the main body of the humerus.\n4. **Colles fracture** — A complete transverse fracture of the distal radius that drives the separated fragment posteriorly and superiorly.\n   4.1 **\"Dinner fork\" bend** — A characteristic forearm deformity caused by the posterior displacement of the hand during a distal radius fracture.\n5. **Scaphoid fracture** — A break in the most commonly injured carpal bone, often initially misdiagnosed as a wrist sprain.\n   5.1 **Bone necrosis** — The death of bone tissue that may occur following a scaphoid fracture due to a naturally poor blood supply.\n\n## Muscle attachment sites\nThis section lists the specific roughened regions and processes where muscles and ligaments anchor to the upper limb bones.\n\n### Key terms\n1. **Deltoid tuberosity** — A roughened, V-shaped region on the lateral side of the humeral shaft where the deltoid muscle attaches.\n2. **Medial epicondyle** — A prominent projection on the distal humerus that serves as the origin for powerful anterior forearm grasping muscles.\n3. **Lateral epicondyle** — A small projection on the distal humerus where the weaker posterior forearm muscles attach.\n4. **Ulnar tuberosity** — A roughened area on the anterior ulna located just below the coronoid process.\n5. **Radial tuberosity** — An oval-shaped bony protuberance on the medial side of the proximal radius that serves as a muscle attachment point.\n6. **Styloid process of the radius** — A pointed projection that provides ligament attachment and limits the range of motion for lateral deviations.\n\n## Forearm bone stability\nThis section explains the structural components that keep the radius and ulna united along their length.\n\n### Key terms\n1. **Interosseous border** — A small ridge running along the medial side of the radius and the lateral side of the ulna.\n2. **Interosseous membrane of the forearm** — A sheet of dense connective tissue that unites the radius and ulna bones along their shafts.\n\n## Wrist joint movement\nThis section defines the specific joints and carpal bone groups responsible for hand movement at the wrist.\n\n### Key terms\n1. **Radiocarpal joint** — The articulation between the distal radius and specific proximal carpal bones that forms the wrist joint.\n   1.1 **Scaphoid, lunate, and triquetrum** — Carpal bones where the radius articulates with the first two directly and the third via a fibrocartilaginous pad.\n2. **Midcarpal joint** — The articulation located between the proximal and distal rows of carpal bones.\n\n## Upper limb alignment\nThis section describes the anatomical deviation of the forearm relative to the arm in the anatomical position.\n\n### Key terms\n1. **Carrying angle** — A lateral deviation of 5–15 degrees of the forearm, which is larger in females to accommodate a wider pelvis.\n\n## Carpal tunnel function\nThis section defines the boundaries and the contents of the passageway into the hand through the wrist.\n\n### Key terms\n1. **Flexor retinaculum** — A strong ligament that spans the carpal bones to form the roof of the carpal tunnel.\n2. **Carpal tunnel** — A passageway formed by carpal bones and a ligament through which nine muscle tendons and a major nerve enter the hand.\n3. **Carpal tunnel syndrome** — A condition where inflammation within the carpal tunnel compresses the nerve, causing pain, numbness, and muscle weakness.\n\n## Hand gripping mechanics\nThis section details the role of the metacarpal bones in enhancing the strength and stability of the grip.\n\n### Key terms\n1. **Metacarpal bones** — Five elongated bones forming the palm of the hand, numbered 1–5 starting from the thumb side.\n2. **Power gripping** — The action of pulling the medial metacarpal bones anteriorly to increase contact and strength during a firm grip.\n   2.1 **Fourth and fifth metacarpals** — Palm bones with limited mobility, though the fifth bone exhibits significantly more motion than the fourth.\n\n## Thumb mobility\nThis section explains the anatomical uniqueness and skeletal structure of the first digit.\n\n### Key terms\n1. **First metacarpal bone** — The bone at the base of the thumb that is separated from other metacarpals to allow independent movement.\n2. **Pollex** — The anatomical term for the thumb, which is specifically identified as digit number 1.\n   2.1 **Proximal and distal phalanges** — The two specific bones that make up the complete skeletal structure of the thumb.\n\n## Forearm joint articulation\nThis section identifies the specific joints where the radius and ulna articulate to allow rotation.\n\n### Key terms\n1. **Proximal radioulnar joint** — The articulation between the head of the radius and the radial notch of the ulna.\n2. **Distal radioulnar joint** — The articulation between the head of the ulna and the ulnar notch of the radius."}</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
 const $ = s => document.querySelector(s);
 const esc = t => { const d=document.createElement('div'); d.textContent = t==null?'':t; return d.innerHTML; };
 const G_OK = '✓', G_NO = '✕';
+
+/* WHY A QUESTION IS ON THE EXAM. One glyph, set by the generator in the topic tag, and the
+   only thing the page does with it is show it and group by it. The ORDER of this object is
+   his priority order (08-11) and the tables below read it, so re-ordering here re-orders the
+   report: starred first, then missed, then flagged, then his own research, then the ones he
+   got right and is being asked again from a harder angle. */
+const SRC = {
+  '☆': 'Starred in the subchapter quiz',
+  '✕': 'You got this wrong',
+  '?': 'You flagged it — no idea at the time',
+  'R': 'Built from your own research',
+  '$': 'You got it right before — asked a different way'
+};
+const SRC_ORDER = Object.keys(SRC);
+function srcName(g){ return SRC[g] || ''; }
 
 /* ---- saved state -------------------------------------------------------------
    Everything lives in localStorage under the page id. `hash` fingerprints the question
@@ -659,24 +728,208 @@ function rput(id, t, imgs){
   catch(e){ return false; }                       // quota — the caller puts it back
 }
 
+/* ---- the written half ------------------------------------------------------------------
+   Three long-form questions on their own tab, generated with the exam by NotebookLM and
+   marked ON THIS PAGE with no network, no key and no credit. His constraint: *"its
+   subjective and hard to do but it needs to be no code, I dont mind comparing them manually
+   if need be but it wold be best if automated somehow."*
+
+   HOW THE MARKING IS HONEST. Each point carries a list of ways of saying it, written by the
+   generator alongside the question. A point whose wording is found is ticked; a point that
+   cannot be settled by wording at all is marked JUDGEMENT and left for him. The page never
+   guesses at the second kind — a marker that quietly awarded them would flatter every
+   answer, which is worse than one that asks.
+
+   ITS OWN STORAGE KEY, like the research box and for the same reason: S is one attempt and a
+   Retake clears it. What he wrote is material, and it outlives the attempt. */
+const FKEY = KEY + ':frq';
+let F = (function(){ try{ return JSON.parse(localStorage.getItem(FKEY) || '{}') || {}; }
+                     catch(e){ return {}; } })();
+function fput(){ try{ localStorage.setItem(FKEY, JSON.stringify(F)); }catch(e){} }
+function fget(i){ const f = F[i] || {}; return {t: f.t || '', m: f.m || {}, done: !!f.done}; }
+
+/* WORD BOUNDARIES, NOT SUBSTRINGS, and this is the difference between marking and
+   flattering: a bare substring search awards "recovers the verb" for the word `implement`
+   sitting inside `implementation`, which is the exact thing the answer was asked to undo.
+   A key ending in `*` keeps its open end on purpose, for stems like `pluralis*`. */
+function keyRe(k){
+  const open = /\*$/.test(k), base = open ? k.slice(0,-1) : k;
+  const lit = base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const head = /^[a-z0-9]/i.test(base) ? '\\b' : '';
+  const tail = (!open && /[a-z0-9]$/i.test(base)) ? '\\b' : '';
+  return new RegExp(head + lit + tail, 'i');
+}
+function findHit(text, keys){
+  const t = ' ' + String(text||'').toLowerCase().replace(/[’']/g, "'").replace(/\s+/g,' ') + ' ';
+  for(let i=0;i<(keys||[]).length;i++){ if(keyRe(keys[i]).test(t)) return keys[i]; }
+  return null;
+}
+function frqHit(fi, ri){
+  const f = D.frq[fi], r = f.rubric[ri], st = fget(fi);
+  if(st.m[ri] !== undefined) return {on: !!st.m[ri], why: 'set'};
+  if(r.judge) return {on: false, why: 'judge'};
+  const found = findHit(st.t, r.k);
+  return {on: !!found, why: found ? found.replace(/\*$/,'') : ''};
+}
+function frqScore(fi){
+  const f = D.frq[fi];
+  let n = 0;
+  f.rubric.forEach((_r, ri) => { if(frqHit(fi, ri).on) n++; });
+  return {n: n, t: f.rubric.length};
+}
+function flushFrq(){
+  document.querySelectorAll('#frqview textarea').forEach(ta => {
+    const i = +ta.dataset.f;
+    F[i] = F[i] || {}; F[i].t = ta.value;
+  });
+  fput();
+}
+function drawFrq(){
+  const box = $('#frqview');
+  if(!box || !(D.frq||[]).length) return;
+  let h = '<p class="say">Three written answers, from the same sources as the paper. Write '
+        + 'one, then mark it: every point that can be settled by what you wrote is checked '
+        + 'for you, and the ones that need judgement are handed back. Click any row to '
+        + 'overrule it.</p>';
+  D.frq.forEach((f, fi) => {
+    const st = fget(fi);
+    h += '<section class="frq"><p class="meta"><span class="num">' + (fi+1) + ' / '
+       + D.frq.length + '</span>'
+       + (f.tag ? '<span class="dot">·</span><span>' + esc(f.tag) + '</span>' : '')
+       + (f.secs ? '<span class="dot">·</span><span class="sec">' + esc(f.secs) + '</span>' : '')
+       + '</p>';
+    if(f.prompt) h += '<blockquote class="stim">' + esc(f.prompt) + '</blockquote>';
+    h += '<h1 class="q">' + esc(f.ask) + '</h1>';
+    if(f.words) h += '<p class="say">About ' + esc(f.words) + ' words.</p>';
+    h += '<textarea class="frqin" data-f="' + fi + '" spellcheck="true" '
+       + 'placeholder="Write your answer.">' + esc(st.t) + '</textarea>'
+       + '<p class="saved" data-wc="' + fi + '"></p>'
+       + '<div class="acts inline"><button class="pill primary" data-mark="' + fi
+       + '">Mark my answer</button>'
+       + '<button class="pill ghost" data-fcopy="' + fi + '">Copy</button></div>'
+       + '<div class="rubric hide" data-rub="' + fi + '"></div></section>';
+  });
+  box.innerHTML = h;
+
+  box.querySelectorAll('textarea').forEach(ta => {
+    const fi = +ta.dataset.f;
+    const count = () => {
+      const n = ta.value.trim() ? ta.value.trim().split(/\s+/).length : 0;
+      const el = box.querySelector('[data-wc="' + fi + '"]');
+      if(el) el.textContent = n + (n === 1 ? ' word' : ' words');
+    };
+    ta.addEventListener('input', () => {
+      F[fi] = F[fi] || {}; F[fi].t = ta.value; fput(); count();
+      if(fget(fi).done) markFrq(fi);
+    });
+    count();
+  });
+  box.querySelectorAll('[data-mark]').forEach(b => {
+    b.onclick = () => { const fi = +b.dataset.mark; F[fi] = F[fi] || {};
+                        F[fi].done = true; fput(); markFrq(fi); };
+  });
+  box.querySelectorAll('[data-fcopy]').forEach(b => {
+    b.onclick = () => copyText(oneFrqMarkdown(+b.dataset.fcopy), b, 'Copy');
+  });
+  D.frq.forEach((_f, fi) => { if(fget(fi).done) markFrq(fi); });
+}
+function markFrq(fi){
+  const f = D.frq[fi], st = fget(fi), box = $('#frqview [data-rub="' + fi + '"]');
+  if(!box) return;
+  box.classList.remove('hide');
+  if(!st.t.trim()){
+    box.innerHTML = '<p class="say">Nothing to mark yet — write an answer first.</p>';
+    return;
+  }
+  let h = '<h3>Marking</h3>';
+  f.rubric.forEach((r, ri) => {
+    const hit = frqHit(fi, ri);
+    let note;
+    if(hit.why === 'set') note = 'Set by you.';
+    else if(hit.why === 'judge') note = 'Nothing here can be settled by wording — read it and decide.';
+    else if(hit.on) note = 'Found “' + esc(hit.why) + '”.';
+    else note = 'Not found. If you said it another way, click to award it.';
+    h += '<div class="rrow ' + (hit.on ? 'hit' : 'miss') + '" data-ri="' + ri + '">'
+       + '<span class="rmark">' + (hit.on ? G_OK : '–') + '</span>'
+       + '<span class="rbody"><span class="rlab">' + esc(r.t)
+       + (r.judge ? '<span class="judge">your call</span>' : '') + '</span>'
+       + '<span class="rnote">' + note + '</span></span></div>';
+  });
+  const s = frqScore(fi);
+  const word = s.n >= s.t - 1 ? 'Strong' : s.n >= s.t - 2 ? 'Solid'
+             : s.n >= 2 ? 'Thin' : 'Missed the question';
+  h += '<div class="rfoot"><span class="rscore">' + s.n + ' <small>/ ' + s.t + '</small></span>'
+     + '<span class="rverdict">' + word + '</span><span class="spacer"></span>'
+     + (f.model ? '<button class="link" data-model="' + fi + '">Model answer</button>' : '')
+     + '</div>';
+  if(f.model) h += '<div class="model hide" data-mv="' + fi + '">' + tinyMd(f.model) + '</div>';
+  box.innerHTML = h;
+
+  box.querySelectorAll('.rrow').forEach(row => {
+    row.onclick = () => {
+      const ri = +row.dataset.ri;
+      F[fi] = F[fi] || {}; F[fi].m = F[fi].m || {};
+      F[fi].m[ri] = !row.classList.contains('hit');
+      fput(); markFrq(fi);
+    };
+  });
+  const mb = box.querySelector('[data-model]');
+  if(mb) mb.onclick = () => {
+    const mv = box.querySelector('[data-mv="' + fi + '"]');
+    mv.classList.toggle('hide');
+    mb.textContent = mv.classList.contains('hide') ? 'Model answer' : 'Hide model answer';
+  };
+}
+function oneFrqMarkdown(fi){
+  const f = D.frq[fi], st = fget(fi), s = frqScore(fi);
+  let out = '### Written ' + (fi+1) + (f.tag ? ' — ' + f.tag : '')
+          + (f.secs ? ' (' + f.secs + ')' : '') + '\n\n';
+  if(f.prompt) out += '> ' + f.prompt + '\n\n';
+  out += '**' + f.ask + '**\n\n' + (st.t.trim() || '_(not answered)_') + '\n\n'
+       + '**Marked ' + s.n + '/' + s.t + '**\n\n';
+  f.rubric.forEach((r, ri) => {
+    out += '- [' + (frqHit(fi, ri).on ? 'x' : ' ') + '] ' + r.t
+         + (r.judge ? ' _(judgement)_' : '') + '\n';
+  });
+  return out;
+}
+/* Only answered ones ride the Copy. An untouched written half would otherwise put three
+   empty questions and eighteen unticked boxes onto the Notion row every week. */
+function frqMarkdown(){
+  const done = (D.frq || []).map((_f, i) => i).filter(i => fget(i).t.trim());
+  if(!done.length) return '';
+  return '\n\n## Written\n\n' + done.map(oneFrqMarkdown).join('\n');
+}
+function copyText(text, btn, back){
+  navigator.clipboard.writeText(text).then(()=>{
+    const old = btn.textContent;
+    btn.textContent = 'Copied';
+    setTimeout(()=>{ btn.textContent = back || old; }, 1400);
+  });
+}
+
 /* ---- rendering ---------------------------------------------------------------- */
 /* The Starred tab only exists while something is starred, and the Study sheet tab only when
    the quiz shipped with one — a linguistics quiz built before topic tags has none. If that
    leaves one tab, the whole group goes: a lone "Quiz" button is chrome that says nothing. */
 function syncTabs(){
   const nstar = Object.keys(S.starred||{}).length;
+  const nfrq = (D.frq || []).length;
   document.querySelector('.tab[data-tab="starred"]').classList.toggle('hide', !nstar);
   document.querySelector('.tab[data-tab="sheet"]').classList.toggle('hide', !D.hasSheet);
-  $('#tabs').classList.toggle('hide', !nstar && !D.hasSheet);
+  document.querySelector('.tab[data-tab="frq"]').classList.toggle('hide', !nfrq);
+  $('#tabs').classList.toggle('hide', !nstar && !D.hasSheet && !nfrq);
   if(D.tab === 'starred' && !nstar) setTab('quiz');
 }
 function setTab(name){
   if(D.tab === 'quiz' && name !== 'quiz') flushResearch();
+  if(D.tab === 'frq' && name !== 'frq') flushFrq();
   D.tab = name;
   document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===name));
   $('#band').classList.toggle('hide', name!=='quiz');
   $('#starredview').classList.toggle('hide', name!=='starred');
   $('#sheetview').classList.toggle('hide', name!=='sheet');
+  $('#frqview').classList.toggle('hide', name!=='frq');
   $('#footer').classList.toggle('hide', name!=='quiz');
   if(name==='quiz'){
     draw();
@@ -686,6 +939,7 @@ function setTab(name){
   } else {
     if(name==='starred') drawStarred();
     if(name==='sheet'){ renderScore(); renderSheetExtras(); }
+    if(name==='frq') drawFrq();
     $('main').style.paddingTop = BASE_PAD + 'px';
     window.scrollTo(0,0);
   }
@@ -788,7 +1042,17 @@ function buildQ(i, picked, fresh, en){
   let h = '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta"><span class="num">' + (pos+1) + ' / ' + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        // THE SECTION AND THE GLYPH, on the exam only — a subchapter quiz carries neither and
+        // this line is byte-for-byte what it always was. The section is what it says; the
+        // glyph is why this question is on the paper at all, and it is deliberately JUST the
+        // glyph. His instruction: "the blurb needs to be shortened to just the symbol : in
+        // that its either has them as a tag or it doesnt."
+        + (q.sec ? '<span class="dot">·</span><span class="sec">' + esc(q.sec)
+                 + (q.link ? '<span class="lk">+' + esc(q.link) + '</span>' : '')
+                 + '</span>' : '')
         + (q.topic ? '<span class="dot">·</span><span>' + esc(q.topic) + '</span>' : '')
+        + (q.src ? '<span class="dot">·</span><span class="src" title="' + srcName(q.src)
+                 + '">' + esc(q.src) + '</span>' : '')
         + '</p>'
         + '<h1 class="q">' + esc(q.q) + '</h1></div>'
         // ? BEFORE ☆, because it is the one pressed while the question is still unanswered:
@@ -1099,6 +1363,39 @@ function finish(){
   save(); end(); window.scrollTo(0,0);
 }
 
+/* One scored breakdown, keyed by whatever `keyOf` pulls off a question. Returns '' when no
+   question carries the field, which is what keeps the subchapter quiz's end card identical.
+   Rows come out in SRC_ORDER when the key is a glyph and in natural order otherwise, so the
+   provenance table always reads down his priority ladder even if the paper is shuffled. */
+function group(act, keyOf, head, label){
+  const by = {};
+  act.forEach(i=>{
+    // A CROSS-SECTION QUESTION COUNTS IN BOTH SECTIONS, because it tested both. It is one
+    // question on the paper and two lines in the report, so the column does not add up to
+    // the total — which is correct, and the alternative is worse: filing it under whichever
+    // section happened to be written first would hide the other one's weakness entirely.
+    const ks = [].concat(keyOf(i) || []);
+    ks.forEach(k=>{
+      if(!k) return;
+      by[k] = by[k] || {n:0,t:0};
+      by[k].t++;
+      if(finalRight(i)) by[k].n++;
+    });
+  });
+  let keys = Object.keys(by);
+  if(!keys.length) return '';
+  const ranked = keys.filter(k => SRC_ORDER.indexOf(k) >= 0).length === keys.length;
+  keys = ranked ? SRC_ORDER.filter(k => by[k])
+                : keys.sort((a,b)=>a.localeCompare(b, undefined, {numeric:true}));
+  let h = '<div class="topics"><h3>'+esc(head)+'</h3>';
+  keys.forEach(k=>{
+    h += '<div class="trow"><span>'+(label ? label(k) : esc(k))+'</span>'
+       + '<span class="n">'+by[k].n+'/'+by[k].t+'</span>'
+       + '<span class="tbar"><i style="width:'+(by[k].n/by[k].t*100)+'%"></i></span></div>';
+  });
+  return h + '</div>';
+}
+
 function end(){
   const act = active(S), n = score(S), t = act.length;
   const pct = t ? Math.round(n/t*100) : 0;
@@ -1131,6 +1428,18 @@ function end(){
     });
     h += '</div>';
   }
+
+  /* THE TWO EXAM-ONLY TABLES. Both are built from fields a subchapter quiz never carries, so
+     both are simply absent there — no flag, no branch anywhere else, and nothing about the
+     quiz page changed the day these were added.
+
+     BY SUBCHAPTER is the one he asked for by name: a paper spanning seven sections that can
+     only report one number tells him he scored 78% and nothing about where to go back to.
+     BY WHY IT WAS ASKED is the one that closes the loop — it is the only place that answers
+     whether the thing he got wrong last week actually stuck. */
+  h += group(act, i => [D.questions[i].sec, D.questions[i].link], 'By subchapter', null);
+  h += group(act, i => D.questions[i].src, 'Why it was asked',
+             g => SRC[g] ? esc(g) + '  ' + esc(SRC[g]) : esc(g));
 
   if(S.history.length){
     h += '<p class="hist">Earlier attempts: ' + S.history.slice().reverse()
@@ -1360,6 +1669,23 @@ function markedList(map){
   D.questions.forEach((q, i) => { if((map || {})[q.qid]) out.push({n: i + 1, i: i, q: q}); });
   return out;
 }
+
+/* WHAT HE GOT WRONG — the one part of the record that never left the browser.
+   Starred, Needs work and My research have ridden the Copy into Notion since 08-11, and the
+   week's exam is built from that Notion row; the wrong answers were the missing rung, so the
+   exam could prefer a question he flagged but not one he actually failed. This is that rung,
+   and it costs one section in a paste he already makes.
+
+   FINAL verdicts, so a question redeemed on the second pass is NOT listed — he ended the
+   attempt knowing it. Skipped questions are excluded for the same reason as everywhere else:
+   they were taken out of the run. */
+function missedList(){
+  const out = [];
+  active(S).forEach(i => {
+    if(ans(i) !== undefined && !finalRight(i)) out.push({n: i + 1, i: i, q: D.questions[i]});
+  });
+  return out.sort((a,b)=>a.n-b.n);
+}
 function renderMarked(sel, list, head, say){
   const box = $(sel);
   if(!box) return;
@@ -1470,8 +1796,10 @@ function fullMarkdown(){
   return (sc ? sc + '\n\n' : '') + (D.sheet || '')
        + (mine ? '\n\n## My notes\n\n' + mine + '\n' : '')
        + markedMarkdown(markedList(S.starred), 'Starred')
+       + markedMarkdown(missedList(), 'Missed')
        + markedMarkdown(markedList(S.unsure), 'Needs work')
-       + researchMarkdown();
+       + researchMarkdown()
+       + frqMarkdown();
 }
 
 /* THE HTML FLAVOUR EXISTS ONLY FOR THE IMAGES, and it is only put on the clipboard when
@@ -1491,6 +1819,7 @@ function fullHTML(){
   const mine = noteMarkdown();
   if(mine) h += '<h2>My notes</h2>' + tinyMd(mine);
   h += markedHTML(markedList(S.starred), 'Starred');
+  h += markedHTML(missedList(), 'Missed');
   h += markedHTML(markedList(S.unsure), 'Needs work');
   const list = researchList();
   if(list.length){
@@ -1501,6 +1830,8 @@ function fullHTML(){
       x.r.i.forEach(src => { h += '<p><img src="' + src + '"></p>'; });
     });
   }
+  const fm = frqMarkdown();
+  if(fm) h += tinyMd(fm);
   return '<meta charset="utf-8">' + h;
 }
 
