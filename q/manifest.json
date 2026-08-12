@@ -78,5 +78,13 @@
   "book": "EL",
   "url": "q/el-6-1.html",
   "total": 12
+ },
+ {
+  "id": "el-6-2",
+  "title": "6.2 Word order",
+  "subtitle": "Chapter 6 · Syntax",
+  "book": "EL",
+  "url": "q/el-6-2.html",
+  "total": 16
  }
 ]
