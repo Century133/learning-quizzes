@@ -1,0 +1,2505 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#131314">
+<title>Ch8 Exam · 8.1, 8.4</title>
+<style>
+:root{--bg:#131314;--surface:#1e1f20;--surface-hi:#26282a;--text:#e3e3e3;
+--muted:#9aa0a6;--line:#3c4043;--accent:#8ab4f8;--right:#81c995;--wrong:#f28b82;
+--radius:14px;--maxw:660px;--qsize:1.25rem;--qweight:600;
+--osize:0.95rem;--opad:12px 16px;--ogap:7px;--qgap:18px;
+--barh:46px;--band:#191a1b;--bandr:20px;--bandpad:20px;
+--font:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font);
+ font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+ min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+a{color:var(--accent)}
+/* Longhands, NOT `padding:0 22px`. `main` and `footer` also carry .wrap, and a class beats
+   an element selector — the shorthand here was silently zeroing their vertical padding. */
+.wrap{width:100%;max-width:var(--maxw);margin:0 auto;
+ padding-left:22px;padding-right:22px}
+
+/* ---- top bar: title, tabs, progress. Nothing else lives up here. ---- */
+header{position:sticky;top:0;z-index:5;background:var(--bg);
+ border-bottom:1px solid var(--line)}
+/* THE BAR IS WIDER THAN THE COLUMN, and that is what makes a centred title possible at all.
+   The reading column is 660px and the tab strip is ~300 of it once an exam shows Starred and
+   Written — so inside the column there is no width at which a real title can be centred with
+   the tabs still on the row. Letting only the bar run to 1080 pushes the tabs out to the
+   window and leaves the middle free. THE CENTRE IS UNCHANGED by this: the bar, the rail, the
+   band and the card are all centred on the same axis, so the title still lines up with the
+   question under it — only the tabs moved outward. */
+.bar{display:flex;align-items:center;gap:14px;height:var(--barh);position:relative;
+ max-width:min(1080px, 100%)}
+/* DEAD-CENTRE WHENEVER IT FITS (08-12, his ask), and centred in the space beside the tabs
+   when it does not. The fallback is not caution: the column is 660px, the tabs eat ~235 of
+   it, and dead-centre needs an empty gutter the same width on the left — which leaves about
+   120px for the title, and "3.6 How to Feel Better: Coping With Negative Emotions" is 360.
+   Truncating every long title to centre it would be a worse page than an off-centre one.
+   `fitTitle()` measures both and adds .mid only when the real title clears the real tabs. */
+.title{font-size:.9rem;font-weight:500;white-space:nowrap;overflow:hidden;
+ text-overflow:ellipsis;flex:1;text-align:center}
+/* Out of the flex row and centred on the bar's padding box — the same box the rail spans,
+   so the title lines up with the progress track under it and with the band below that. */
+.bar.mid .title{position:absolute;left:0;right:0;margin:0 auto;width:max-content;
+ max-width:100%;flex:none}
+.bar.mid .tabs{margin-left:auto}
+.tabs{display:flex;gap:2px}
+.tab{background:none;border:0;color:var(--muted);font:inherit;font-size:.82rem;
+ padding:5px 12px;border-radius:999px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--surface-hi);color:var(--text)}
+/* END CAPS, because a grey line on a grey page has no visible extent — "hard to see the
+   defined start and end". Two short uprights mark where the quiz begins and ends, so the
+   blue fill is read against a track with edges rather than against the whole window. They
+   are luminance, not colour, so they survive grayscale like the rest of the page. */
+.rail{height:2px;background:var(--line);position:relative}
+.rail::before,.rail::after{content:"";position:absolute;top:-3px;width:2px;height:8px;
+ background:var(--muted);border-radius:1px}
+.rail::before{left:0}
+.rail::after{right:0}
+.rail>i{display:block;height:100%;background:var(--accent);width:0;
+ transition:width .25s ease}
+
+/* TOP-ANCHORED, NOT CENTRED, and that is a fix rather than a preference. With
+   justify-content:center the question drifted upward the moment an answer opened a
+   rationale, because the block got taller and the centring recomputed — "the question
+   shifts… it should stay stationary". Anchored to the top it cannot move: only the cards
+   below the one he clicked ever change position. */
+main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;padding:16px 0 6px}
+
+/* ---- THE BAND ----
+   Flat black under the question made it hard to read; the notebook's lighter middle band is
+   what he wanted instead. So the question and EVERY option sit inside one surface.
+
+   IT CLOSES AT THE BOTTOM AND HUGS THE CONTENT. The first version ran off the bottom of the
+   screen — "kind of weirdly big at the bottom", and he was right: with the block centred, an
+   open band left a lot of empty surface under the last option. It is a card now, sized to
+   what is in it.
+
+   THREE TONES, and the order matters: page (--bg) → band (--band) → option card (--surface).
+   Set --band lighter than --surface and the cards vanish into it. */
+.band{background:var(--band);border:1px solid var(--line);border-radius:var(--bandr);
+ padding:var(--bandpad)}
+/* Off for the end card, the review list and the sheet — a long scrolling list does not want
+   to be in a box. */
+.band.off{background:none;border:0;padding:0}
+/* A short window pays for the band's padding out of the space the options need, so it gives
+   most of it back below 780px. Measured: at 800px all 14 questions of PSP 3.6 still fit
+   answered-wrong with no scrolling. */
+@media (max-height:780px){
+  .band{padding:12px 16px}
+}
+
+/* ---- the question ---- */
+.qhead{display:flex;align-items:flex-start;gap:10px;margin:0 0 var(--qgap)}
+.qhead .qcol{flex:1;min-width:0}
+.meta{display:flex;align-items:center;gap:8px;margin:0 0 7px;font-size:.7rem;
+ color:var(--muted);letter-spacing:.07em;text-transform:uppercase}
+.meta .num{font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.meta .dot{opacity:.55}
+.topic{margin:0 0 6px;font-size:.7rem;color:var(--muted);letter-spacing:.07em;
+ text-transform:uppercase}
+.q{font-size:var(--qsize);line-height:1.35;font-weight:var(--qweight);margin:0;
+ letter-spacing:-.005em}
+.link{background:none;border:0;padding:0;color:var(--muted);font:inherit;
+ font-size:.85rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.link:hover{color:var(--text)}
+/* The hint lives in the FOOTER, as Gemini's does. Opening it there grows the sticky bar
+   upward and leaves the question and every option exactly where they were; under the
+   question it would have shoved all four cards down. */
+.hinttext{margin:0 0 12px;color:var(--muted);font-size:.88rem;line-height:1.5;
+ border-left:2px solid var(--line);padding-left:12px}
+
+/* ---- options ---- */
+.opts{display:flex;flex-direction:column;gap:var(--ogap)}
+.opt{display:block;width:100%;text-align:left;background:var(--surface);
+ border:1px solid transparent;border-radius:var(--radius);padding:var(--opad);
+ color:var(--text);font:inherit;font-size:var(--osize);cursor:pointer;
+ transition:background .16s ease,border-color .16s ease,opacity .16s ease}
+.opt:hover:not(:disabled){background:var(--surface-hi)}
+.opt:disabled{cursor:default}
+.line{display:flex;gap:12px;align-items:flex-start;line-height:1.4}
+.line .k{color:var(--muted);min-width:1.25em}
+.line .t{flex:1}
+.line .mark{font-size:1.05rem;line-height:1.45;min-width:1.05em;text-align:right;opacity:0}
+
+/* GRAYSCALE-SAFE STATES — three signals, never colour alone: the ✓/✕ glyph, the WORD in
+   .lab, and luminance (bright solid border vs dimmed dashed). Turn the display to
+   grayscale and every state still reads. */
+.opt.is-right{background:var(--surface-hi);border-color:var(--right);
+ box-shadow:inset 0 0 0 1px var(--right)}
+.opt.is-right .mark{opacity:1;color:var(--right)}
+.opt.is-wrong{background:transparent;border-style:dashed;border-color:var(--wrong);
+ opacity:.8}
+.opt.is-wrong .mark{opacity:1;color:var(--wrong)}
+.opt.is-muted{opacity:.42}
+
+/* THE FEEDBACK LIVES INSIDE THE CARD, as Gemini's does — that is what he asked for, and it
+   is also why nothing has to scroll: the explanation appears where he is already looking.
+   The 0fr→1fr grid trick animates an unknown height with no JS measuring. If a browser
+   refuses to animate it, the row still ends at 1fr, so the text is visible either way. */
+.rat{display:grid;grid-template-rows:1fr;opacity:1}
+.rat>.ratin{overflow:hidden;min-height:0}
+.opt.fresh .rat{animation:reveal .3s ease}
+@keyframes reveal{from{grid-template-rows:0fr;opacity:0}to{grid-template-rows:1fr;opacity:1}}
+.lab{display:flex;align-items:center;gap:8px;font-size:.86rem;font-weight:600;
+ margin:9px 0 0;padding-left:calc(1.25em + 12px)}
+.opt.is-right .lab{color:var(--right)}
+.opt.is-wrong .lab{color:var(--wrong)}
+.why{margin:4px 0 0;padding-left:calc(1.25em + 12px);color:var(--muted);
+ font-size:.86rem;line-height:1.4}
+
+.opt.enter,.qhead.enter{animation:fadein .24s ease both}
+@keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* ---- SELECTABLE TEXT, and it is timed rather than global ----
+   He searches the web while he works, so the wording has to leave the page. Two different
+   problems, one each side of the answer:
+
+   THE QUESTION was never selectable because the browser's own stylesheet turns selection
+   off inside a <button>, and the whole question head sits in one. `user-select:text` on the
+   text itself puts it back; it costs nothing, because nothing up there is a click target
+   except the ☆ and the ⋮, which are excluded below.
+
+   THE OPTIONS STAY LOCKED UNTIL HE HAS ANSWERED, and that is deliberate, not an oversight.
+   An option IS the button — drag across one to select it and the mouseup answers the
+   question with whatever he happened to start the drag on. So selection is enabled on
+   `:disabled`, which is exactly the set of options that can no longer be clicked: every
+   option, the moment the answer is in. On a second pass the pending question re-enables and
+   locks again, which is right — it is live again. */
+.q,.qq,.why,.lab,.hinttext,.rline,.tag,.sheet,.topics,.legend{
+ user-select:text;-webkit-user-select:text}
+.opt{user-select:none;-webkit-user-select:none}
+.opt:disabled,.opt:disabled *{user-select:text;-webkit-user-select:text;cursor:auto}
+.star,.dots,.tab,button.pill{user-select:none;-webkit-user-select:none}
+
+/* ---- HIS RESEARCH, one box per question ----
+   Under the options, inside the band, and OUTSIDE #quizview — so answering re-renders the
+   question without touching what he is halfway through typing, the same reason the hint
+   lives in the footer.
+
+   THE TOGGLE ROW IS ALWAYS VISIBLE AND THE BODY IS WHAT COLLAPSES. That is what keeps the
+   centring honest: the block's minimum height is a constant the measurement can include,
+   whether the box is open or shut. Opening it only ever grows the page downward, which is
+   the one direction this page allows. */
+.research{margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+.rtoggle{display:inline-flex;align-items:center;gap:7px;background:none;border:0;padding:0;
+ color:var(--muted);font:inherit;font-size:.82rem;cursor:pointer;text-decoration:underline;
+ text-underline-offset:3px;user-select:none;-webkit-user-select:none}
+.rtoggle:hover{color:var(--text)}
+.rtoggle.has{color:var(--text)}
+.rbody{margin:12px 0 0}
+/* HALF EACH, and they collapse to stacked well before the panes get too narrow to read a
+   pasted paragraph in. The label sits inside the <label> so clicking it lands the caret. */
+.rcols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:720px){.rcols{grid-template-columns:1fr}}
+.rcol{display:flex;flex-direction:column;gap:6px;min-width:0}
+.rlab{color:var(--muted);font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;
+ display:flex;align-items:center;gap:6px}
+.rlab kbd{font:inherit;font-size:.68rem;text-transform:none;letter-spacing:0;line-height:1;
+ padding:2px 5px;border:1px solid var(--line);border-radius:5px;background:var(--surface)}
+#rtext,#rfix{width:100%;min-height:104px;resize:vertical;background:var(--surface);
+ color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
+ padding:11px 13px;font:inherit;font-size:.9rem;line-height:1.55;outline:none}
+#rtext:focus,#rfix:focus{border-color:var(--accent)}
+#rtext::placeholder,#rfix::placeholder{color:var(--muted);opacity:.7}
+.rshots{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
+.shot{position:relative;display:block;line-height:0}
+.shot img{max-height:88px;max-width:150px;border-radius:9px;border:1px solid var(--line)}
+.shot .x{position:absolute;top:-6px;right:-6px;width:20px;height:20px;line-height:18px;
+ text-align:center;border-radius:999px;border:1px solid var(--line);background:var(--surface-hi);
+ color:var(--text);font:inherit;font-size:.8rem;cursor:pointer;padding:0}
+.rsay{color:var(--muted);font-size:.76rem;margin:9px 0 0;min-height:1em}
+.rsay.warn{color:var(--wrong)}
+
+/* the same material, read back on the study sheet */
+.ritem{border-top:1px solid var(--line);padding:16px 0 4px}
+.ritem:first-of-type{border-top:0;padding-top:6px}
+.rq{font-size:.95rem;font-weight:600;margin:0 0 8px}
+.rans{font-size:.88rem;color:var(--muted);margin:0 0 8px}
+.rtxt p{margin:0 0 9px;color:var(--muted)}
+.rimg{display:block;max-width:100%;border-radius:10px;border:1px solid var(--line);
+ margin:0 0 10px}
+
+/* ---- starring ----
+   A visible toggle rather than a menu item: it is used on questions he got RIGHT as often as
+   wrong, so it has to be one press. Outline vs filled is a shape difference, so it reads in
+   grayscale without needing colour. */
+.star{background:none;border:0;color:var(--muted);font-size:1.05rem;line-height:1;
+ padding:4px 6px;border-radius:999px;cursor:pointer;flex:0 0 auto}
+.star:hover{background:var(--surface);color:var(--text)}
+.star.on{color:var(--text)}
+
+/* ---- ? "no idea, needs work" ----
+   Beside the star and read the same way. GRAYSCALE-SAFE like everything else on this page:
+   on/off is a RING appearing, not a colour changing, so it reads with the colour off and at
+   a glance in a screenshot. */
+.qmark{background:none;border:1px solid transparent;color:var(--muted);font:inherit;
+ font-size:.9rem;font-weight:600;line-height:1;width:26px;height:26px;padding:0;
+ border-radius:999px;cursor:pointer;flex:0 0 auto;user-select:none;-webkit-user-select:none}
+.qmark:hover{background:var(--surface);color:var(--text)}
+.qmark.on{color:var(--text);border-color:var(--accent);background:var(--surface-hi)}
+
+/* ---- the ⋮ menu ---- */
+.more{position:relative;flex:0 0 auto}
+.dots{background:none;border:0;color:var(--muted);font-size:1.15rem;line-height:1;
+ padding:4px 8px;border-radius:999px;cursor:pointer}
+.dots:hover{background:var(--surface);color:var(--text)}
+.menu{position:absolute;right:0;top:32px;background:var(--surface-hi);
+ border:1px solid var(--line);border-radius:10px;padding:5px;min-width:170px;z-index:6;
+ box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.menu button{display:block;width:100%;text-align:left;background:none;border:0;
+ color:var(--text);font:inherit;font-size:.88rem;padding:8px 10px;border-radius:7px;
+ cursor:pointer;white-space:nowrap}
+.menu button:hover{background:var(--surface)}
+
+/* ---- bottom bar ---- */
+footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg) 30%);
+ padding:8px 0 10px}
+.acts{display:flex;gap:10px;align-items:center}
+.spacer{flex:1}
+button.pill{font:inherit;font-size:.9rem;border-radius:999px;padding:9px 22px;
+ cursor:pointer;border:1px solid var(--line);background:none;color:var(--text)}
+button.pill:disabled{opacity:.32;cursor:default}
+button.pill.primary{background:var(--accent);color:#0b0b0c;border-color:var(--accent);
+ font-weight:500}
+button.pill.ghost{border-color:transparent;color:var(--muted)}
+
+/* ---- end card ---- */
+.score{font-size:3.1rem;font-weight:400;letter-spacing:-.03em;margin:0}
+.score small{font-size:.95rem;color:var(--muted);font-weight:400;letter-spacing:0}
+.sub{color:var(--muted);margin:5px 0 26px;font-size:.92rem}
+.chart{display:flex;height:11px;border-radius:999px;overflow:hidden;
+ background:var(--line);margin:0 0 9px}
+.chart i{display:block;height:100%}
+.chart i.r{background:var(--right)}
+/* hatched as well as coloured, so the split reads with the colour off */
+.chart i.w{background:var(--wrong);
+ background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,
+ rgba(0,0,0,.45) 3px,rgba(0,0,0,.45) 6px)}
+.legend{display:flex;gap:16px;color:var(--muted);font-size:.84rem;margin:0 0 30px}
+.legend b{color:var(--text);font-weight:500}
+.topics{margin:0 0 30px}
+.topics h3,.rev h3{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;
+ color:var(--muted);font-weight:500;margin:0 0 12px}
+.trow{display:grid;grid-template-columns:1fr auto;gap:5px 14px;align-items:center;
+ padding:8px 0;border-top:1px solid var(--line)}
+.trow .n{font-variant-numeric:tabular-nums;color:var(--muted);font-size:.88rem}
+.tbar{grid-column:1/-1;height:3px;background:var(--line);border-radius:999px;
+ overflow:hidden}
+.tbar i{display:block;height:100%;background:var(--text)}
+
+/* ---- review list ---- */
+.rev{padding:6px 0 36px}
+.item{border-top:1px solid var(--line);padding:20px 0}
+.item .qq{font-size:1rem;margin:0 0 12px}
+.rline{display:flex;gap:10px;align-items:flex-start;padding:3px 0;font-size:.92rem}
+.rline .g{min-width:1.2em}
+.rline.mine{color:var(--muted)}
+.tag{display:inline-block;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;
+ color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 9px;
+ margin:0 0 9px}
+
+/* ---- study sheet ----
+   THREE DISTINCT LEVELS, because two of them used to look the same: he could not tell the
+   topic from the "Key terms" heading under it. Topic = large, over a rule. Key terms /
+   Names and studies = a small uppercase label, the same treatment the quiz gives its topic
+   tag. Entries = a numbered list with the term in bold, which is the shape of his own
+   Notion notes, so his shorthand sits beside this instead of clashing with it. */
+.sheet{padding:2px 0 56px;font-size:.95rem}
+.sheet h2{font-size:1.3rem;font-weight:600;margin:34px 0 10px;letter-spacing:-.01em}
+.sheet h3{font-size:1.15rem;font-weight:600;margin:34px 0 4px;letter-spacing:-.01em;
+ padding-top:18px;border-top:1px solid var(--line)}
+/* first-of-type, not first-child: .sheettools is the first child, so first-child never
+   matched and the opening topic carried a stray rule above it */
+.sheet h3:first-of-type{margin-top:0;padding-top:0;border-top:0}
+.sheet h4,.sheet h5{font-size:.7rem;font-weight:600;margin:18px 0 8px;color:var(--muted);
+ letter-spacing:.09em;text-transform:uppercase}
+.sheet p{margin:0 0 10px;color:var(--muted)}
+.sheet h3+p{color:var(--text);margin-bottom:4px}
+.sheet ul,.sheet ol{margin:0 0 4px;padding-left:24px}
+.sheet ol{list-style:decimal}
+.sheet ol ol{list-style:lower-alpha;margin:4px 0 6px}
+.sheet ul ul,.sheet ol ul{margin:4px 0 6px}
+.sheet li{margin:0 0 6px;padding-left:2px}
+.sheet li::marker{color:var(--muted)}
+.sheet li>strong:first-child{color:var(--text)}
+.sheet strong{font-weight:600}
+.sheet hr{border:0;border-top:1px solid var(--line);margin:26px 0}
+.sheet code{background:var(--surface);padding:1px 6px;border-radius:6px;font-size:.9em}
+.sheettools{display:flex;justify-content:flex-end;gap:18px;padding:10px 0 4px}
+.copied{color:var(--right)}
+
+/* ---- the score, on the sheet ----
+   It sits at the top of the sheet and Copy takes it, so the paste that lands in the Notion
+   row carries what he scored beside what the section says — which is what tells him later
+   whether this one needs testing again. */
+.scorecard{border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;
+ margin:16px 0 6px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.scorecard b{font-size:1.35rem;font-weight:500;font-variant-numeric:tabular-nums}
+.scorecard span{color:var(--muted);font-size:.88rem}
+/* Its own row under the score, never beside it — the projected number is a second reading
+   of the same quiz and putting it inline would read as more of the first one. */
+.scorecard .proj{flex-basis:100%;padding-top:2px;border-top:1px solid var(--line);
+ margin-top:4px;font-size:.84rem}
+
+/* ---- his own additions ---- */
+/* SCOPED TO .sheet, because `.mine` is also the review list's "you chose this" modifier
+   (`.rline.mine`) and this block sits later in the file — unscoped, it was handing every
+   wrong-answer line in the review list a 34px gap and a rule above it. */
+.own{margin:34px 0 0;padding-top:18px;border-top:1px solid var(--line)}
+.own h3{margin:0 0 4px;padding:0;border:0}
+.own .say{color:var(--muted);font-size:.85rem;margin:0 0 12px}
+.own .item:first-of-type{border-top:0;padding-top:6px}
+#mynotes{width:100%;min-height:180px;resize:vertical;background:var(--surface);
+ color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
+ padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.6;outline:none}
+#mynotes:focus{border-color:var(--accent)}
+#mynotes::placeholder{color:var(--muted);opacity:.7}
+.saved{color:var(--muted);font-size:.78rem;margin:8px 0 0;height:1em}
+#minepreview{margin:14px 0 0}
+
+/* ---- the exam's two extra tags, and the written half ----
+   The section and the glyph ride the existing .meta line rather than becoming chips of their
+   own: they belong with the counter and the topic, which is already the line that says what
+   you are looking at. Colour is not used to tell the five glyphs apart — each one IS a
+   distinct character, so the page stays readable in grayscale without a legend. */
+.meta .sec{color:var(--text)}
+/* The second section on a cross-section question. Smaller and dimmer than the first, because
+   the first is where the question is filed and this one says what it also reaches into. */
+.meta .lk{color:var(--muted);font-size:.9em;margin-left:1px}
+.meta .src{font-size:.85rem;line-height:1;text-transform:none;letter-spacing:0;cursor:help}
+
+.frqs{padding:2px 0 56px}
+.frqs > .say{color:var(--muted);font-size:.88rem;margin:0 0 26px;max-width:60ch}
+.frq{margin:0 0 42px;padding:0 0 34px;border-bottom:1px solid var(--line)}
+.frq:last-child{border-bottom:0;padding-bottom:0}
+.frq .q{font-size:1.08rem;line-height:1.45;font-weight:600;margin:0 0 6px}
+.frq .say{color:var(--muted);font-size:.84rem;margin:6px 0 0}
+.stim{margin:0 0 14px;padding:11px 16px;background:var(--surface);
+ border-left:2px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;
+ font-size:.95rem;line-height:1.55;color:var(--text)}
+.frqin{width:100%;min-height:190px;resize:vertical;background:var(--surface);
+ color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
+ padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.6;outline:none;margin-top:16px}
+.frqin:focus{border-color:var(--accent)}
+.frqin::placeholder{color:var(--muted);opacity:.7}
+.acts.inline{margin-top:12px}
+.rubric{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
+.rubric h3{margin:0 0 10px;padding:0;border:0;font-size:.7rem;letter-spacing:.09em;
+ text-transform:uppercase;color:var(--muted)}
+.rrow{display:flex;gap:12px;align-items:flex-start;padding:9px 10px;margin:0 -10px;
+ border-radius:10px;cursor:pointer}
+.rrow:hover{background:var(--surface)}
+.rmark{flex:0 0 auto;width:22px;height:22px;border-radius:6px;border:1px solid var(--line);
+ display:grid;place-items:center;font-size:.78rem;background:var(--surface);
+ color:var(--muted);margin-top:2px}
+.rrow.hit .rmark{border-color:var(--right);color:var(--right)}
+.rbody{flex:1;min-width:0}
+.rlab{font-size:.93rem;line-height:1.45;color:var(--muted)}
+.rrow.hit .rlab{color:var(--text)}
+.rnote{display:block;font-size:.78rem;color:var(--muted);opacity:.85;margin-top:2px}
+.judge{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);
+ border:1px solid var(--accent);border-radius:999px;padding:1px 7px;margin-left:7px;
+ white-space:nowrap;vertical-align:1px}
+.rfoot{display:flex;align-items:baseline;gap:14px;margin-top:16px;padding-top:14px;
+ border-top:1px solid var(--line)}
+.rscore{font-size:1.35rem;font-weight:600;font-variant-numeric:tabular-nums}
+.rscore small{color:var(--muted);font-size:.75em;font-weight:400}
+.rverdict{font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.spacer{flex:1}
+.model{margin-top:14px;background:var(--surface);border-radius:var(--radius);
+ padding:14px 16px;font-size:.9rem;line-height:1.65;color:var(--muted)}
+.model strong{color:var(--text)}
+
+.empty{color:var(--muted);padding:8px 0 30px}
+.hist{color:var(--muted);font-size:.84rem;margin:22px 0 0}
+.hist span{white-space:nowrap}
+.note{color:var(--muted);font-size:.84rem;margin:16px 0 0}
+.hide{display:none !important}
+
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  .q{font-size:1.22rem}
+  main{padding:22px 0 14px}
+  .score{font-size:2.5rem}
+  .bar{gap:8px}
+  .tab{padding:5px 10px}
+  button.pill{padding:11px 18px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important}
+}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap bar">
+    <span class="title">Ch8 Exam · 8.1, 8.4</span>
+    <span class="tabs" id="tabs"><button class="tab" data-tab="quiz" aria-selected="true">Quiz</button><button class="tab hide" data-tab="starred" aria-selected="false">Starred</button><button class="tab hide" data-tab="frq" aria-selected="false">Written</button><button class="tab" data-tab="sheet" aria-selected="false">Study sheet</button></span>
+  </div>
+  <!-- In the same .wrap as the title and the tabs: the progress track used to run the full
+       width of the window under a centred column, which is the one thing up here that was
+       not lined up with everything else. -->
+  <div class="wrap"><div class="rail"><i id="rail"></i></div></div>
+</header>
+
+<main class="wrap">
+  <div class="band" id="band">
+    <div id="quizview"></div>
+    <!-- Outside #quizview on purpose: answering re-renders the question, and it must not
+         throw away what he is halfway through pasting. -->
+    <div class="research hide" id="research">
+      <button class="rtoggle" id="rtoggle">+ Add research or a fix</button>
+      <!-- Two panes, and the labels are the whole point of the split: the left one is
+           material the exam will test him on, the right one is an instruction the exam will
+           obey. Esc shuts the box; so does moving to the next question. -->
+      <div class="rbody hide" id="rbody">
+        <div class="rcols">
+          <label class="rcol">
+            <span class="rlab">Research <kbd>r</kbd></span>
+            <textarea id="rtext" spellcheck="false" placeholder="Paste what you found — an explanation, a definition, a diagram. Images paste straight in."></textarea>
+          </label>
+          <label class="rcol">
+            <span class="rlab">Fix this question <kbd>f</kbd></span>
+            <textarea id="rfix" spellcheck="true" placeholder="What was wrong with it. &quot;Never says which joint.&quot; &quot;Two options are both right.&quot; &quot;Ask what it causes, not what it is.&quot; Enter saves it and moves on."></textarea>
+          </label>
+        </div>
+        <div class="rshots hide" id="rshots"></div>
+        <p class="rsay" id="rsay"></p>
+      </div>
+    </div>
+  </div>
+  <div id="starredview" class="rev hide"></div>
+  <div id="frqview" class="frqs hide"></div>
+  <div id="sheetview" class="sheet hide">
+    <div class="scorecard hide" id="scorecard"></div>
+    <div class="sheettools">
+      <button class="link" id="previewnotes">Preview</button>
+      <button class="link" id="copysheet">Copy</button>
+    </div>
+    <div id="sheetmd"><h4>At-issue meaning</h4>
+<p>At-issue meaning constitutes the literal, surface-level content that functions as the primary topic or &quot;issue&quot; under discussion in an utterance.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>At-issue meaning</strong> — the literal, surface content that represents the main topic or &quot;issue&quot; being discussed.</li>
+<ol>
+<li>ex. &#x27;Mounissa will buy the discounted strawberries&#x27; — the primary event described by the sentence.</li>
+</ol>
+</ol>
+<h4>Sense and Denotation</h4>
+<p>Linguistic meaning can be systematically divided into the mental concepts held by a speaker and the specific real-world references those concepts point toward.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Sense</strong> — the lexical semantics or mental concept of a word held in a speaker&#x27;s head.</li>
+<ol>
+<li>ex. the botanical definition or visual image of a &quot;strawberry&quot; in a person&#x27;s mind.</li>
+</ol>
+<li><strong>Denotation</strong> — the specific object or set of objects that a word points to in the actual world.</li>
+<ol>
+<li>ex. &#x27;ode’imin&#x27; and &#x27;strawberry&#x27; pointing to the same physical fruit.</li>
+</ol>
+</ol>
+<h4>Non-at-issue meaning</h4>
+<p>Non-at-issue meaning refers to any content that is suggested, implied, or assumed rather than being part of the literal surface claim.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Non-at-issue meaning</strong> — content that is suggested or assumed rather than being part of the literal, surface statement.</li>
+<ol>
+<li>ex. implicatures and presuppositions.</li>
+</ol>
+</ol>
+<h4>Truth-conditional meaning</h4>
+<p>Truth-conditional meaning is a technical term for at-issue content that determines the truth or falsity of a sentence and is the specific target of a &quot;No, that is false&quot; response.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Truth-conditional meaning</strong> — a term used outside the textbook to refer to at-issue meaning because it determines the truth or falsity of the sentence.</li>
+<ol>
+<li>ex. the content targeted by a supervisor saying &quot;That is not the case&quot; to reject a literal claim.</li>
+</ol>
+</ol>
+<h4>Presupposition</h4>
+<p>A presupposition is information that must be accepted as a background fact by discourse participants for an utterance to be logically coherent.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Presupposition</strong> — information that is assumed to be true already before a sentence is even uttered.</li>
+<ol>
+<li>ex. the use of &#x27;the&#x27; in &#x27;the department head&#x27; assuming a specific head exists.</li>
+</ol>
+</ol>
+<h4>Speaker commitment</h4>
+<p>Speaker commitment involves the discursive responsibility and sincerity a person adopts regarding the truth of their utterances.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Speaker commitment</strong> — the responsibility a person takes for the sincerity or truth of what they say during a discourse.</li>
+<ol>
+<li>ex. saying &quot;coffee is just as tasty as tea&quot; and meaning it sincerely.</li>
+</ol>
+</ol>
+<h4>Implicature</h4>
+<p>An implicature is a non-literal suggestion generated by an utterance based on the specific context of the conversation rather than logical entailment.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Implicature</strong> — a non-entailment suggested by a sentence based on the specific context of the conversation.</li>
+<ol>
+<li>ex. &#x27;Mounissa bought 10lbs of strawberries&#x27; implying she is making jam.</li>
+</ol>
+</ol>
+<h4>Retraction</h4>
+<p>Retraction is the formal act of withdrawing a previously established speaker commitment or clarifying that a suggested non-at-issue meaning was unintended.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Retraction</strong> — the act of withdrawing a previous commitment or clarifying that a non-at-issue meaning was not intended.</li>
+<ol>
+<li>ex. saying &quot;I didn&#x27;t mean it that way&quot; after suggesting a developer is careless.</li>
+</ol>
+</ol>
+<h4>Presupposition survival</h4>
+<p>Presupposition survival is the linguistic phenomenon where background assumptions remain true even if the main at-issue claim is denied through negation.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Presupposition survival</strong> — the phenomenon where a presupposition remains true even when the sentence is negated.</li>
+<ol>
+<li>ex. &quot;It is not the case that Mounissa will buy the discounted strawberries&quot; still requiring that discounted strawberries exist.</li>
+</ol>
+</ol>
+<h4>At-issue diagnostics</h4>
+<p>Linguists employ diagnostic tools like sentential negation to isolate the literal claim of a sentence from its non-at-issue components.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Sentential negation</strong> — the use of &quot;it is not the case that...&quot; to identify at-issue meaning.</li>
+<ol>
+<li>ex. identifying that the literal claim &#x27;Mounissa will buy strawberries&#x27; is what gets canceled by negation.</li>
+</ol>
+</ol>
+<h4>Sense vs Denotation</h4>
+<p>The distinction between sense and denotation highlights how different linguistic labels can share the same real-world referent while maintaining unique internal definitions.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Sense vs Denotation</strong> — the contrast between the internal definition of a word and the external object it describes.</li>
+<ol>
+<li>ex. &#x27;Ode’imin&#x27; and &#x27;strawberry&#x27; having different linguistic senses but the same denotation.</li>
+</ol>
+</ol>
+<h4>Sense</h4>
+<p>Sense refers specifically to the cognitive aspect of meaning, encompassing the internal mental images or botanical definitions a speaker associates with a word.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Sense</strong> — the mental lexical semantics or &quot;image&quot; associated with a word in a speaker&#x27;s mind.</li>
+<ol>
+<li>ex. thinking about a botanical definition while discussing a fruit.</li>
+</ol>
+</ol>
+<h4>Retraction and Implicature</h4>
+<p>Speakers utilize clarification as a preventative measure to ensure that a listener does not interpret a suggested implicature as a settled speaker commitment.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Clarification</strong> — the use of additional phrases to ensure a listener does not accept a suggested implicature as fact.</li>
+<ol>
+<li>ex. adding &quot;but I still need to write the conclusion&quot; to ensure the listener does not assume the report is finished.</li>
+</ol>
+</ol>
+<h4>Cancellable Meanings</h4>
+<p>Cancellable meanings are non-entailed suggestions that can be explicitly denied by the speaker without creating a logical contradiction.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Cancellability</strong> — the property of a meaning that allows it to be taken back or denied.</li>
+<ol>
+<li>ex. &quot;This book is about China, but it is not long.&quot;</li>
+</ol>
+</ol>
+<h4>Contextual Influence</h4>
+<p>Implicatures are heavily influenced by background knowledge, such as a speaker’s awareness of a listener’s specific hobbies or preferences.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Context</strong> — the specific circumstances or background knowledge (like a friend&#x27;s hobbies) that determine which implicature is generated.</li>
+<ol>
+<li>ex. a sentence about a history book implying &quot;you will like this&quot; because Danny knows Josh is a history enthusiast.</li>
+</ol>
+</ol>
+<h4>Conversational Implicature</h4>
+<p>Conversational implicatures are meanings suggested by an utterance that arise from the underlying cooperative rules humans follow during interaction.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Conversational implicature</strong> — a meaning suggested by an utterance that arises specifically from conversational rules.</li>
+<ol>
+<li>ex. concluding a friend will like a book based on their known interests and the cooperative nature of the reply.</li>
+</ol>
+</ol>
+<h4>Logical Entailment</h4>
+<p>An entailment is a component of meaning that must necessarily be true if the sentence is true and cannot be cancelled without contradiction.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Entailment</strong> — a meaning that is necessarily true and cannot be canceled without creating a logical contradiction.</li>
+<ol>
+<li>ex. &#x27;This is a book about China&#x27; necessarily entailing &#x27;This is a book.&#x27;</li>
+</ol>
+</ol>
+<h4>Scalar Implicature</h4>
+<p>Scalar implicature occurs when a speaker&#x27;s choice of a weaker term on a scale implies that the stronger, more informative term is false.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Scalar implicature</strong> — a type of suggestion where using a weaker term implies the denial of a stronger term.</li>
+<ol>
+<li>ex. using &quot;some&quot; to imply &quot;not all.&quot;</li>
+</ol>
+</ol>
+<h4>Cancellability</h4>
+<p>The cancellability test is the primary diagnostic for distinguishing implicatures from entailments by checking if a meaning can be denied without contradiction.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Cancellability test</strong> — the ability to add &quot;but it is not the case that...&quot; to a sentence without it being a contradiction.</li>
+<ol>
+<li>ex. &quot;She has three kids — in fact four&quot; showing that &quot;exactly three&quot; was a cancellable implicature.</li>
+</ol>
+</ol>
+<h4>Context dependence</h4>
+<p>Context dependence describes the instability of implicatures, which may shift or disappear entirely depending on the conversational environment or audience.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Context dependence</strong> — the characteristic of implicatures where they change or disappear depending on the environment.</li>
+<ol>
+<li>ex. an entailment about a book remains constant, while the implicature of &quot;liking&quot; it changes based on the audience&#x27;s interests.</li>
+</ol>
+</ol>
+<h4>Conversational Rules</h4>
+<p>Conversational rules provide the logical and cooperative framework that allows discourse participants to derive non-literal meanings from factual statements.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Conversational rules</strong> — the underlying principles used by speakers and listeners to interact and derive non-literal meaning.</li>
+<ol>
+<li>ex. the framework that allows a listener to conclude a recommendation from a description.</li>
+</ol>
+</ol>
+<h4>Entailment vs Implicature</h4>
+<p>The difference between entailment and implicature is defined by whether a meaning is logically necessary or merely suggested and subject to retraction.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Entailment vs Implicature</strong> — the distinction between meanings that are logically required and those that are merely suggested and cancellable.</li>
+<ol>
+<li>ex. a history book is always a book (entailment), but it is not always long (implicature).</li>
+</ol>
+</ol>
+<h4>Negation and Implicature</h4>
+<p>Sentential negation targets at-issue meaning because non-at-issue content, such as presupposition, must be true <em>before</em> the sentence is uttered and is thus not subject to denial.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Negation impact</strong> — the fact that sentential negation targets at-issue meaning but might not cancel the implicature.</li>
+<ol>
+<li>ex. Mounissa not buying strawberries (at-issue canceled) while still potentially liking them (implicature survives).</li>
+</ol>
+</ol>
+<h4>Context</h4>
+<p>Context encompasses the surrounding discourse environment and shared situational knowledge required to interpret non-entailed suggestions.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Context</strong> — the environment and shared knowledge that allows a non-entailment to be suggested.</li>
+<ol>
+<li>ex. the situational environment where Danny and Josh discuss a book to determine if it is a recommendation.</li>
+</ol>
+</ol>
+<h4>Presupposition vs Implicature</h4>
+<p>Presuppositions are background requirements that survive negation, whereas implicatures are context-driven suggestions that can be cancelled without logical conflict.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Presupposition vs Implicature</strong> — the difference between what is assumed true beforehand and what is suggested by context.</li>
+<ol>
+<li>ex. the existence of a department head (presupposition) vs the idea that a book is long (implicature).</li>
+</ol>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Grice (1975)</strong> — developed the theory of logic and conversation, proposing that interaction is a cooperative endeavor governed by rules where implicatures are cancellable without contradiction.</li>
+</ol></div>
+    <div class="own">
+      <h3>My notes</h3>
+      <p class="say">What the sheet missed. Write it however you write — one thing a line,
+      <code>Term: what it is</code>, indent to nest. Copy takes this with the sheet, formatted,
+      ready to paste into the Notion row. That row is what the week's exam is built from.</p>
+      <textarea id="mynotes" spellcheck="true" placeholder="Rebound effect: suppressed thought comes back stronger once you stop trying
+   ex. telling yourself not to check the score
+Self-control is finite - one hard task leaves less for the next"></textarea>
+      <p class="saved" id="savedmsg"></p>
+      <div id="minepreview" class="hide"></div>
+    </div>
+    <!-- Last on the sheet, and last in the Copy, so the paste reads sheet → his notes →
+         what he went and found, grouped under the question that sent him looking. -->
+    <div class="own hide" id="starredsheet"></div>
+    <div class="own hide" id="unsuresheet"></div>
+    <div class="own hide" id="researchview"></div>
+    <div class="own hide" id="fixview"></div>
+  </div>
+</main>
+
+<footer id="footer" class="wrap hide">
+  <p class="hinttext hide" id="hinttext"></p>
+  <div class="acts">
+    <button class="pill ghost" id="back">Back</button>
+    <button class="pill ghost hide" id="hintbtn">Hint</button>
+    <!-- The mis-click undo. Same slot as Hint, which has just left it, and it clears the
+         answer to THIS question and nothing else — the research and fix boxes stay. -->
+    <button class="pill ghost hide" id="redo">Redo</button>
+    <!-- Retake CLEARS, so it sits off to the side on its own, away from the two that keep
+         his progress. 2nd Pass is the primary one and takes the position Next held. -->
+    <button class="pill ghost hide" id="retake">Retake</button>
+    <span class="spacer"></span>
+    <button class="pill hide" id="review">Review quiz</button>
+    <button class="pill primary hide" id="pass2">2nd Pass</button>
+    <button class="pill primary" id="next">Next</button>
+  </div>
+</footer>
+
+<script id="quiz-data" type="application/json">{"id": "el-ch8-8-1_8-4", "title": "Ch8 Exam · 8.1, 8.4", "subtitle": "Pragmatics", "book": "EL", "hash": "ea0758bd17a9497a", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "A customer looks at a high-end camera and tells a salesperson, 'This model is far beyond my budget.' The salesperson replies, 'That is not the case.' What is the salesperson primarily challenging in this exchange?", "options": ["The speaker's sincerity regarding their desire to buy the camera.", "The presupposition that the customer has a specific budget in mind.", "The literal, at-issue claim regarding the price relative to the customer's funds.", "The non-at-issue suggestion that the customer should look for a cheaper camera."], "rationales": ["Sincerity is a matter of speaker commitment rather than the at-issue truth condition targeted by 'that is not the case'.", "Presuppositions survive negation and are usually taken as established facts rather than the point of contention.", "Negation targets the at-issue meaning, which is the main factual claim being asserted in the sentence.", "Sentential negation typically fails to target suggestions or implied advice, focusing instead on the surface claim."], "correct": 2, "hint": "Consider which part of the sentence is the main topic of discussion being denied.", "topic": "At-issue meaning", "sec": "8.1", "src": "✕", "link": "", "qid": "e33b8ce9e4"}, {"q": "Two researchers agree that 'the laboratory' needs cleaning. One researcher is thinking about the specific room number and its physical layout, while the other is thinking about the abstract concept of a controlled testing environment. Despite these different mental focuses, they both arrive at the same physical building to start cleaning. What does this shared outcome demonstrate?", "options": ["The researchers share the same sense of the word.", "The words have the same denotation.", "The exchange relies entirely on conversational implicature.", "The at-issue meaning has been cancelled by their differing perspectives."], "rationales": ["Sense refers to the mental representation or concept, which the prompt states is different for each person.", "Denotation refers to the actual object or location in the real world that a word points to.", "The focus here is on lexical reference to a physical place, not a suggested meaning beyond the words.", "At-issue meaning involves the literal claim, which remains intact as they both successfully identified the target."], "correct": 1, "hint": "Focus on whether they are sharing a mental concept or a real-world object.", "topic": "Sense and Denotation", "sec": "8.1", "src": "✕", "link": "", "qid": "f6c23a5969"}, {"q": "A project lead says, 'The new intern is very thorough.' Which of the following is NOT a characteristic of the non-at-issue meaning (the suggestion that the intern might be slow) in this context?", "options": ["It is not part of the 'surface' or literal meaning of the sentence.", "It can be explicitly retracted by the speaker saying 'I didn't mean it that way.'", "It is automatically cancelled if the project lead says 'It is not the case that the intern is thorough.'", "It depends heavily on the specific context of the conversation."], "rationales": ["By definition, non-at-issue meaning is the layer of communication that exists beyond the literal words used.", "Non-at-issue meanings like implicatures are not part of the literal commitment and can be clarified or taken back.", "Negation targets the at-issue meaning (thoroughness) but the suggestion of being slow often survives or remains as a possibility.", "Implicatures are context-dependent and change based on the situation, such as a looming deadline."], "correct": 2, "hint": "Look for the behavior of meaning when the main sentence is negated.", "topic": "Non-at-issue meaning", "sec": "8.1", "src": "☆", "link": "", "qid": "4f1d62324e"}, {"q": "When a technical writer uses the diagnostic 'It is not the case that...' to test a sentence, what type of content are they specifically trying to isolate?", "options": ["Speaker sincerity", "Truth-conditional meaning", "Conversational implicatures", "Presuppositions"], "rationales": ["Sincerity is a pragmatic commitment of the speaker, not a part of the literal truth-conditional content of the sentence.", "This type of meaning, also called at-issue meaning, is the part of the sentence that can be directly negated or judged as true/false.", "Implicatures are suggestions that often persist even if the main statement is denied.", "Presuppositions are non-at-issue and survive negation rather than being cancelled by it."], "correct": 1, "hint": "Recall what 'no, that is false' is able to target in a statement.", "topic": "Truth-conditional meaning", "sec": "8.1", "src": "R", "link": "", "qid": "4bee076a68"}, {"q": "In the sentence 'The office manager realized the printer was out of ink,' the fact that there is a specific office manager is a(n) __________ that survives even if we negate the sentence.", "options": ["at-issue meaning", "implicature", "presupposition", "denotation"], "rationales": ["At-issue meaning is the main claim (the act of realizing), which is exactly what gets cancelled when you negate the sentence.", "Implicatures are suggestions that can be cancelled, whereas the existence of the manager is a requirement for the sentence to function.", "Presuppositions are assumptions that must be true for the sentence to make sense and they remain true under negation.", "While the manager has a denotation, the term for the information that must be accepted as fact is presupposition."], "correct": 2, "hint": "Identify the term for information that is taken for granted before a sentence is even uttered.", "topic": "Presupposition", "sec": "8.1", "src": "?", "link": "", "qid": "4e66fa6593"}, {"q": "You tell a client, 'We are not using the premium analytics suite.' Even though you have negated the statement, the client still understands that a premium analytics suite exists. Which aspect of meaning ensures this existence is still understood?", "options": ["A conversational implicature based on context.", "A presupposition triggered by the definite description.", "The sense of the word 'analytics' provides the guarantee.", "An at-issue meaning that overrides the negation."], "rationales": ["While context matters, the existence of the suite is a structural presupposition rather than a cancellable suggestion.", "Definite articles like 'the' trigger the presupposition that the entity exists, a meaning that survives negation.", "Sense refers to the mental concept of analytics, not the existential claim about a specific suite in the world.", "At-issue meaning is precisely what negation cancels; if this were at-issue, the suite's existence would be denied."], "correct": 1, "hint": "Think about what 'the' implies about the existence of the object it describes.", "topic": "Non-at-issue meaning", "sec": "8.1", "src": "✎", "link": "", "qid": "226ca74a9c"}, {"q": "If an architect says, 'This is the blueprint I drafted,' and they are specifically concerned with the physical document on the table rather than the abstract plan in their mind, they are prioritizing which aspect of meaning?", "options": ["Implicature", "Sense", "Denotation", "At-issue meaning"], "rationales": ["Implicature involves suggestions beyond the literal words, whereas this is about direct reference.", "Sense refers to the mental definition or lexical semantics, not the physical object itself.", "Denotation is the relationship between a word and the actual object it points to in the real world.", "While the statement has at-issue meaning, the specific focus on the physical object is a question of denotation."], "correct": 2, "hint": "Determine if the focus is on a mental concept or a tangible, real-world item.", "topic": "Sense and Denotation", "sec": "8.1", "src": "$", "link": "", "qid": "a7610e90d4"}, {"q": "You say to a friend, 'The concert starts at 8 PM.' Later, you find out it was postponed and say, 'I didn't mean it.' Which of the following is NOT true regarding this retraction?", "options": ["You are addressing your sincerity as a speaker.", "The original sentence still has a compositional meaning.", "You are attempting to cancel your commitment to the discourse.", "You are retracting the literal sense of the words 'concert' and 'starts'."], "rationales": ["Saying you 'didn't mean it' often explains that your previous utterance does not reflect your current knowledge or intent.", "Even if a speaker is insincere or mistaken, the sentence itself remains linguistically meaningful and understandable.", "Retracting a statement is a way of signaling that you no longer stand by the information previously provided.", "The words still have the same sense; you are retracting your sincerity and commitment to the claim, not the definitions of the words."], "correct": 3, "hint": "Distinguish between the definition of words and the speaker's promise that the words are true.", "topic": "Speaker commitment", "sec": "8.1", "src": "$", "link": "", "qid": "f96eb2dfec"}, {"q": "A coworker asks, 'What do you mean, the server is down?' and you explain that the website won't load and customers are complaining. In this context, what were you originally providing when you said 'the server is down'?", "options": ["A sense", "A presupposition", "An implicature", "A denotation"], "rationales": ["The coworker is asking for the consequences or implications, not the dictionary definition of 'server' or 'down'.", "The server being down is the main point of the sentence, not a background fact taken for granted.", "The secondary information (website won't load) is a non-entailed suggestion derived from the literal fact that the server is down.", "The coworker is not asking which specific physical server is being discussed, but rather what the situation implies."], "correct": 2, "hint": "Think about the non-literal suggestions that arise from a sentence in a specific context.", "topic": "Implicature", "sec": "8.1", "src": "$", "link": "", "qid": "479711a4b4"}, {"q": "The 'literal' or 'surface' meaning that represents the primary topic of discussion in a sentence is known as the __________ meaning.", "options": ["implicated", "at-issue", "presupposed", "non-at-issue"], "rationales": ["Implicated meaning refers to suggestions that are not part of the surface, literal meaning.", "This term refers to the main 'issue' or claim that is being put forward for discussion in an utterance.", "Presuppositions are a type of non-at-issue meaning that is taken for granted rather than being the main point.", "Non-at-issue meaning includes background assumptions or suggestions, not the primary literal claim."], "correct": 1, "hint": "This is the 'issue' currently being debated or stated in the conversation.", "topic": "At-issue meaning", "sec": "8.1", "src": "+", "link": "", "qid": "93312eb6dd"}, {"q": "A supervisor tells a team, 'The client was happy with the demo.' A team member, knowing the client only liked the interface but hated the speed, says 'I didn't mean it that way' when someone assumes the client signed the contract. What is the team member attempting to do?", "options": ["Change the denotation of the word 'client'.", "Negate the at-issue truth-conditions of the supervisor's statement.", "Assert a new presupposition about the demo.", "Retract a non-at-issue commitment to a suggestion."], "rationales": ["The person being discussed (the client) hasn't changed; only the implications of their mood are being refined.", "The team member isn't saying the client wasn't happy; they are clarifying the scope of that happiness.", "Presuppositions are background facts; this is a foregrounded clarification of a suggestion.", "Retraction allows a speaker to clarify that they did not intend to commit to an implicature (signing the contract)."], "correct": 3, "hint": "Consider how a speaker manages the expectations their words create in a listener.", "topic": "Retraction", "sec": "8.1", "src": "+", "link": "", "qid": "dd83c1af05"}, {"q": "If you negate the sentence 'Our manager decided to hire the external candidate' and the existence of a manager remains a fact, which principle of meaning are you observing?", "options": ["At-issue meaning is cancellable.", "Implicatures are context-dependent.", "Presuppositions survive negation.", "Sense and denotation are distinct."], "rationales": ["While true, this explains why the 'hiring' part is gone, but it doesn't explain why the 'manager' part stays.", "The existence of the manager is a structural requirement (presupposition), not a context-based suggestion (implicature).", "Non-at-issue content like presuppositions is not targeted by negation and remains true even if the main claim is denied.", "This principle explains how we define words, but it does not describe the behavior of meaning under negation."], "correct": 2, "hint": "Focus on what happens to background assumptions when a sentence is made negative.", "topic": "Presupposition survival", "sec": "8.1", "src": "+", "link": "", "qid": "6104967042"}, {"q": "Which of the following is NOT a reliable way to identify or describe at-issue meaning in a standard declarative sentence?", "options": ["It is the literal 'surface' meaning produced by the words used.", "It is the primary topic of discussion or 'issue' being asserted.", "It is also referred to as the truth-conditional meaning of the sentence.", "It is the part of the sentence that survives when you add 'It is not the case that...'"], "rationales": ["At-issue meaning represents the direct, compositional meaning found on the surface of the sentence.", "This is a correct definition of at-issue meaning as the central point of an utterance.", "This is a synonymous term used in linguistics to describe the literal conditions required for a sentence to be true.", "This is incorrect because at-issue meaning is exactly what is cancelled or reversed by negation."], "correct": 3, "hint": "Think about what negation specifically destroys versus what it leaves alone.", "topic": "At-issue diagnostics", "sec": "8.1", "src": "+", "link": "", "qid": "71caefb9e3"}, {"q": "A linguist argues that two different words for the same fruit have the same __________ but different __________ if two speakers from different cultures have different mental images of that fruit.", "options": ["at-issue meanings; non-at-issue meanings", "denotation; senses", "senses; denotations", "implicatures; presuppositions"], "rationales": ["At-issue and non-at-issue refer to levels of assertion in a sentence, not the internal structure of word meaning.", "Denotation is the real-world object (the same fruit), while sense is the mental representation (the different mental images).", "This would mean they have the same mental image but are looking at different physical fruits, which is the opposite of the situation.", "These terms refer to suggestions and assumptions, not the fundamental relationship between a word and its object or concept."], "correct": 1, "hint": "Map 'real-world object' and 'mental image' to the correct linguistic terms.", "topic": "Sense vs Denotation", "sec": "8.1", "src": "+", "link": "", "qid": "b5ad1f76e1"}, {"q": "The aspect of meaning that refers to the mental concept or lexical semantics associated with a word is called its __________.", "options": ["implicature", "entailment", "sense", "denotation"], "rationales": ["Implicature is a suggestion based on context, not the foundational mental concept of a word.", "Entailment is a logical relationship between sentences, not a type of word-level meaning.", "Sense is the internal linguistic meaning or 'mental dictionary' entry for a word.", "Denotation is the external object in the world that the word refers to, not the concept in the head."], "correct": 2, "hint": "Distinguish the 'idea' in your mind from the 'thing' in the world.", "topic": "Sense", "sec": "8.1", "src": "+", "link": "", "qid": "7408da243d"}, {"q": "You tell a colleague, 'The new server is fast.' Later, they complain that it crashes often, and you say, 'I only meant it processes requests quickly, not that it is reliable.' Why is this distinction possible?", "options": ["The word 'fast' has a denotation that excludes the possibility of crashing.", "The presupposition of the server's existence was negated by the crash.", "Conversational implicatures cannot be clarified once they are uttered.", "The at-issue meaning (speed) is a factual claim, but the suggestion of reliability is a cancellable implicature."], "rationales": ["Denotation is the object in the world; 'fast' is a descriptor with a sense that can imply different things in different contexts.", "Presuppositions survive negation and crashes; the server still exists even if it is currently broken.", "The text explicitly states that non-at-issue meanings like implicatures are retractably and clarify-able.", "The speaker can commit to the literal truth of speed while retracting the suggested non-at-issue meaning of reliability."], "correct": 3, "hint": "Consider the difference between literal truth and the assumptions a listener makes.", "topic": "Retraction and Implicature", "sec": "8.1", "src": "+", "link": "8.4", "qid": "1f4cd4cc0d"}, {"q": "You leave a note for your roommate saying, 'Your dinner is in the oven.' They assume it is ready to eat, but it is actually frozen and needs to be cooked. How could you have phrased the note to clarify that the 'ready to eat' part was only a potential suggestion?", "options": ["Change 'the oven' to 'an oven' to remove the presupposition of existence.", "Add 'but it still needs to be thawed and baked' to the end of the sentence.", "Capitalize the word 'OVEN' to emphasize the location.", "Use the phrase 'It is not the case that your dinner is in the oven.'"], "rationales": ["This would only make the location of the dinner more vague, not clarify the food's state.", "Because implicatures are cancellable, you can explicitly state that the suggested meaning does not apply.", "Emphasis might change focus, but it doesn't systematically cancel the suggestion that the food is ready.", "This would negate the at-issue meaning (the location of the food), making the note factually false."], "correct": 1, "hint": "Think about how to take back a suggestion without contradicting the literal fact.", "topic": "Cancellable Meanings", "sec": "8.4", "src": "✕", "link": "", "qid": "5bd1744d39"}, {"q": "A host tells a guest, 'This cake contains strawberries.' If the host knows the guest is allergic to fruit, the guest concludes they should not eat it. If the host knows the guest loves fruit, the guest concludes they will enjoy it. What causes this shift in meaning?", "options": ["The at-issue meaning is negated in the allergy scenario.", "The literal entailment of the sentence changes depending on the guest's health.", "The denotation of 'strawberries' shifts between the two scenarios.", "The implicature changes based on the context of what the speaker knows about the hearer."], "rationales": ["The literal fact (strawberries are present) is still the main issue; it is the non-at-issue suggestion that differs.", "Entailments are constant; the sentence 'This cake contains strawberries' always entails there are strawberries regardless of who hears it.", "The physical fruit (strawberries) remains the same; only the suggestion regarding them changes.", "Conversational implicatures are context-dependent and are shaped by the shared knowledge of the participants."], "correct": 3, "hint": "Consider how shared knowledge between people changes the underlying message.", "topic": "Contextual Influence", "sec": "8.4", "src": "✕", "link": "", "qid": "1b19b958be"}, {"q": "Which of the following is NOT a characteristic of a conversational implicature?", "options": ["It can be cancelled without creating a logical contradiction.", "It arises from the rules people use to interact and understand one another.", "It is context-dependent and can change depending on the situation.", "It is a logical entailment that must be true if the main sentence is true."], "rationales": ["The ability to take back an implicature without 'clashing' with the literal words is its defining trait.", "This is why they are called 'conversational'; they depend on the cooperation and norms of human discourse.", "Unlike entailments, implicatures are not fixed and rely on the surrounding environment and background.", "Implicatures are non-entailments, meaning they can be false even if the sentence itself is true."], "correct": 3, "hint": "Identify the property that belongs to entailments but not to suggestions.", "topic": "Conversational Implicature", "sec": "8.4", "src": "☆", "link": "", "qid": "0e48b41991"}, {"q": "If you say 'I have two pens' and then immediately say 'In fact, I have three,' why is this acceptable in conversation, whereas saying 'This is a red pen, but it is not a pen' is not?", "options": ["The suggestion 'only two' is a cancellable implicature, but 'is a pen' is a non-cancellable entailment.", "Numbers are presuppositions that do not survive negation.", "The speaker is changing the sense of the word 'pen' mid-sentence.", "The word 'two' is at-issue, while the word 'three' is non-at-issue."], "rationales": ["Grice noted that implicatures can be cancelled without contradiction, whereas entailments are logically required.", "Quantity is typically at-issue truth-conditional content, not a background presupposition.", "The definition of pen remains constant; the speaker is only refining the count.", "Both numbers represent at-issue claims about quantity, but the limit 'exactly two' is a suggestion."], "correct": 0, "hint": "Think about which part of the meaning can be taken back without looking like a liar.", "topic": "Contextual Influence", "sec": "8.4", "src": "R", "link": "", "qid": "8de05f7dea"}, {"q": "When a speaker says something that suggests a fact but does not logically guarantee it, that suggestion is a(n) __________ meaning that can be taken back.", "options": ["entailed", "at-issue", "cancellable", "presupposed"], "rationales": ["Entailments are non-cancellable because they are logically necessary if the sentence is true.", "At-issue meaning is the literal claim, which is exactly what a speaker is guaranteeing.", "Cancellability is the defining property of implicatures, allowing them to be removed without logical contradiction.", "While presuppositions are non-at-issue, the prompt describes a suggestion rather than a background requirement."], "correct": 2, "hint": "Use the term for a meaning that is not 'locked in' by the literal words.", "topic": "Cancellable Meanings", "sec": "8.4", "src": "?", "link": "", "qid": "fd16f76433"}, {"q": "A manager writes in an email, 'The draft is finished.' A subordinate assumes the formatting is also complete. If the manager knew the formatting was not done but sent the email anyway, why might the subordinate feel misled even if the 'drafting' of text was technically done?", "options": ["The manager negated the at-issue meaning by sending the email.", "The manager failed to account for a conversational implicature regarding 'finished' in a professional context.", "The subordinate is confusing at-issue meaning with presupposition.", "The word 'finished' entails that the formatting is complete in every possible world."], "rationales": ["Sending the email asserts the at-issue meaning; it doesn't negate it.", "In context, 'finished' usually implies all aspects are done, creating a suggestion that the manager should have clarified.", "This is a conflict between literal meaning and suggested meaning (implicature), not background assumptions.", "Formatting is not a logical entailment of drafting; one can finish writing without finishing the layout."], "correct": 1, "hint": "Consider how expectations in a workplace go beyond the dictionary definitions of words.", "topic": "Conversational Implicature", "sec": "8.4", "src": "✎", "link": "", "qid": "4ec701ad5b"}, {"q": "If the sentence 'This is a red electric guitar' is true, which of the following must also be true in every possible context because it is a logical entailment?", "options": ["This is an expensive guitar.", "The speaker knows how to play this guitar.", "This guitar is loud.", "This is a guitar."], "rationales": ["Price is not part of the literal definition of a 'red electric guitar' and thus not an entailment.", "Ownership or proximity does not logically require the ability to play; this would be a contextual suggestion.", "While electric guitars are often loud, it is a suggestion or implicature, not a logical necessity.", "Entailments are meanings that are necessarily true if the original sentence is true, regardless of context."], "correct": 3, "hint": "Identify the piece of information that is 'baked into' the sentence and cannot be removed.", "topic": "Logical Entailment", "sec": "8.4", "src": "$", "link": "", "qid": "625352df9e"}, {"q": "Which of these pairs represents a sentence and its non-cancellable entailment?", "options": ["Sentence: 'Mounissa bought a new sedan.' / Entailment: 'Mounissa bought a car.'", "Sentence: 'The meeting is at noon.' / Entailment: 'The meeting will be short.'", "Sentence: 'The coffee is hot.' / Entailment: 'The coffee is delicious.'", "Sentence: 'I have a cat.' / Entailment: 'I like animals.'"], "rationales": ["A sedan is a type of car, so the second statement must be true if the first is true.", "Length is a suggestion or implicature that could be cancelled (e.g., 'but it will last four hours').", "Temperature and quality are independent; you cannot logically guarantee taste from heat.", "One can own a cat for various reasons without liking animals; this is a suggestion, not a logical requirement."], "correct": 0, "hint": "Look for a relationship where the second part is a direct, unavoidable sub-component of the first.", "topic": "Logical Entailment", "sec": "8.4", "src": "$", "link": "", "qid": "91ca19c975"}, {"q": "A team member says, 'I've finished some of the updates.' You naturally conclude they haven't finished all of them. Which concept describes the 'not all' part of the meaning?", "options": ["Denotation", "Conversational implicature", "Logical entailment", "Presupposition"], "rationales": ["Denotation refers to the items updated, not the suggested quantity left undone.", "The word 'some' suggests 'not all' through conversational rules, but it does not logically exclude 'all'.", "If 'all' were true, 'some' would still be true; therefore, 'not all' is not a logical requirement.", "Presuppositions are facts taken for granted, whereas this is a suggestion derived from the choice of the word 'some'."], "correct": 1, "hint": "Consider what the choice of a specific word like 'some' suggests about the words you didn't choose.", "topic": "Scalar Implicature", "sec": "8.4", "src": "+", "link": "", "qid": "7e4d9424a4"}, {"q": "Implicatures are fundamentally different from entailments because they are __________, meaning they can be denied without creating a logical clash.", "options": ["at-issue", "compositional", "presupposed", "cancellable"], "rationales": ["At-issue refers to the literal surface claim, which is exactly what a denial would contradict.", "Compositional refers to how word meanings combine, which applies to both entailments and implicatures.", "Presuppositions are background assumptions, not the foregrounded suggestions being described here.", "This property allows a speaker to say 'I have three kids, in fact four' without contradicting themselves."], "correct": 3, "hint": "Look for the term that describes the 'take-back' ability of suggestions.", "topic": "Cancellability", "sec": "8.4", "src": "+", "link": "", "qid": "d02ed48be5"}, {"q": "Suppose you know a coworker is trying to save money. When they ask about a local restaurant, you say 'That place is very expensive.' Why does this mean something different than telling a wealthy CEO the same thing?", "options": ["The sentence entails 'you should avoid this' in only one of the cases.", "The sense of 'expensive' is different for poor people and rich people.", "The at-issue price of the food literally changes based on who is listening.", "The implicature (don't go there) depends on the context of the hearer's goals."], "rationales": ["Entailments are context-independent; if it were an entailment, it would have to be true for both people.", "The mental definition of 'expensive' (high cost) is shared; only the advice derived from it changes.", "The literal cost (at-issue meaning) is a fact about the restaurant, not the listener.", "Conversational implicatures are context-dependent and change their impact based on what the listener needs or knows."], "correct": 3, "hint": "Focus on how the same literal fact can serve as two different pieces of advice.", "topic": "Context dependence", "sec": "8.4", "src": "+", "link": "", "qid": "89c72b1a3d"}, {"q": "If you are asked 'Did you do the laundry?' and you reply 'I washed the shirts,' what follows from the conversational rules?", "options": ["You entail that the shirts are now dry.", "You negate the at-issue meaning of the word 'laundry'.", "You imply you did not wash the other items (like pants).", "You presuppose that you do not own any pants."], "rationales": ["Washing does not logically guarantee drying; the state of being dry would be a separate claim.", "You are answering a question about laundry with a subset of that category; the word's meaning is intact.", "By being specific, you suggest that the items you didn't mention were not included in the action.", "The sentence doesn't assume anything about your wardrobe; it only focuses on what you actually washed."], "correct": 2, "hint": "Think about why a listener would assume the unmentioned work remains undone.", "topic": "Conversational Rules", "sec": "8.4", "src": "+", "link": "", "qid": "e77a53e5c5"}, {"q": "Which of the following is NOT true about the difference between entailment and implicature?", "options": ["Implicatures are non-entailments suggested by a sentence based on context.", "An implicature can change depending on who is talking to whom.", "Entailments are logically necessary if the sentence is true.", "Entailments can be cancelled in certain contexts, whereas implicatures cannot."], "rationales": ["This accurately describes how implicatures function as suggestions rather than requirements.", "Implicatures rely on shared knowledge and situational context, which vary by participant.", "This is the core definition of entailment; it is a guarantee 'baked into' the sentence.", "This is backwards; implicatures are the ones that are context-dependent and cancellable."], "correct": 3, "hint": "Look for the property that defines which meaning is 'fixed' and which is 'flexible'.", "topic": "Entailment vs Implicature", "sec": "8.4", "src": "+", "link": "", "qid": "683ebab8f9"}, {"q": "When you negate a sentence using 'It is not the case that...', which type of meaning is targeted for cancellation, and which type usually remains as a suggestion or assumption?", "options": ["At-issue meaning is targeted; non-at-issue meaning (like presuppositions) remains.", "Presuppositions are targeted; at-issue meaning remains.", "Sense is targeted; denotation remains.", "Implicatures are targeted; entailments remain."], "rationales": ["Negation acts on the literal claim but leaves the underlying assumptions and suggestions untouched.", "This is the opposite of the linguistic diagnostic; presuppositions are defined by their survival under negation.", "Negation doesn't change the definitions of words or what they point to in the world.", "Entailments are part of the at-issue content and are reversed by negation; implicatures often survive."], "correct": 0, "hint": "Consider the 'diagnostic' test for at-issue meaning and what it leaves behind.", "topic": "Negation and Implicature", "sec": "8.1", "src": "+", "link": "8.4", "qid": "8b31d7504c"}, {"q": "If you say 'The project is complete' and later add 'but we still need to write the report,' why is the 'finished' feeling of the first sentence considered __________ meaning rather than __________?", "options": ["denotation; truth-conditional", "at-issue; non-at-issue", "presupposition; sense", "implicature; entailment"], "rationales": ["Truth-conditional meaning is another name for at-issue meaning; denotation is the thing in the world.", "Both parts of the sentence contribute to the at-issue claim; the question is about the logical necessity of the completeness.", "Presupposition is about background facts; this is about the strength of the claim being made in the foreground.", "Because the speaker can add a correction without a logical clash, the 'finished' sense was a suggestion, not a requirement."], "correct": 3, "hint": "Determine if the completion of the report was logically required by the word 'complete' or just expected.", "topic": "Context", "sec": "8.4", "src": "+", "link": "", "qid": "914c600313"}, {"q": "A manager says, 'The new developer finished the code.' A coworker responds, 'It is not the case that the developer finished the code.' Which of the following describes a meaning that survives this response?", "options": ["The denotation of the word 'finished' as a mental concept.", "The presupposition that there is a new developer.", "The entailment that the developer is skilled.", "The at-issue claim that the code was completed."], "rationales": ["This is a sense, not a piece of information that survives negation; denotation refers to the act itself.", "Presuppositions, such as the existence of individuals mentioned with 'the', survive negation, unlike at-issue claims.", "Finishing code does not logically entail skill, and any such suggestion would likely be weakened by the negation.", "This is exactly what the coworker's negation is intended to destroy or reverse."], "correct": 1, "hint": "Look for the background fact that must remain true for the argument to even make sense.", "topic": "Presupposition vs Implicature", "sec": "8.4", "src": "+", "link": "8.1", "qid": "bec6f4f52f"}], "hasSheet": true, "frq": [{"tag": "Presupposition Management", "secs": "8.1", "prompt": "You receive a Slack message from a colleague regarding a recent budget review that states: \"The department head's mistake was costly.\"", "ask": "Rewrite the sentence to remove the presupposition while keeping the at-issue claim intact. Then, explain how applying the \"it is not the case that\" test proves which part of the original sentence was the at-issue meaning.", "words": "120", "rubric": [{"t": "The rewrite effectively frames the cost as a conditional or separate claim without asserting the error as an established fact", "judge": true, "k": []}, {"t": "denial", "judge": false, "k": ["negation* :: refutes"]}, {"t": "taken for granted", "judge": false, "k": ["background* :: assumption"]}, {"t": "primary claim", "judge": false, "k": ["literal content :: central point"]}, {"t": "persist", "judge": false, "k": ["survive* :: remains"]}, {"t": "superior", "judge": false, "k": ["supervisor :: person in charge"]}], "model": "To strip the sentence \"The department head’s mistake was costly\" of its backgrounded assumption, one should frame the error as a conditional possibility. An effective rewrite is: \"If the department head made an error, it resulted in a high cost.\" This version maintains the focus on the financial impact while removing the automatic assertion that a mistake definitely occurred.\n\nThe \"it is not the case that\" test proves which part of the statement is the literal proposition by showing what is targeted by denial. If we say, \"It is not the case that the department head’s mistake was costly,\" we are only denying the expense. The listener still understands that a mistake happened. Because the existence of the error persists despite the denial, it is identified as the non-at-issue meaning. Conversely, the high cost is proven to be the at-issue meaning because it is the specific part of the statement that is successfully negated. This diagnostic demonstrates that while the cost is the primary topic of discussion, the occurrence of the mistake is merely information taken for granted prior to the utterance."}, {"tag": "Cancellability in Context", "secs": "8.4", "prompt": "During a performance review, a supervisor describes a software developer by saying, \"The new developer is very fast.\" In this professional context, this could unintentionally imply the developer is careless or rushes through tasks.", "ask": "Add a specific phrase to the end of the sentence that cancels the potentially negative implicature without creating a logical contradiction. Explain why this modification is possible for an implicature but would be impossible for an entailment.", "words": "120", "rubric": [{"t": "The clarification sounds natural and professional while successfully removing the negative suggestion", "judge": true, "k": []}, {"t": "take back", "judge": false, "k": ["cancel* :: retract"]}, {"t": "situation", "judge": false, "k": ["context* :: environment"]}, {"t": "clash", "judge": false, "k": ["contradiction :: logical error"]}, {"t": "guaranteed fact", "judge": false, "k": ["entail* :: necessity"]}, {"t": "suggest", "judge": false, "k": ["implicature :: non-entailment"]}], "model": "To address the potential negative suggestion that the developer is careless, a speaker can append a clarifying phrase: \"The new developer is very fast, and their work is also highly meticulous.\" This addition cancels the unintended suggestion of haste-induced errors without creating a logical clash with the original statement.\n\nThis modification is possible because the idea of \"carelessness\" is a conversational implicature, which is non-truth-conditional and context-dependent. Unlike entailments, which are facts that must be true if the sentence is true, implicatures are merely suggested. Therefore, they are \"cancellable\"; they can be retracted or clarified by the speaker as context changes. If \"The developer is fast\" entailed \"The developer is careless,\" adding the clarification would result in a logical contradiction, similar to saying \"This is a history book, but it is not a book.\" Because the literal meaning of \"fast\" does not strictly require \"careless,\" the speaker can refine the suggested meaning to ensure the professional communication is interpreted as intended by the listener."}, {"tag": "Diagnostic Synthesis", "secs": "8.1, 8.4", "prompt": "A project lead says, \"This is a manual for the legacy system.\" There are two recipients: Sam, who needs the technical details to fix a bug, and Alex, who finds legacy maintenance work tedious and boring.", "ask": "Produce a brief explanation for a third party that (1) uses the 8.1 negation test to isolate the at-issue meaning of the statement and (2) explains how the non-at-issue meaning shifts based on the recipient's context as described in 8.4.", "words": "120", "rubric": [{"t": "The response clearly differentiates between literal identification and context-driven suggestion", "judge": true, "k": []}, {"t": "The explanation provides a logical transition from the negation test to the audience-specific shift", "judge": true, "k": []}, {"t": "no", "judge": false, "k": ["negation test :: denial"]}, {"t": "environment", "judge": false, "k": ["context-dependent :: situation"]}, {"t": "suggest", "judge": false, "k": ["implicature :: non-literal"]}, {"t": "surface", "judge": false, "k": ["at-issue :: literal meaning"]}], "model": "To isolate the at-issue meaning of \"This is a manual for the legacy system,\" we apply the negation test from Section 8.1. By stating, \"It is not the case that this is a manual for the legacy system,\" we see that the denial only targets the literal identification of the object. It does not negate the existence of the legacy system or the manual itself, which are backgrounded presuppositions that survive the test. Thus, the at-issue meaning is strictly the surface-level claim about what the document is.\n\nHowever, the non-at-issue meaning shifts based on the recipient’s context, a hallmark of conversational implicature described in Section 8.4. For Sam, who is actively bug-fixing, the statement implies a helpful suggestion: \"Here is the solution you need.\" For Alex, who dislikes legacy maintenance, the same sentence suggests something negative: \"You are about to perform a tedious task.\" Because implicatures are context-dependent and not part of the literal truth-conditions, the suggested meaning fluctuates according to the listener’s specific situation and needs, even while the at-issue claim remains constant."}], "notebook": "https://notebooklm.google.com/notebook/2593f308-1e5d-4d51-ace7-2db8cbc5e8ff/artifact/78a9680b-c6fe-481c-a3cd-6704cac7db4d", "root": "../index.html", "tab": "quiz", "sheet": "### 1. At-issue meaning\nAt-issue meaning constitutes the literal, surface-level content that functions as the primary topic or \"issue\" under discussion in an utterance.\n\n### Key terms\n1. **At-issue meaning** — the literal, surface content that represents the main topic or \"issue\" being discussed.\n    1. ex. 'Mounissa will buy the discounted strawberries' — the primary event described by the sentence.\n\n### 2. Sense and Denotation\nLinguistic meaning can be systematically divided into the mental concepts held by a speaker and the specific real-world references those concepts point toward.\n\n### Key terms\n1. **Sense** — the lexical semantics or mental concept of a word held in a speaker's head.\n    1. ex. the botanical definition or visual image of a \"strawberry\" in a person's mind.\n2. **Denotation** — the specific object or set of objects that a word points to in the actual world.\n    1. ex. 'ode’imin' and 'strawberry' pointing to the same physical fruit.\n\n### 3. Non-at-issue meaning\nNon-at-issue meaning refers to any content that is suggested, implied, or assumed rather than being part of the literal surface claim.\n\n### Key terms\n1. **Non-at-issue meaning** — content that is suggested or assumed rather than being part of the literal, surface statement.\n    1. ex. implicatures and presuppositions.\n\n### 4. Truth-conditional meaning\nTruth-conditional meaning is a technical term for at-issue content that determines the truth or falsity of a sentence and is the specific target of a \"No, that is false\" response.\n\n### Key terms\n1. **Truth-conditional meaning** — a term used outside the textbook to refer to at-issue meaning because it determines the truth or falsity of the sentence.\n    1. ex. the content targeted by a supervisor saying \"That is not the case\" to reject a literal claim.\n\n### 5. Presupposition\nA presupposition is information that must be accepted as a background fact by discourse participants for an utterance to be logically coherent.\n\n### Key terms\n1. **Presupposition** — information that is assumed to be true already before a sentence is even uttered.\n    1. ex. the use of 'the' in 'the department head' assuming a specific head exists.\n\n### 6. Speaker commitment\nSpeaker commitment involves the discursive responsibility and sincerity a person adopts regarding the truth of their utterances.\n\n### Key terms\n1. **Speaker commitment** — the responsibility a person takes for the sincerity or truth of what they say during a discourse.\n    1. ex. saying \"coffee is just as tasty as tea\" and meaning it sincerely.\n\n### 7. Implicature\nAn implicature is a non-literal suggestion generated by an utterance based on the specific context of the conversation rather than logical entailment.\n\n### Key terms\n1. **Implicature** — a non-entailment suggested by a sentence based on the specific context of the conversation.\n    1. ex. 'Mounissa bought 10lbs of strawberries' implying she is making jam.\n\n### 8. Retraction\nRetraction is the formal act of withdrawing a previously established speaker commitment or clarifying that a suggested non-at-issue meaning was unintended.\n\n### Key terms\n1. **Retraction** — the act of withdrawing a previous commitment or clarifying that a non-at-issue meaning was not intended.\n    1. ex. saying \"I didn't mean it that way\" after suggesting a developer is careless.\n\n### 9. Presupposition survival\nPresupposition survival is the linguistic phenomenon where background assumptions remain true even if the main at-issue claim is denied through negation.\n\n### Key terms\n1. **Presupposition survival** — the phenomenon where a presupposition remains true even when the sentence is negated.\n    1. ex. \"It is not the case that Mounissa will buy the discounted strawberries\" still requiring that discounted strawberries exist.\n\n### 10. At-issue diagnostics\nLinguists employ diagnostic tools like sentential negation to isolate the literal claim of a sentence from its non-at-issue components.\n\n### Key terms\n1. **Sentential negation** — the use of \"it is not the case that...\" to identify at-issue meaning.\n    1. ex. identifying that the literal claim 'Mounissa will buy strawberries' is what gets canceled by negation.\n\n### 11. Sense vs Denotation\nThe distinction between sense and denotation highlights how different linguistic labels can share the same real-world referent while maintaining unique internal definitions.\n\n### Key terms\n1. **Sense vs Denotation** — the contrast between the internal definition of a word and the external object it describes.\n    1. ex. 'Ode’imin' and 'strawberry' having different linguistic senses but the same denotation.\n\n### 12. Sense\nSense refers specifically to the cognitive aspect of meaning, encompassing the internal mental images or botanical definitions a speaker associates with a word.\n\n### Key terms\n1. **Sense** — the mental lexical semantics or \"image\" associated with a word in a speaker's mind.\n    1. ex. thinking about a botanical definition while discussing a fruit.\n\n### 13. Retraction and Implicature\nSpeakers utilize clarification as a preventative measure to ensure that a listener does not interpret a suggested implicature as a settled speaker commitment.\n\n### Key terms\n1. **Clarification** — the use of additional phrases to ensure a listener does not accept a suggested implicature as fact.\n    1. ex. adding \"but I still need to write the conclusion\" to ensure the listener does not assume the report is finished.\n\n### 14. Cancellable Meanings\nCancellable meanings are non-entailed suggestions that can be explicitly denied by the speaker without creating a logical contradiction.\n\n### Key terms\n1. **Cancellability** — the property of a meaning that allows it to be taken back or denied.\n    1. ex. \"This book is about China, but it is not long.\"\n\n### 15. Contextual Influence\nImplicatures are heavily influenced by background knowledge, such as a speaker’s awareness of a listener’s specific hobbies or preferences.\n\n### Key terms\n1. **Context** — the specific circumstances or background knowledge (like a friend's hobbies) that determine which implicature is generated.\n    1. ex. a sentence about a history book implying \"you will like this\" because Danny knows Josh is a history enthusiast.\n\n### 16. Conversational Implicature\nConversational implicatures are meanings suggested by an utterance that arise from the underlying cooperative rules humans follow during interaction.\n\n### Key terms\n1. **Conversational implicature** — a meaning suggested by an utterance that arises specifically from conversational rules.\n    1. ex. concluding a friend will like a book based on their known interests and the cooperative nature of the reply.\n\n### 17. Logical Entailment\nAn entailment is a component of meaning that must necessarily be true if the sentence is true and cannot be cancelled without contradiction.\n\n### Key terms\n1. **Entailment** — a meaning that is necessarily true and cannot be canceled without creating a logical contradiction.\n    1. ex. 'This is a book about China' necessarily entailing 'This is a book.'\n\n### 18. Scalar Implicature\nScalar implicature occurs when a speaker's choice of a weaker term on a scale implies that the stronger, more informative term is false.\n\n### Key terms\n1. **Scalar implicature** — a type of suggestion where using a weaker term implies the denial of a stronger term.\n    1. ex. using \"some\" to imply \"not all.\"\n\n### 19. Cancellability\nThe cancellability test is the primary diagnostic for distinguishing implicatures from entailments by checking if a meaning can be denied without contradiction.\n\n### Key terms\n1. **Cancellability test** — the ability to add \"but it is not the case that...\" to a sentence without it being a contradiction.\n    1. ex. \"She has three kids — in fact four\" showing that \"exactly three\" was a cancellable implicature.\n\n### 20. Context dependence\nContext dependence describes the instability of implicatures, which may shift or disappear entirely depending on the conversational environment or audience.\n\n### Key terms\n1. **Context dependence** — the characteristic of implicatures where they change or disappear depending on the environment.\n    1. ex. an entailment about a book remains constant, while the implicature of \"liking\" it changes based on the audience's interests.\n\n### 21. Conversational Rules\nConversational rules provide the logical and cooperative framework that allows discourse participants to derive non-literal meanings from factual statements.\n\n### Key terms\n1. **Conversational rules** — the underlying principles used by speakers and listeners to interact and derive non-literal meaning.\n    1. ex. the framework that allows a listener to conclude a recommendation from a description.\n\n### 22. Entailment vs Implicature\nThe difference between entailment and implicature is defined by whether a meaning is logically necessary or merely suggested and subject to retraction.\n\n### Key terms\n1. **Entailment vs Implicature** — the distinction between meanings that are logically required and those that are merely suggested and cancellable.\n    1. ex. a history book is always a book (entailment), but it is not always long (implicature).\n\n### 23. Negation and Implicature\nSentential negation targets at-issue meaning because non-at-issue content, such as presupposition, must be true *before* the sentence is uttered and is thus not subject to denial.\n\n### Key terms\n1. **Negation impact** — the fact that sentential negation targets at-issue meaning but might not cancel the implicature.\n    1. ex. Mounissa not buying strawberries (at-issue canceled) while still potentially liking them (implicature survives).\n\n### 24. Context\nContext encompasses the surrounding discourse environment and shared situational knowledge required to interpret non-entailed suggestions.\n\n### Key terms\n1. **Context** — the environment and shared knowledge that allows a non-entailment to be suggested.\n    1. ex. the situational environment where Danny and Josh discuss a book to determine if it is a recommendation.\n\n### 25. Presupposition vs Implicature\nPresuppositions are background requirements that survive negation, whereas implicatures are context-driven suggestions that can be cancelled without logical conflict.\n\n### Key terms\n1. **Presupposition vs Implicature** — the difference between what is assumed true beforehand and what is suggested by context.\n    1. ex. the existence of a department head (presupposition) vs the idea that a book is long (implicature).\n\n### Names and studies\n1. **Grice (1975)** — developed the theory of logic and conversation, proposing that interaction is a cooperative endeavor governed by rules where implicatures are cancellable without contradiction."}</script>
+<script>
+const D = JSON.parse(document.getElementById('quiz-data').textContent);
+const KEY = 'lq:' + D.id;
+const $ = s => document.querySelector(s);
+const esc = t => { const d=document.createElement('div'); d.textContent = t==null?'':t; return d.innerHTML; };
+const G_OK = '✓', G_NO = '✕';
+
+/* WHY A QUESTION IS ON THE EXAM. One glyph, set by the generator in the topic tag, and the
+   only thing the page does with it is show it and group by it. The ORDER of this object is
+   his priority order and the tables below read it, so re-ordering here re-orders the report.
+
+   RE-RANKED 08-14 TO HIS NEW ORDER: *"Wrong questions tested first · Starred · Questions with
+   research (not fix) · Question mark tags · Fix marks · Correct answers."* It has to be kept
+   in step with `POOL_RUNGS` in reinforce.py, which is what actually assigns the glyphs — that
+   list decides which card gets a spot, this one only names the result. Out of step, the
+   report groups a paper by an order the paper was not built in.
+
+   ✎ USED TO SIT FIRST and no longer does. Until 08-12 it was the one he wrote as an
+   instruction rather than a mark, so it led the report; he has since ranked it fifth, and a
+   ✎ question now takes an ordinary spot like every other rung.
+
+   `+` IS NOT A RUNG. Nothing is tagged `+` — it is what a section gets when its quiz was
+   shorter than the quota, which is ordinary rather than exceptional. It is last because a
+   question with no card behind it is the one he has least history with. */
+const SRC = {
+  '✕': 'You got this wrong',
+  '☆': 'Starred in the subchapter quiz',
+  'R': 'Built from your own research',
+  '?': 'You flagged it — no idea at the time',
+  '✎': 'You asked for this one to be rewritten',
+  '$': 'You got it right before — asked a different way',
+  '+': 'New — nothing of yours left to re-ask on this section'
+};
+const SRC_ORDER = Object.keys(SRC);
+function srcName(g){ return SRC[g] || ''; }
+
+/* ---- saved state -------------------------------------------------------------
+   Everything lives in localStorage under the page id. `hash` fingerprints the question
+   set: a Redo regenerates the quiz, and when that happens the old answers describe
+   questions that no longer exist, so the attempt is retired into history rather than
+   shown against the new ones.
+
+   KEYED ON q.qid, NOT ON THE ARRAY INDEX (v2). Skipping and starring have to outlive a
+   rebuild: a question he deleted must stay deleted, and a question he starred must still be
+   starred, even after the quiz is regenerated and the order changes. That is also what makes
+   `skipped` usable later as a permanent exclusion list when exam reuse is built — see qid()
+   in quizpage.py. v1 states are migrated once, on load. */
+function qk(i){ return D.questions[i].qid; }
+function blank(){ return {v:2, hash:D.hash, i:0, answers:{}, pass2:{}, skipped:{}, starred:{},
+                          unsure:{}, hints:{}, phase:1, p2list:null, done:false, at:null,
+                          shuf:{}, history:[]}; }
+function migrate(s){
+  // v1 keyed every map on the array index. The hash matches, so the indices are still valid
+  // and this is a straight re-key — done once, then never again.
+  const re = m => { const o = {}; Object.keys(m||{}).forEach(k=>{
+    const i = +k; if(D.questions[i]) o[qk(i)] = m[k]; }); return o; };
+  s.answers = re(s.answers); s.skipped = re(s.skipped);
+  s.pass2 = {}; s.starred = {}; s.unsure = {}; s.hints = {}; s.phase = 1; s.p2list = null;
+  s.shuf = {};
+  s.v = 2;
+  return s;
+}
+function load(){
+  try{
+    const s = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if(!s) return blank();
+    if(s.hash !== D.hash){
+      const b = blank();
+      b.history = (s.history||[]).slice();
+      // TAKE THE SCORE AS IT WAS RECORDED, never recompute it. These answers were given to
+      // questions that no longer exist, so scoring them against the new set is meaningless —
+      // it turned a real 8/10 into 2/10 in testing. `meta` is written on every save for
+      // exactly this moment.
+      if(s.done) b.history.push({
+        at: s.at,
+        score: (s.meta && typeof s.meta.score === 'number') ? s.meta.score : 0,
+        total: (s.meta && s.meta.total) || Object.keys(s.answers||{}).length,
+        stale: true});
+      b.rebuilt = true;
+      // A REBUILD DOES NOT RESURRECT A DELETED QUESTION. Answers are retired because they
+      // describe questions that may be gone; skipped and starred are decisions ABOUT
+      // questions, so they carry over on qid and simply miss anything no longer present.
+      if(s.v === 2){ b.skipped = s.skipped || {}; b.starred = s.starred || {};
+                     b.unsure = s.unsure || {}; }
+      return b;
+    }
+    if(!s.history) s.history = [];
+    if(s.v !== 2) return migrate(s);
+    if(!s.skipped) s.skipped = {};
+    if(!s.starred) s.starred = {};
+    if(!s.unsure) s.unsure = {};
+    if(!s.hints) s.hints = {};
+    if(!s.pass2) s.pass2 = {};
+    if(!s.phase) s.phase = 1;
+    // Not carried across a rebuild on purpose: blank() empties it. A stored order describes a
+    // set of options that may no longer be the same length — optOrder() throws out any that
+    // no longer fit, so a stale one is harmless anyway.
+    if(!s.shuf) s.shuf = {};
+    return s;
+  }catch(e){ return blank(); }
+}
+function save(){
+  S.meta = {title:D.title, subtitle:D.subtitle, book:D.book, total:active(S).length,
+            at:S.at, done:S.done, score:score(S)};
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+}
+/* Skipped questions leave the run entirely — out of the count, out of the denominator,
+   out of the topic breakdown. Anything less makes "8 / 10" a lie about a quiz of nine. */
+function active(s){ return D.questions.map((_,i)=>i).filter(i => !(s.skipped||{})[qk(i)]); }
+function ans(i){ return S.answers[qk(i)]; }
+function ans2(i){ return S.pass2[qk(i)]; }
+function firstRight(i){ return ans(i) === D.questions[i].correct; }
+/* THE SECOND PASS REDEEMS. Wrong first, right second → the question counts as right; wrong
+   both times stays wrong, and there is no third pass. The first answer is never overwritten,
+   which is what lets the end card say "10 right, +2 redeemed" instead of quietly rewriting a
+   10 into a 12. */
+function finalRight(i){ return firstRight(i) || ans2(i) === D.questions[i].correct; }
+function score(s){ return active(s).reduce((n,i)=> n + (finalRight(i) ? 1 : 0), 0); }
+function redeemed(){ return active(S).filter(i => !firstRight(i) && ans2(i) === D.questions[i].correct); }
+/* What a second pass would still have to cover: wrong on the first pass and not yet
+   re-answered. Empty → no button, which is the "if there are no mistakes there is no second
+   pass" rule and also what ends the round rather than looping it. */
+function pending2(){
+  return active(S).filter(i => ans(i) !== undefined && !firstRight(i) && ans2(i) === undefined);
+}
+/* The questions THIS pass runs over. Frozen into p2list when the second pass starts, so
+   answering one correctly cannot shrink the list under his feet mid-run. */
+function runList(){
+  if(S.phase === 2 && S.p2list) return S.p2list.filter(i => !S.skipped[qk(i)]);
+  return active(S);
+}
+function pick(i){ return S.phase === 2 ? ans2(i) : ans(i); }
+
+/* ---- THE ON-SCREEN OPTION ORDER ------------------------------------------------------
+   A DISPLAY LAYER AND NOTHING MORE. `S.shuf[qid]` is a list of ORIGINAL option indices in
+   the order they are drawn; every button still carries its original index in `data-k`, so
+   `S.answers`, `q.correct`, the review list, the study sheet and the exam export all keep
+   reading exactly what they read before and none of them ever learn this exists. Reordering
+   the array itself would silently re-point his saved answers at different options — the same
+   trap the build-time shuffle avoids by being deterministic (see shuffle_options()).
+
+   NO ENTRY MEANS THE ORDER THE PAGE WAS BUILT WITH, which is already shuffled once, per
+   page id, in Python. This one is only ever written by Redo. */
+function optOrder(i){
+  const n = D.questions[i].options.length;
+  const o = (S.shuf||{})[qk(i)];
+  // Length is the guard: anything stored against a different option count is discarded
+  // rather than half-applied, which would drop or double an option on screen.
+  if(!Array.isArray(o) || o.length !== n) return D.questions[i].options.map((_,k)=>k);
+  return o;
+}
+/* Fisher–Yates, and it REFUSES TO LAND ON THE ORDER IT ALREADY HAD — with four options a
+   plain shuffle repeats itself about one time in twenty-four, and a Redo that changes
+   nothing on screen is the one outcome he pressed the button to avoid. */
+function reshuffleOpts(i){
+  const cur = optOrder(i), n = cur.length;
+  if(n < 2) return;
+  let next;
+  for(let t = 0; t < 12; t++){
+    next = cur.slice();
+    for(let a = n-1; a > 0; a--){
+      const b = Math.floor(Math.random() * (a+1));
+      [next[a], next[b]] = [next[b], next[a]];
+    }
+    if(next.some((v,k)=> v !== cur[k])) break;
+  }
+  if(!S.shuf) S.shuf = {};
+  S.shuf[qk(i)] = next;
+}
+let S = load();
+let lastShown = -1;
+
+/* ---- HIS RESEARCH, kept apart from the attempt ---------------------------------------
+   Its own localStorage key, NOT a field of S, and that is the whole design. S is one
+   attempt: Retake clears it, a rebuilt quiz retires it. What he went and found while
+   answering is neither — it is material, and it has to survive both. Keyed on q.qid like
+   `starred` and `skipped`, so it also survives a Redo that reorders the questions.
+
+   `{ qid: {t: "his text", i: ["data:image/...", ...], f: "how to fix the question"} }` — an
+   entry with none of the three is deleted rather than stored empty, which is what makes
+   `rhas()` a simple truth test.
+
+   `f` IS THE SECOND BOX AND IT IS A DIFFERENT KIND OF THING (08-12). `t` is material — what
+   he went and found, which the generator tests him on. `f` is an INSTRUCTION about the
+   question itself: the stem omitted a detail, the options were ambiguous, the idea should be
+   asked from the other end. They ride together here because they are written in the same
+   moment, and they are split everywhere downstream because one is content and the other is
+   direction. An old entry has no `f` and reads as ''. */
+const RKEY = KEY + ':research';
+function loadResearch(){
+  try{ const r = JSON.parse(localStorage.getItem(RKEY) || '{}');
+       return (r && typeof r === 'object') ? r : {}; }
+  catch(e){ return {}; }
+}
+let R = loadResearch();
+function rget(id){
+  const r = R[id];
+  return {t: (r && r.t) || '', i: (r && r.i) || [], f: (r && r.f) || ''};
+}
+function rput(id, t, imgs, fix){
+  fix = fix || '';
+  if(!t.trim() && !imgs.length && !fix.trim()) delete R[id];
+  else R[id] = {t: t, i: imgs, f: fix};
+  try{ localStorage.setItem(RKEY, JSON.stringify(R)); return true; }
+  catch(e){ return false; }                       // quota — the caller puts it back
+}
+
+/* ---- the written half ------------------------------------------------------------------
+   Three long-form questions on their own tab, generated with the exam by NotebookLM and
+   marked ON THIS PAGE with no network, no key and no credit. His constraint: *"its
+   subjective and hard to do but it needs to be no code, I dont mind comparing them manually
+   if need be but it wold be best if automated somehow."*
+
+   HOW THE MARKING IS HONEST. Each point carries a list of ways of saying it, written by the
+   generator alongside the question. A point whose wording is found is ticked; a point that
+   cannot be settled by wording at all is marked JUDGEMENT and left for him. The page never
+   guesses at the second kind — a marker that quietly awarded them would flatter every
+   answer, which is worse than one that asks.
+
+   ITS OWN STORAGE KEY, like the research box and for the same reason: S is one attempt and a
+   Retake clears it. What he wrote is material, and it outlives the attempt. */
+const FKEY = KEY + ':frq';
+let F = (function(){ try{ return JSON.parse(localStorage.getItem(FKEY) || '{}') || {}; }
+                     catch(e){ return {}; } })();
+function fput(){ try{ localStorage.setItem(FKEY, JSON.stringify(F)); }catch(e){} }
+function fget(i){ const f = F[i] || {}; return {t: f.t || '', m: f.m || {}, done: !!f.done}; }
+
+/* WORD BOUNDARIES, NOT SUBSTRINGS, and this is the difference between marking and
+   flattering: a bare substring search awards "recovers the verb" for the word `implement`
+   sitting inside `implementation`, which is the exact thing the answer was asked to undo.
+   A key ending in `*` keeps its open end on purpose, for stems like `pluralis*`. */
+function keyRe(k){
+  const open = /\*$/.test(k), base = open ? k.slice(0,-1) : k;
+  const lit = base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const head = /^[a-z0-9]/i.test(base) ? '\\b' : '';
+  const tail = (!open && /[a-z0-9]$/i.test(base)) ? '\\b' : '';
+  return new RegExp(head + lit + tail, 'i');
+}
+function findHit(text, keys){
+  const t = ' ' + String(text||'').toLowerCase().replace(/[’']/g, "'").replace(/\s+/g,' ') + ' ';
+  for(let i=0;i<(keys||[]).length;i++){ if(keyRe(keys[i]).test(t)) return keys[i]; }
+  return null;
+}
+function frqHit(fi, ri){
+  const f = D.frq[fi], r = f.rubric[ri], st = fget(fi);
+  if(st.m[ri] !== undefined) return {on: !!st.m[ri], why: 'set'};
+  if(r.judge) return {on: false, why: 'judge'};
+  const found = findHit(st.t, r.k);
+  return {on: !!found, why: found ? found.replace(/\*$/,'') : ''};
+}
+function frqScore(fi){
+  const f = D.frq[fi];
+  let n = 0;
+  f.rubric.forEach((_r, ri) => { if(frqHit(fi, ri).on) n++; });
+  return {n: n, t: f.rubric.length};
+}
+function flushFrq(){
+  document.querySelectorAll('#frqview textarea').forEach(ta => {
+    const i = +ta.dataset.f;
+    F[i] = F[i] || {}; F[i].t = ta.value;
+  });
+  fput();
+}
+function drawFrq(){
+  const box = $('#frqview');
+  if(!box || !(D.frq||[]).length) return;
+  let h = '<p class="say">Three written answers, from the same sources as the paper. Write '
+        + 'one, then mark it: every point that can be settled by what you wrote is checked '
+        + 'for you, and the ones that need judgement are handed back. Click any row to '
+        + 'overrule it.</p>';
+  D.frq.forEach((f, fi) => {
+    const st = fget(fi);
+    h += '<section class="frq"><p class="meta"><span class="num">' + (fi+1) + ' / '
+       + D.frq.length + '</span>'
+       + (f.tag ? '<span class="dot">·</span><span>' + esc(f.tag) + '</span>' : '')
+       + (f.secs ? '<span class="dot">·</span><span class="sec">' + esc(f.secs) + '</span>' : '')
+       + '</p>';
+    if(f.prompt) h += '<blockquote class="stim">' + esc(f.prompt) + '</blockquote>';
+    h += '<h1 class="q">' + esc(f.ask) + '</h1>';
+    if(f.words) h += '<p class="say">About ' + esc(f.words) + ' words.</p>';
+    h += '<textarea class="frqin" data-f="' + fi + '" spellcheck="true" '
+       + 'placeholder="Write your answer.">' + esc(st.t) + '</textarea>'
+       + '<p class="saved" data-wc="' + fi + '"></p>'
+       + '<div class="acts inline"><button class="pill primary" data-mark="' + fi
+       + '">Mark my answer</button>'
+       + '<button class="pill ghost" data-fcopy="' + fi + '">Copy</button></div>'
+       + '<div class="rubric hide" data-rub="' + fi + '"></div></section>';
+  });
+  box.innerHTML = h;
+
+  box.querySelectorAll('textarea').forEach(ta => {
+    const fi = +ta.dataset.f;
+    const count = () => {
+      const n = ta.value.trim() ? ta.value.trim().split(/\s+/).length : 0;
+      const el = box.querySelector('[data-wc="' + fi + '"]');
+      if(el) el.textContent = n + (n === 1 ? ' word' : ' words');
+    };
+    ta.addEventListener('input', () => {
+      F[fi] = F[fi] || {}; F[fi].t = ta.value; fput(); count();
+      if(fget(fi).done) markFrq(fi);
+    });
+    count();
+  });
+  box.querySelectorAll('[data-mark]').forEach(b => {
+    b.onclick = () => { const fi = +b.dataset.mark; F[fi] = F[fi] || {};
+                        F[fi].done = true; fput(); markFrq(fi); };
+  });
+  box.querySelectorAll('[data-fcopy]').forEach(b => {
+    b.onclick = () => copyText(oneFrqMarkdown(+b.dataset.fcopy), b, 'Copy');
+  });
+  D.frq.forEach((_f, fi) => { if(fget(fi).done) markFrq(fi); });
+}
+function markFrq(fi){
+  const f = D.frq[fi], st = fget(fi), box = $('#frqview [data-rub="' + fi + '"]');
+  if(!box) return;
+  box.classList.remove('hide');
+  if(!st.t.trim()){
+    box.innerHTML = '<p class="say">Nothing to mark yet — write an answer first.</p>';
+    return;
+  }
+  let h = '<h3>Marking</h3>';
+  f.rubric.forEach((r, ri) => {
+    const hit = frqHit(fi, ri);
+    let note;
+    if(hit.why === 'set') note = 'Set by you.';
+    else if(hit.why === 'judge') note = 'Nothing here can be settled by wording — read it and decide.';
+    else if(hit.on) note = 'Found “' + esc(hit.why) + '”.';
+    else note = 'Not found. If you said it another way, click to award it.';
+    h += '<div class="rrow ' + (hit.on ? 'hit' : 'miss') + '" data-ri="' + ri + '">'
+       + '<span class="rmark">' + (hit.on ? G_OK : '–') + '</span>'
+       + '<span class="rbody"><span class="rlab">' + esc(r.t)
+       + (r.judge ? '<span class="judge">your call</span>' : '') + '</span>'
+       + '<span class="rnote">' + note + '</span></span></div>';
+  });
+  const s = frqScore(fi);
+  const word = s.n >= s.t - 1 ? 'Strong' : s.n >= s.t - 2 ? 'Solid'
+             : s.n >= 2 ? 'Thin' : 'Missed the question';
+  h += '<div class="rfoot"><span class="rscore">' + s.n + ' <small>/ ' + s.t + '</small></span>'
+     + '<span class="rverdict">' + word + '</span><span class="spacer"></span>'
+     + (f.model ? '<button class="link" data-model="' + fi + '">Model answer</button>' : '')
+     + '</div>';
+  if(f.model) h += '<div class="model hide" data-mv="' + fi + '">' + tinyMd(f.model) + '</div>';
+  box.innerHTML = h;
+
+  box.querySelectorAll('.rrow').forEach(row => {
+    row.onclick = () => {
+      const ri = +row.dataset.ri;
+      F[fi] = F[fi] || {}; F[fi].m = F[fi].m || {};
+      F[fi].m[ri] = !row.classList.contains('hit');
+      fput(); markFrq(fi);
+    };
+  });
+  const mb = box.querySelector('[data-model]');
+  if(mb) mb.onclick = () => {
+    const mv = box.querySelector('[data-mv="' + fi + '"]');
+    mv.classList.toggle('hide');
+    mb.textContent = mv.classList.contains('hide') ? 'Model answer' : 'Hide model answer';
+  };
+}
+function oneFrqMarkdown(fi){
+  const f = D.frq[fi], st = fget(fi), s = frqScore(fi);
+  let out = '### Written ' + (fi+1) + (f.tag ? ' — ' + f.tag : '')
+          + (f.secs ? ' (' + f.secs + ')' : '') + '\n\n';
+  if(f.prompt) out += '> ' + f.prompt + '\n\n';
+  out += '**' + f.ask + '**\n\n' + (st.t.trim() || '_(not answered)_') + '\n\n'
+       + '**Marked ' + s.n + '/' + s.t + '**\n\n';
+  f.rubric.forEach((r, ri) => {
+    out += '- [' + (frqHit(fi, ri).on ? 'x' : ' ') + '] ' + r.t
+         + (r.judge ? ' _(judgement)_' : '') + '\n';
+  });
+  return out;
+}
+/* Only answered ones ride the Copy. An untouched written half would otherwise put three
+   empty questions and eighteen unticked boxes onto the Notion row every week. */
+function frqMarkdown(){
+  const done = (D.frq || []).map((_f, i) => i).filter(i => fget(i).t.trim());
+  if(!done.length) return '';
+  return '\n\n## Written\n\n' + done.map(oneFrqMarkdown).join('\n');
+}
+function copyText(text, btn, back){
+  navigator.clipboard.writeText(text).then(()=>{
+    const old = btn.textContent;
+    btn.textContent = 'Copied';
+    setTimeout(()=>{ btn.textContent = back || old; }, 1400);
+  });
+}
+
+/* ---- rendering ---------------------------------------------------------------- */
+/* The Starred tab only exists while something is starred, and the Study sheet tab only when
+   the quiz shipped with one — a linguistics quiz built before topic tags has none. If that
+   leaves one tab, the whole group goes: a lone "Quiz" button is chrome that says nothing. */
+function syncTabs(){
+  const nstar = Object.keys(S.starred||{}).length;
+  const nfrq = (D.frq || []).length;
+  document.querySelector('.tab[data-tab="starred"]').classList.toggle('hide', !nstar);
+  document.querySelector('.tab[data-tab="sheet"]').classList.toggle('hide', !D.hasSheet);
+  document.querySelector('.tab[data-tab="frq"]').classList.toggle('hide', !nfrq);
+  $('#tabs').classList.toggle('hide', !nstar && !D.hasSheet && !nfrq);
+  if(D.tab === 'starred' && !nstar) setTab('quiz');
+  fitTitle();          // starring one question adds a tab, which moves what the title clears
+}
+
+/* THE TITLE GOES DEAD-CENTRE ONLY IF IT CAN DO IT WHOLE. Measured, not guessed: the title's
+   own width against the bar minus a gutter the width of the tabs on each side. It is
+   re-measured whenever the tabs change and whenever the window does, because both change
+   the answer. See .bar.mid in the CSS for why the fallback exists. */
+function fitTitle(){
+  const bar = document.querySelector('.bar'), t = document.querySelector('.title'),
+        tabs = $('#tabs');
+  if(!bar || !t) return;
+  /* MEASURED CENTRED, THEN PUT BACK IF IT DOES NOT FIT. It has to be done in that order:
+     in the flex layout the title is `flex:1`, so it is as wide as the space beside the tabs
+     whatever the words are, and both scrollWidth and offsetWidth report that width rather
+     than the title's own. .mid makes it `width:max-content`, which is the only state in
+     which it can be asked how wide it actually is. Both classList calls happen inside one
+     frame, so nothing is painted half-way. */
+  bar.classList.add('mid');
+  const side = (tabs && !tabs.classList.contains('hide')) ? tabs.offsetWidth : 0;
+  if(t.getBoundingClientRect().width > bar.clientWidth - 2 * (side + 14))
+    bar.classList.remove('mid');
+}
+function setTab(name){
+  if(D.tab === 'quiz' && name !== 'quiz') flushResearch();
+  if(D.tab === 'frq' && name !== 'frq') flushFrq();
+  D.tab = name;
+  document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===name));
+  $('#band').classList.toggle('hide', name!=='quiz');
+  $('#starredview').classList.toggle('hide', name!=='starred');
+  $('#sheetview').classList.toggle('hide', name!=='sheet');
+  $('#frqview').classList.toggle('hide', name!=='frq');
+  $('#footer').classList.toggle('hide', name!=='quiz');
+  if(name==='quiz'){
+    draw();
+    // Restore the frozen offset rather than recomputing it: answer, read the sheet, come
+    // back — the question must be exactly where he left it.
+    if(quizPad !== null) $('main').style.paddingTop = quizPad;
+  } else {
+    if(name==='starred') drawStarred();
+    if(name==='sheet'){ renderScore(); renderSheetExtras(); }
+    if(name==='frq') drawFrq();
+    $('main').style.paddingTop = BASE_PAD + 'px';
+    window.scrollTo(0,0);
+  }
+}
+
+/* CENTRE THE BLOCK, BUT COMPUTE THE OFFSET ONLY WHEN THE QUESTION CHANGES.
+   `justify-content:center` was the original approach and it is what made the question jump:
+   opening a rationale made the block taller and the centring recomputed underneath him.
+   Measuring once per question and freezing the padding gives both — centred on arrival,
+   immovable afterwards, because answering only ever grows the page downward. */
+const BASE_PAD = 16;
+let quizPad = null;
+
+/* CENTRE ON THE ANSWERED HEIGHT, NOT THE HEIGHT ON SCREEN.
+   Centring on what is visible was wrong in a way that only showed up after answering: the
+   block grows by two rationales, so the top gap stayed large while the last option slid
+   under the footer. Coming back to the same question then looked right, because by then it
+   WAS the answered height being measured — the two states he photographed, from one bug.
+   `reserve` is the height with feedback open, measured off-screen before anything renders. */
+/* CENTRE THE QUESTION HE IS LOOKING AT; ONLY MOVE UP IF THE ANSWER WOULD NOT FIT.
+   Two rules that used to fight, now resolved with a `min` instead of a choice between them:
+
+     centred = the block as it is on screen, centred        ← what he reads
+     fit     = the lowest start that still leaves room for the ANSWERED block
+
+   `min` of the two. On a tall window the answered block still fits inside the centred
+   position, so nothing clamps and the question sits in the middle of the page — *"so i dont
+   have to look at the top too much but just straight at the center"* (08-11). On a short
+   one, `fit` wins and the block rides up exactly as far as it must, which is the 08-10
+   behaviour and no further.
+
+   Either way the padding is computed ONCE per question and frozen, so answering still moves
+   nothing: only the cards below the one he clicked ever change position.
+
+   THE RESEARCH ROW IS DELIBERATELY OUT OF BOTH MEASUREMENTS (08-11). Counting it would
+   centre the whole band and lift the question by half the row — he tried that and preferred
+   it without: *"if research is opened I can scroll down to add it in."* */
+function centreBlock(i){
+  const m = $('main');
+  m.style.paddingTop = BASE_PAD + 'px';
+  const avail = innerHeight - $('header').offsetHeight - $('footer').offsetHeight;
+  // The band's own padding is part of the block, or the box lands low by exactly one padding.
+  const bp = parseFloat(getComputedStyle($('#band')).paddingTop) || 0;
+  const live = $('#quizview').getBoundingClientRect().height + bp * 2;
+  const answered = (i === undefined ? live : answeredHeight(i) + bp * 2);
+  const centred = Math.round((avail - live) / 2);
+  const fit = Math.round(avail - answered);
+  quizPad = Math.max(BASE_PAD, Math.min(centred, fit)) + 'px';
+  m.style.paddingTop = quizPad;
+}
+
+/* The tallest this question can get: a WRONG pick, which opens two rationales rather than
+   one. Rendered into a hidden probe of the same width and thrown away. */
+function answeredHeight(i){
+  const q = D.questions[i];
+  const probe = document.createElement('div');
+  probe.style.cssText = 'position:absolute;left:-99999px;top:0;visibility:hidden';
+  probe.style.width = $('#quizview').getBoundingClientRect().width + 'px';
+  probe.innerHTML = buildQ(i, (q.correct + 1) % q.options.length, false);
+  $('main').appendChild(probe);
+  const h = probe.getBoundingClientRect().height;
+  probe.remove();
+  return h;
+}
+
+/* NEVER BACKWARDS. The old fallback here was `S.i = act[0]`, so skipping a question sent him
+   to question 1 — the whole way back to the start of the quiz. The nearest question AFTER
+   the one that just left is the only sensible landing place. */
+function nextFrom(list, i){
+  const nx = list.find(j => j > i);
+  return nx === undefined ? list[list.length-1] : nx;
+}
+function draw(){
+  if(D.tab!=='quiz') return;
+  $('#band').classList.toggle('off', !!(S.reviewing || S.done));
+  // The box belongs to a question on screen. The end card and the review list have none, so
+  // it goes away there rather than floating under a score.
+  showResearch(!(S.reviewing || S.done));
+  if(S.reviewing) return review();
+  if(S.done) return end();
+  const act = runList();
+  if(!act.length) return end();
+  if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
+  question();
+}
+
+/* Pure markup, no DOM writes and no state changes — so the same builder can render the
+   question and be measured off-screen for the centring reserve. */
+function buildQ(i, picked, fresh, en){
+  const q = D.questions[i];
+  const answered = picked !== undefined;
+  const act = runList(), pos = act.indexOf(i);
+  const starred = !!S.starred[q.qid];
+  const unsure = !!(S.unsure||{})[q.qid];
+  en = en || '';
+
+  // The counter sits top-left above the question, the way the notebook does it, rather than
+  // up in the bar — it belongs with the thing it counts. On a second pass it counts the
+  // second pass, so four wrong answers read as "1 / 4" and not as a broken 16.
+  let h = '<div class="qhead' + en + '"><div class="qcol">'
+        + '<p class="meta"><span class="num">' + (pos+1) + ' / ' + act.length + '</span>'
+        + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        // THE SECTION AND THE GLYPH, on the exam only — a subchapter quiz carries neither and
+        // this line is byte-for-byte what it always was. The section is what it says; the
+        // glyph is why this question is on the paper at all, and it is deliberately JUST the
+        // glyph. His instruction: "the blurb needs to be shortened to just the symbol : in
+        // that its either has them as a tag or it doesnt."
+        + (q.sec ? '<span class="dot">·</span><span class="sec">' + esc(q.sec)
+                 + (q.link ? '<span class="lk">+' + esc(q.link) + '</span>' : '')
+                 + '</span>' : '')
+        + (q.topic ? '<span class="dot">·</span><span>' + esc(q.topic) + '</span>' : '')
+        + (q.src ? '<span class="dot">·</span><span class="src" title="' + srcName(q.src)
+                 + '">' + esc(q.src) + '</span>' : '')
+        + '</p>'
+        + '<h1 class="q">' + esc(q.q) + '</h1></div>'
+        // ? BEFORE ☆, because it is the one pressed while the question is still unanswered:
+        // "no idea" is a thing he knows before he picks, and starring is usually after.
+        // The key is in the tooltip because there is nowhere else on the page that says it,
+        // and a legend down the footer would be four words of chrome on every question.
+        + '<button class="qmark' + (unsure?' on':'') + '" id="qmark" '
+        + 'title="No idea — needs work  ( / )" aria-label="No idea, needs work">?</button>'
+        + '<button class="star' + (starred?' on':'') + '" id="star" title="Star  ( s )" '
+        + 'aria-label="Star">'
+        + (starred?'★':'☆') + '</button>'
+        + '<div class="more"><button class="dots" id="dots" aria-label="More">⋮</button></div>'
+        + '</div>';
+
+  h += '<div class="opts">';
+  // `pos` is where it sits on screen and `k` is which option it is. The LETTER follows the
+  // position — A is whatever is drawn first, always — because the letter is how he says
+  // "that one" with the keyboard. `data-k` follows the option, because that is what gets
+  // stored, scored and exported.
+  optOrder(i).forEach((k,pos)=>{
+    const o = q.options[k];
+    let cls = 'opt' + en, mark = '', lab = '', why = '';
+    if(answered){
+      if(k === q.correct){ cls += ' is-right'; mark = G_OK; lab = 'Right answer'; }
+      else if(k === picked){ cls += ' is-wrong'; mark = G_NO; lab = 'Not quite'; }
+      else cls += ' is-muted';
+      if(lab && fresh) cls += ' fresh';
+      why = q.rationales ? (q.rationales[k]||'') : '';
+    }
+    h += '<button class="'+cls+'" data-k="'+k+'"'+(answered?' disabled':'')+'>'
+       + '<span class="line"><span class="k">'+D.letters[pos]+'.</span>'
+       + '<span class="t">'+esc(o)+'</span>'
+       + '<span class="mark">'+mark+'</span></span>';
+    if(lab){
+      h += '<span class="rat"><span class="ratin">'
+         + '<span class="lab"><span class="g">'+mark+'</span>'+lab+'</span>'
+         + (why ? '<span class="why" style="display:block">'+esc(why)+'</span>' : '')
+         + '</span></span>';
+    }
+    h += '</button>';
+  });
+  return h + '</div>';
+}
+
+function question(fresh){
+  const i = S.i, q = D.questions[i], picked = pick(i);
+  const answered = picked !== undefined;
+  const act = runList();
+  const pos = act.indexOf(i);
+  const isNew = i !== lastShown;
+  lastShown = i;
+
+  $('#rail').style.width = ((pos + (answered?1:0)) / act.length * 100) + '%';
+  $('#quizview').innerHTML = buildQ(i, picked, fresh, isNew ? ' enter' : '');
+  $('#quizview').querySelectorAll('.opt').forEach(b=>{
+    b.onclick = ()=>{
+      // The first pass is never overwritten — a second-pass answer goes in its own map.
+      if(S.phase === 2) S.pass2[qk(i)] = +b.dataset.k; else S.answers[qk(i)] = +b.dataset.k;
+      save(); question(true);
+    };
+  });
+  $('#star').onclick = ()=> toggleStar(i);
+  $('#qmark').onclick = ()=> toggleUnsure(i);
+  $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
+
+  // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
+  // touches it — and nothing above the options ever changes height.
+  const hb = $('#hintbtn'), ht = $('#hinttext');
+  hb.classList.toggle('hide', !q.hint || answered);
+  ht.classList.toggle('hide', !(S.hintOpen && q.hint && !answered));
+  ht.textContent = q.hint || '';
+  hb.onclick = toggleHint;
+
+  // Redo takes the Hint slot the moment the hint leaves it: before the answer the footer
+  // offers help, after it the footer offers a way back. Never both, never an empty gap.
+  const rd = $('#redo');
+  rd.classList.toggle('hide', !answered);
+  rd.onclick = redoQuestion;
+
+  $('#back').classList.remove('hide');
+  $('#next').classList.remove('hide');
+  $('#review').classList.add('hide');
+  $('#retake').classList.add('hide');
+  $('#pass2').classList.add('hide');
+  $('#back').disabled = pos === 0;
+  /* NEXT IS NEVER DISABLED (08-12). It used to be locked until he answered, which made a
+     gap impossible and the recycle below unreachable. He asked for the opposite: Enter
+     always moves on, and the button has to mean the same thing as the key or there are two
+     answers to "what does forward do". It only says Finish when there is nothing left
+     unanswered — with a gap anywhere it says Next, because that is what it does. */
+  $('#next').disabled = false;
+  $('#next').textContent = (pos === act.length-1 && !gaps().length) ? 'Finish' : 'Next';
+  $('#footer').classList.remove('hide');
+  mountResearch(q.qid);
+  // Only when the question changes, and always against the ANSWERED height, so the layout
+  // he lands on is the one he will still be looking at after he picks.
+  if(isNew) centreBlock(i);
+}
+
+/* THE HINT, from the button or from `h`. One path for both, and the BUTTON'S OWN VISIBILITY
+   is the gate: it is already hidden when the question has no hint or has been answered, so
+   there is no second copy of that condition to fall out of step. */
+function toggleHint(){
+  const hb = $('#hintbtn'), ht = $('#hinttext');
+  if(hb.classList.contains('hide')) return;
+  S.hintOpen = !S.hintOpen;
+  ht.classList.toggle('hide', !S.hintOpen);
+  /* RECORDED PER QUESTION, NOT PER PRESS. Still one hint however many times he opens the
+     same one — the number is meant to say how many questions he needed help on, and
+     counting keystrokes would make a fidget look like a gap. It rides in S, so a Retake
+     clears it: it describes this attempt, unlike ☆ and ?.
+
+     SHUTTING IT AGAIN TAKES THE DEDUCTION BACK (08-12, his ask): `h` is next to the keys
+     that answer, so it gets hit by accident, and a projected score docked for a hint he
+     never read is wrong about the only thing that number is for. Open then shut = not
+     used. He can also read it and shut it, and that is his to do — nothing here can tell
+     the two apart, and the projected score is his own instrument to be honest with. */
+  if(S.hintOpen){ if(!S.hints) S.hints = {}; S.hints[qk(S.i)] = true; }
+  else if(S.hints) delete S.hints[qk(S.i)];
+  save();
+}
+
+/* REDO — put this question back the way it was before he answered it, and nothing else.
+   For the mis-click: an option is a full-width card and the row above it is the question,
+   so the wrong one gets hit. It clears the pick FOR THIS PASS only.
+
+   AND IT RESHUFFLES THE OPTIONS (08-14, his ask). A mis-click still shows him the right
+   answer for the moment it takes to press Redo, so putting the same four cards back in the
+   same four places hands him the answer by position — he would be picking a slot he
+   remembers, not an answer he knows. Reshuffled, what he saw is worth nothing. Purely
+   cosmetic: `data-k` still carries the original index, so the pick he then makes is stored,
+   scored and exported exactly as an untouched question's would be. See optOrder().
+
+   WHAT IT DELIBERATELY DOES NOT TOUCH: the research and fix boxes (they live in R, not in
+   S, and what he found stands whatever he clicked), ☆, ?, and the hint. Retake is the one
+   that clears, and it is at the end of the quiz where it belongs.
+
+   No re-centring: `question()` sees the same index, so the frozen padding stays and the
+   block does not jump under him. */
+function redoQuestion(){
+  const i = S.i;
+  if(pick(i) === undefined) return;
+  if(S.phase === 2) delete S.pass2[qk(i)]; else delete S.answers[qk(i)];
+  reshuffleOpts(i);
+  save(); question();
+}
+
+/* STARRING is not the same thing as skipping and the two maps never mix. Starred = worth
+   coming back to, right or wrong, still fully part of the run and the score. Skipped =
+   removed from it. Keeping them apart is what lets exam reuse later take the starred ones as
+   candidates and treat the skipped ones as permanently excluded. */
+function toggleStar(i){
+  const k = qk(i);
+  if(S.starred[k]) delete S.starred[k]; else S.starred[k] = true;
+  save(); syncTabs();
+  const b = $('#star');
+  if(b){ b.textContent = S.starred[k] ? '★' : '☆'; b.classList.toggle('on', !!S.starred[k]); }
+}
+
+/* ? IS NOT ☆ AND IT IS NOT WRONG EITHER. His words: "I have no idea and whether or not I get
+   this right or wrong, it still needs work." So it is a third map beside `starred` and
+   `skipped`, it changes no score, and it survives a Retake and a rebuild exactly as the
+   other two do — a guess that happened to land right is the case it exists for, and that
+   question would otherwise leave no trace anywhere. */
+function toggleUnsure(i){
+  const k = qk(i);
+  if(!S.unsure) S.unsure = {};
+  if(S.unsure[k]) delete S.unsure[k]; else S.unsure[k] = true;
+  save();
+  const b = $('#qmark');
+  if(b) b.classList.toggle('on', !!S.unsure[k]);
+}
+
+/* ---- the research box ----------------------------------------------------------------
+   One box per question, opened from a row under the options, holding TWO panes side by side.
+
+   WHY TWO AND NOT ONE (08-12). Everything he wrote here used to land under a single
+   `## My research` heading, and the exam prompt reads that heading as MATERIAL — the rung-4
+   pile of things never yet asked. That is right for a definition he looked up and wrong for
+   "this stem never said which joint": an instruction filed as material gets tested rather
+   than obeyed, so the flawed question came back unchanged. So the pane on the left is what
+   he FOUND and the pane on the right is what the QUESTION should have been, they travel to
+   the sheet under two different headings, and the pipeline routes them to two different
+   places — content into the exam's sources, direction into the exam's prompt.
+
+   THE BOX SHUTS WHEN THE QUESTION CHANGES. It used to stay open across the whole quiz on the
+   theory that an evening of looking things up should not need it reopening fifteen times;
+   in practice he ended up scrolling past an empty box on every question he had nothing to
+   say about. The CONTENT is per question and always was. */
+const rpanel = $('#research'), rtoggle = $('#rtoggle'), rbody = $('#rbody');
+const rtext = $('#rtext'), rfix = $('#rfix'), rshots = $('#rshots'), rsay = $('#rsay');
+let rOpen = false;
+let rFor = null;          // the qid the box currently holds
+let rTimer = null;
+
+function showResearch(on){ if(rpanel) rpanel.classList.toggle('hide', !on); }
+
+/* Write both textareas back to the question they belong to. Called before the box is pointed
+   at a different question, on blur, on a debounce while typing, and on the way out of the
+   page — the textareas are the live copy and everything else reads from R. */
+function flushResearch(){
+  if(rFor === null || !rtext) return;
+  const cur = rget(rFor);
+  if(!rput(rFor, rtext.value, cur.i, rfix ? rfix.value : cur.f)) warnFull();
+  paintToggle();
+}
+function mountResearch(id){
+  if(!rpanel) return;
+  /* FLUSHED ON EVERY MOUNT, INCLUDING A RE-MOUNT OF THE SAME QUESTION. Below this line the
+     panes are overwritten from R, so anything still sitting in the debounce is gone — and
+     answering re-mounts. Type a sentence, click an option inside 400ms, and the sentence was
+     silently deleted. Only the cross-question case used to flush, which is why that went
+     unnoticed: it needs the two events within a fifth of a second of each other. */
+  if(rFor !== null){ clearTimeout(rTimer); flushResearch(); }
+  // A NEW question, so the box goes away with the old one. Same question re-rendered leaves
+  // it exactly as he left it, mid-paste and all.
+  if(rFor !== null && rFor !== id) rOpen = false;
+  rFor = id;
+  const r = rget(id);
+  rtext.value = r.t;
+  if(rfix) rfix.value = r.f;
+  rbody.classList.toggle('hide', !rOpen);
+  rsay.textContent = ''; rsay.classList.remove('warn');
+  drawShots();
+  paintToggle();
+}
+/* The row says what is behind it, so a question he has already written on is visible
+   without opening anything. */
+function paintToggle(){
+  if(!rtoggle) return;
+  const r = rget(rFor), n = r.i.length, bits = [];
+  if(r.t.trim()) bits.push('notes');
+  if(n) bits.push(n + (n > 1 ? ' images' : ' image'));
+  if(r.f.trim()) bits.push('a fix');
+  rtoggle.textContent = bits.length ? ('My research · ' + bits.join(', '))
+                                    : '+ Add research or a fix';
+  rtoggle.classList.toggle('has', !!bits.length);
+}
+function drawShots(){
+  const imgs = rget(rFor).i;
+  rshots.classList.toggle('hide', !imgs.length);
+  rshots.innerHTML = imgs.map((src, n) =>
+    '<span class="shot"><img src="' + src + '" alt="Pasted image ' + (n+1) + '">'
+    + '<button class="x" data-rm="' + n + '" aria-label="Remove image">×</button></span>').join('');
+  rshots.querySelectorAll('[data-rm]').forEach(b => {
+    b.onclick = () => {
+      const imgs2 = rget(rFor).i.slice();
+      imgs2.splice(+b.dataset.rm, 1);
+      rput(rFor, rtext.value, imgs2, rfix ? rfix.value : '');
+      drawShots(); paintToggle();
+      rsay.textContent = ''; rsay.classList.remove('warn');
+    };
+  });
+}
+
+/* IMAGES ARE SHRUNK BEFORE THEY ARE STORED, and that is not a nicety — localStorage is a
+   few megabytes for the whole origin, and one full-size screenshot off a web page is
+   comfortably a megabyte of base64. Long edge 1100px, WebP where the browser has it,
+   JPEG where it does not. A diagram is still readable and a page's worth of them fits. */
+function shrink(file, cb){
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  img.onload = () => {
+    const max = 1100;
+    const s = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+    const c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round(img.naturalWidth * s));
+    c.height = Math.max(1, Math.round(img.naturalHeight * s));
+    const ctx = c.getContext('2d');
+    // JPEG has no transparency and paints it black, so a white plate goes down first —
+    // most diagrams he will paste are black line art on a transparent background.
+    ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, c.width, c.height);
+    ctx.drawImage(img, 0, 0, c.width, c.height);
+    URL.revokeObjectURL(url);
+    let out = '';
+    try{ out = c.toDataURL('image/webp', 0.72); }catch(e){}
+    if(out.slice(0, 15) !== 'data:image/webp') out = c.toDataURL('image/jpeg', 0.78);
+    cb(out);
+  };
+  img.onerror = () => { URL.revokeObjectURL(url); cb(null); };
+  img.src = url;
+}
+function warnFull(){
+  rsay.textContent = 'This browser is out of room — remove an image and try again.';
+  rsay.classList.add('warn');
+}
+
+/* ONE WAY IN, from the row or from `r`, and it lands him in the box ready to paste:
+   scrolled to, focused, caret at the end. `block:'center'` rather than `'nearest'` because
+   the box opens below the fold on a long question and 'nearest' stops the moment its top
+   edge is visible — which is not far enough to type in. The LEFT pane takes the focus: `r`
+   means "I want to paste this now", and what he pastes is research. */
+function openResearch(pane){
+  if(!rpanel || rpanel.classList.contains('hide')) return;
+  rOpen = true;
+  rbody.classList.remove('hide');
+  const el = (pane === 'fix' && rfix) ? rfix : rtext;
+  el.focus();
+  el.setSelectionRange(el.value.length, el.value.length);
+  rbody.scrollIntoView({block:'center', behavior:'smooth'});
+}
+/* `f` GOES STRAIGHT TO THE RIGHT-HAND PANE, and it never closes the box — it moves the caret
+   into it, whether the box was shut or already open on the other pane. That asymmetry with
+   `r` is the honest one: `r` is a mode he sits in for a while, `f` is one sentence and out,
+   and a key that sometimes closed the box he was aiming at would be the wrong tool for it.
+   Esc is the closer, from either pane. */
+function openFix(){ openResearch('fix'); }
+/* ONE WAY OUT, and it saves on the way — the debounce may not have fired, and a box that
+   swallowed the last sentence he typed would be worse than one that never closed. The blur
+   matters as much as the hide: with the caret still parked in a hidden textarea, every
+   option key afterwards would be typed into it instead of answering. */
+function closeResearch(){
+  if(!rpanel) return;
+  clearTimeout(rTimer);
+  flushResearch();
+  rOpen = false;
+  rbody.classList.add('hide');
+  const a = document.activeElement;
+  if(a && rbody.contains(a)) a.blur();
+}
+function toggleResearch(){
+  if(!rpanel || rpanel.classList.contains('hide')) return;
+  if(rOpen) closeResearch(); else openResearch();
+}
+
+if(rpanel){
+  rtoggle.onclick = toggleResearch;
+  [rtext, rfix].forEach(el => {
+    if(!el) return;
+    el.addEventListener('input', () => { clearTimeout(rTimer); rTimer = setTimeout(flushResearch, 400); });
+    el.addEventListener('blur', flushResearch);
+  });
+
+  /* ENTER-MOVES-ON IS NOT HANDLED HERE. It lives in the one document keydown handler, with
+     every other key on the quiz tab — see the ENTER IS THE ONE EXCEPTION block there. A
+     second listener on this element would be a second path to the same action, and briefly
+     was: both fired on one press and the quiz advanced two questions. */
+
+  /* NO preventDefault. A copied web selection puts BOTH a text flavour and an image file on
+     the clipboard; swallowing the event to grab the image would throw the text away. The
+     text lands in the textarea by itself and the files are picked off beside it. */
+  rbody.addEventListener('paste', e => {
+    const items = (e.clipboardData && e.clipboardData.items) || [];
+    const files = [];
+    for(let n = 0; n < items.length; n++){
+      if(items[n].kind === 'file' && /^image\//.test(items[n].type)){
+        const f = items[n].getAsFile();
+        if(f) files.push(f);
+      }
+    }
+    if(!files.length) return;
+    const target = rFor;
+    rsay.textContent = 'Adding ' + files.length + ' image' + (files.length > 1 ? 's' : '') + '…';
+    rsay.classList.remove('warn');
+    let left = files.length;
+    files.forEach(f => shrink(f, data => {
+      left--;
+      if(data && target === rFor){
+        // Hold the list as it was: a failed rput has already written the oversized entry
+        // into R, so the revert needs a copy taken BEFORE the attempt, not after it.
+        const prev = rget(target).i.slice(), fx = rfix ? rfix.value : '';
+        if(rput(target, rtext.value, prev.concat([data]), fx)){ drawShots(); paintToggle(); }
+        else { rput(target, rtext.value, prev, fx); warnFull(); return; }
+      }
+      if(left === 0 && !rsay.classList.contains('warn')) rsay.textContent = '';
+    }));
+  });
+  addEventListener('beforeunload', flushResearch);
+}
+
+/* One question can be dropped from the run, the way the notebook lets him delete one —
+   except nothing is deleted in NotebookLM, so a rebuild brings it back and the end card
+   can put it back at any time.
+
+   SKIPPING THE LAST QUESTION SUBMITS. It used to send him back to question 1, because the
+   skipped index left `active()` and draw()'s fallback was `act[0]`. Deleting the last item
+   in a list means the list is finished, so this does exactly what Finish does. */
+function openMenu(){
+  const host = $('.more');
+  if(host.querySelector('.menu')) return closeMenu();
+  const m = document.createElement('div');
+  m.className = 'menu';
+  m.innerHTML = '<button id="skipq">Skip this question</button>';
+  host.appendChild(m);
+  m.querySelector('#skipq').onclick = ()=>{
+    const list = runList(), pos = list.indexOf(S.i);
+    if(list.length <= 1) return closeMenu();        // never skip the last one standing
+    const wasLast = pos === list.length - 1;
+    S.skipped[qk(S.i)] = true;
+    delete S.answers[qk(S.i)];
+    delete S.pass2[qk(S.i)];
+    delete S.starred[qk(S.i)];                     // a deleted question is not a starred one
+    if(S.unsure) delete S.unsure[qk(S.i)];         // nor one that still needs work
+    closeMenu();
+    syncTabs();
+    if(wasLast){ finish(); return; }
+    // After the removal the list has shrunk, so the item now AT `pos` is the one that
+    // followed the skipped question. Forwards, never back to the top.
+    S.i = runList()[pos];
+    S.hintOpen = false;
+    lastShown = -1;
+    save(); question(); window.scrollTo(0,0);
+  };
+  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
+}
+function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(); }
+
+function finish(){
+  S.done = true; S.at = new Date().toISOString();
+  recycling = false;          // the clean-up pass is over; a second pass starts in order
+  save(); end(); window.scrollTo(0,0);
+}
+
+/* One scored breakdown, keyed by whatever `keyOf` pulls off a question. Returns '' when no
+   question carries the field, which is what keeps the subchapter quiz's end card identical.
+   Rows come out in SRC_ORDER when the key is a glyph and in natural order otherwise, so the
+   provenance table always reads down his priority ladder even if the paper is shuffled. */
+function group(act, keyOf, head, label){
+  const by = {};
+  act.forEach(i=>{
+    // A CROSS-SECTION QUESTION COUNTS IN BOTH SECTIONS, because it tested both. It is one
+    // question on the paper and two lines in the report, so the column does not add up to
+    // the total — which is correct, and the alternative is worse: filing it under whichever
+    // section happened to be written first would hide the other one's weakness entirely.
+    const ks = [].concat(keyOf(i) || []);
+    ks.forEach(k=>{
+      if(!k) return;
+      by[k] = by[k] || {n:0,t:0};
+      by[k].t++;
+      if(finalRight(i)) by[k].n++;
+    });
+  });
+  let keys = Object.keys(by);
+  if(!keys.length) return '';
+  const ranked = keys.filter(k => SRC_ORDER.indexOf(k) >= 0).length === keys.length;
+  keys = ranked ? SRC_ORDER.filter(k => by[k])
+                : keys.sort((a,b)=>a.localeCompare(b, undefined, {numeric:true}));
+  let h = '<div class="topics"><h3>'+esc(head)+'</h3>';
+  keys.forEach(k=>{
+    h += '<div class="trow"><span>'+(label ? label(k) : esc(k))+'</span>'
+       + '<span class="n">'+by[k].n+'/'+by[k].t+'</span>'
+       + '<span class="tbar"><i style="width:'+(by[k].n/by[k].t*100)+'%"></i></span></div>';
+  });
+  return h + '</div>';
+}
+
+function end(){
+  const act = active(S), n = score(S), t = act.length;
+  const pct = t ? Math.round(n/t*100) : 0;
+  const red = redeemed().length;
+  let h = '<p class="score">'+n+' <small>/ '+t+'</small></p>'
+        + '<p class="sub">'+pct+'% · '+when(S.at)+'</p>'
+        + '<div class="chart"><i class="r" style="width:'+(t?n/t*100:0)+'%"></i>'
+        + '<i class="w" style="width:'+(t?(t-n)/t*100:0)+'%"></i></div>'
+        + '<p class="legend"><span>'+G_OK+' <b>'+n+'</b> correct</span>'
+        + '<span>'+G_NO+' <b>'+(t-n)+'</b> wrong</span>'
+        // The chart stays TWO segments. A third fill for redemptions would need its own
+        // grayscale-safe hatch and would make the one number he reads harder to read; the
+        // count says it in words instead.
+        + (red ? '<span>+<b>'+red+'</b> on the second pass</span>' : '') + '</p>';
+
+  const by = {};
+  act.forEach(i=>{
+    const q = D.questions[i], k = q.topic || '';
+    if(!k) return;
+    by[k] = by[k] || {n:0,t:0};
+    by[k].t++;
+    if(finalRight(i)) by[k].n++;
+  });
+  const keys = Object.keys(by);
+  if(keys.length){
+    h += '<div class="topics"><h3>Topics covered</h3>';
+    keys.forEach(k=>{
+      h += '<div class="trow"><span>'+esc(k)+'</span><span class="n">'+by[k].n+'/'+by[k].t+'</span>'
+         + '<span class="tbar"><i style="width:'+(by[k].n/by[k].t*100)+'%"></i></span></div>';
+    });
+    h += '</div>';
+  }
+
+  /* THE TWO EXAM-ONLY TABLES. Both are built from fields a subchapter quiz never carries, so
+     both are simply absent there — no flag, no branch anywhere else, and nothing about the
+     quiz page changed the day these were added.
+
+     BY SUBCHAPTER is the one he asked for by name: a paper spanning seven sections that can
+     only report one number tells him he scored 78% and nothing about where to go back to.
+     BY WHY IT WAS ASKED is the one that closes the loop — it is the only place that answers
+     whether the thing he got wrong last week actually stuck. */
+  h += group(act, i => [D.questions[i].sec, D.questions[i].link], 'By subchapter', null);
+  h += group(act, i => D.questions[i].src, 'Why it was asked',
+             g => SRC[g] ? esc(g) + '  ' + esc(SRC[g]) : esc(g));
+
+  if(S.history.length){
+    h += '<p class="hist">Earlier attempts: ' + S.history.slice().reverse()
+        .map(a=>'<span>'+a.score+'/'+a.total+' on '+when(a.at)+'</span>').join(' · ') + '</p>';
+  }
+  const nskip = Object.keys(S.skipped||{}).length;
+  if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
+              + '<button class="link" id="unskip">put them back</button></p>';
+  if(S.rebuilt) h += '<p class="note">These questions were rebuilt since your last attempt.</p>';
+  h += '<p class="note"><a href="'+D.root+'">All my quizzes</a>'
+     + (D.notebook ? ' · <a href="'+D.notebook+'">Open in Gemini Notebook</a>' : '') + '</p>';
+
+  $('#quizview').innerHTML = h;
+  const u = $('#unskip');
+  if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  $('#rail').style.width = '100%';
+  $('#band').classList.add('off');
+  showResearch(false);
+  $('#footer').classList.remove('hide');
+  $('#back').classList.add('hide');
+  $('#hintbtn').classList.add('hide');
+  $('#hinttext').classList.add('hide');
+  $('#redo').classList.add('hide');
+  $('#next').classList.add('hide');
+  $('#review').classList.remove('hide');
+  $('#review').textContent = 'Review quiz';
+  $('#retake').classList.remove('hide');
+  // No wrong answers left to retry → no button at all, which is also what stops the second
+  // pass looping into a third: anything answered on pass two leaves pending2() for good.
+  $('#pass2').classList.toggle('hide', pending2().length === 0);
+  renderScore();
+  lastShown = -1;
+  centreBlock();
+}
+
+/* One question's full record: the right answer, what he chose on each pass, the rationale.
+   Shared by the review list and the Starred tab so the two can never drift apart. */
+function itemHTML(i, n){
+  const q = D.questions[i], first = ans(i), second = ans2(i);
+  let h = '<div class="item">';
+  if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
+  h += '<p class="qq">'+(n===undefined?'':(n+1)+'. ')+esc(q.q)+'</p>'
+     + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
+  if(!firstRight(i)){
+    h += '<p class="rline mine"><span class="g">'+G_NO+'</span><span>You chose: '
+       + (first===undefined ? 'nothing' : esc(q.options[first])) + '</span></p>';
+    if(second !== undefined){
+      h += '<p class="rline mine"><span class="g">'+(second===q.correct?G_OK:G_NO)+'</span>'
+         + '<span>Second pass: '+esc(q.options[second])
+         + (second===q.correct ? ' — redeemed' : '') + '</span></p>';
+    }
+  }
+  const why = q.rationales ? q.rationales[q.correct] : '';
+  if(why) h += '<p class="why" style="padding-left:0">'+esc(why)+'</p>';
+  return h + '</div>';
+}
+
+function review(){
+  let h = '<div class="rev"><h3>Every question</h3>';
+  active(S).forEach((i,n)=>{ h += itemHTML(i, n); });
+  h += '</div>';
+  $('#quizview').innerHTML = h;
+  $('#band').classList.add('off');
+  showResearch(false);
+  $('#footer').classList.remove('hide');
+  $('#back').classList.add('hide');
+  $('#hintbtn').classList.add('hide');
+  $('#hinttext').classList.add('hide');
+  $('#redo').classList.add('hide');
+  $('#next').classList.add('hide');
+  $('#pass2').classList.add('hide');
+  $('#review').classList.remove('hide');
+  $('#review').textContent = 'Summary';
+  $('#retake').classList.remove('hide');
+  quizPad = BASE_PAD + 'px';                      // a long list, never centred
+  $('main').style.paddingTop = quizPad;
+  window.scrollTo(0,0);
+}
+
+/* ---- the Starred tab ---------------------------------------------------------------
+   Its own view rather than a section of the review list, because the point is to find them
+   again quickly on a later visit — including on a quiz he has not retaken. Right or wrong
+   does not matter; "this one is important" is the only thing being recorded. */
+function drawStarred(){
+  const list = D.questions.map((_,i)=>i).filter(i => S.starred[qk(i)]);
+  if(!list.length){
+    $('#starredview').innerHTML = '<h3>Starred</h3><p class="empty">Nothing starred yet. '
+      + 'Use the ☆ beside a question.</p>';
+    return;
+  }
+  let h = '<h3>Starred · '+list.length+'</h3>';
+  list.forEach((i,n)=>{
+    h += itemHTML(i, n).replace('</div>',
+      '<p class="rline"><button class="link" data-unstar="'+i+'">Unstar</button></p></div>');
+  });
+  $('#starredview').innerHTML = h;
+  $('#starredview').querySelectorAll('[data-unstar]').forEach(b=>{
+    b.onclick = ()=>{ delete S.starred[qk(+b.dataset.unstar)]; save(); syncTabs(); drawStarred(); };
+  });
+}
+
+/* ---- the score, written where he copies from ---------------------------------------- */
+/* THE PROJECTED SCORE DOCKS A MARK FOR EVERY HINT, which is his rule and his reasoning:
+   a high score with a lot of hints "is actually a sign that you didn't know them very
+   well". So `(right − hints) / total`, floored at zero — the number he would have got
+   with the hints shut. It never touches the real score; both are printed, and the gap
+   between them is the thing worth looking at.
+
+   Hints are counted per question, so this cannot go more negative than the score itself. */
+function scoreParts(){
+  const act = active(S), n = score(S), t = act.length, red = redeemed().length;
+  const hints = act.filter(i => (S.hints || {})[qk(i)]).length;
+  const proj = Math.max(0, n - hints);
+  return {n:n, t:t, pct: t ? Math.round(n/t*100) : 0, red:red, first:n-red, wrong:t-n,
+          skipped: Object.keys(S.skipped||{}).length,
+          hints:hints, proj:proj, projpct: t ? Math.round(proj/t*100) : 0};
+}
+function hintLine(p){
+  if(!p.hints) return 'No hints used';
+  return p.hints + ' hint' + (p.hints > 1 ? 's' : '') + ' used · projected '
+       + p.proj + ' / ' + p.t + ' (' + p.projpct + '%) with the hints docked';
+}
+function scoreMarkdown(){
+  if(!S.done) return '';
+  const p = scoreParts();
+  return '**Quiz:** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
+       + (p.red ? ', +' + p.red + ' redeemed' : '') + ', ' + p.wrong + ' wrong'
+       + (p.skipped ? ', ' + p.skipped + ' skipped' : '') + ' · ' + when(S.at)
+       + '\n**Hints:** ' + hintLine(p);
+}
+function renderScore(){
+  const el = $('#scorecard');
+  if(!el) return;
+  el.classList.toggle('hide', !S.done);
+  if(!S.done) return;
+  const p = scoreParts();
+  el.innerHTML = '<b>'+p.n+' / '+p.t+'</b><span>'+p.pct+'% · '+p.first+' right'
+    + (p.red ? ', +'+p.red+' on the second pass' : '') + ', '+p.wrong+' wrong'
+    + (p.skipped ? ' · '+p.skipped+' skipped' : '') + ' · '+when(S.at)+'</span>'
+    + '<span class="proj">'+hintLine(p)+'</span>';
+}
+
+function when(iso){
+  if(!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString(undefined,{month:'short',day:'numeric'})
+       + ' ' + d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+}
+
+/* ---- controls ------------------------------------------------------------------ */
+function goTo(i){
+  S.i = i; S.hintOpen = false; save(); question(); window.scrollTo(0,0);
+}
+/* Everything in this pass he has not answered. On the second pass that means not
+   re-answered, because `pick()` reads the pass he is on. */
+function gaps(){ return runList().filter(i => pick(i) === undefined); }
+
+/* THE END OF THE LIST IS NOT THE END OF THE QUIZ (08-12, his ask). Enter moves on whether or
+   not he answered, so a run can reach the last question with holes in it — and a quiz handed
+   in with holes is just a lower score for no reason. So the last question sends him back to
+   the first thing he left blank, and from then on forward means "the next blank one" until
+   there are none, which is the moment Finish becomes real.
+
+   `recycling` is the mode, and it has to be a mode rather than a rule about gaps: before he
+   has reached the end, forward means the next question in order — that is a quiz. After it,
+   forward means the next hole — that is a clean-up pass. The same key, two jobs, and which
+   one it is doing is decided by whether he has been to the end yet.
+
+   NOT SAVED. A reload starts him at the top of the list again, where in-order is right. */
+let recycling = false;
+function advance(){
+  const act = runList(), pos = act.indexOf(S.i), left = gaps();
+  if(recycling){
+    if(!left.length){ finish(); return; }
+    const nx = left.find(j => j > S.i);
+    const to = nx !== undefined ? nx : left[0];
+    if(to === S.i) return;                        // the last hole is the one he is looking at
+    goTo(to); return;
+  }
+  if(pos < act.length - 1){ goTo(act[pos + 1]); return; }
+  if(left.length){ recycling = true; goTo(left[0]); return; }
+  finish();
+}
+function step(dir){
+  if(dir > 0){ advance(); return; }
+  const act = runList(), nx = act[act.indexOf(S.i) - 1];
+  if(nx === undefined) return;
+  goTo(nx);
+}
+$('#next').onclick = ()=> step(1);
+$('#back').onclick = ()=> step(-1);
+$('#review').onclick = ()=>{ S.reviewing = !S.reviewing; draw(); };
+/* THE SECOND PASS — the preferred way out of the end card, and the one that keeps
+   everything. It re-runs only what he got wrong, on a list frozen at the moment he presses
+   it, and a right answer here redeems the question in the final score. */
+$('#pass2').onclick = ()=>{
+  const list = pending2();
+  if(!list.length) return;
+  S.phase = 2; S.p2list = list; S.i = list[0];
+  S.done = false; S.reviewing = false; S.hintOpen = false;
+  lastShown = -1;
+  save(); draw(); window.scrollTo(0,0);
+};
+/* RETAKE CLEARS, which is why it sits apart from the other two. The attempt goes into
+   history first so nothing is lost, and the questions he deleted or starred stay that way —
+   they are decisions about the quiz, not part of one attempt at it. */
+$('#retake').onclick = ()=>{
+  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length});
+  const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
+  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  lastShown = -1;
+  save(); syncTabs(); renderScore(); draw();
+};
+document.querySelectorAll('.tab').forEach(b=> b.onclick = ()=> setTab(b.dataset.tab));
+
+/* ---- his own additions -------------------------------------------------------------
+   A textarea, localStorage, and string work. NO API, no model, nothing paid — the
+   formatting below is deterministic, which is the whole reason it can be free.
+
+   The loop this closes: he pastes the result into the subchapter's Notion row, and the
+   weekly exam already scrapes that row first (board-notes.md → exam-notes.md). So anything
+   he adds here becomes exam content without touching the pipeline. */
+const NKEY = KEY + ':notes';
+const ta = $('#mynotes'), savedmsg = $('#savedmsg');
+
+function loadNotes(){ try{ return localStorage.getItem(NKEY) || ''; }catch(e){ return ''; } }
+function saveNotes(){
+  try{ localStorage.setItem(NKEY, ta.value); }catch(e){}
+  savedmsg.textContent = ta.value.trim() ? 'Saved in this browser' : '';
+}
+
+/* His shorthand → the sheet's own markdown shape, so the paste reads as one document
+   rather than a tidy half and a raw half. Bolds the term before a `:` or a dash, keeps his
+   indentation as nesting, and numbers everything (markdown renumbers `1.` itself, and
+   Notion honours that on paste). A line he already formatted is left alone. */
+function fmtLine(t){
+  if(/\*\*/.test(t)) return t;
+  let m = t.match(/^([^:]{1,60}?):\s+(.+)$/);
+  if(!m) m = t.match(/^(.{1,60}?)\s+[—–-]\s+(.+)$/);
+  return m ? '**' + m[1].trim() + '** — ' + m[2].trim() : t;
+}
+function noteMarkdown(){
+  const out = [];
+  (ta.value || '').split('\n').forEach(raw=>{
+    const line = raw.replace(/\t/g, '  ');
+    const m = line.match(/^(\s*)(?:[-*+]\s+|\d+[.)]\s+)?(.*)$/);
+    const text = m[2].trim();
+    if(!text) return;
+    const depth = Math.min(Math.floor(m[1].length / 2), 2);
+    out.push('   '.repeat(depth) + '1. ' + fmtLine(text));
+  });
+  return out.join('\n');
+}
+/* ---- ☆ and ? read back on the sheet --------------------------------------------------
+   Both marks end up in the same place for the same reason he gave: he stopped and marked
+   the question, so it is worth having beside the sheet when he pastes it into Notion — and
+   the ? ones especially, because a lucky guess leaves no other trace. Each entry is the
+   full record from `itemHTML`, so the sheet and the review list can never disagree. */
+function markedList(map){
+  const out = [];
+  D.questions.forEach((q, i) => { if((map || {})[q.qid]) out.push({n: i + 1, i: i, q: q}); });
+  return out;
+}
+
+/* WHAT HE GOT WRONG — the one part of the record that never left the browser.
+   Starred, Needs work and My research have ridden the Copy into Notion since 08-11, and the
+   week's exam is built from that Notion row; the wrong answers were the missing rung, so the
+   exam could prefer a question he flagged but not one he actually failed. This is that rung,
+   and it costs one section in a paste he already makes.
+
+   FINAL verdicts, so a question redeemed on the second pass is NOT listed — he ended the
+   attempt knowing it. Skipped questions are excluded for the same reason as everywhere else:
+   they were taken out of the run. */
+function missedList(){
+  const out = [];
+  active(S).forEach(i => {
+    if(ans(i) !== undefined && !finalRight(i)) out.push({n: i + 1, i: i, q: D.questions[i]});
+  });
+  return out.sort((a,b)=>a.n-b.n);
+}
+function renderMarked(sel, list, head, say){
+  const box = $(sel);
+  if(!box) return;
+  box.classList.toggle('hide', !list.length);
+  if(!list.length) return;
+  let h = '<h3>' + head + ' · ' + list.length + '</h3><p class="say">' + say + '</p>';
+  list.forEach(x => { h += itemHTML(x.i, x.n - 1); });
+  box.innerHTML = h;
+}
+function markedMarkdown(list, head){
+  if(!list.length) return '';
+  let out = '\n\n## ' + head + '\n';
+  list.forEach(x => {
+    const q = x.q, why = q.rationales ? q.rationales[q.correct] : '';
+    out += '\n### ' + x.n + '. ' + q.q + '\n\n'
+         + '**Answer:** ' + q.options[q.correct] + '\n'
+         + (why ? '\n' + why + '\n' : '');
+  });
+  return out;
+}
+function markedHTML(list, head){
+  if(!list.length) return '';
+  let h = '<h2>' + head + '</h2>';
+  list.forEach(x => {
+    const q = x.q, why = q.rationales ? q.rationales[q.correct] : '';
+    h += '<h3>' + x.n + '. ' + esc(q.q) + '</h3>'
+       + '<p><strong>Answer:</strong> ' + esc(q.options[q.correct]) + '</p>'
+       + (why ? '<p>' + esc(why) + '</p>' : '');
+  });
+  return h;
+}
+
+/* ---- what he found, read back on the sheet ------------------------------------------
+   Grouped by the question, in question order, and NOT filtered by anything: a question he
+   skipped still keeps its research, because the research is his and the skip was about the
+   question. Numbering is the question's own position, so it does not move when the run does. */
+function researchList(){
+  const out = [];
+  D.questions.forEach((q, i) => {
+    const r = rget(q.qid);
+    if(r.t.trim() || r.i.length) out.push({n: i + 1, q: q, r: r});
+  });
+  return out;
+}
+/* The right-hand pane, listed on its own. A question can appear in one list, the other, or
+   both — they are two different statements about it and neither implies the other. */
+function fixList(){
+  const out = [];
+  D.questions.forEach((q, i) => {
+    const r = rget(q.qid);
+    if(r.f.trim()) out.push({n: i + 1, q: q, r: r});
+  });
+  return out;
+}
+function paras(t){
+  return t.trim().split(/\n{2,}/)
+          .map(p => '<p>' + esc(p).replace(/\n/g, '<br>') + '</p>').join('');
+}
+/* Everything the sheet grows below the book's own material, in the order the Copy writes
+   it: what he marked, then what he went and found. */
+function renderSheetExtras(){
+  renderMarked('#starredsheet', markedList(S.starred), 'Starred',
+               'Marked while answering, right or wrong.');
+  renderMarked('#unsuresheet', markedList(S.unsure), 'Needs work',
+               'Marked ? — no idea at the time, so the answer is not proof of anything.');
+  renderResearch();
+  renderFixes();
+}
+function renderResearch(){
+  const el = $('#researchview');
+  if(!el) return;
+  // The textarea is the live copy while a question is on screen, so write it back before
+  // reading R — otherwise the sheet shows everything except the paragraph he just typed.
+  flushResearch();
+  const list = researchList();
+  el.classList.toggle('hide', !list.length);
+  if(!list.length) return;
+  let h = '<h3>My research</h3><p class="say">What you pasted while answering, under the '
+        + 'question that sent you looking. Copy takes this with the sheet.</p>';
+  list.forEach(x => {
+    h += '<div class="ritem"><p class="rq">' + x.n + '. ' + esc(x.q.q) + '</p>';
+    if(x.r.t.trim()) h += '<div class="rtxt">' + paras(x.r.t) + '</div>';
+    x.r.i.forEach((src, k) => {
+      h += '<img class="rimg" src="' + src + '" alt="Pasted image ' + (k+1) + '">';
+    });
+    h += '</div>';
+  });
+  el.innerHTML = h;
+}
+/* THE QUESTION IS PRINTED WITH THE FIX, and it has to be: the next exam is asked to rewrite
+   a specific question, and it never sees this quiz's paper — `exam-prior-questions.md` is
+   given to it as the do-not-repeat list, not as something to work from. The stem and the
+   right answer sitting under his instruction are the whole of what it has to go on. */
+function renderFixes(){
+  const el = $('#fixview');
+  if(!el) return;
+  flushResearch();
+  const list = fixList();
+  el.classList.toggle('hide', !list.length);
+  if(!list.length) return;
+  let h = '<h3>Fix these questions</h3><p class="say">What was wrong with the question '
+        + 'itself. The next exam is told to rewrite these the way you said, not to test what '
+        + 'you wrote here.</p>';
+  list.forEach(x => {
+    h += '<div class="ritem"><p class="rq">' + x.n + '. ' + esc(x.q.q) + '</p>'
+       + '<p class="rans"><strong>Answer:</strong> ' + esc(x.q.options[x.q.correct]) + '</p>'
+       + '<div class="rtxt">' + paras(x.r.f) + '</div></div>';
+  });
+  el.innerHTML = h;
+}
+
+/* THE IMAGES DO NOT GO IN THE PLAIN TEXT, and that is the point of the two flavours below.
+   A pasted screenshot is a couple of hundred kilobytes of base64; dropping that into the
+   markdown would make one Notion row unreadable and the paste enormous. So the text
+   flavour names each image and the HTML flavour carries it. */
+function researchMarkdown(){
+  const list = researchList();
+  if(!list.length) return '';
+  let out = '\n\n## My research\n';
+  list.forEach(x => {
+    out += '\n### ' + x.n + '. ' + x.q.q + '\n\n';
+    const t = x.r.t.trim();
+    if(t) out += t + '\n\n';
+    if(x.r.i.length){
+      x.r.i.forEach((_, k) => { out += '_[image ' + (k+1) + ' — on the quiz page]_\n'; });
+      out += '\n';
+    }
+  });
+  return out.replace(/\n+$/, '\n');
+}
+/* TWO HEADINGS WHOSE TEXT IS LOAD-BEARING. `notion_board.py notes` splits both of these out
+   of the row body BY NAME — `split_fixes()`, and `FIX_HEADING` / `SKIP_HEADING` there are
+   these two strings. Everything else on the row stays material. Rename one here and it
+   silently becomes material again, which is the bug this whole split exists to fix. */
+const FIXHEAD = 'Fix these questions';
+const SKIPHEAD = 'Skipped';
+
+/* THE CARDS HE DELETED, and this section exists to keep them OUT of things (08-14, his rule:
+   skipped cards *"are never reformed and never appear"*, on any exam, v2 or v3).
+
+   It is the one place on this page where a skipped question is written down. Everywhere else
+   they are gone by design — out of the run, out of the score, out of the denominator, out of
+   the sheet — because they were taken out of the quiz. But "gone" only ever meant gone from
+   THIS browser: the exam is built from what he pastes into Notion, so a card he deleted here
+   was invisible to it and perfectly likely to come back as an exam question. This is the one
+   line of the paste that stops that, and `remember_skipped()` files it permanently.
+
+   It says so in the heading's own body text because it will be read by a person too, and a
+   bare list of questions under his notes reads exactly like a list of things to be tested. */
+function skipMarkdown(){
+  const list = markedList(S.skipped);
+  if(!list.length) return '';
+  let out = '\n\n## ' + SKIPHEAD + '\n\n'
+          + '_Deleted while taking the quiz. Not material — these are the ideas to stop '
+          + 'asking about._\n';
+  list.forEach(x => { out += '\n### ' + x.n + '. ' + x.q.q + '\n'; });
+  return out.replace(/\n+$/, '\n');
+}
+function fixMarkdown(){
+  const list = fixList();
+  if(!list.length) return '';
+  let out = '\n\n## ' + FIXHEAD + '\n';
+  list.forEach(x => {
+    out += '\n### ' + x.n + '. ' + x.q.q + '\n\n'
+         + '**Answer:** ' + x.q.options[x.q.correct] + '\n\n'
+         + '**Change it to:** ' + x.r.f.trim() + '\n';
+  });
+  return out.replace(/\n+$/, '\n');
+}
+
+/* THE SCORE RIDES ALONG WITH THE COPY. One press still takes score + sheet + his own notes
+   as a single markdown block, which is what Notion parses on paste — so the row that the
+   week's exam is built from also records how the quiz went, and he can see later whether
+   this section needs testing again. His research is last, so the shape of the paste he
+   already knows is unchanged and the new material is appended under it. */
+function fullMarkdown(){
+  const mine = noteMarkdown();
+  const sc = scoreMarkdown();
+  return (sc ? sc + '\n\n' : '') + (D.sheet || '')
+       + (mine ? '\n\n## My notes\n\n' + mine + '\n' : '')
+       + markedMarkdown(markedList(S.starred), 'Starred')
+       + markedMarkdown(missedList(), 'Missed')
+       + markedMarkdown(markedList(S.unsure), 'Needs work')
+       + researchMarkdown()
+       + fixMarkdown()
+       + skipMarkdown()
+       + frqMarkdown();
+}
+
+/* THE HTML FLAVOUR EXISTS ONLY FOR THE IMAGES, and it is only put on the clipboard when
+   there is one. That rule is what protects the paste he already relies on: with no images
+   the clipboard holds plain markdown and Notion parses it exactly as it does today. With
+   images there is no other way — no clipboard format carries markdown AND a picture — so
+   the whole document goes over as HTML, which Notion also turns into real blocks.
+
+   The sheet's own HTML is reused rather than re-rendered: #sheetmd already holds what
+   md_to_html produced, so the two can never drift. */
+function fullHTML(){
+  let h = '';
+  const sc = scoreMarkdown();
+  if(sc) h += tinyMd(sc);
+  const md = $('#sheetmd');
+  if(md) h += md.innerHTML;
+  const mine = noteMarkdown();
+  if(mine) h += '<h2>My notes</h2>' + tinyMd(mine);
+  h += markedHTML(markedList(S.starred), 'Starred');
+  h += markedHTML(missedList(), 'Missed');
+  h += markedHTML(markedList(S.unsure), 'Needs work');
+  const list = researchList();
+  if(list.length){
+    h += '<h2>My research</h2>';
+    list.forEach(x => {
+      h += '<h3>' + x.n + '. ' + esc(x.q.q) + '</h3>';
+      if(x.r.t.trim()) h += paras(x.r.t);
+      x.r.i.forEach(src => { h += '<p><img src="' + src + '"></p>'; });
+    });
+  }
+  const fixes = fixList();
+  if(fixes.length){
+    h += '<h2>' + FIXHEAD + '</h2>';
+    fixes.forEach(x => {
+      h += '<h3>' + x.n + '. ' + esc(x.q.q) + '</h3>'
+         + '<p><strong>Answer:</strong> ' + esc(x.q.options[x.q.correct]) + '</p>'
+         + '<p><strong>Change it to:</strong> ' + esc(x.r.f.trim()) + '</p>';
+    });
+  }
+  /* The HTML flavour has to carry this too. It goes on the clipboard INSTEAD of the markdown
+     whenever there is a pasted image anywhere on the quiz, so anything missing here is
+     missing from the Notion row on exactly those weeks — and a skipped card that does not
+     reach the row is a card the exam is free to ask about again. */
+  const skips = markedList(S.skipped);
+  if(skips.length){
+    h += '<h2>' + SKIPHEAD + '</h2>'
+       + '<p><em>Deleted while taking the quiz. Not material — these are the ideas to stop '
+       + 'asking about.</em></p>';
+    skips.forEach(x => { h += '<h3>' + x.n + '. ' + esc(x.q.q) + '</h3>'; });
+  }
+  const fm = frqMarkdown();
+  if(fm) h += tinyMd(fm);
+  return '<meta charset="utf-8">' + h;
+}
+
+/* A 25-line renderer so Preview shows the same shape the paste will have. Lists and bold
+   only — anything more and this would be a markdown library, which is the dependency the
+   whole file exists to avoid. */
+function tinyMd(md){
+  const esc2 = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const inline = s => esc2(s).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  let html = '', stack = [];
+  md.split('\n').forEach(line=>{
+    if(!line.trim()) return;
+    const h = line.match(/^(#{1,4})\s+(.*)$/);
+    if(h){ while(stack.length){ html += '</ol>'; stack.pop(); }
+           html += '<h' + Math.min(h[1].length+1,5) + '>' + inline(h[2]) + '</h' + Math.min(h[1].length+1,5) + '>'; return; }
+    const m = line.match(/^(\s*)(?:[-*+]|\d+[.)])\s+(.*)$/);
+    if(!m){ while(stack.length){ html += '</ol>'; stack.pop(); } html += '<p>' + inline(line.trim()) + '</p>'; return; }
+    const d = Math.floor(m[1].length / 3);
+    while(stack.length > d + 1){ html += '</ol>'; stack.pop(); }
+    while(stack.length < d + 1){ html += '<ol>'; stack.push(1); }
+    html += '<li>' + inline(m[2]) + '</li>';
+  });
+  while(stack.length){ html += '</ol>'; stack.pop(); }
+  return html;
+}
+
+if(ta){
+  ta.value = loadNotes();
+  saveNotes();
+  let t = null;
+  ta.addEventListener('input', ()=>{ clearTimeout(t); t = setTimeout(saveNotes, 400); });
+  ta.addEventListener('blur', saveNotes);
+  $('#previewnotes').onclick = ()=>{
+    const p = $('#minepreview'), on = p.classList.contains('hide');
+    p.innerHTML = on ? (noteMarkdown() ? tinyMd(noteMarkdown())
+                                       : '<p>Nothing written yet.</p>') : '';
+    p.classList.toggle('hide', !on);
+    $('#previewnotes').textContent = on ? 'Hide preview' : 'Preview';
+  };
+}
+
+/* COPIES THE MARKDOWN, NOT THE RENDERED TEXT. He pastes this into Notion, and Notion parses
+   markdown on paste — so the headings, the numbering and the bold terms all survive as real
+   Notion blocks. Copying the visible text would paste one flat wall. */
+const cp = $('#copysheet');
+if(cp) cp.onclick = async ()=>{
+  flushResearch();
+  // Both strings are built BEFORE the first await: Safari only honours a clipboard write
+  // inside the gesture that asked for it, and work done after an await is outside it.
+  const md = fullMarkdown();
+  const shots = researchList().some(x => x.r.i.length);
+  const html = shots ? fullHTML() : '';
+  let done = false;
+  if(shots && window.ClipboardItem && navigator.clipboard && navigator.clipboard.write){
+    try{
+      await navigator.clipboard.write([new ClipboardItem({
+        'text/html':  new Blob([html], {type: 'text/html'}),
+        'text/plain': new Blob([md],   {type: 'text/plain'})
+      })]);
+      done = true;
+    }catch(e){}                      // fall through to the plain paste rather than nothing
+  }
+  if(!done){
+    try{ await navigator.clipboard.writeText(md); done = true; }
+    catch(e){
+      const t = document.createElement('textarea');
+      t.value = md; t.style.position='fixed'; t.style.opacity='0';
+      document.body.appendChild(t); t.select();
+      try{ document.execCommand('copy'); }catch(_){}
+      t.remove();
+    }
+  }
+  cp.textContent = shots ? 'Copied + images' : 'Copied';
+  cp.classList.add('copied');
+  setTimeout(()=>{ cp.textContent = 'Copy'; cp.classList.remove('copied'); }, 1600);
+};
+
+// Re-centre when the window changes shape; the frozen padding would be wrong afterwards.
+// Against the ANSWERED height, like every other call — measuring what is on screen is the
+// bug this file already fixed once.
+addEventListener('resize', ()=>{
+  fitTitle();
+  if(D.tab==='quiz' && !S.reviewing && !S.done) centreBlock(S.i);
+});
+
+document.addEventListener('keydown', e=>{
+  const t = e.target;
+  /* ESC IS THE WAY OUT FROM INSIDE THE BOX, and it has to be checked before the rule below
+     lets typing through. `r` cannot do this job: once the caret is in the pane, `r` is the
+     letter r — the first character of "radius", "reflex" and "rephrase" — so a second `r`
+     that closed the box would eat it. Esc is read while typing; `r` toggles from outside. */
+  if(e.key === 'Escape' && rbody && !rbody.classList.contains('hide')){
+    e.preventDefault(); closeResearch(); return;
+  }
+  /* TYPING IS NOT ANSWERING. The research box is a textarea ON THE QUIZ TAB, so without
+     this every letter he types would be read as an option key and `h` would open the hint —
+     the notes box on the sheet tab was only safe because that tab returns above.
+
+     ENTER IS THE ONE EXCEPTION, AND ONLY IN THE TWO RESEARCH PANES (08-12, his ask):
+     *"when I press enter it moves onto the next question. I move onto the next question
+     whenever I press enter."* One key means one thing everywhere on the quiz tab, including
+     from inside the box he was just typing in. SHIFT+ENTER IS THE NEWLINE — a textarea
+     still needs one, and this is the swap every chat box has already taught his hands.
+     It closes on the way out, which flushes what he typed and takes the caret with it;
+     without the blur the next keystroke would still be going into a hidden textarea.
+     The sheet's notes box is NOT in this: it is not a question and has nowhere to go. */
+  if(t && (t.tagName === 'TEXTAREA' || t.tagName === 'INPUT' || t.isContentEditable)){
+    if(e.key === 'Enter' && !e.shiftKey && (t.id === 'rtext' || t.id === 'rfix')
+       && D.tab === 'quiz' && !S.done && !S.reviewing){
+      e.preventDefault();
+      closeResearch();
+      step(1);
+    }
+    return;
+  }
+
+  /* THE WHOLE END OF A QUIZ IS ONE KEY. Enter walks it in the order he works in — second
+     pass, then the review list, then the sheet — and `c` on the sheet copies. Enter already
+     meant "next" all the way through the questions, so it just carries on meaning it past
+     the last one instead of stopping dead at the end card.
+
+     Each step is taken by CLICKING THE REAL BUTTON, so there is one path into a second pass
+     and one into the review list, whether he pressed the key or the button. A step with no
+     button on screen is skipped rather than faked: no wrong answers means no 2nd Pass, so
+     Enter goes straight to the review list. */
+  if(D.tab === 'sheet'){
+    if(e.key === 'c' || e.key === 'C'){ const b = $('#copysheet'); if(b) b.click(); }
+    return;
+  }
+  if(D.tab !== 'quiz') return;
+  if(S.done || S.reviewing){
+    if(e.key !== 'Enter') return;
+    e.preventDefault();
+    if(!S.reviewing && pending2().length){ $('#pass2').click(); return; }
+    if(!S.reviewing){ $('#review').click(); return; }
+    if(D.hasSheet) setTab('sheet');
+    return;
+  }
+  const q = D.questions[S.i];
+  // Forward is forward whether or not he answered — see advance() for where the last
+  // question goes now. The old `if(!$('#next').disabled)` guard is gone with the disabling.
+  if(e.key === 'Enter' || e.key === 'ArrowRight'){ step(1); return; }
+  if(e.key === 'ArrowLeft'){ if(!$('#back').disabled) step(-1); return; }
+  // `h` IS THE HINT, not option H. Every quiz here has four options, so H as an option key
+  // has never been reachable; if one ever has eight, the eighth is still `8`.
+  if(e.key === 'h' || e.key === 'H'){ toggleHint(); return; }
+  // `r` TOGGLES THE RESEARCH BOX and, opening, puts him in it — the point of the key is "I
+  // want to paste this now". R is past H, so it can never be an option key. From inside the
+  // box `r` is a letter and Esc is what shuts it; see the Escape branch at the top.
+  if(e.key === 'r' || e.key === 'R'){ e.preventDefault(); toggleResearch(); return; }
+  /* `f` OPENS THE BOX ON THE FIX PANE. It is claimed BEFORE the option lookup below, and
+     unlike `h` and `r` that costs something real: F is the SIXTH option letter, so a quiz
+     with six or more options would lose `f` as an answer key. Every quiz and exam this
+     system has ever generated has four, and the prompts do not offer a way to ask for more,
+     so the cost is theoretical — but it is a tighter margin than `h` (eighth) or `r` (past
+     the end), and if that ever changes this is the line that breaks. */
+  if(e.key === 'f' || e.key === 'F'){ e.preventDefault(); openFix(); return; }
+  // `s` STARS and `/` TAGS IT "no idea" — the two marks he makes while reading, on the two
+  // keys nearest that. Both are past G, so neither can ever be an option key. `?` is bound
+  // beside `/` because it is the same key with a shift on it and the glyph he sees is `?`;
+  // preventDefault stops Firefox's quick-find opening underneath the page.
+  if(e.key === 's' || e.key === 'S'){ toggleStar(S.i); return; }
+  if(e.key === '/' || e.key === '?'){ e.preventDefault(); toggleUnsure(S.i); return; }
+  /* THE KEY NAMES A POSITION ON SCREEN, not an option. `2` and `B` mean the second card he
+     can see, which is the only thing either of them could mean to him — after a Redo has
+     reshuffled the cards that is no longer option 2, so it goes through optOrder() to find
+     which one it now is. Before any Redo the map is the identity and this is what it was. */
+  let pos = -1;
+  if(/^[1-9]$/.test(e.key)) pos = +e.key - 1;
+  else if(/^[a-gA-G]$/.test(e.key)) pos = D.letters.indexOf(e.key.toUpperCase());
+  if(pos >= 0 && pos < q.options.length && pick(S.i) === undefined){
+    // click the real button rather than repeating its handler — one path for answering
+    const btn = $('#quizview').querySelector('.opt[data-k="' + optOrder(S.i)[pos] + '"]');
+    if(btn) btn.click();
+  }
+});
+
+save();
+syncTabs();
+renderScore();
+setTab(D.tab || 'quiz');
+</script>
+</body>
+</html>
