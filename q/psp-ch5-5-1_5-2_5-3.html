@@ -1,0 +1,2607 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#131314">
+<title>Ch5 Exam · 5.1–5.3</title>
+<style>
+:root{--bg:#131314;--surface:#1e1f20;--surface-hi:#26282a;--text:#e3e3e3;
+--muted:#9aa0a6;--line:#3c4043;--accent:#8ab4f8;--right:#81c995;--wrong:#f28b82;
+--radius:14px;--maxw:660px;--qsize:1.25rem;--qweight:600;
+--osize:0.95rem;--opad:12px 16px;--ogap:7px;--qgap:18px;
+--barh:46px;--band:#191a1b;--bandr:20px;--bandpad:20px;
+--font:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font);
+ font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+ min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+a{color:var(--accent)}
+/* Longhands, NOT `padding:0 22px`. `main` and `footer` also carry .wrap, and a class beats
+   an element selector — the shorthand here was silently zeroing their vertical padding. */
+.wrap{width:100%;max-width:var(--maxw);margin:0 auto;
+ padding-left:22px;padding-right:22px}
+
+/* ---- top bar: title, tabs, progress. Nothing else lives up here. ---- */
+header{position:sticky;top:0;z-index:5;background:var(--bg);
+ border-bottom:1px solid var(--line)}
+/* THE BAR IS WIDER THAN THE COLUMN, and that is what makes a centred title possible at all.
+   The reading column is 660px and the tab strip is ~300 of it once an exam shows Starred and
+   Written — so inside the column there is no width at which a real title can be centred with
+   the tabs still on the row. Letting only the bar run to 1080 pushes the tabs out to the
+   window and leaves the middle free. THE CENTRE IS UNCHANGED by this: the bar, the rail, the
+   band and the card are all centred on the same axis, so the title still lines up with the
+   question under it — only the tabs moved outward. */
+.bar{display:flex;align-items:center;gap:14px;height:var(--barh);position:relative;
+ max-width:min(1080px, 100%)}
+/* DEAD-CENTRE WHENEVER IT FITS (08-12, his ask), and centred in the space beside the tabs
+   when it does not. The fallback is not caution: the column is 660px, the tabs eat ~235 of
+   it, and dead-centre needs an empty gutter the same width on the left — which leaves about
+   120px for the title, and "3.6 How to Feel Better: Coping With Negative Emotions" is 360.
+   Truncating every long title to centre it would be a worse page than an off-centre one.
+   `fitTitle()` measures both and adds .mid only when the real title clears the real tabs. */
+.title{font-size:.9rem;font-weight:500;white-space:nowrap;overflow:hidden;
+ text-overflow:ellipsis;flex:1;text-align:center}
+/* Out of the flex row and centred on the bar's padding box — the same box the rail spans,
+   so the title lines up with the progress track under it and with the band below that. */
+.bar.mid .title{position:absolute;left:0;right:0;margin:0 auto;width:max-content;
+ max-width:100%;flex:none}
+.bar.mid .tabs{margin-left:auto}
+.tabs{display:flex;gap:2px}
+.tab{background:none;border:0;color:var(--muted);font:inherit;font-size:.82rem;
+ padding:5px 12px;border-radius:999px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--surface-hi);color:var(--text)}
+/* END CAPS, because a grey line on a grey page has no visible extent — "hard to see the
+   defined start and end". Two short uprights mark where the quiz begins and ends, so the
+   blue fill is read against a track with edges rather than against the whole window. They
+   are luminance, not colour, so they survive grayscale like the rest of the page. */
+.rail{height:2px;background:var(--line);position:relative}
+.rail::before,.rail::after{content:"";position:absolute;top:-3px;width:2px;height:8px;
+ background:var(--muted);border-radius:1px}
+.rail::before{left:0}
+.rail::after{right:0}
+.rail>i{display:block;height:100%;background:var(--accent);width:0;
+ transition:width .25s ease}
+
+/* TOP-ANCHORED, NOT CENTRED, and that is a fix rather than a preference. With
+   justify-content:center the question drifted upward the moment an answer opened a
+   rationale, because the block got taller and the centring recomputed — "the question
+   shifts… it should stay stationary". Anchored to the top it cannot move: only the cards
+   below the one he clicked ever change position. */
+main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;padding:16px 0 6px}
+
+/* ---- THE BAND ----
+   Flat black under the question made it hard to read; the notebook's lighter middle band is
+   what he wanted instead. So the question and EVERY option sit inside one surface.
+
+   IT CLOSES AT THE BOTTOM AND HUGS THE CONTENT. The first version ran off the bottom of the
+   screen — "kind of weirdly big at the bottom", and he was right: with the block centred, an
+   open band left a lot of empty surface under the last option. It is a card now, sized to
+   what is in it.
+
+   THREE TONES, and the order matters: page (--bg) → band (--band) → option card (--surface).
+   Set --band lighter than --surface and the cards vanish into it. */
+.band{background:var(--band);border:1px solid var(--line);border-radius:var(--bandr);
+ padding:var(--bandpad)}
+/* Off for the end card, the review list and the sheet — a long scrolling list does not want
+   to be in a box. */
+.band.off{background:none;border:0;padding:0}
+/* A short window pays for the band's padding out of the space the options need, so it gives
+   most of it back below 780px. Measured: at 800px all 14 questions of PSP 3.6 still fit
+   answered-wrong with no scrolling. */
+@media (max-height:780px){
+  .band{padding:12px 16px}
+}
+
+/* ---- the question ---- */
+.qhead{display:flex;align-items:flex-start;gap:10px;margin:0 0 var(--qgap)}
+.qhead .qcol{flex:1;min-width:0}
+.meta{display:flex;align-items:center;gap:8px;margin:0 0 7px;font-size:.7rem;
+ color:var(--muted);letter-spacing:.07em;text-transform:uppercase}
+.meta .num{font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.meta .dot{opacity:.55}
+.topic{margin:0 0 6px;font-size:.7rem;color:var(--muted);letter-spacing:.07em;
+ text-transform:uppercase}
+.q{font-size:var(--qsize);line-height:1.35;font-weight:var(--qweight);margin:0;
+ letter-spacing:-.005em}
+.link{background:none;border:0;padding:0;color:var(--muted);font:inherit;
+ font-size:.85rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.link:hover{color:var(--text)}
+/* The hint lives in the FOOTER, as Gemini's does. Opening it there grows the sticky bar
+   upward and leaves the question and every option exactly where they were; under the
+   question it would have shoved all four cards down. */
+.hinttext{margin:0 0 12px;color:var(--muted);font-size:.88rem;line-height:1.5;
+ border-left:2px solid var(--line);padding-left:12px}
+
+/* ---- options ---- */
+.opts{display:flex;flex-direction:column;gap:var(--ogap)}
+.opt{display:block;width:100%;text-align:left;background:var(--surface);
+ border:1px solid transparent;border-radius:var(--radius);padding:var(--opad);
+ color:var(--text);font:inherit;font-size:var(--osize);cursor:pointer;
+ transition:background .16s ease,border-color .16s ease,opacity .16s ease}
+.opt:hover:not(:disabled){background:var(--surface-hi)}
+.opt:disabled{cursor:default}
+.line{display:flex;gap:12px;align-items:flex-start;line-height:1.4}
+.line .k{color:var(--muted);min-width:1.25em}
+.line .t{flex:1}
+.line .mark{font-size:1.05rem;line-height:1.45;min-width:1.05em;text-align:right;opacity:0}
+
+/* GRAYSCALE-SAFE STATES — three signals, never colour alone: the ✓/✕ glyph, the WORD in
+   .lab, and luminance (bright solid border vs dimmed dashed). Turn the display to
+   grayscale and every state still reads. */
+.opt.is-right{background:var(--surface-hi);border-color:var(--right);
+ box-shadow:inset 0 0 0 1px var(--right)}
+.opt.is-right .mark{opacity:1;color:var(--right)}
+.opt.is-wrong{background:transparent;border-style:dashed;border-color:var(--wrong);
+ opacity:.8}
+.opt.is-wrong .mark{opacity:1;color:var(--wrong)}
+.opt.is-muted{opacity:.42}
+
+/* THE FEEDBACK LIVES INSIDE THE CARD, as Gemini's does — that is what he asked for, and it
+   is also why nothing has to scroll: the explanation appears where he is already looking.
+   The 0fr→1fr grid trick animates an unknown height with no JS measuring. If a browser
+   refuses to animate it, the row still ends at 1fr, so the text is visible either way. */
+.rat{display:grid;grid-template-rows:1fr;opacity:1}
+.rat>.ratin{overflow:hidden;min-height:0}
+.opt.fresh .rat{animation:reveal .3s ease}
+@keyframes reveal{from{grid-template-rows:0fr;opacity:0}to{grid-template-rows:1fr;opacity:1}}
+.lab{display:flex;align-items:center;gap:8px;font-size:.86rem;font-weight:600;
+ margin:9px 0 0;padding-left:calc(1.25em + 12px)}
+.opt.is-right .lab{color:var(--right)}
+.opt.is-wrong .lab{color:var(--wrong)}
+.why{margin:4px 0 0;padding-left:calc(1.25em + 12px);color:var(--muted);
+ font-size:.86rem;line-height:1.4}
+
+.opt.enter,.qhead.enter{animation:fadein .24s ease both}
+@keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* ---- SELECTABLE TEXT, and it is timed rather than global ----
+   He searches the web while he works, so the wording has to leave the page. Two different
+   problems, one each side of the answer:
+
+   THE QUESTION was never selectable because the browser's own stylesheet turns selection
+   off inside a <button>, and the whole question head sits in one. `user-select:text` on the
+   text itself puts it back; it costs nothing, because nothing up there is a click target
+   except the ☆ and the ⋮, which are excluded below.
+
+   THE OPTIONS STAY LOCKED UNTIL HE HAS ANSWERED, and that is deliberate, not an oversight.
+   An option IS the button — drag across one to select it and the mouseup answers the
+   question with whatever he happened to start the drag on. So selection is enabled on
+   `:disabled`, which is exactly the set of options that can no longer be clicked: every
+   option, the moment the answer is in. On a second pass the pending question re-enables and
+   locks again, which is right — it is live again. */
+.q,.qq,.why,.lab,.hinttext,.rline,.tag,.sheet,.topics,.legend{
+ user-select:text;-webkit-user-select:text}
+.opt{user-select:none;-webkit-user-select:none}
+.opt:disabled,.opt:disabled *{user-select:text;-webkit-user-select:text;cursor:auto}
+.star,.dots,.tab,button.pill{user-select:none;-webkit-user-select:none}
+
+/* ---- HIS RESEARCH, one box per question ----
+   Under the options, inside the band, and OUTSIDE #quizview — so answering re-renders the
+   question without touching what he is halfway through typing, the same reason the hint
+   lives in the footer.
+
+   THE TOGGLE ROW IS ALWAYS VISIBLE AND THE BODY IS WHAT COLLAPSES. That is what keeps the
+   centring honest: the block's minimum height is a constant the measurement can include,
+   whether the box is open or shut. Opening it only ever grows the page downward, which is
+   the one direction this page allows. */
+.research{margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+.rtoggle{display:inline-flex;align-items:center;gap:7px;background:none;border:0;padding:0;
+ color:var(--muted);font:inherit;font-size:.82rem;cursor:pointer;text-decoration:underline;
+ text-underline-offset:3px;user-select:none;-webkit-user-select:none}
+.rtoggle:hover{color:var(--text)}
+.rtoggle.has{color:var(--text)}
+.rbody{margin:12px 0 0}
+/* HALF EACH, and they collapse to stacked well before the panes get too narrow to read a
+   pasted paragraph in. The label sits inside the <label> so clicking it lands the caret. */
+.rcols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:720px){.rcols{grid-template-columns:1fr}}
+.rcol{display:flex;flex-direction:column;gap:6px;min-width:0}
+.rlab{color:var(--muted);font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;
+ display:flex;align-items:center;gap:6px}
+.rlab kbd{font:inherit;font-size:.68rem;text-transform:none;letter-spacing:0;line-height:1;
+ padding:2px 5px;border:1px solid var(--line);border-radius:5px;background:var(--surface)}
+#rtext,#rfix{width:100%;min-height:104px;resize:vertical;background:var(--surface);
+ color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
+ padding:11px 13px;font:inherit;font-size:.9rem;line-height:1.55;outline:none}
+#rtext:focus,#rfix:focus{border-color:var(--accent)}
+#rtext::placeholder,#rfix::placeholder{color:var(--muted);opacity:.7}
+.rshots{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
+.shot{position:relative;display:block;line-height:0}
+.shot img{max-height:88px;max-width:150px;border-radius:9px;border:1px solid var(--line)}
+.shot .x{position:absolute;top:-6px;right:-6px;width:20px;height:20px;line-height:18px;
+ text-align:center;border-radius:999px;border:1px solid var(--line);background:var(--surface-hi);
+ color:var(--text);font:inherit;font-size:.8rem;cursor:pointer;padding:0}
+.rsay{color:var(--muted);font-size:.76rem;margin:9px 0 0;min-height:1em}
+.rsay.warn{color:var(--wrong)}
+
+/* the same material, read back on the study sheet */
+.ritem{border-top:1px solid var(--line);padding:16px 0 4px}
+.ritem:first-of-type{border-top:0;padding-top:6px}
+.rq{font-size:.95rem;font-weight:600;margin:0 0 8px}
+.rans{font-size:.88rem;color:var(--muted);margin:0 0 8px}
+.rtxt p{margin:0 0 9px;color:var(--muted)}
+.rimg{display:block;max-width:100%;border-radius:10px;border:1px solid var(--line);
+ margin:0 0 10px}
+
+/* ---- starring ----
+   A visible toggle rather than a menu item: it is used on questions he got RIGHT as often as
+   wrong, so it has to be one press. Outline vs filled is a shape difference, so it reads in
+   grayscale without needing colour. */
+.star{background:none;border:0;color:var(--muted);font-size:1.05rem;line-height:1;
+ padding:4px 6px;border-radius:999px;cursor:pointer;flex:0 0 auto}
+.star:hover{background:var(--surface);color:var(--text)}
+.star.on{color:var(--text)}
+
+/* ---- ? "no idea, needs work" ----
+   Beside the star and read the same way. GRAYSCALE-SAFE like everything else on this page:
+   on/off is a RING appearing, not a colour changing, so it reads with the colour off and at
+   a glance in a screenshot. */
+.qmark{background:none;border:1px solid transparent;color:var(--muted);font:inherit;
+ font-size:.9rem;font-weight:600;line-height:1;width:26px;height:26px;padding:0;
+ border-radius:999px;cursor:pointer;flex:0 0 auto;user-select:none;-webkit-user-select:none}
+.qmark:hover{background:var(--surface);color:var(--text)}
+.qmark.on{color:var(--text);border-color:var(--accent);background:var(--surface-hi)}
+
+/* ---- the ⋮ menu ---- */
+.more{position:relative;flex:0 0 auto}
+.dots{background:none;border:0;color:var(--muted);font-size:1.15rem;line-height:1;
+ padding:4px 8px;border-radius:999px;cursor:pointer}
+.dots:hover{background:var(--surface);color:var(--text)}
+.menu{position:absolute;right:0;top:32px;background:var(--surface-hi);
+ border:1px solid var(--line);border-radius:10px;padding:5px;min-width:170px;z-index:6;
+ box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.menu button{display:block;width:100%;text-align:left;background:none;border:0;
+ color:var(--text);font:inherit;font-size:.88rem;padding:8px 10px;border-radius:7px;
+ cursor:pointer;white-space:nowrap}
+.menu button:hover{background:var(--surface)}
+
+/* ---- bottom bar ---- */
+footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg) 30%);
+ padding:8px 0 10px}
+.acts{display:flex;gap:10px;align-items:center}
+.spacer{flex:1}
+button.pill{font:inherit;font-size:.9rem;border-radius:999px;padding:9px 22px;
+ cursor:pointer;border:1px solid var(--line);background:none;color:var(--text)}
+button.pill:disabled{opacity:.32;cursor:default}
+button.pill.primary{background:var(--accent);color:#0b0b0c;border-color:var(--accent);
+ font-weight:500}
+button.pill.ghost{border-color:transparent;color:var(--muted)}
+
+/* ---- end card ---- */
+.score{font-size:3.1rem;font-weight:400;letter-spacing:-.03em;margin:0}
+.score small{font-size:.95rem;color:var(--muted);font-weight:400;letter-spacing:0}
+.sub{color:var(--muted);margin:5px 0 26px;font-size:.92rem}
+.chart{display:flex;height:11px;border-radius:999px;overflow:hidden;
+ background:var(--line);margin:0 0 9px}
+.chart i{display:block;height:100%}
+.chart i.r{background:var(--right)}
+/* hatched as well as coloured, so the split reads with the colour off */
+.chart i.w{background:var(--wrong);
+ background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,
+ rgba(0,0,0,.45) 3px,rgba(0,0,0,.45) 6px)}
+.legend{display:flex;gap:16px;color:var(--muted);font-size:.84rem;margin:0 0 30px}
+.legend b{color:var(--text);font-weight:500}
+.topics{margin:0 0 30px}
+.topics h3,.rev h3{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;
+ color:var(--muted);font-weight:500;margin:0 0 12px}
+.trow{display:grid;grid-template-columns:1fr auto;gap:5px 14px;align-items:center;
+ padding:8px 0;border-top:1px solid var(--line)}
+.trow .n{font-variant-numeric:tabular-nums;color:var(--muted);font-size:.88rem}
+.tbar{grid-column:1/-1;height:3px;background:var(--line);border-radius:999px;
+ overflow:hidden}
+.tbar i{display:block;height:100%;background:var(--text)}
+
+/* ---- review list ---- */
+.rev{padding:6px 0 36px}
+.item{border-top:1px solid var(--line);padding:20px 0}
+.item .qq{font-size:1rem;margin:0 0 12px}
+.rline{display:flex;gap:10px;align-items:flex-start;padding:3px 0;font-size:.92rem}
+.rline .g{min-width:1.2em}
+.rline.mine{color:var(--muted)}
+.tag{display:inline-block;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;
+ color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 9px;
+ margin:0 0 9px}
+
+/* ---- study sheet ----
+   THREE DISTINCT LEVELS, because two of them used to look the same: he could not tell the
+   topic from the "Key terms" heading under it. Topic = large, over a rule. Key terms /
+   Names and studies = a small uppercase label, the same treatment the quiz gives its topic
+   tag. Entries = a numbered list with the term in bold, which is the shape of his own
+   Notion notes, so his shorthand sits beside this instead of clashing with it. */
+.sheet{padding:2px 0 56px;font-size:.95rem}
+.sheet h2{font-size:1.3rem;font-weight:600;margin:34px 0 10px;letter-spacing:-.01em}
+.sheet h3{font-size:1.15rem;font-weight:600;margin:34px 0 4px;letter-spacing:-.01em;
+ padding-top:18px;border-top:1px solid var(--line)}
+/* first-of-type, not first-child: .sheettools is the first child, so first-child never
+   matched and the opening topic carried a stray rule above it */
+.sheet h3:first-of-type{margin-top:0;padding-top:0;border-top:0}
+.sheet h4,.sheet h5{font-size:.7rem;font-weight:600;margin:18px 0 8px;color:var(--muted);
+ letter-spacing:.09em;text-transform:uppercase}
+.sheet p{margin:0 0 10px;color:var(--muted)}
+.sheet h3+p{color:var(--text);margin-bottom:4px}
+.sheet ul,.sheet ol{margin:0 0 4px;padding-left:24px}
+.sheet ol{list-style:decimal}
+.sheet ol ol{list-style:lower-alpha;margin:4px 0 6px}
+.sheet ul ul,.sheet ol ul{margin:4px 0 6px}
+.sheet li{margin:0 0 6px;padding-left:2px}
+.sheet li::marker{color:var(--muted)}
+.sheet li>strong:first-child{color:var(--text)}
+.sheet strong{font-weight:600}
+.sheet hr{border:0;border-top:1px solid var(--line);margin:26px 0}
+.sheet code{background:var(--surface);padding:1px 6px;border-radius:6px;font-size:.9em}
+.sheettools{display:flex;justify-content:flex-end;gap:18px;padding:10px 0 4px}
+.copied{color:var(--right)}
+
+/* ---- the score, on the sheet ----
+   It sits at the top of the sheet and Copy takes it, so the paste that lands in the Notion
+   row carries what he scored beside what the section says — which is what tells him later
+   whether this one needs testing again. */
+.scorecard{border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;
+ margin:16px 0 6px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.scorecard b{font-size:1.35rem;font-weight:500;font-variant-numeric:tabular-nums}
+.scorecard span{color:var(--muted);font-size:.88rem}
+/* Its own row under the score, never beside it — the projected number is a second reading
+   of the same quiz and putting it inline would read as more of the first one. */
+.scorecard .proj{flex-basis:100%;padding-top:2px;border-top:1px solid var(--line);
+ margin-top:4px;font-size:.84rem}
+
+/* ---- his own additions ---- */
+/* SCOPED TO .sheet, because `.mine` is also the review list's "you chose this" modifier
+   (`.rline.mine`) and this block sits later in the file — unscoped, it was handing every
+   wrong-answer line in the review list a 34px gap and a rule above it. */
+.own{margin:34px 0 0;padding-top:18px;border-top:1px solid var(--line)}
+.own h3{margin:0 0 4px;padding:0;border:0}
+.own .say{color:var(--muted);font-size:.85rem;margin:0 0 12px}
+.own .item:first-of-type{border-top:0;padding-top:6px}
+#mynotes{width:100%;min-height:180px;resize:vertical;background:var(--surface);
+ color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
+ padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.6;outline:none}
+#mynotes:focus{border-color:var(--accent)}
+#mynotes::placeholder{color:var(--muted);opacity:.7}
+.saved{color:var(--muted);font-size:.78rem;margin:8px 0 0;height:1em}
+#minepreview{margin:14px 0 0}
+
+/* ---- the exam's two extra tags, and the written half ----
+   The section and the glyph ride the existing .meta line rather than becoming chips of their
+   own: they belong with the counter and the topic, which is already the line that says what
+   you are looking at. Colour is not used to tell the five glyphs apart — each one IS a
+   distinct character, so the page stays readable in grayscale without a legend. */
+.meta .sec{color:var(--text)}
+/* The second section on a cross-section question. Smaller and dimmer than the first, because
+   the first is where the question is filed and this one says what it also reaches into. */
+.meta .lk{color:var(--muted);font-size:.9em;margin-left:1px}
+.meta .src{font-size:.85rem;line-height:1;text-transform:none;letter-spacing:0;cursor:help}
+
+.frqs{padding:2px 0 56px}
+.frqs > .say{color:var(--muted);font-size:.88rem;margin:0 0 26px;max-width:60ch}
+.frq{margin:0 0 42px;padding:0 0 34px;border-bottom:1px solid var(--line)}
+.frq:last-child{border-bottom:0;padding-bottom:0}
+.frq .q{font-size:1.08rem;line-height:1.45;font-weight:600;margin:0 0 6px}
+.frq .say{color:var(--muted);font-size:.84rem;margin:6px 0 0}
+.stim{margin:0 0 14px;padding:11px 16px;background:var(--surface);
+ border-left:2px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;
+ font-size:.95rem;line-height:1.55;color:var(--text)}
+.frqin{width:100%;min-height:190px;resize:vertical;background:var(--surface);
+ color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
+ padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.6;outline:none;margin-top:16px}
+.frqin:focus{border-color:var(--accent)}
+.frqin::placeholder{color:var(--muted);opacity:.7}
+.acts.inline{margin-top:12px}
+.rubric{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
+.rubric h3{margin:0 0 10px;padding:0;border:0;font-size:.7rem;letter-spacing:.09em;
+ text-transform:uppercase;color:var(--muted)}
+.rrow{display:flex;gap:12px;align-items:flex-start;padding:9px 10px;margin:0 -10px;
+ border-radius:10px;cursor:pointer}
+.rrow:hover{background:var(--surface)}
+.rmark{flex:0 0 auto;width:22px;height:22px;border-radius:6px;border:1px solid var(--line);
+ display:grid;place-items:center;font-size:.78rem;background:var(--surface);
+ color:var(--muted);margin-top:2px}
+.rrow.hit .rmark{border-color:var(--right);color:var(--right)}
+.rbody{flex:1;min-width:0}
+.rlab{font-size:.93rem;line-height:1.45;color:var(--muted)}
+.rrow.hit .rlab{color:var(--text)}
+.rnote{display:block;font-size:.78rem;color:var(--muted);opacity:.85;margin-top:2px}
+.judge{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);
+ border:1px solid var(--accent);border-radius:999px;padding:1px 7px;margin-left:7px;
+ white-space:nowrap;vertical-align:1px}
+.rfoot{display:flex;align-items:baseline;gap:14px;margin-top:16px;padding-top:14px;
+ border-top:1px solid var(--line)}
+.rscore{font-size:1.35rem;font-weight:600;font-variant-numeric:tabular-nums}
+.rscore small{color:var(--muted);font-size:.75em;font-weight:400}
+.rverdict{font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.spacer{flex:1}
+.model{margin-top:14px;background:var(--surface);border-radius:var(--radius);
+ padding:14px 16px;font-size:.9rem;line-height:1.65;color:var(--muted)}
+.model strong{color:var(--text)}
+
+.empty{color:var(--muted);padding:8px 0 30px}
+.hist{color:var(--muted);font-size:.84rem;margin:22px 0 0}
+.hist span{white-space:nowrap}
+.note{color:var(--muted);font-size:.84rem;margin:16px 0 0}
+.hide{display:none !important}
+
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  .q{font-size:1.22rem}
+  main{padding:22px 0 14px}
+  .score{font-size:2.5rem}
+  .bar{gap:8px}
+  .tab{padding:5px 10px}
+  button.pill{padding:11px 18px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important}
+}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap bar">
+    <span class="title">Ch5 Exam · 5.1–5.3</span>
+    <span class="tabs" id="tabs"><button class="tab" data-tab="quiz" aria-selected="true">Quiz</button><button class="tab hide" data-tab="starred" aria-selected="false">Starred</button><button class="tab hide" data-tab="frq" aria-selected="false">Written</button><button class="tab" data-tab="sheet" aria-selected="false">Study sheet</button></span>
+  </div>
+  <!-- In the same .wrap as the title and the tabs: the progress track used to run the full
+       width of the window under a centred column, which is the one thing up here that was
+       not lined up with everything else. -->
+  <div class="wrap"><div class="rail"><i id="rail"></i></div></div>
+</header>
+
+<main class="wrap">
+  <div class="band" id="band">
+    <div id="quizview"></div>
+    <!-- Outside #quizview on purpose: answering re-renders the question, and it must not
+         throw away what he is halfway through pasting. -->
+    <div class="research hide" id="research">
+      <button class="rtoggle" id="rtoggle">+ Add research or a fix</button>
+      <!-- Two panes, and the labels are the whole point of the split: the left one is
+           material the exam will test him on, the right one is an instruction the exam will
+           obey. Esc shuts the box; so does moving to the next question. -->
+      <div class="rbody hide" id="rbody">
+        <div class="rcols">
+          <label class="rcol">
+            <span class="rlab">Research <kbd>r</kbd></span>
+            <textarea id="rtext" spellcheck="false" placeholder="Paste what you found — an explanation, a definition, a diagram. Images paste straight in."></textarea>
+          </label>
+          <label class="rcol">
+            <span class="rlab">Fix this question <kbd>f</kbd></span>
+            <textarea id="rfix" spellcheck="true" placeholder="What was wrong with it. &quot;Never says which joint.&quot; &quot;Two options are both right.&quot; &quot;Ask what it causes, not what it is.&quot; Enter saves it and moves on."></textarea>
+          </label>
+        </div>
+        <div class="rshots hide" id="rshots"></div>
+        <p class="rsay" id="rsay"></p>
+      </div>
+    </div>
+  </div>
+  <div id="starredview" class="rev hide"></div>
+  <div id="frqview" class="frqs hide"></div>
+  <div id="sheetview" class="sheet hide">
+    <div class="scorecard hide" id="scorecard"></div>
+    <div class="sheettools">
+      <button class="link" id="previewnotes">Preview</button>
+      <button class="link" id="copysheet">Copy</button>
+    </div>
+    <div id="sheetmd"><h3>Self-monitoring</h3>
+<p>Individual differences in attending to social cues to adjust behavior to the environment.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Self-monitoring</strong> — The tendency to attend to social cues and adjust behavior accordingly.</li>
+</ol>
+<p><strong>High self-monitors</strong> — Individuals blending in to be liked; lower att-beh consistency.</p>
+<p><strong>Low self-monitors</strong> — Individuals acting on internal attitudes; higher att-beh consistency.</p>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Kraus (1995)</strong> — Meta-analysis showing weaker att-beh relationship for high self-monitors.</li>
+</ol>
+<h3>Genetic transmission</h3>
+<p>Attitudes can be passed biologically from parents rather than being solely learned.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Genetic transmission</strong> — Biological process of parents influencing offspring attitudes via genetic code.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Olson, Vernon, Harris, &amp; Jang (2001)</strong> — Twin study identifying heritability in social attitudes.</li>
+</ol>
+<h3>Attitude strength</h3>
+<p>Impactful attitudes are characterized by high cognitive accessibility and frequency of use.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Attitude strength</strong> — Evaluation importance based on how quickly/easily it comes to mind.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Fazio (1990/1995)</strong> — Defines strength as mental accessibility that guides actions automatically.</li>
+</ol>
+<h3>Introspection effects</h3>
+<p>Cognitive analysis of reasons can undermine the accuracy and validity of preferences.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Cognitive introspection</strong> — Focusing on specific reasons for an attitude rather than feelings.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Wilson and Schooler (1991)</strong> — Jam study; analyzing reasons reduced rating correlation with experts.</li>
+</ol>
+<h3>Evolutionary functions</h3>
+<p>Attitudes provide adaptive utility for rapid, survival-based approach or avoid decisions.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Attitude utility</strong> — Functional value of quick, effortless decisions to approach or avoid objects.</li>
+</ol>
+<h3>Attitude-behavior consistency</h3>
+<p>Alignment between evaluations and actions depends on personal, situational, and measurement factors.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Attitude-behavior correlation</strong> — Statistical link between expressed attitudes and subsequent actions.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Wicker (1969)</strong> — Historical review noting situational variability in att-beh relationships.</li>
+</ol>
+<h3>Measurement specificity</h3>
+<p>Prediction accuracy requires matching the specificity of the attitude measure to the behavior.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Specificity</strong> — Matching the level of attitude assessment to the target behavior.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Davidson and Jaccard (1979)</strong> — Specific birth control questions outperformed general ones as predictors.</li>
+</ol>
+<h3>Theory of planned behavior</h3>
+<p>A framework identifying intentions as the essential cognitive link to deliberate actions.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Intention</strong> — The primary cognitive predictor and decision to perform a specific behavior.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Fishbein and Ajzen (1975)</strong> — Theory identifying strong intentions as the key to att-beh links.</li>
+</ol>
+<h3>Attitude consistency</h3>
+<p>Evaluative stability results from the alignment of an attitude&#x27;s three core components.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Principle of attitude consistency</strong> — Requirement that ABC components normally align.</li>
+</ol>
+<p><strong>Affect</strong> — The emotional component of an evaluation (e.g., liking/disliking).</p>
+<p><strong>Behavior</strong> — The action-based component of an evaluation (e.g., frequent use).</p>
+<p><strong>Cognition</strong> — The belief-based component of an evaluation (e.g., knowledge of features).</p>
+<h3>Definition of attitude</h3>
+<p>Psychological evaluations that link the self-concept to external attitude objects.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Attitude</strong> — A relatively enduring evaluation of an object, person, or social group.</li>
+</ol>
+<h3>Neural basis</h3>
+<p>Distinct brain regions process and store different aspects of social evaluations.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Prefrontal cortex</strong> — Brain region used for storing social knowledge and attitudes.</li>
+<li><strong>Amygdala</strong> — Structure involved in emotional attitudes, especially those involving fear.</li>
+</ol>
+<h3>Heritability</h3>
+<p>Genetic variation accounts for statistical differences in the strength of inherited attitudes.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Heritability coefficient</strong> — Statistical measure of genetic influence on attitude variation.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Olson et al. (2001)</strong> — Data shows 0.54 heritability for abortion vs. 0 for birth control.</li>
+</ol>
+<h3>Social liking</h3>
+<p>Interpersonal attraction and positive associations are leveraged to enhance persuasive reach.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Positive association</strong> — Linking attractive sources to products to induce favorable recipient moods.</li>
+</ol>
+<h3>Processing motivation</h3>
+<p>Personal relevance dictates whether a message is evaluated via logic or heuristic cues.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Involvement</strong> — Topic relevance determining spontaneous (feelings) vs. thoughtful (logic) processing.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Chaiken (1980)</strong> — Uninvolved students used likeability cues; involved students used logic.</li>
+</ol>
+<h3>Communicator bias</h3>
+<p>Source effectiveness is discounted when messages appear driven by situational incentives.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Causal inferences</strong> — Attributions regarding why a communicator is speaking.</li>
+</ol>
+<p><strong>External causes</strong> — Situational incentives (e.g., payment) that lead to source discounting.</p>
+<p><strong>Internal states</strong> — Genuine beliefs seen as powerful when source argues against self-interest.</p>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Eagly, Wood, &amp; Chaiken (1978)</strong> — Discounting occurs for sources seen as arguing in self-interest.</li>
+</ol>
+<h3>Fear appeals</h3>
+<p>Negative affect is used to highlight risks to the self and motivate change.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Self-efficacy</strong> — Necessary belief in one&#x27;s ability to act to rectify a feared threat.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Banks et al. (1995)</strong> — Loss-framed mammogram messages were more effective than gain-framed ones.</li>
+</ol>
+<h3>Speech rate</h3>
+<p>Fast delivery serves as a heuristic for expertise while reducing listener counterarguing.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Time compression</strong> — Technique of speeding up speech to increase perceived knowledge.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>MacLachlan &amp; Siegel (1980)</strong> — Faster speech increases persuasiveness by making speakers seem expert.</li>
+</ol>
+<h3>Relevance cues</h3>
+<p>Issue importance determines if an audience relies on source status or message quality.</p>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Petty, Cacioppo, &amp; Goldman (1981)</strong> — High relevance led students to focus on argument quality.</li>
+</ol>
+<h3>Affective states</h3>
+<p>Current mood significantly alters the depth and care of information processing.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Positive affect</strong> — Signal that &quot;things are OK,&quot; leading to less careful message processing.</li>
+</ol>
+<h3>Source memory</h3>
+<p>Persuasion can increase over time as memory of an untrustworthy source fades.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Sleeper effect</strong> — Delayed attitude change when message content outlasts source memory.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Kumkale &amp; Albarracín (2004)</strong> — Meta-analysis confirming content retention after source discounting fades.</li>
+</ol>
+<h3>Resistance techniques</h3>
+<p>Practicing defenses against weak attacks bolsters attitudes for future persuasive attempts.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Inoculation</strong> — Building resistance by practicing counterarguments against mild attacks.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>McGuire (1961)</strong> — Demonstrated refutational defenses immunize attitudes against change.</li>
+</ol>
+<h3>Message framing</h3>
+<p>The presentation of information as either a gain or a loss alters its impact.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Framing</strong> — Emphasizing either the losses of inaction or the gains of compliance.</li>
+</ol>
+<h3>Subliminal priming</h3>
+<p>Primes below conscious awareness have negligible impact on choice under most conditions.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Subliminal advertising</strong> — Displaying brand images/messages without conscious awareness.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Karremans, Stroebe, and Claus (2006)</strong> — Lipton Ice primes worked only for thirsty participants.</li>
+</ol>
+<h3>Choice freedom</h3>
+<p>Threats to autonomy trigger negative emotional responses and rebellious behavior.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Psychological reactance</strong> — Negative response following a perceived threat to choice freedom.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Erceg-Hurn and Steed (2011)</strong> — Graphic cigarette warnings can reduce efficacy via reactance.</li>
+</ol>
+<h3>Strategic forewarning</h3>
+<p>Alerting audiences to persuasion attempts allows for the activation of defensive bolstering.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Forewarning</strong> — Resistance method involving practicing responses to known incoming appeals.</li>
+</ol>
+<h3>Communicators</h3>
+<p>Source traits like expertise and trustworthiness determine the success of a message.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Expertise</strong> — Perceived knowledge/skill of a source regarding the target topic.</li>
+<li><strong>Trustworthiness</strong> — Perception that a communicator is presenting an honest, unbiased message.</li>
+</ol>
+<h3>Justifying effort</h3>
+<p>Difficult entry requirements increase the perceived value and commitment to a group.</p>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Aronson and Mills (1959)</strong> — Severe initiation led to higher liking for a boring group.</li>
+</ol>
+<h3>Overjustification effect</h3>
+<p>External rewards for interesting tasks can diminish intrinsic motivation and liking.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Overjustification</strong> — Discounting internal interest because behavior is attributed to external rewards.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Lepper, Greene, and Nisbett (1973)</strong> — Children promised awards for markers later played with them less.</li>
+</ol>
+<h3>Practical application of self-perception</h3>
+<p>Unconscious physical actions can influence the degree of agreement with persuasive logic.</p>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Wells and Petty (1980)</strong> — Vertical head-nodding increased agreement with tuition arguments.</li>
+</ol>
+<h3>Postdecisional dissonance</h3>
+<p>Evaluations shift to favor chosen options following important and irrevocable decisions.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Buyer&#x27;s remorse</strong> — Regret stemming from the positive features of rejected alternatives.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Brehm (1956)</strong> — Post-choice ratings increased for chosen and decreased for rejected appliances.</li>
+</ol>
+<h3>Low-ball technique</h3>
+<p>Active participation creates commitment that persists even if deal terms change negatively.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Commitment</strong> — Psychological tie to a deal created by active involvement (e.g., signing).</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Cialdini (1988)</strong> — Personal involvement in signing agreements increases likelihood of staying in deals.</li>
+</ol>
+<h3>Cognitive dissonance study</h3>
+<p>Seminal research shows attitudes change to justify behaviors lacking external rationale.</p>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Festinger and Carlsmith (1959)</strong> — $1 participants liked boring tasks more than $20 participants.</li>
+</ol>
+<h3>Neuroscience of dissonance</h3>
+<p>Brain regions processing physical pain also respond to the conflict of dissonance.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Anterior cingulate cortex</strong> — Pain-sensitive brain region active during cognitive conflict.</li>
+</ol>
+<h3>Self-affirmation theory</h3>
+<p>Boosting global self-worth reduces the need to rationalize specific dissonant acts.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Self-affirmation</strong> — Boosting unrelated self-worth to mitigate dissonance-related pain.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Steele (1988)</strong> — Affirming self-worth reduces the tendency to justify dissonant attitudes.</li>
+</ol>
+<h3>Forbidden toy study</h3>
+<p>The severity of punishment threats dictates the degree of internal attitude change.</p>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Aronson and Carlsmith (1963)</strong> — Mild threats led to decreased toy liking; severe threats did not.</li>
+</ol>
+<h3>Cultural differences</h3>
+<p>Dissonance reduction is more common in individualistic than collectivistic social structures.</p>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Heine and Lehman (1997)</strong> — Canadians showed higher spread of alternatives than Japanese participants.</li>
+</ol>
+<h3>Triggers of dissonance</h3>
+<p>Conflict arises from recognizing discrepancies between self-concept and actual behavior.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Cognitive dissonance</strong> — Discomfort from behaving in ways seen as inappropriate.</li>
+</ol>
+<p><strong>Dissonant cognitions</strong> — Thoughts that are inconsistent with behavior or each other.</p>
+<p><strong>Consonant cognitions</strong> — Thoughts that are consistent with behavior and bolster self-esteem.</p>
+<h3>Foot-in-the-door technique</h3>
+<p>Initial small compliance creates a self-label that encourages later consistency.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Self-labeling</strong> — Seeing oneself as a helpful person following initial small request compliance.</li>
+</ol>
+<h3>Self-perception</h3>
+<p>Internal states are inferred from observable behavior when internal cues are weak.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Self-perception theory</strong> — Using one&#x27;s own behavior as a guide for thoughts and feelings.</li>
+</ol>
+<h4>Names and studies</h4>
+<ol>
+<li><strong>Bem (1972)</strong> — Proposes people infer internal states from their own observable behaviors.</li>
+</ol>
+<h3>Benjamin Franklin effect</h3>
+<p>Performing favors leads to increased liking for the recipient to maintain consistency.</p>
+<h4>Key terms</h4>
+<ol>
+<li><strong>Behavior-to-attitude shift</strong> — Internalizing positive attitudes after performing helpful favors for others.</li>
+</ol></div>
+    <div class="own">
+      <h3>My notes</h3>
+      <p class="say">What the sheet missed. Write it however you write — one thing a line,
+      <code>Term: what it is</code>, indent to nest. Copy takes this with the sheet, formatted,
+      ready to paste into the Notion row. That row is what the week's exam is built from.</p>
+      <textarea id="mynotes" spellcheck="true" placeholder="Rebound effect: suppressed thought comes back stronger once you stop trying
+   ex. telling yourself not to check the score
+Self-control is finite - one hard task leaves less for the next"></textarea>
+      <p class="saved" id="savedmsg"></p>
+      <div id="minepreview" class="hide"></div>
+    </div>
+    <!-- Last on the sheet, and last in the Copy, so the paste reads sheet → his notes →
+         what he went and found, grouped under the question that sent him looking. -->
+    <div class="own hide" id="starredsheet"></div>
+    <div class="own hide" id="unsuresheet"></div>
+    <div class="own hide" id="researchview"></div>
+    <div class="own hide" id="fixview"></div>
+  </div>
+</main>
+
+<footer id="footer" class="wrap hide">
+  <p class="hinttext hide" id="hinttext"></p>
+  <div class="acts">
+    <button class="pill ghost" id="back">Back</button>
+    <button class="pill ghost hide" id="hintbtn">Hint</button>
+    <!-- The mis-click undo. Same slot as Hint, which has just left it, and it clears the
+         answer to THIS question and nothing else — the research and fix boxes stay. -->
+    <button class="pill ghost hide" id="redo">Redo</button>
+    <!-- Retake CLEARS, so it sits off to the side on its own, away from the two that keep
+         his progress. 2nd Pass is the primary one and takes the position Next held. -->
+    <button class="pill ghost hide" id="retake">Retake</button>
+    <span class="spacer"></span>
+    <button class="pill hide" id="review">Review quiz</button>
+    <button class="pill primary hide" id="pass2">2nd Pass</button>
+    <button class="pill primary" id="next">Next</button>
+  </div>
+</footer>
+
+<script id="quiz-data" type="application/json">{"id": "psp-ch5-5-1_5-2_5-3", "title": "Ch5 Exam · 5.1–5.3", "subtitle": "Attitudes, Behavior, and Persuasion", "book": "PSP", "hash": "3f87d7addd226350", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "An individual consistently adapts their behavior to match local social norms instead of acting on their personal evaluations. What personal characteristic is the most likely cause of this discrepancy?", "options": ["Affective inconsistency", "High self-monitoring", "Low self-monitoring", "High attitude strength"], "rationales": ["This refers to a mismatch within the attitude itself rather than a person's tendency to follow social cues.", "High self-monitors prioritize social cues and situational appropriateness over their internal attitudes.", "Low self-monitors are more likely to act on their internal evaluations regardless of the social environment.", "Strong attitudes typically lead to higher consistency between evaluations and behavior, not lower."], "correct": 1, "hint": "Think about the trait that involves 'blending in' to be liked by others.", "topic": "Self-monitoring", "sec": "5.1", "src": "☆", "link": "", "qid": "a2c5403f48"}, {"q": "Which of the following is NOT true regarding the heritability of attitudes as discovered by Olson and colleagues?", "options": ["Highly heritable attitudes tend to form earlier in an individual's life.", "Attitudes toward the death penalty show higher heritability than attitudes toward playing bingo.", "Highly heritable attitudes are more susceptible to social persuasion than learned ones.", "Attitudes toward abortion are among the most strongly determined by genetic variation."], "rationales": ["This is a key characteristic of attitudes that are passed through genetic transmission from parents.", "The study ranked the death penalty at 0.5 heritability while bingo was at zero.", "The research found that attitudes with a strong genetic component are actually more resistant to change.", "Abortion on demand was ranked as the most heritable attitude in the study with a 0.54 score."], "correct": 2, "hint": "Consider the relationship between an attitude's origin and its stability over time.", "topic": "Genetic transmission", "sec": "5.1", "src": "☆", "link": "", "qid": "b544e113ce"}, {"q": "A person's evaluation of a topic becomes significantly more extreme and cognitively accessible after they spend an hour discussing it with friends. Which concept describes this outcome?", "options": ["Attitude strength", "Introspection effect", "Self-monitoring", "Principle of consistency"], "rationales": ["Attitudes become stronger and more important when they are frequently expressed or discussed.", "Introspection typically involves analyzing reasons, which can sometimes weaken the validity of an attitude.", "This refers to adjusting behavior to social cues, not the internal strengthening of an evaluation.", "This principle describes the alignment of ABC components rather than the importance or accessibility of the attitude."], "correct": 0, "hint": "Recall what happens to an evaluation's accessibility when it is repeatedly activated.", "topic": "Attitude strength", "sec": "5.1", "src": "☆", "link": "", "qid": "67effd1e55"}, {"q": "According to research by Wilson and Schooler, the process of ________ can reduce the validity of a judgment by introducing cognitive noise into an affective evaluation.", "options": ["introspection", "genetic transmission", "self-awareness", "attitude activation"], "rationales": ["Thinking too much about the reasons for an emotional preference can distort one's true feelings.", "This refers to the biological inheritance of attitudes, not the process of over-analyzing them.", "Self-awareness usually increases the likelihood of acting on internal attitudes rather than decreasing their validity.", "Activation generally makes an attitude more accessible and stronger rather than less valid."], "correct": 0, "hint": "This term describes the act of looking inward to analyze one's own thoughts or reasons.", "topic": "Introspection effects", "sec": "5.1", "src": "☆", "link": "", "qid": "01b8d8ccff"}, {"q": "Upon seeing a dark shape in the grass, a hiker immediately feels a sense of unease and steps back before consciously identifying the object as a snake. This rapid response illustrates which function of attitudes?", "options": ["Self-concept integration", "Cognitive elaboration of social knowledge", "Consistency between affect and behavior", "Survival value via rapid avoidance decisions"], "rationales": ["Integration refers to how attitudes define the self, not the survival utility of rapid object evaluation.", "The hiker's response was automatic and lacked the slow, careful thought associated with cognitive elaboration.", "While consistent, this does not name the specific evolutionary function the attitude is serving in this moment.", "Attitudes allow for effortless, quick decisions that helped ancestors survive by identifying threats instantly."], "correct": 3, "hint": "Think about the speed of evaluation and why that would have been useful for our ancestors.", "topic": "Evolutionary functions", "sec": "5.1", "src": "☆", "link": "", "qid": "2458aea6d9"}, {"q": "A researcher finds that a group of participants prioritized immediate affective impulses over their long-term cognitive safety norms. What situational variable was likely manipulated to produce this override?", "options": ["Alcohol consumption", "Implicit cognitive measures", "Self-awareness mirrors", "Repeat attitude expression"], "rationales": ["Intoxication makes immediate affective factors more accessible, often overriding long-term cognitive intentions like safety.", "These are tools used to measure attitudes, not situational variables that override safety norms.", "Mirrors increase focus on the self-concept, which typically strengthens the adherence to internal cognitive norms.", "Repeated expression makes an attitude stronger and more stable, not more impulsive or inconsistent."], "correct": 0, "hint": "Consider a substance that narrows focus to the immediate emotional situation.", "topic": "Attitude-behavior consistency", "sec": "5.1", "src": "☆", "link": "", "qid": "8aaf6951a9"}, {"q": "To accurately predict if a person will participate in a specific volunteer event next Saturday, which of the following question types should be AVOIDED?", "options": ["A general question about their attitude toward altruism", "A question about their availability on that specific Saturday", "A specific question about their intention to attend the event", "A question asking for a firm commitment to show up at a set time"], "rationales": ["General attitudes are poor predictors of specific behaviors; measurement specificity must match the action.", "This question addresses the specific level of the behavior, aiding accurate prediction.", "Specific questions about intentions are the most effective predictors of future behaviors.", "Firm commitments and intentions are strong, direct predictors of behavioral outcomes."], "correct": 0, "hint": "Recall the principle that the level of the question must match the level of the behavior.", "topic": "Measurement specificity", "sec": "5.1", "src": "☆", "link": "", "qid": "fa3e5246bb"}, {"q": "What is the most direct predictor of behavior according to the theory of planned behavior?", "options": ["The speed of the initial affective evaluation", "The level of self-monitoring in the individual", "The person's intention to perform the behavior", "The genetic heritability of the attitude"], "rationales": ["While fast evaluation helps survival, the theory focuses on deliberate intentions for planned actions.", "Self-monitoring determines consistency between attitude and behavior, but it isn't the direct predictor in this specific theory.", "The theory posits that behavioral intentions are the primary bridge between attitudes and actions.", "Heritability influences how an attitude forms and its resistance to change, but not directly the execution of behavior."], "correct": 2, "hint": "Look for the cognitive 'bridge' that turns an evaluation into a committed plan.", "topic": "Theory of planned behavior", "sec": "5.1", "src": "☆", "link": "", "qid": "d7d7f00242"}, {"q": "The ________ suggests that the emotional, behavioral, and cognitive components of an evaluation will generally align for any given object.", "options": ["theory of planned behavior", "implicit association effect", "principle of attitude consistency", "evolutionary functional model"], "rationales": ["This theory focuses on predicting behavior from intentions rather than the internal alignment of ABC components.", "This refers to tools used to measure unconscious attitudes, not the rule regarding alignment of components.", "This principle states that the ABC components (Affect, Behavior, Cognition) are normally in line with each other.", "This explains the survival utility of attitudes but does not focus on the alignment of internal components."], "correct": 2, "hint": "This term refers to the idea that our thoughts, feelings, and actions regarding an object usually match.", "topic": "Attitude consistency", "sec": "5.1", "src": "☆", "link": "", "qid": "cdc9ed3581"}, {"q": "In the study by Fazio and colleagues, one group worked on puzzles while another group merely watched. What did the researchers discover about the observers' evaluations?", "options": ["Observers demonstrated similar attitudes as the participants, but their attitudes were weaker.", "Observers developed much stronger attitudes because they had more time to think.", "Observers were unable to form a reliable evaluation without tactile experience.", "Observers formed completely different attitudes based on their frustration at not playing."], "rationales": ["While liking levels were similar, direct experience made attitudes stronger and faster to activate compared to observation.", "Direct experience is actually the factor that significantly increases attitude strength and accessibility.", "Indirect experience through observation is a valid way attitudes are learned, though they are less cognitively accessible.", "The study showed that observers ended up liking or disliking the puzzles roughly as much as the participants did."], "correct": 0, "hint": "Consider how the lack of direct physical interaction might affect the speed of the evaluation.", "topic": "Attitude strength", "sec": "5.1", "src": "R", "link": "", "qid": "76be5e78d0"}, {"q": "A person holds a relatively enduring evaluation of a specific product. In social psychology, what is the term for the product being evaluated?", "options": ["Attitude object", "Self-concept", "Behavioral component", "Affective source"], "rationales": ["The 'something' being evaluated—whether a person, product, or group—is termed the attitude object.", "Attitudes tie the self-concept to the object, but the object remains a separate entity in the evaluation.", "This refers to the actions taken toward an object, not the object itself.", "This is not a standard social psychological term for the target of an evaluation."], "correct": 0, "hint": "This two-word term describes the 'thing' you are having an attitude about.", "topic": "Definition of attitude", "sec": "5.1", "src": "$", "link": "", "qid": "0f7cca8549"}, {"q": "Neuroimaging research and studies on persuasion have identified several facts about how the brain processes attitudes. Which of the following is NOT a finding from this research?", "options": ["Most general social knowledge and attitudes are stored primarily in the prefrontal cortex.", "Spontaneous processing often involves quick affective responses rather than cognitive elaboration.", "The prefrontal cortex is the primary site for processing emotional fear-based appeals.", "Attitudes can be activated in the brain within 200 milliseconds of seeing an object."], "rationales": ["Neuroimaging indicates that the prefrontal cortex is the main storage site for social cognition.", "This is a core distinction between spontaneous and thoughtful processing routes.", "Fear-based attitudes are specifically linked to the amygdala, though most social knowledge is in the prefrontal cortex.", "Research has confirmed that rapid hedonic evaluation occurs in about one-fifth of a second."], "correct": 2, "hint": "Identify the brain structure most famous for its association with the 'fear' response.", "topic": "Neural basis", "sec": "5.1", "src": "$", "link": "5.2", "qid": "ac48ef18e0"}, {"q": "Research on twins found that attitudes toward abortion on demand had a heritability coefficient of 0.54, while attitudes toward playing bingo were at 0. Which statement best reflects the concept of heritability in this context?", "options": ["Genetic variation significantly influences some social attitudes but not others.", "Any attitude with a score of 0 is learned through genetic transmission.", "The score of 0.54 means exactly 54% of a person's individual attitude is in their DNA.", "Inherited attitudes like those toward abortion are easier to change through education."], "rationales": ["Heritability measures the extent to which genetic differences among people determine specific attitudes.", "A score of 0 means the attitude is learned entirely through experience and has no genetic basis.", "Heritability refers to the variation between people in a population, not the percentage of a single person's belief.", "Highly heritable attitudes are actually more resistant to change than learned attitudes."], "correct": 0, "hint": "Focus on what the different numerical values imply about the role of biology versus environment.", "topic": "Heritability", "sec": "5.1", "src": "+", "link": "", "qid": "39c2227ce7"}, {"q": "In social psychology, an ________ refers to our relatively enduring evaluation of a person, product, or social group.", "options": ["attitude", "ABC model", "affect", "intention"], "rationales": ["An attitude is defined as a relatively enduring evaluation of an attitude object.", "This is the name of the framework used to describe the components of an attitude, not the evaluation itself.", "Affect is just one of the three components that make up an overall attitude.", "Intention is a specific plan to act, not the general evaluation of the object itself."], "correct": 0, "hint": "This common term is used more specifically by social psychologists than in everyday speech.", "topic": "Definition of attitude", "sec": "5.1", "src": "+", "link": "", "qid": "40e9f1e40f"}, {"q": "What factor is the primary reason that social selling events between friends, like Tupperware parties, are so successful even if the product is mediocre?", "options": ["Interpersonal liking of the communicator", "Cognitive elaboration of the product features", "High personal relevance to the audience", "Perceived expertise regarding kitchen storage"], "rationales": ["We tend to trust and be persuaded by people we like, often accepting their messages without critical evaluation.", "These events often rely on spontaneous processing rather than careful, thoughtful analysis of the product.", "While relevant, the primary driver identified is the social relationship and the desire to support a friend.", "The salesperson is usually a friend, not an expert, and the liking of the person is more influential than their expertise."], "correct": 0, "hint": "Consider the relationship between the buyer and the seller in this specific scenario.", "topic": "Social liking", "sec": "5.2", "src": "☆", "link": "", "qid": "dffcd6c69c"}, {"q": "According to Chaiken (1980), which of the following is NOT true of students with low personal involvement in a topic?", "options": ["They use spontaneous rather than thoughtful processing to evaluate the message.", "They are easily persuaded by an attractive or likeable communicator.", "They fail to critically evaluate the validity of the communicator's specific claims.", "They are more persuaded by the quality of the argument than the likeability of the source."], "rationales": ["When a topic does not affect us personally, we lack the motivation to process it deeply.", "Likeability is a salient, obvious cue that works well when listeners are not processing information carefully.", "Spontaneous processing means accepting a message based on superficial traits without deep thought.", "Low-involvement students rely on spontaneous cues like likeability; only high-involvement students focus on argument quality."], "correct": 3, "hint": "Think about which route—spontaneous or thoughtful—someone takes when they don't care about the outcome.", "topic": "Processing motivation", "sec": "5.2", "src": "☆", "link": "", "qid": "2e31574df7"}, {"q": "A celebrity spokesperson is paid millions to endorse a luxury watch. According to research on communicator bias, why might this be less effective than a spokesperson who uses the watch for free?", "options": ["The message lacks high personal relevance for the celebrity.", "The celebrity's high attractiveness creates too much cognitive noise.", "The audience uses thoughtful processing to analyze the celebrity's history.", "The audience discounts the message because it is attributed to external causes."], "rationales": ["The issue is the audience's perception of the celebrity's motivation (money), not the celebrity's own involvement.", "Attractiveness generally increases effectiveness by creating positive associations, it doesn't normally 'create noise'.", "The text suggests we often discount the source quickly without elaborate analysis if self-interest is obvious.", "Communicators seen as arguing in their own self-interest are perceived as less trustworthy and sincere."], "correct": 3, "hint": "Consider how a listener reacts when they think a speaker is 'just doing it for the money.'", "topic": "Communicator bias", "sec": "5.2", "src": "☆", "link": "", "qid": "45cf78e750"}, {"q": "Fear appeals are most effective when they provide the audience with a sense of ________, allowing them to feel they can effectively rectify the threat.", "options": ["negativity bias", "associational learning", "self-efficacy", "spontaneous processing"], "rationales": ["This is the brain's tendency to react to bad news, but it is not the specific feeling required to make a fear appeal work.", "This refers to linking products with positive features, whereas fear appeals focus on negative ones.", "Without a way to respond to the fear, audiences may experience anxiety and turn away from the message.", "This is a method of processing, not a psychological state of feeling capable of change."], "correct": 2, "hint": "This term describes the belief in one's own ability to take action and succeed.", "topic": "Fear appeals", "sec": "5.2", "src": "☆", "link": "", "qid": "a8f9c9128f"}, {"q": "A salesperson speaks extremely quickly and confidently during a pitch. According to research, how does this affect the listeners?", "options": ["It enhances perceived expertise and reduces their ability to generate counterarguments.", "It decreases trustworthiness because the speaker seems to be hiding something.", "It encourages thoughtful processing because the message is difficult to follow.", "It triggers psychological reactance, leading the audience to rebel against the message."], "rationales": ["Fast delivery makes the source seem knowledgeable while leaving no time for the listener to think of rebuttals.", "Contrary to common belief, research shows faster speech actually tends to increase perceived expertise and persuasion.", "Complexity or speed usually forces listeners to rely on spontaneous cues like expertise rather than deep thought.", "Reactance is caused by a perceived threat to freedom of choice, not the speed of the speech itself."], "correct": 0, "hint": "Think about how speed affects the 'cognitive bandwidth' available to disagree with a speaker.", "topic": "Speech rate", "sec": "5.2", "src": "☆", "link": "", "qid": "5d60c673a5"}, {"q": "In the study by Petty, Cacioppo, and Goldman (1981), what triggered students to shift from evaluating the communicator's expertise to evaluating the actual strength of the argument?", "options": ["Decreasing the listeners' positive mood states", "Using a non-expert source to present a strong message", "Increasing the personal relevance of the topic", "Reducing the speed of the persuasive delivery"], "rationales": ["While mood affects processing depth, this study specifically manipulated relevance, expertise, and argument strength.", "Non-expert sources were ignored by low-relevance students but did not 'trigger' thoughtful processing on their own.", "When a topic directly affects an individual, they switch from spontaneous cues to thoughtful message processing.", "While it allows for more counterarguments, the study specifically focused on relevance as the motivator for deep thought."], "correct": 2, "hint": "Recall the difference in the students' reactions when they thought the exam policy would apply to them.", "topic": "Relevance cues", "sec": "5.2", "src": "☆", "link": "", "qid": "1d194b729f"}, {"q": "Which of the following is NOT a reason why advertisers attempt to create a positive mood in their audience?", "options": ["Positive affect signals that a situation is dangerous, triggering more careful cognitive scrutiny.", "Happy people are more likely to accept a message without critical evaluation.", "Humor and positive images increase the salience of the advertisement.", "Associational learning links the positive feelings from the ad to the product being sold."], "rationales": ["Actually, positive affect indicates that things are 'OK,' which leads people to process information less carefully.", "Good moods promote spontaneous processing, making audiences more susceptible to simple appeals.", "Ads that make us feel good grab our attention and stay in our memory longer.", "This is a primary mechanism for how emotional ads successfully change consumer attitudes."], "correct": 0, "hint": "Think about the signal a 'good mood' sends to the brain regarding safety and effort.", "topic": "Affective states", "sec": "5.2", "src": "☆", "link": "", "qid": "a9be43fc75"}, {"q": "A person hears a rumor in a tabloid and initially dismisses it. Weeks later, they recall the information as true but forget where they read it. What is this phenomenon called?", "options": ["Psychological reactance", "The sleeper effect", "The overjustification effect", "Inoculation failure"], "rationales": ["This is an emotional rebellion against a threat to freedom, not a memory-based change in evaluation.", "Over time, we tend to remember the content of a message but forget its unreliable source, leading to delayed attitude change.", "This occurs when rewards undermine intrinsic interest, which is unrelated to forgetting the source of a rumor.", "Inoculation is a defense technique; this scenario describes a failure of memory and source discounting."], "correct": 1, "hint": "Think of a term that suggests something was 'asleep' but woke up later.", "topic": "Source memory", "sec": "5.2", "src": "☆", "link": "", "qid": "d43352570d"}, {"q": "The process of ________ involves exposing individuals to a mild attack on their beliefs to help them practice generating counterarguments.", "options": ["forewarning", "spontaneous processing", "inoculation", "subliminal priming"], "rationales": ["Forewarning is simply alerting someone that a message is coming; it doesn't necessarily involve providing a 'weak dose' to practice with.", "This is a route to persuasion, whereas the question describes a method to prevent it.", "Similar to a medical vaccine, a weak dose of an opposing argument builds cognitive defenses for the future.", "This involves hidden messages below the conscious threshold, not overt practice with counterarguments."], "correct": 2, "hint": "This term is borrowed from medical science and involves building up 'immunity' to ideas.", "topic": "Resistance techniques", "sec": "5.2", "src": "☆", "link": "", "qid": "39d898b9f7"}, {"q": "A health campaign switches from saying 'Screening saves lives' to 'Not screening costs lives.' Why does the latter tend to be more effective?", "options": ["It aligns with the brain's negativity bias, which responds more strongly to negative affect.", "It triggers thoughtful processing by making the listener feel more safe.", "It reduces psychological reactance by being more direct and authoritative.", "It uses associational learning to link the clinic with positive survival outcomes."], "rationales": ["Research shows that messages framed to emphasize potential harm to self are more effective than positive ones.", "Fear-based messages usually target emotional responses rather than feelings of safety.", "Being overly directive often increases reactance rather than reducing it.", "The message specifically highlights negative outcomes (costs lives) rather than positive ones."], "correct": 0, "hint": "Consider the brain's tendency to prioritize information about potential loss or danger.", "topic": "Message framing", "sec": "5.2", "src": "R", "link": "", "qid": "15771f7ed7"}, {"q": "In Karremans' study, the Lipton Ice prime only worked for thirsty participants. What does this suggest about the relationship between subliminal cues and internal states?", "options": ["Thirst is an evolutionary function that bypasses the prefrontal cortex.", "Implicit measures are generally more accurate than intentions for predicting behavior.", "Subliminal ads are powerful enough to override long-term cognitive attitudes.", "Subliminal influence is highly conditional on current motivations."], "rationales": ["While thirst is biological, the study was about the effectiveness of persuasion, not brain localization.", "Intentions are typically very strong predictors of behavior, even in subliminal research.", "Actually, prior attitudes and current situations normally overshadow any weak effects from subliminal stimuli.", "Subtle cues only translate into behavior if they align with the person's current goals and needs."], "correct": 3, "hint": "Think about why a snack ad wouldn't work on someone who just finished a large meal.", "topic": "Subliminal priming", "sec": "5.2", "src": "$", "link": "5.1", "qid": "2e0d6e8b05"}, {"q": "Which of the following is NOT a likely result of an overly aggressive and directive anti-smoking campaign?", "options": ["The person engages in the forbidden behavior specifically to assert their freedom.", "The target individual ignores the persuasion attempt entirely.", "Increased cognitive elaboration of the campaign's logical arguments.", "The individual experiences strong negative emotions toward the communicator."], "rationales": ["This is the classic 'boomerang' effect where the person does exactly what they were told not to do.", "Reactance often involves completely tuning out the person attempting to exert control.", "High pressure usually leads to emotional rebellion (reactance) rather than careful, thoughtful consideration of logic.", "Reactance is characterized by a strong emotional response when choice is threatened."], "correct": 2, "hint": "Recall the term for the emotional 'pushback' when we feel our autonomy is at stake.", "topic": "Choice freedom", "sec": "5.2", "src": "$", "link": "", "qid": "29b38f22ed"}, {"q": "Warning people that they are about to hear a persuasive message allows them to develop defenses. What is this technique called?", "options": ["Sleeper effect", "Strategic bias", "Forewarning", "Inoculation"], "rationales": ["The sleeper effect deals with forgetting the source of a message, not preparing to resist a future one.", "This is not a standard term used in the text to describe resistance techniques.", "Forewarning provides advance notice, giving individuals time to practice resistance and maintain existing beliefs.", "Inoculation specifically involves a 'weak dose' of an argument, while forewarning is just the alert that a message is coming."], "correct": 2, "hint": "Think of a term that means being cautioned or alerted in advance.", "topic": "Strategic forewarning", "sec": "5.2", "src": "$", "link": "", "qid": "36f1bdf581"}, {"q": "Communicators are generally more effective when they appeal to ________, such as by being attractive or similar to the audience.", "options": ["self-concern", "other-concern", "thoughtful processing", "cognitive dissonance"], "rationales": ["Persuaders who make the recipient feel good about themselves or provide personal benefits are more effective.", "While social psychologists study other-concern, the text emphasizes that communicators usually win by making the listener feel good personally.", "Attractive and similar communicators actually tend to trigger spontaneous rather than thoughtful processing.", "Dissonance is an internal state caused by one's own actions, not a direct appeal used by a communicator."], "correct": 0, "hint": "This term refers to the basic human motivation to protect and enhance the self.", "topic": "Communicators", "sec": "5.2", "src": "+", "link": "", "qid": "d5c08bf99b"}, {"q": "After enduring a rigorous and embarrassing hazing process to join a club, a student finds the group's actual activities to be quite boring but still reports high satisfaction. Why?", "options": ["They are high self-monitors who want to fit in with the other new members.", "The embarrassing procedure triggered a sleeper effect regarding the group's quality.", "The cognitive elaboration of the hazing provided new positive associations.", "They justify their effort by inflating the group's perceived value."], "rationales": ["While self-monitoring matters, the primary psychological driver here is the internal need to justify personal expenditure of effort.", "The sleeper effect involves forgetting a source, while this scenario is about justifying effort.", "The hazing itself is negative; the positive evaluation follows as a way to rationalize why the negative experience was 'worth it.'", "To resolve the dissonance of 'I did all this work for nothing,' people convince themselves the goal was highly worthwhile."], "correct": 3, "hint": "Think about the mental cost of admitting you went through pain for a boring result.", "topic": "Justifying effort", "sec": "5.3", "src": "☆", "link": "", "qid": "2ab3743202"}, {"q": "A teacher starts paying students for every book they read. Later, the payments stop. What is the most likely outcome for students who previously enjoyed reading for its own sake?", "options": ["Their reading behavior will shift from spontaneous to thoughtful processing.", "They will develop a stronger attitude consistency toward literacy.", "Their intrinsic interest in reading will decrease.", "They will experience psychological reactance and read more to spite the teacher."], "rationales": ["Overjustification deals with the source of motivation (internal vs external), not the route of information processing.", "Rewarding behavior often creates inconsistency between pre-existing internal liking and new external motivations.", "Overjustification occurs when an activity is seen as caused by an external reward, undermining internal interest.", "Reactance happens when choice is threatened, whereas this is about how rewards change the perceived reason for an activity."], "correct": 2, "hint": "Consider what happens when you start being paid for a hobby.", "topic": "Overjustification effect", "sec": "5.3", "src": "☆", "link": "", "qid": "5cb59d1642"}, {"q": "To encourage a child to develop a lasting internal preference for eating vegetables, which strategy should be AVOIDED?", "options": ["Modeling the behavior by enjoying vegetables in front of the child.", "Offering a large, desirable toy as a reward for every vegetable eaten.", "Using the smallest effective reward to get them to try a bite.", "Providing mild discouragement for refusing to try new foods."], "rationales": ["Social modeling is a legitimate way to help form attitudes without the risk of overjustification from rewards.", "Too much reward leads the child to attribute their behavior to the prize rather than their own liking (overjustification).", "Minimal external incentive encourages children to attribute their behavior to internal factors like actually liking the food.", "Insufficient external justification (mild pressure) often leads people to convince themselves they chose the behavior internally."], "correct": 1, "hint": "Think about the 'moral' of the study involving markers and expected rewards.", "topic": "Practical application of self-perception", "sec": "5.3", "src": "☆", "link": "", "qid": "15411d694b"}, {"q": "A consumer chooses between two similar laptops. Shortly after the purchase, their rating of the chosen laptop increases while their rating of the rejected one decreases. What is this effect called?", "options": ["Affective priming", "Spread of alternatives", "The Benjamin Franklin effect", "Insufficient justification"], "rationales": ["This is a memory phenomenon, not the divergence of ratings following an irrevocable decision.", "Postdecisional dissonance is reduced by magnifying the positives of our choice and the negatives of what we gave up.", "This involves liking a person more after doing them a favor, not rerating consumer products.", "This refers to the lack of external reason for a behavior, while the laptop case is about resolving choice regret."], "correct": 1, "hint": "This term describes the growing distance between how much you like your choice and the one you left behind.", "topic": "Postdecisional dissonance", "sec": "5.3", "src": "☆", "link": "", "qid": "3a89d0b22f"}, {"q": "The ________ technique works by getting a person to commit to a task before revealing its full costs or duration.", "options": ["sleeper", "inoculation", "foot-in-the-door", "low-ball"], "rationales": ["The sleeper effect is about memory of a source over time, not sequential requests or deal-making.", "Inoculation is a resistance strategy to prevent persuasion, not a sales technique to ensure compliance.", "This involves a separate, smaller request first, whereas low-balling involves changing the terms of the same deal.", "Once a person makes an initial commitment, they often feel obligated to follow through even if the deal worsens."], "correct": 3, "hint": "Think of a term from sports that implies throwing something surprisingly low or tricky.", "topic": "Low-ball technique", "sec": "5.3", "src": "☆", "link": "", "qid": "63ef5ba13a"}, {"q": "In a study, participants are paid either 1 dollar or 20 dollars to lie and say a boring task was fun. Which group actually convinced themselves the task was enjoyable?", "options": ["Both groups equally", "The 1-dollar group", "The 20-dollar group", "Neither group"], "rationales": ["Dissonance reduction is sensitive to the level of external pressure; more pressure results in less internal attitude change.", "Because 1 dollar was insufficient justification for lying, they changed their internal attitude to reduce the discomfort of lying.", "The large payment provided enough external justification for the lie, so they didn't need to change their internal attitude.", "The study confirmed that behavior can indeed change internal attitudes, particularly when external rewards are small."], "correct": 1, "hint": "Consider which group would find it harder to say, 'I only did it for the money.'", "topic": "Cognitive dissonance study", "sec": "5.3", "src": "☆", "link": "", "qid": "ccdb9f733c"}, {"q": "Increased activity in the anterior cingulate cortex during an inconsistent act is a reliable predictor of what outcome?", "options": ["The heritability coefficient of the attitude", "The speed of spontaneous message processing", "The extent of subsequent attitude change", "The likelihood of a sleeper effect occurring"], "rationales": ["Heritability is determined by genetics across a population, not brain activity during a specific moment of choice.", "Spontaneous processing is generally fast and affective, whereas this brain activity signals the discomfort of a contradiction.", "Neural activity in this pain-sensitive area predicts how much an individual will modify their beliefs to reduce dissonance.", "The sleeper effect is a result of memory decay regarding a source, not the affective 'pain' of current cognitive dissonance."], "correct": 2, "hint": "This brain area is sensitive to 'pain' and its activation helps drive the need to fix an inconsistency.", "topic": "Neuroscience of dissonance", "sec": "5.3", "src": "☆", "link": "", "qid": "4219c464dd"}, {"q": "Which of the following is NOT true regarding the role of self-esteem in dissonance reduction?", "options": ["Westerners are generally more motivated to restore self-esteem through dissonance reduction than Easterners.", "Affirming one's value in an unrelated area, like sports, has no effect on dissonance caused by a moral failing.", "Dissonance is stronger when an action violates one's positive self-concept as a 'smart' or 'decent' person.", "People with lower motivation for self-concern show less tendency to justify their attitudes."], "rationales": ["Research indicates that individualistic cultures are more sensitive to internal threats to the self-concept.", "Self-affirmation theory shows that boosting self-worth in ANY area can reduce the need to justify a specific inconsistent act.", "Cognitive dissonance is fundamentally a threat to self-esteem and the preferred self-view.", "If you care less about maintaining a perfect self-image, the discomfort of an inconsistency is reduced."], "correct": 1, "hint": "Look for the option that claims unrelated positive traits cannot help you feel better about a mistake.", "topic": "Self-affirmation theory", "sec": "5.3", "src": "☆", "link": "", "qid": "cccd11fff5"}, {"q": "Children avoid a toy because they were told it would lead to a minor scolding. They later decide they don't like the toy. Which concept explains this?", "options": ["Strategic forewarning", "Overjustification effect", "Postdecisional spread", "Insufficient justification"], "rationales": ["This is a persuasion defense, not a process of inferring one's own attitudes from behavioral avoidance.", "This occurs when rewards decrease interest, not when mild threats increase internal dislike.", "This refers to choosing between two things you like, whereas the toy study was about obeying a prohibition.", "The minor threat wasn't enough to justify the avoidance, so the children inferred their own lack of interest was the cause."], "correct": 3, "hint": "Think about why a 'mild' threat is more effective for long-term attitude change than a 'harsh' one.", "topic": "Forbidden toy study", "sec": "5.3", "src": "☆", "link": "", "qid": "d4fcf2f8d1"}, {"q": "Research by Heine and Lehman found that while Westerners use dissonance reduction to restore self-esteem, ________ students showed no significant 'spread of alternatives' after receiving negative feedback.", "options": ["low-relevance", "Canadian", "high self-monitoring", "Japanese"], "rationales": ["This refers to interest in a topic, but the study focused on cultural orientations toward self-esteem and consistency.", "The study showed that Canadians (representing Westerners) actually increased their spread of alternatives when threatened.", "While self-monitoring affects behavior, the study specifically compared different cultural samples (Canada vs Japan).", "Collectivist cultures are less motivated to maintain an individualistic positive self-image, leading to less personal dissonance."], "correct": 3, "hint": "This group represents an Eastern, collectivist perspective in the cited study.", "topic": "Cultural differences", "sec": "5.3", "src": "☆", "link": "", "qid": "fc978b3685"}, {"q": "In the Kool-Aid study, why was it crucial that participants were asked to crumple up and throw away their written lie?", "options": ["To prevent a sleeper effect by ensuring the source of the lie was immediately forgotten.", "To ensure that the 'High Choice' group felt they had more freedom than the 'Low Choice' group.", "To activate the anterior cingulate cortex through physical behavioral cues.", "To prove that dissonance occurs even when the lie has no harmful social consequences."], "rationales": ["The sleeper effect involves long-term memory; this procedure focused on the immediate feeling of cognitive inconsistency.", "While 'Choice' was a variable, the crumpling of the paper was specifically to isolate the act from its consequences.", "Brain activity was confirmed in separate studies, but the crumpling was an experimental control for consequences.", "Attitude change occurred because of the internal inconsistency, not because the participant was worried about misleading others."], "correct": 3, "hint": "Think about what 'no consequences' implies for why a person would still feel bad about lying.", "topic": "Triggers of dissonance", "sec": "5.3", "src": "R", "link": "", "qid": "0db62e1087"}, {"q": "A salesperson first asks a customer to sign a free petition for a cause. Later, they ask the customer for a large donation. What technique is being used?", "options": ["Sleeper effect", "Foot-in-the-door", "Inoculation", "Low-ball"], "rationales": ["This is a memory decay phenomenon regarding the credibility of a source over time.", "This technique involves getting a person to agree to a minor request first to increase the likelihood of a larger one later.", "This is a defense against persuasion, not a strategy used by a salesperson to gain compliance.", "Low-balling involves changing the terms of a single deal after commitment, not asking for two different things."], "correct": 1, "hint": "This term describes getting a small 'entry' into someone's home or mind before asking for more.", "topic": "Foot-in-the-door technique", "sec": "5.3", "src": "$", "link": "", "qid": "5effa9141d"}, {"q": "According to self-perception theory, which of the following is NOT a way people determine their internal states?", "options": ["By looking at the social situation to see if it explains why they acted.", "By observing their own physical actions, such as nodding their head up and down.", "By realizing how thirsty they are only after they finish drinking a large glass of water.", "By ignoring their behavior and relying solely on pre-existing, strong cognitive schemas."], "rationales": ["If the situation doesn't explain the act, we infer the cause must be our own internal preference.", "Studies have shown that physical motor actions like nodding can be used as data points for attitude formation.", "This is a classic example of using behavior to diagnose an internal physical or emotional state.", "Self-perception theory specifically argues that we use our overt behavior as a guide to infer our thoughts and feelings."], "correct": 3, "hint": "Look for the option that suggests we DON'T need to look at our actions to know our minds.", "topic": "Self-perception", "sec": "5.3", "src": "+", "link": "", "qid": "c4c0650dff"}, {"q": "A person realizes they like a rival more after doing that rival a small favor. What is the best psychological explanation for this change?", "options": ["Psychological reactance against the social norm of having a rival.", "Self-perception of their own helpful behavior.", "An overjustification effect triggered by the rival's gratitude.", "A sleeper effect where the person forgot that the rival was an 'untrustworthy' source."], "rationales": ["Reactance is a rebellion against control, whereas this is a shift toward consistency with one's own voluntary act.", "The person looks at their own helpful act and concludes, 'I wouldn't do a favor for someone I hate, so I must like them.'", "Overjustification usually decreases liking when a behavior is attributed to a reward, not a favor done for another.", "This effect involves information sources, not the change in attitude following one's own behavioral choice."], "correct": 1, "hint": "This idea is named after a Founding Father and involves how we justify the nice things we do for others.", "topic": "Benjamin Franklin effect", "sec": "5.3", "src": "+", "link": "", "qid": "818c144974"}], "hasSheet": true, "frq": [{"tag": "Integrating Attitude-Behavior Consistency (5.1) and Self-Perception (5.3)", "secs": "5.1, 5.3", "prompt": "Magritte, a 16-year-old student, informs her parents that she holds a strong negative attitude toward smoking while in the home environment. However, social psychologists recognize that her behavior may change when she is exposed to different social norms and peer pressure among friends.", "ask": "Propose a specific behavioral intervention Magritte’s parents could use (based on techniques like the 'foot-in-the-door') to ensure she remains a non-smoker. Account for why this would be more effective for a high self-monitor than simple instruction.", "words": "120", "rubric": [{"t": "preliminary act* ; initial commitment ; small request ; minor behavior", "judge": false, "k": ["The student identifies a low-threshold starting behavior to trigger subsequent compliance"]}, {"t": "infer* ; self-perception* ; deduction ; observation", "judge": false, "k": ["The student explains how an individual uses their own actions to determine their internal states"]}, {"t": "social environment* ; social cue* ; adaptation* ; situational adjustment", "judge": false, "k": ["The student identifies that those high in the trait tend to align their actions with external surroundings to be liked"]}, {"t": "self-concept* ; person factor* ; intrinsic* ; internal label", "judge": false, "k": ["The student describes the shift from external compliance to a stable, behaviorally-derived identity"]}, {"t": "The response successfully demonstrates how an internal inference derived from the intervention overrides the high self-monitor’s reliance on external peer cues", "judge": true, "k": []}], "model": "Magritte’s parents should employ the foot-in-the-door technique by asking her to commit to a minor, public action, such as joining a school health discussion group or signing a petition for a local safe driving campaign. According to self-perception theory, when Magritte engages in this preliminary act, she will observe her own behavior to infer her beliefs, concluding that she is a person who values health and safety.\n\nThis intervention is superior to simple parental instruction for a high self-monitor. High self-monitors typically adjust their behavior to match social cues and environment to achieve social approval. Simple instructions represent external pressure, which Magritte might discount when the social context shifts to a peer group where smoking is normalized. However, the foot-in-the-door technique encourages Magritte to develop an internal self-concept based on her prior actions. Once she has labeled herself as a non-smoker through her own voluntary commitment, she is more likely to maintain consistency to avoid violating her self-perceived identity, even when facing the shifting norms of her friend group."}, {"tag": "Thoughtful vs. Spontaneous message processing", "secs": "5.2", "prompt": "Based on the study by Petty, Cacioppo, and Goldman (1981), a university is considering the implementation of a new comprehensive exam. A group of students is identified as having \"low personal relevance\" because they will graduate before the policy takes effect.", "ask": "Draft a brief persuasive statement (1–2 sentences) aimed at this group to gain their support. Account for the choice of source expertise and argument quality used in that statement based on the dual-route model of persuasion.", "words": "120", "rubric": [{"t": "authority* ; credibility ; prestige ; elite status", "judge": false, "k": ["The student selects a high-status communicator, such as an expert from Princeton"]}, {"t": "heuristic* ; peripheral* ; mental shortcut* ; superficial", "judge": false, "k": ["The student identifies the processing mode used by recipients with low involvement"]}, {"t": "engagement* ; cognitive labor* ; attention ; effort", "judge": false, "k": ["The student explains why the audience does not scrutinize the underlying message content"]}, {"t": "salient* ; cue* ; obvious feature* ; surface characteristic", "judge": false, "k": ["The student explains the reliance on the \"who\" (communicator) over the \"what\" (evidence)"]}, {"t": "The response correctly prioritizes source-related cues over evidence strength in alignment with the Petty et al. (1981) findings", "judge": true, "k": []}], "model": "\"The Carnegie Commission on Higher Education, chaired by a distinguished professor from Princeton University, has officially endorsed this exam as the premier standard for academic excellence.\"\n\nIn this statement, I prioritized source expertise over argument quality. According to the research by Petty, Cacioppo, and Goldman (1981), students with low relevance lack the motivation to engage in thoughtful message processing. Because the policy does not affect them personally, they are unlikely to perform the cognitive labor required to elaborate on the statistical validity or specific pros and cons of the evidence. Instead, they utilize a spontaneous route, relying on peripheral cues and heuristics to form an evaluation. In this state, the prestige of the communicator—specifically an elite professor from a top-tier university—acts as a powerful mental shortcut. These recipients accept the persuasion attempt because the source appears authoritative and trustworthy, whereas the actual strength of the arguments remains secondary. Consequently, utilizing a salient expert cue is the most effective strategy for this specific audience."}, {"tag": "Insufficient vs. Oversufficient Justification", "secs": "5.3", "prompt": "Use the Aronson and Carlsmith (1963) \"forbidden toy\" study.", "ask": "Direct the student to modify the \"harsh threat\" condition to instead utilize an \"expected reward\" (based on the Lepper et al. marker study). Account for how this would paradoxically decrease the child's long-term interest in the toy compared to the \"mild threat\" group.", "words": "120", "rubric": [{"t": "prize* ; extrinsic motivator ; external incentive ; payment", "judge": false, "k": ["The student identifies the situational motivator used in the modified condition"]}, {"t": "situational attribution* ; external cause ; environmental explanation", "judge": false, "k": ["The student explains why the subject credits the environment rather than personal interest for their behavior"]}, {"t": "undermine* ; discount* ; reduce liking* ; diminish value", "judge": false, "k": ["The student describes the reduction of inherent enjoyment for the activity"]}, {"t": "uncomfortable state* ; internal state* ; person factor* ; belief change", "judge": false, "k": ["The student identifies why the group receiving subtle pressure undergoes a genuine shift in evaluation"]}, {"t": "The response successfully contrasts how obvious external motivators (prizes) prevent the internal shifts that occur under subtle pressure", "judge": true, "k": []}], "model": "If the \"harsh threat\" were replaced with an \"expected reward\"—such as promising a \"good student award\" for avoiding the toy—it would trigger overjustification. The child would view their behavior as being caused by the situation (the prize) rather than their own preference. Consequently, they would discount any personal liking for the object, leading to a decrease in long-term interest once the incentive is removed.\n\nThis outcome is reached paradoxically when compared to the \"mild threat\" group. Children under a mild threat experience insufficient justification; the pressure is enough to ensure compliance but too subtle to serve as a convincing external excuse. To reduce the resulting uncomfortable state of dissonance, these children must find an internal reason for their behavior, concluding they avoided the toy because they did not actually like it. Therefore, while a reward may ensure immediate compliance, it paradoxically undermines intrinsic interest. The mild threat is more effective for enduring attitude change because it forces the child to attribute the behavior to internal, person factors."}], "notebook": "https://notebooklm.google.com/notebook/1f800a4d-3f2e-42d1-a3e6-41ea2e8916f1/artifact/3ffe7753-0de3-4e97-a7d9-0024865ad1dd", "root": "../index.html", "tab": "quiz", "sheet": "## Self-monitoring\nIndividual differences in attending to social cues to adjust behavior to the environment.\n### Key terms\n1. **Self-monitoring** — The tendency to attend to social cues and adjust behavior accordingly.\n   **High self-monitors** — Individuals blending in to be liked; lower att-beh consistency.\n   **Low self-monitors** — Individuals acting on internal attitudes; higher att-beh consistency.\n### Names and studies\n1. **Kraus (1995)** — Meta-analysis showing weaker att-beh relationship for high self-monitors.\n\n## Genetic transmission\nAttitudes can be passed biologically from parents rather than being solely learned.\n### Key terms\n1. **Genetic transmission** — Biological process of parents influencing offspring attitudes via genetic code.\n### Names and studies\n1. **Olson, Vernon, Harris, & Jang (2001)** — Twin study identifying heritability in social attitudes.\n\n## Attitude strength\nImpactful attitudes are characterized by high cognitive accessibility and frequency of use.\n### Key terms\n1. **Attitude strength** — Evaluation importance based on how quickly/easily it comes to mind.\n### Names and studies\n1. **Fazio (1990/1995)** — Defines strength as mental accessibility that guides actions automatically.\n\n## Introspection effects\nCognitive analysis of reasons can undermine the accuracy and validity of preferences.\n### Key terms\n1. **Cognitive introspection** — Focusing on specific reasons for an attitude rather than feelings.\n### Names and studies\n1. **Wilson and Schooler (1991)** — Jam study; analyzing reasons reduced rating correlation with experts.\n\n## Evolutionary functions\nAttitudes provide adaptive utility for rapid, survival-based approach or avoid decisions.\n### Key terms\n1. **Attitude utility** — Functional value of quick, effortless decisions to approach or avoid objects.\n\n## Attitude-behavior consistency\nAlignment between evaluations and actions depends on personal, situational, and measurement factors.\n### Key terms\n1. **Attitude-behavior correlation** — Statistical link between expressed attitudes and subsequent actions.\n### Names and studies\n1. **Wicker (1969)** — Historical review noting situational variability in att-beh relationships.\n\n## Measurement specificity\nPrediction accuracy requires matching the specificity of the attitude measure to the behavior.\n### Key terms\n1. **Specificity** — Matching the level of attitude assessment to the target behavior.\n### Names and studies\n1. **Davidson and Jaccard (1979)** — Specific birth control questions outperformed general ones as predictors.\n\n## Theory of planned behavior\nA framework identifying intentions as the essential cognitive link to deliberate actions.\n### Key terms\n1. **Intention** — The primary cognitive predictor and decision to perform a specific behavior.\n### Names and studies\n1. **Fishbein and Ajzen (1975)** — Theory identifying strong intentions as the key to att-beh links.\n\n## Attitude consistency\nEvaluative stability results from the alignment of an attitude's three core components.\n### Key terms\n1. **Principle of attitude consistency** — Requirement that ABC components normally align.\n   **Affect** — The emotional component of an evaluation (e.g., liking/disliking).\n   **Behavior** — The action-based component of an evaluation (e.g., frequent use).\n   **Cognition** — The belief-based component of an evaluation (e.g., knowledge of features).\n\n## Definition of attitude\nPsychological evaluations that link the self-concept to external attitude objects.\n### Key terms\n1. **Attitude** — A relatively enduring evaluation of an object, person, or social group.\n\n## Neural basis\nDistinct brain regions process and store different aspects of social evaluations.\n### Key terms\n1. **Prefrontal cortex** — Brain region used for storing social knowledge and attitudes.\n2. **Amygdala** — Structure involved in emotional attitudes, especially those involving fear.\n\n## Heritability\nGenetic variation accounts for statistical differences in the strength of inherited attitudes.\n### Key terms\n1. **Heritability coefficient** — Statistical measure of genetic influence on attitude variation.\n### Names and studies\n1. **Olson et al. (2001)** — Data shows 0.54 heritability for abortion vs. 0 for birth control.\n\n## Social liking\nInterpersonal attraction and positive associations are leveraged to enhance persuasive reach.\n### Key terms\n1. **Positive association** — Linking attractive sources to products to induce favorable recipient moods.\n\n## Processing motivation\nPersonal relevance dictates whether a message is evaluated via logic or heuristic cues.\n### Key terms\n1. **Involvement** — Topic relevance determining spontaneous (feelings) vs. thoughtful (logic) processing.\n### Names and studies\n1. **Chaiken (1980)** — Uninvolved students used likeability cues; involved students used logic.\n\n## Communicator bias\nSource effectiveness is discounted when messages appear driven by situational incentives.\n### Key terms\n1. **Causal inferences** — Attributions regarding why a communicator is speaking.\n   **External causes** — Situational incentives (e.g., payment) that lead to source discounting.\n   **Internal states** — Genuine beliefs seen as powerful when source argues against self-interest.\n### Names and studies\n1. **Eagly, Wood, & Chaiken (1978)** — Discounting occurs for sources seen as arguing in self-interest.\n\n## Fear appeals\nNegative affect is used to highlight risks to the self and motivate change.\n### Key terms\n1. **Self-efficacy** — Necessary belief in one's ability to act to rectify a feared threat.\n### Names and studies\n1. **Banks et al. (1995)** — Loss-framed mammogram messages were more effective than gain-framed ones.\n\n## Speech rate\nFast delivery serves as a heuristic for expertise while reducing listener counterarguing.\n### Key terms\n1. **Time compression** — Technique of speeding up speech to increase perceived knowledge.\n### Names and studies\n1. **MacLachlan & Siegel (1980)** — Faster speech increases persuasiveness by making speakers seem expert.\n\n## Relevance cues\nIssue importance determines if an audience relies on source status or message quality.\n### Names and studies\n1. **Petty, Cacioppo, & Goldman (1981)** — High relevance led students to focus on argument quality.\n\n## Affective states\nCurrent mood significantly alters the depth and care of information processing.\n### Key terms\n1. **Positive affect** — Signal that \"things are OK,\" leading to less careful message processing.\n\n## Source memory\nPersuasion can increase over time as memory of an untrustworthy source fades.\n### Key terms\n1. **Sleeper effect** — Delayed attitude change when message content outlasts source memory.\n### Names and studies\n1. **Kumkale & Albarracín (2004)** — Meta-analysis confirming content retention after source discounting fades.\n\n## Resistance techniques\nPracticing defenses against weak attacks bolsters attitudes for future persuasive attempts.\n### Key terms\n1. **Inoculation** — Building resistance by practicing counterarguments against mild attacks.\n### Names and studies\n1. **McGuire (1961)** — Demonstrated refutational defenses immunize attitudes against change.\n\n## Message framing\nThe presentation of information as either a gain or a loss alters its impact.\n### Key terms\n1. **Framing** — Emphasizing either the losses of inaction or the gains of compliance.\n\n## Subliminal priming\nPrimes below conscious awareness have negligible impact on choice under most conditions.\n### Key terms\n1. **Subliminal advertising** — Displaying brand images/messages without conscious awareness.\n### Names and studies\n1. **Karremans, Stroebe, and Claus (2006)** — Lipton Ice primes worked only for thirsty participants.\n\n## Choice freedom\nThreats to autonomy trigger negative emotional responses and rebellious behavior.\n### Key terms\n1. **Psychological reactance** — Negative response following a perceived threat to choice freedom.\n### Names and studies\n1. **Erceg-Hurn and Steed (2011)** — Graphic cigarette warnings can reduce efficacy via reactance.\n\n## Strategic forewarning\nAlerting audiences to persuasion attempts allows for the activation of defensive bolstering.\n### Key terms\n1. **Forewarning** — Resistance method involving practicing responses to known incoming appeals.\n\n## Communicators\nSource traits like expertise and trustworthiness determine the success of a message.\n### Key terms\n1. **Expertise** — Perceived knowledge/skill of a source regarding the target topic.\n2. **Trustworthiness** — Perception that a communicator is presenting an honest, unbiased message.\n\n## Justifying effort\nDifficult entry requirements increase the perceived value and commitment to a group.\n### Names and studies\n1. **Aronson and Mills (1959)** — Severe initiation led to higher liking for a boring group.\n\n## Overjustification effect\nExternal rewards for interesting tasks can diminish intrinsic motivation and liking.\n### Key terms\n1. **Overjustification** — Discounting internal interest because behavior is attributed to external rewards.\n### Names and studies\n1. **Lepper, Greene, and Nisbett (1973)** — Children promised awards for markers later played with them less.\n\n## Practical application of self-perception\nUnconscious physical actions can influence the degree of agreement with persuasive logic.\n### Names and studies\n1. **Wells and Petty (1980)** — Vertical head-nodding increased agreement with tuition arguments.\n\n## Postdecisional dissonance\nEvaluations shift to favor chosen options following important and irrevocable decisions.\n### Key terms\n1. **Buyer's remorse** — Regret stemming from the positive features of rejected alternatives.\n### Names and studies\n1. **Brehm (1956)** — Post-choice ratings increased for chosen and decreased for rejected appliances.\n\n## Low-ball technique\nActive participation creates commitment that persists even if deal terms change negatively.\n### Key terms\n1. **Commitment** — Psychological tie to a deal created by active involvement (e.g., signing).\n### Names and studies\n1. **Cialdini (1988)** — Personal involvement in signing agreements increases likelihood of staying in deals.\n\n## Cognitive dissonance study\nSeminal research shows attitudes change to justify behaviors lacking external rationale.\n### Names and studies\n1. **Festinger and Carlsmith (1959)** — $1 participants liked boring tasks more than $20 participants.\n\n## Neuroscience of dissonance\nBrain regions processing physical pain also respond to the conflict of dissonance.\n### Key terms\n1. **Anterior cingulate cortex** — Pain-sensitive brain region active during cognitive conflict.\n\n## Self-affirmation theory\nBoosting global self-worth reduces the need to rationalize specific dissonant acts.\n### Key terms\n1. **Self-affirmation** — Boosting unrelated self-worth to mitigate dissonance-related pain.\n### Names and studies\n1. **Steele (1988)** — Affirming self-worth reduces the tendency to justify dissonant attitudes.\n\n## Forbidden toy study\nThe severity of punishment threats dictates the degree of internal attitude change.\n### Names and studies\n1. **Aronson and Carlsmith (1963)** — Mild threats led to decreased toy liking; severe threats did not.\n\n## Cultural differences\nDissonance reduction is more common in individualistic than collectivistic social structures.\n### Names and studies\n1. **Heine and Lehman (1997)** — Canadians showed higher spread of alternatives than Japanese participants.\n\n## Triggers of dissonance\nConflict arises from recognizing discrepancies between self-concept and actual behavior.\n### Key terms\n1. **Cognitive dissonance** — Discomfort from behaving in ways seen as inappropriate.\n   **Dissonant cognitions** — Thoughts that are inconsistent with behavior or each other.\n   **Consonant cognitions** — Thoughts that are consistent with behavior and bolster self-esteem.\n\n## Foot-in-the-door technique\nInitial small compliance creates a self-label that encourages later consistency.\n### Key terms\n1. **Self-labeling** — Seeing oneself as a helpful person following initial small request compliance.\n\n## Self-perception\nInternal states are inferred from observable behavior when internal cues are weak.\n### Key terms\n1. **Self-perception theory** — Using one's own behavior as a guide for thoughts and feelings.\n### Names and studies\n1. **Bem (1972)** — Proposes people infer internal states from their own observable behaviors.\n\n## Benjamin Franklin effect\nPerforming favors leads to increased liking for the recipient to maintain consistency.\n### Key terms\n1. **Behavior-to-attitude shift** — Internalizing positive attitudes after performing helpful favors for others."}</script>
+<script>
+const D = JSON.parse(document.getElementById('quiz-data').textContent);
+const KEY = 'lq:' + D.id;
+const $ = s => document.querySelector(s);
+const esc = t => { const d=document.createElement('div'); d.textContent = t==null?'':t; return d.innerHTML; };
+const G_OK = '✓', G_NO = '✕';
+
+/* WHY A QUESTION IS ON THE EXAM. One glyph, set by the generator in the topic tag, and the
+   only thing the page does with it is show it and group by it. The ORDER of this object is
+   his priority order and the tables below read it, so re-ordering here re-orders the report.
+
+   RE-RANKED 08-14 TO HIS NEW ORDER: *"Wrong questions tested first · Starred · Questions with
+   research (not fix) · Question mark tags · Fix marks · Correct answers."* It has to be kept
+   in step with `POOL_RUNGS` in reinforce.py, which is what actually assigns the glyphs — that
+   list decides which card gets a spot, this one only names the result. Out of step, the
+   report groups a paper by an order the paper was not built in.
+
+   ✎ USED TO SIT FIRST and no longer does. Until 08-12 it was the one he wrote as an
+   instruction rather than a mark, so it led the report; he has since ranked it fifth, and a
+   ✎ question now takes an ordinary spot like every other rung.
+
+   `+` IS NOT A RUNG. Nothing is tagged `+` — it is what a section gets when its quiz was
+   shorter than the quota, which is ordinary rather than exceptional. It is last because a
+   question with no card behind it is the one he has least history with. */
+const SRC = {
+  '✕': 'You got this wrong',
+  '☆': 'Starred in the subchapter quiz',
+  'R': 'Built from your own research',
+  '?': 'You flagged it — no idea at the time',
+  '✎': 'You asked for this one to be rewritten',
+  '$': 'You got it right before — asked a different way',
+  '+': 'New — nothing of yours left to re-ask on this section'
+};
+const SRC_ORDER = Object.keys(SRC);
+function srcName(g){ return SRC[g] || ''; }
+
+/* ---- saved state -------------------------------------------------------------
+   Everything lives in localStorage under the page id. `hash` fingerprints the question
+   set: a Redo regenerates the quiz, and when that happens the old answers describe
+   questions that no longer exist, so the attempt is retired into history rather than
+   shown against the new ones.
+
+   KEYED ON q.qid, NOT ON THE ARRAY INDEX (v2). Skipping and starring have to outlive a
+   rebuild: a question he deleted must stay deleted, and a question he starred must still be
+   starred, even after the quiz is regenerated and the order changes. That is also what makes
+   `skipped` usable later as a permanent exclusion list when exam reuse is built — see qid()
+   in quizpage.py. v1 states are migrated once, on load. */
+function qk(i){ return D.questions[i].qid; }
+function blank(){ return {v:2, hash:D.hash, i:0, answers:{}, pass2:{}, skipped:{}, starred:{},
+                          unsure:{}, hints:{}, phase:1, p2list:null, done:false, at:null,
+                          shuf:{}, history:[]}; }
+function migrate(s){
+  // v1 keyed every map on the array index. The hash matches, so the indices are still valid
+  // and this is a straight re-key — done once, then never again.
+  const re = m => { const o = {}; Object.keys(m||{}).forEach(k=>{
+    const i = +k; if(D.questions[i]) o[qk(i)] = m[k]; }); return o; };
+  s.answers = re(s.answers); s.skipped = re(s.skipped);
+  s.pass2 = {}; s.starred = {}; s.unsure = {}; s.hints = {}; s.phase = 1; s.p2list = null;
+  s.shuf = {};
+  s.v = 2;
+  return s;
+}
+function load(){
+  try{
+    const s = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if(!s) return blank();
+    if(s.hash !== D.hash){
+      const b = blank();
+      b.history = (s.history||[]).slice();
+      // TAKE THE SCORE AS IT WAS RECORDED, never recompute it. These answers were given to
+      // questions that no longer exist, so scoring them against the new set is meaningless —
+      // it turned a real 8/10 into 2/10 in testing. `meta` is written on every save for
+      // exactly this moment.
+      if(s.done) b.history.push({
+        at: s.at,
+        score: (s.meta && typeof s.meta.score === 'number') ? s.meta.score : 0,
+        total: (s.meta && s.meta.total) || Object.keys(s.answers||{}).length,
+        stale: true});
+      b.rebuilt = true;
+      // A REBUILD DOES NOT RESURRECT A DELETED QUESTION. Answers are retired because they
+      // describe questions that may be gone; skipped and starred are decisions ABOUT
+      // questions, so they carry over on qid and simply miss anything no longer present.
+      if(s.v === 2){ b.skipped = s.skipped || {}; b.starred = s.starred || {};
+                     b.unsure = s.unsure || {}; }
+      return b;
+    }
+    if(!s.history) s.history = [];
+    if(s.v !== 2) return migrate(s);
+    if(!s.skipped) s.skipped = {};
+    if(!s.starred) s.starred = {};
+    if(!s.unsure) s.unsure = {};
+    if(!s.hints) s.hints = {};
+    if(!s.pass2) s.pass2 = {};
+    if(!s.phase) s.phase = 1;
+    // Not carried across a rebuild on purpose: blank() empties it. A stored order describes a
+    // set of options that may no longer be the same length — optOrder() throws out any that
+    // no longer fit, so a stale one is harmless anyway.
+    if(!s.shuf) s.shuf = {};
+    return s;
+  }catch(e){ return blank(); }
+}
+function save(){
+  S.meta = {title:D.title, subtitle:D.subtitle, book:D.book, total:active(S).length,
+            at:S.at, done:S.done, score:score(S)};
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+}
+/* Skipped questions leave the run entirely — out of the count, out of the denominator,
+   out of the topic breakdown. Anything less makes "8 / 10" a lie about a quiz of nine. */
+function active(s){ return D.questions.map((_,i)=>i).filter(i => !(s.skipped||{})[qk(i)]); }
+function ans(i){ return S.answers[qk(i)]; }
+function ans2(i){ return S.pass2[qk(i)]; }
+function firstRight(i){ return ans(i) === D.questions[i].correct; }
+/* THE SECOND PASS REDEEMS. Wrong first, right second → the question counts as right; wrong
+   both times stays wrong, and there is no third pass. The first answer is never overwritten,
+   which is what lets the end card say "10 right, +2 redeemed" instead of quietly rewriting a
+   10 into a 12. */
+function finalRight(i){ return firstRight(i) || ans2(i) === D.questions[i].correct; }
+function score(s){ return active(s).reduce((n,i)=> n + (finalRight(i) ? 1 : 0), 0); }
+function redeemed(){ return active(S).filter(i => !firstRight(i) && ans2(i) === D.questions[i].correct); }
+/* What a second pass would still have to cover: wrong on the first pass and not yet
+   re-answered. Empty → no button, which is the "if there are no mistakes there is no second
+   pass" rule and also what ends the round rather than looping it. */
+function pending2(){
+  return active(S).filter(i => ans(i) !== undefined && !firstRight(i) && ans2(i) === undefined);
+}
+/* The questions THIS pass runs over. Frozen into p2list when the second pass starts, so
+   answering one correctly cannot shrink the list under his feet mid-run. */
+function runList(){
+  if(S.phase === 2 && S.p2list) return S.p2list.filter(i => !S.skipped[qk(i)]);
+  return active(S);
+}
+function pick(i){ return S.phase === 2 ? ans2(i) : ans(i); }
+
+/* ---- THE ON-SCREEN OPTION ORDER ------------------------------------------------------
+   A DISPLAY LAYER AND NOTHING MORE. `S.shuf[qid]` is a list of ORIGINAL option indices in
+   the order they are drawn; every button still carries its original index in `data-k`, so
+   `S.answers`, `q.correct`, the review list, the study sheet and the exam export all keep
+   reading exactly what they read before and none of them ever learn this exists. Reordering
+   the array itself would silently re-point his saved answers at different options — the same
+   trap the build-time shuffle avoids by being deterministic (see shuffle_options()).
+
+   NO ENTRY MEANS THE ORDER THE PAGE WAS BUILT WITH, which is already shuffled once, per
+   page id, in Python. This one is only ever written by Redo. */
+function optOrder(i){
+  const n = D.questions[i].options.length;
+  const o = (S.shuf||{})[qk(i)];
+  // Length is the guard: anything stored against a different option count is discarded
+  // rather than half-applied, which would drop or double an option on screen.
+  if(!Array.isArray(o) || o.length !== n) return D.questions[i].options.map((_,k)=>k);
+  return o;
+}
+/* Fisher–Yates, and it REFUSES TO LAND ON THE ORDER IT ALREADY HAD — with four options a
+   plain shuffle repeats itself about one time in twenty-four, and a Redo that changes
+   nothing on screen is the one outcome he pressed the button to avoid. */
+function reshuffleOpts(i){
+  const cur = optOrder(i), n = cur.length;
+  if(n < 2) return;
+  let next;
+  for(let t = 0; t < 12; t++){
+    next = cur.slice();
+    for(let a = n-1; a > 0; a--){
+      const b = Math.floor(Math.random() * (a+1));
+      [next[a], next[b]] = [next[b], next[a]];
+    }
+    if(next.some((v,k)=> v !== cur[k])) break;
+  }
+  if(!S.shuf) S.shuf = {};
+  S.shuf[qk(i)] = next;
+}
+let S = load();
+let lastShown = -1;
+
+/* ---- HIS RESEARCH, kept apart from the attempt ---------------------------------------
+   Its own localStorage key, NOT a field of S, and that is the whole design. S is one
+   attempt: Retake clears it, a rebuilt quiz retires it. What he went and found while
+   answering is neither — it is material, and it has to survive both. Keyed on q.qid like
+   `starred` and `skipped`, so it also survives a Redo that reorders the questions.
+
+   `{ qid: {t: "his text", i: ["data:image/...", ...], f: "how to fix the question"} }` — an
+   entry with none of the three is deleted rather than stored empty, which is what makes
+   `rhas()` a simple truth test.
+
+   `f` IS THE SECOND BOX AND IT IS A DIFFERENT KIND OF THING (08-12). `t` is material — what
+   he went and found, which the generator tests him on. `f` is an INSTRUCTION about the
+   question itself: the stem omitted a detail, the options were ambiguous, the idea should be
+   asked from the other end. They ride together here because they are written in the same
+   moment, and they are split everywhere downstream because one is content and the other is
+   direction. An old entry has no `f` and reads as ''. */
+const RKEY = KEY + ':research';
+function loadResearch(){
+  try{ const r = JSON.parse(localStorage.getItem(RKEY) || '{}');
+       return (r && typeof r === 'object') ? r : {}; }
+  catch(e){ return {}; }
+}
+let R = loadResearch();
+function rget(id){
+  const r = R[id];
+  return {t: (r && r.t) || '', i: (r && r.i) || [], f: (r && r.f) || ''};
+}
+function rput(id, t, imgs, fix){
+  fix = fix || '';
+  if(!t.trim() && !imgs.length && !fix.trim()) delete R[id];
+  else R[id] = {t: t, i: imgs, f: fix};
+  try{ localStorage.setItem(RKEY, JSON.stringify(R)); return true; }
+  catch(e){ return false; }                       // quota — the caller puts it back
+}
+
+/* ---- the written half ------------------------------------------------------------------
+   Three long-form questions on their own tab, generated with the exam by NotebookLM and
+   marked ON THIS PAGE with no network, no key and no credit. His constraint: *"its
+   subjective and hard to do but it needs to be no code, I dont mind comparing them manually
+   if need be but it wold be best if automated somehow."*
+
+   HOW THE MARKING IS HONEST. Each point carries a list of ways of saying it, written by the
+   generator alongside the question. A point whose wording is found is ticked; a point that
+   cannot be settled by wording at all is marked JUDGEMENT and left for him. The page never
+   guesses at the second kind — a marker that quietly awarded them would flatter every
+   answer, which is worse than one that asks.
+
+   ITS OWN STORAGE KEY, like the research box and for the same reason: S is one attempt and a
+   Retake clears it. What he wrote is material, and it outlives the attempt. */
+const FKEY = KEY + ':frq';
+let F = (function(){ try{ return JSON.parse(localStorage.getItem(FKEY) || '{}') || {}; }
+                     catch(e){ return {}; } })();
+function fput(){ try{ localStorage.setItem(FKEY, JSON.stringify(F)); }catch(e){} }
+function fget(i){ const f = F[i] || {}; return {t: f.t || '', m: f.m || {}, done: !!f.done}; }
+
+/* WORD BOUNDARIES, NOT SUBSTRINGS, and this is the difference between marking and
+   flattering: a bare substring search awards "recovers the verb" for the word `implement`
+   sitting inside `implementation`, which is the exact thing the answer was asked to undo.
+   A key ending in `*` keeps its open end on purpose, for stems like `pluralis*`. */
+function keyRe(k){
+  const open = /\*$/.test(k), base = open ? k.slice(0,-1) : k;
+  const lit = base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const head = /^[a-z0-9]/i.test(base) ? '\\b' : '';
+  const tail = (!open && /[a-z0-9]$/i.test(base)) ? '\\b' : '';
+  return new RegExp(head + lit + tail, 'i');
+}
+function findHit(text, keys){
+  const t = ' ' + String(text||'').toLowerCase().replace(/[’']/g, "'").replace(/\s+/g,' ') + ' ';
+  for(let i=0;i<(keys||[]).length;i++){ if(keyRe(keys[i]).test(t)) return keys[i]; }
+  return null;
+}
+function frqHit(fi, ri){
+  const f = D.frq[fi], r = f.rubric[ri], st = fget(fi);
+  if(st.m[ri] !== undefined) return {on: !!st.m[ri], why: 'set'};
+  if(r.judge) return {on: false, why: 'judge'};
+  const found = findHit(st.t, r.k);
+  return {on: !!found, why: found ? found.replace(/\*$/,'') : ''};
+}
+function frqScore(fi){
+  const f = D.frq[fi];
+  let n = 0;
+  f.rubric.forEach((_r, ri) => { if(frqHit(fi, ri).on) n++; });
+  return {n: n, t: f.rubric.length};
+}
+function flushFrq(){
+  document.querySelectorAll('#frqview textarea').forEach(ta => {
+    const i = +ta.dataset.f;
+    F[i] = F[i] || {}; F[i].t = ta.value;
+  });
+  fput();
+}
+function drawFrq(){
+  const box = $('#frqview');
+  if(!box || !(D.frq||[]).length) return;
+  let h = '<p class="say">Three written answers, from the same sources as the paper. Write '
+        + 'one, then mark it: every point that can be settled by what you wrote is checked '
+        + 'for you, and the ones that need judgement are handed back. Click any row to '
+        + 'overrule it.</p>';
+  D.frq.forEach((f, fi) => {
+    const st = fget(fi);
+    h += '<section class="frq"><p class="meta"><span class="num">' + (fi+1) + ' / '
+       + D.frq.length + '</span>'
+       + (f.tag ? '<span class="dot">·</span><span>' + esc(f.tag) + '</span>' : '')
+       + (f.secs ? '<span class="dot">·</span><span class="sec">' + esc(f.secs) + '</span>' : '')
+       + '</p>';
+    if(f.prompt) h += '<blockquote class="stim">' + esc(f.prompt) + '</blockquote>';
+    h += '<h1 class="q">' + esc(f.ask) + '</h1>';
+    if(f.words) h += '<p class="say">About ' + esc(f.words) + ' words.</p>';
+    h += '<textarea class="frqin" data-f="' + fi + '" spellcheck="true" '
+       + 'placeholder="Write your answer.">' + esc(st.t) + '</textarea>'
+       + '<p class="saved" data-wc="' + fi + '"></p>'
+       + '<div class="acts inline"><button class="pill primary" data-mark="' + fi
+       + '">Mark my answer</button>'
+       + '<button class="pill ghost" data-fcopy="' + fi + '">Copy</button></div>'
+       + '<div class="rubric hide" data-rub="' + fi + '"></div></section>';
+  });
+  box.innerHTML = h;
+
+  box.querySelectorAll('textarea').forEach(ta => {
+    const fi = +ta.dataset.f;
+    const count = () => {
+      const n = ta.value.trim() ? ta.value.trim().split(/\s+/).length : 0;
+      const el = box.querySelector('[data-wc="' + fi + '"]');
+      if(el) el.textContent = n + (n === 1 ? ' word' : ' words');
+    };
+    ta.addEventListener('input', () => {
+      F[fi] = F[fi] || {}; F[fi].t = ta.value; fput(); count();
+      if(fget(fi).done) markFrq(fi);
+    });
+    count();
+  });
+  box.querySelectorAll('[data-mark]').forEach(b => {
+    b.onclick = () => { const fi = +b.dataset.mark; F[fi] = F[fi] || {};
+                        F[fi].done = true; fput(); markFrq(fi); };
+  });
+  box.querySelectorAll('[data-fcopy]').forEach(b => {
+    b.onclick = () => copyText(oneFrqMarkdown(+b.dataset.fcopy), b, 'Copy');
+  });
+  D.frq.forEach((_f, fi) => { if(fget(fi).done) markFrq(fi); });
+}
+function markFrq(fi){
+  const f = D.frq[fi], st = fget(fi), box = $('#frqview [data-rub="' + fi + '"]');
+  if(!box) return;
+  box.classList.remove('hide');
+  if(!st.t.trim()){
+    box.innerHTML = '<p class="say">Nothing to mark yet — write an answer first.</p>';
+    return;
+  }
+  let h = '<h3>Marking</h3>';
+  f.rubric.forEach((r, ri) => {
+    const hit = frqHit(fi, ri);
+    let note;
+    if(hit.why === 'set') note = 'Set by you.';
+    else if(hit.why === 'judge') note = 'Nothing here can be settled by wording — read it and decide.';
+    else if(hit.on) note = 'Found “' + esc(hit.why) + '”.';
+    else note = 'Not found. If you said it another way, click to award it.';
+    h += '<div class="rrow ' + (hit.on ? 'hit' : 'miss') + '" data-ri="' + ri + '">'
+       + '<span class="rmark">' + (hit.on ? G_OK : '–') + '</span>'
+       + '<span class="rbody"><span class="rlab">' + esc(r.t)
+       + (r.judge ? '<span class="judge">your call</span>' : '') + '</span>'
+       + '<span class="rnote">' + note + '</span></span></div>';
+  });
+  const s = frqScore(fi);
+  const word = s.n >= s.t - 1 ? 'Strong' : s.n >= s.t - 2 ? 'Solid'
+             : s.n >= 2 ? 'Thin' : 'Missed the question';
+  h += '<div class="rfoot"><span class="rscore">' + s.n + ' <small>/ ' + s.t + '</small></span>'
+     + '<span class="rverdict">' + word + '</span><span class="spacer"></span>'
+     + (f.model ? '<button class="link" data-model="' + fi + '">Model answer</button>' : '')
+     + '</div>';
+  if(f.model) h += '<div class="model hide" data-mv="' + fi + '">' + tinyMd(f.model) + '</div>';
+  box.innerHTML = h;
+
+  box.querySelectorAll('.rrow').forEach(row => {
+    row.onclick = () => {
+      const ri = +row.dataset.ri;
+      F[fi] = F[fi] || {}; F[fi].m = F[fi].m || {};
+      F[fi].m[ri] = !row.classList.contains('hit');
+      fput(); markFrq(fi);
+    };
+  });
+  const mb = box.querySelector('[data-model]');
+  if(mb) mb.onclick = () => {
+    const mv = box.querySelector('[data-mv="' + fi + '"]');
+    mv.classList.toggle('hide');
+    mb.textContent = mv.classList.contains('hide') ? 'Model answer' : 'Hide model answer';
+  };
+}
+function oneFrqMarkdown(fi){
+  const f = D.frq[fi], st = fget(fi), s = frqScore(fi);
+  let out = '### Written ' + (fi+1) + (f.tag ? ' — ' + f.tag : '')
+          + (f.secs ? ' (' + f.secs + ')' : '') + '\n\n';
+  if(f.prompt) out += '> ' + f.prompt + '\n\n';
+  out += '**' + f.ask + '**\n\n' + (st.t.trim() || '_(not answered)_') + '\n\n'
+       + '**Marked ' + s.n + '/' + s.t + '**\n\n';
+  f.rubric.forEach((r, ri) => {
+    out += '- [' + (frqHit(fi, ri).on ? 'x' : ' ') + '] ' + r.t
+         + (r.judge ? ' _(judgement)_' : '') + '\n';
+  });
+  return out;
+}
+/* Only answered ones ride the Copy. An untouched written half would otherwise put three
+   empty questions and eighteen unticked boxes onto the Notion row every week. */
+function frqMarkdown(){
+  const done = (D.frq || []).map((_f, i) => i).filter(i => fget(i).t.trim());
+  if(!done.length) return '';
+  return '\n\n## Written\n\n' + done.map(oneFrqMarkdown).join('\n');
+}
+function copyText(text, btn, back){
+  navigator.clipboard.writeText(text).then(()=>{
+    const old = btn.textContent;
+    btn.textContent = 'Copied';
+    setTimeout(()=>{ btn.textContent = back || old; }, 1400);
+  });
+}
+
+/* ---- rendering ---------------------------------------------------------------- */
+/* The Starred tab only exists while something is starred, and the Study sheet tab only when
+   the quiz shipped with one — a linguistics quiz built before topic tags has none. If that
+   leaves one tab, the whole group goes: a lone "Quiz" button is chrome that says nothing. */
+function syncTabs(){
+  const nstar = Object.keys(S.starred||{}).length;
+  const nfrq = (D.frq || []).length;
+  document.querySelector('.tab[data-tab="starred"]').classList.toggle('hide', !nstar);
+  document.querySelector('.tab[data-tab="sheet"]').classList.toggle('hide', !D.hasSheet);
+  document.querySelector('.tab[data-tab="frq"]').classList.toggle('hide', !nfrq);
+  $('#tabs').classList.toggle('hide', !nstar && !D.hasSheet && !nfrq);
+  if(D.tab === 'starred' && !nstar) setTab('quiz');
+  fitTitle();          // starring one question adds a tab, which moves what the title clears
+}
+
+/* THE TITLE GOES DEAD-CENTRE ONLY IF IT CAN DO IT WHOLE. Measured, not guessed: the title's
+   own width against the bar minus a gutter the width of the tabs on each side. It is
+   re-measured whenever the tabs change and whenever the window does, because both change
+   the answer. See .bar.mid in the CSS for why the fallback exists. */
+function fitTitle(){
+  const bar = document.querySelector('.bar'), t = document.querySelector('.title'),
+        tabs = $('#tabs');
+  if(!bar || !t) return;
+  /* MEASURED CENTRED, THEN PUT BACK IF IT DOES NOT FIT. It has to be done in that order:
+     in the flex layout the title is `flex:1`, so it is as wide as the space beside the tabs
+     whatever the words are, and both scrollWidth and offsetWidth report that width rather
+     than the title's own. .mid makes it `width:max-content`, which is the only state in
+     which it can be asked how wide it actually is. Both classList calls happen inside one
+     frame, so nothing is painted half-way. */
+  bar.classList.add('mid');
+  const side = (tabs && !tabs.classList.contains('hide')) ? tabs.offsetWidth : 0;
+  if(t.getBoundingClientRect().width > bar.clientWidth - 2 * (side + 14))
+    bar.classList.remove('mid');
+}
+function setTab(name){
+  if(D.tab === 'quiz' && name !== 'quiz') flushResearch();
+  if(D.tab === 'frq' && name !== 'frq') flushFrq();
+  D.tab = name;
+  document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===name));
+  $('#band').classList.toggle('hide', name!=='quiz');
+  $('#starredview').classList.toggle('hide', name!=='starred');
+  $('#sheetview').classList.toggle('hide', name!=='sheet');
+  $('#frqview').classList.toggle('hide', name!=='frq');
+  $('#footer').classList.toggle('hide', name!=='quiz');
+  if(name==='quiz'){
+    draw();
+    // Restore the frozen offset rather than recomputing it: answer, read the sheet, come
+    // back — the question must be exactly where he left it.
+    if(quizPad !== null) $('main').style.paddingTop = quizPad;
+  } else {
+    if(name==='starred') drawStarred();
+    if(name==='sheet'){ renderScore(); renderSheetExtras(); }
+    if(name==='frq') drawFrq();
+    $('main').style.paddingTop = BASE_PAD + 'px';
+    window.scrollTo(0,0);
+  }
+}
+
+/* CENTRE THE BLOCK, BUT COMPUTE THE OFFSET ONLY WHEN THE QUESTION CHANGES.
+   `justify-content:center` was the original approach and it is what made the question jump:
+   opening a rationale made the block taller and the centring recomputed underneath him.
+   Measuring once per question and freezing the padding gives both — centred on arrival,
+   immovable afterwards, because answering only ever grows the page downward. */
+const BASE_PAD = 16;
+let quizPad = null;
+
+/* CENTRE ON THE ANSWERED HEIGHT, NOT THE HEIGHT ON SCREEN.
+   Centring on what is visible was wrong in a way that only showed up after answering: the
+   block grows by two rationales, so the top gap stayed large while the last option slid
+   under the footer. Coming back to the same question then looked right, because by then it
+   WAS the answered height being measured — the two states he photographed, from one bug.
+   `reserve` is the height with feedback open, measured off-screen before anything renders. */
+/* CENTRE THE QUESTION HE IS LOOKING AT; ONLY MOVE UP IF THE ANSWER WOULD NOT FIT.
+   Two rules that used to fight, now resolved with a `min` instead of a choice between them:
+
+     centred = the block as it is on screen, centred        ← what he reads
+     fit     = the lowest start that still leaves room for the ANSWERED block
+
+   `min` of the two. On a tall window the answered block still fits inside the centred
+   position, so nothing clamps and the question sits in the middle of the page — *"so i dont
+   have to look at the top too much but just straight at the center"* (08-11). On a short
+   one, `fit` wins and the block rides up exactly as far as it must, which is the 08-10
+   behaviour and no further.
+
+   Either way the padding is computed ONCE per question and frozen, so answering still moves
+   nothing: only the cards below the one he clicked ever change position.
+
+   THE RESEARCH ROW IS DELIBERATELY OUT OF BOTH MEASUREMENTS (08-11). Counting it would
+   centre the whole band and lift the question by half the row — he tried that and preferred
+   it without: *"if research is opened I can scroll down to add it in."* */
+function centreBlock(i){
+  const m = $('main');
+  m.style.paddingTop = BASE_PAD + 'px';
+  const avail = innerHeight - $('header').offsetHeight - $('footer').offsetHeight;
+  // The band's own padding is part of the block, or the box lands low by exactly one padding.
+  const bp = parseFloat(getComputedStyle($('#band')).paddingTop) || 0;
+  const live = $('#quizview').getBoundingClientRect().height + bp * 2;
+  const answered = (i === undefined ? live : answeredHeight(i) + bp * 2);
+  const centred = Math.round((avail - live) / 2);
+  const fit = Math.round(avail - answered);
+  quizPad = Math.max(BASE_PAD, Math.min(centred, fit)) + 'px';
+  m.style.paddingTop = quizPad;
+}
+
+/* The tallest this question can get: a WRONG pick, which opens two rationales rather than
+   one. Rendered into a hidden probe of the same width and thrown away. */
+function answeredHeight(i){
+  const q = D.questions[i];
+  const probe = document.createElement('div');
+  probe.style.cssText = 'position:absolute;left:-99999px;top:0;visibility:hidden';
+  probe.style.width = $('#quizview').getBoundingClientRect().width + 'px';
+  probe.innerHTML = buildQ(i, (q.correct + 1) % q.options.length, false);
+  $('main').appendChild(probe);
+  const h = probe.getBoundingClientRect().height;
+  probe.remove();
+  return h;
+}
+
+/* NEVER BACKWARDS. The old fallback here was `S.i = act[0]`, so skipping a question sent him
+   to question 1 — the whole way back to the start of the quiz. The nearest question AFTER
+   the one that just left is the only sensible landing place. */
+function nextFrom(list, i){
+  const nx = list.find(j => j > i);
+  return nx === undefined ? list[list.length-1] : nx;
+}
+function draw(){
+  if(D.tab!=='quiz') return;
+  $('#band').classList.toggle('off', !!(S.reviewing || S.done));
+  // The box belongs to a question on screen. The end card and the review list have none, so
+  // it goes away there rather than floating under a score.
+  showResearch(!(S.reviewing || S.done));
+  if(S.reviewing) return review();
+  if(S.done) return end();
+  const act = runList();
+  if(!act.length) return end();
+  if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
+  question();
+}
+
+/* Pure markup, no DOM writes and no state changes — so the same builder can render the
+   question and be measured off-screen for the centring reserve. */
+function buildQ(i, picked, fresh, en){
+  const q = D.questions[i];
+  const answered = picked !== undefined;
+  const act = runList(), pos = act.indexOf(i);
+  const starred = !!S.starred[q.qid];
+  const unsure = !!(S.unsure||{})[q.qid];
+  en = en || '';
+
+  // The counter sits top-left above the question, the way the notebook does it, rather than
+  // up in the bar — it belongs with the thing it counts. On a second pass it counts the
+  // second pass, so four wrong answers read as "1 / 4" and not as a broken 16.
+  let h = '<div class="qhead' + en + '"><div class="qcol">'
+        + '<p class="meta"><span class="num">' + (pos+1) + ' / ' + act.length + '</span>'
+        + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        // THE SECTION AND THE GLYPH, on the exam only — a subchapter quiz carries neither and
+        // this line is byte-for-byte what it always was. The section is what it says; the
+        // glyph is why this question is on the paper at all, and it is deliberately JUST the
+        // glyph. His instruction: "the blurb needs to be shortened to just the symbol : in
+        // that its either has them as a tag or it doesnt."
+        + (q.sec ? '<span class="dot">·</span><span class="sec">' + esc(q.sec)
+                 + (q.link ? '<span class="lk">+' + esc(q.link) + '</span>' : '')
+                 + '</span>' : '')
+        + (q.topic ? '<span class="dot">·</span><span>' + esc(q.topic) + '</span>' : '')
+        + (q.src ? '<span class="dot">·</span><span class="src" title="' + srcName(q.src)
+                 + '">' + esc(q.src) + '</span>' : '')
+        + '</p>'
+        + '<h1 class="q">' + esc(q.q) + '</h1></div>'
+        // ? BEFORE ☆, because it is the one pressed while the question is still unanswered:
+        // "no idea" is a thing he knows before he picks, and starring is usually after.
+        // The key is in the tooltip because there is nowhere else on the page that says it,
+        // and a legend down the footer would be four words of chrome on every question.
+        + '<button class="qmark' + (unsure?' on':'') + '" id="qmark" '
+        + 'title="No idea — needs work  ( / )" aria-label="No idea, needs work">?</button>'
+        + '<button class="star' + (starred?' on':'') + '" id="star" title="Star  ( s )" '
+        + 'aria-label="Star">'
+        + (starred?'★':'☆') + '</button>'
+        + '<div class="more"><button class="dots" id="dots" aria-label="More">⋮</button></div>'
+        + '</div>';
+
+  h += '<div class="opts">';
+  // `pos` is where it sits on screen and `k` is which option it is. The LETTER follows the
+  // position — A is whatever is drawn first, always — because the letter is how he says
+  // "that one" with the keyboard. `data-k` follows the option, because that is what gets
+  // stored, scored and exported.
+  optOrder(i).forEach((k,pos)=>{
+    const o = q.options[k];
+    let cls = 'opt' + en, mark = '', lab = '', why = '';
+    if(answered){
+      if(k === q.correct){ cls += ' is-right'; mark = G_OK; lab = 'Right answer'; }
+      else if(k === picked){ cls += ' is-wrong'; mark = G_NO; lab = 'Not quite'; }
+      else cls += ' is-muted';
+      if(lab && fresh) cls += ' fresh';
+      why = q.rationales ? (q.rationales[k]||'') : '';
+    }
+    h += '<button class="'+cls+'" data-k="'+k+'"'+(answered?' disabled':'')+'>'
+       + '<span class="line"><span class="k">'+D.letters[pos]+'.</span>'
+       + '<span class="t">'+esc(o)+'</span>'
+       + '<span class="mark">'+mark+'</span></span>';
+    if(lab){
+      h += '<span class="rat"><span class="ratin">'
+         + '<span class="lab"><span class="g">'+mark+'</span>'+lab+'</span>'
+         + (why ? '<span class="why" style="display:block">'+esc(why)+'</span>' : '')
+         + '</span></span>';
+    }
+    h += '</button>';
+  });
+  return h + '</div>';
+}
+
+function question(fresh){
+  const i = S.i, q = D.questions[i], picked = pick(i);
+  const answered = picked !== undefined;
+  const act = runList();
+  const pos = act.indexOf(i);
+  const isNew = i !== lastShown;
+  lastShown = i;
+
+  $('#rail').style.width = ((pos + (answered?1:0)) / act.length * 100) + '%';
+  $('#quizview').innerHTML = buildQ(i, picked, fresh, isNew ? ' enter' : '');
+  $('#quizview').querySelectorAll('.opt').forEach(b=>{
+    b.onclick = ()=>{
+      // The first pass is never overwritten — a second-pass answer goes in its own map.
+      if(S.phase === 2) S.pass2[qk(i)] = +b.dataset.k; else S.answers[qk(i)] = +b.dataset.k;
+      save(); question(true);
+    };
+  });
+  $('#star').onclick = ()=> toggleStar(i);
+  $('#qmark').onclick = ()=> toggleUnsure(i);
+  $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
+
+  // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
+  // touches it — and nothing above the options ever changes height.
+  const hb = $('#hintbtn'), ht = $('#hinttext');
+  hb.classList.toggle('hide', !q.hint || answered);
+  ht.classList.toggle('hide', !(S.hintOpen && q.hint && !answered));
+  ht.textContent = q.hint || '';
+  hb.onclick = toggleHint;
+
+  // Redo takes the Hint slot the moment the hint leaves it: before the answer the footer
+  // offers help, after it the footer offers a way back. Never both, never an empty gap.
+  const rd = $('#redo');
+  rd.classList.toggle('hide', !answered);
+  rd.onclick = redoQuestion;
+
+  $('#back').classList.remove('hide');
+  $('#next').classList.remove('hide');
+  $('#review').classList.add('hide');
+  $('#retake').classList.add('hide');
+  $('#pass2').classList.add('hide');
+  $('#back').disabled = pos === 0;
+  /* NEXT IS NEVER DISABLED (08-12). It used to be locked until he answered, which made a
+     gap impossible and the recycle below unreachable. He asked for the opposite: Enter
+     always moves on, and the button has to mean the same thing as the key or there are two
+     answers to "what does forward do". It only says Finish when there is nothing left
+     unanswered — with a gap anywhere it says Next, because that is what it does. */
+  $('#next').disabled = false;
+  $('#next').textContent = (pos === act.length-1 && !gaps().length) ? 'Finish' : 'Next';
+  $('#footer').classList.remove('hide');
+  mountResearch(q.qid);
+  // Only when the question changes, and always against the ANSWERED height, so the layout
+  // he lands on is the one he will still be looking at after he picks.
+  if(isNew) centreBlock(i);
+}
+
+/* THE HINT, from the button or from `h`. One path for both, and the BUTTON'S OWN VISIBILITY
+   is the gate: it is already hidden when the question has no hint or has been answered, so
+   there is no second copy of that condition to fall out of step. */
+function toggleHint(){
+  const hb = $('#hintbtn'), ht = $('#hinttext');
+  if(hb.classList.contains('hide')) return;
+  S.hintOpen = !S.hintOpen;
+  ht.classList.toggle('hide', !S.hintOpen);
+  /* RECORDED PER QUESTION, NOT PER PRESS. Still one hint however many times he opens the
+     same one — the number is meant to say how many questions he needed help on, and
+     counting keystrokes would make a fidget look like a gap. It rides in S, so a Retake
+     clears it: it describes this attempt, unlike ☆ and ?.
+
+     SHUTTING IT AGAIN TAKES THE DEDUCTION BACK (08-12, his ask): `h` is next to the keys
+     that answer, so it gets hit by accident, and a projected score docked for a hint he
+     never read is wrong about the only thing that number is for. Open then shut = not
+     used. He can also read it and shut it, and that is his to do — nothing here can tell
+     the two apart, and the projected score is his own instrument to be honest with. */
+  if(S.hintOpen){ if(!S.hints) S.hints = {}; S.hints[qk(S.i)] = true; }
+  else if(S.hints) delete S.hints[qk(S.i)];
+  save();
+}
+
+/* REDO — put this question back the way it was before he answered it, and nothing else.
+   For the mis-click: an option is a full-width card and the row above it is the question,
+   so the wrong one gets hit. It clears the pick FOR THIS PASS only.
+
+   AND IT RESHUFFLES THE OPTIONS (08-14, his ask). A mis-click still shows him the right
+   answer for the moment it takes to press Redo, so putting the same four cards back in the
+   same four places hands him the answer by position — he would be picking a slot he
+   remembers, not an answer he knows. Reshuffled, what he saw is worth nothing. Purely
+   cosmetic: `data-k` still carries the original index, so the pick he then makes is stored,
+   scored and exported exactly as an untouched question's would be. See optOrder().
+
+   WHAT IT DELIBERATELY DOES NOT TOUCH: the research and fix boxes (they live in R, not in
+   S, and what he found stands whatever he clicked), ☆, ?, and the hint. Retake is the one
+   that clears, and it is at the end of the quiz where it belongs.
+
+   No re-centring: `question()` sees the same index, so the frozen padding stays and the
+   block does not jump under him. */
+function redoQuestion(){
+  const i = S.i;
+  if(pick(i) === undefined) return;
+  if(S.phase === 2) delete S.pass2[qk(i)]; else delete S.answers[qk(i)];
+  reshuffleOpts(i);
+  save(); question();
+}
+
+/* STARRING is not the same thing as skipping and the two maps never mix. Starred = worth
+   coming back to, right or wrong, still fully part of the run and the score. Skipped =
+   removed from it. Keeping them apart is what lets exam reuse later take the starred ones as
+   candidates and treat the skipped ones as permanently excluded. */
+function toggleStar(i){
+  const k = qk(i);
+  if(S.starred[k]) delete S.starred[k]; else S.starred[k] = true;
+  save(); syncTabs();
+  const b = $('#star');
+  if(b){ b.textContent = S.starred[k] ? '★' : '☆'; b.classList.toggle('on', !!S.starred[k]); }
+}
+
+/* ? IS NOT ☆ AND IT IS NOT WRONG EITHER. His words: "I have no idea and whether or not I get
+   this right or wrong, it still needs work." So it is a third map beside `starred` and
+   `skipped`, it changes no score, and it survives a Retake and a rebuild exactly as the
+   other two do — a guess that happened to land right is the case it exists for, and that
+   question would otherwise leave no trace anywhere. */
+function toggleUnsure(i){
+  const k = qk(i);
+  if(!S.unsure) S.unsure = {};
+  if(S.unsure[k]) delete S.unsure[k]; else S.unsure[k] = true;
+  save();
+  const b = $('#qmark');
+  if(b) b.classList.toggle('on', !!S.unsure[k]);
+}
+
+/* ---- the research box ----------------------------------------------------------------
+   One box per question, opened from a row under the options, holding TWO panes side by side.
+
+   WHY TWO AND NOT ONE (08-12). Everything he wrote here used to land under a single
+   `## My research` heading, and the exam prompt reads that heading as MATERIAL — the rung-4
+   pile of things never yet asked. That is right for a definition he looked up and wrong for
+   "this stem never said which joint": an instruction filed as material gets tested rather
+   than obeyed, so the flawed question came back unchanged. So the pane on the left is what
+   he FOUND and the pane on the right is what the QUESTION should have been, they travel to
+   the sheet under two different headings, and the pipeline routes them to two different
+   places — content into the exam's sources, direction into the exam's prompt.
+
+   THE BOX SHUTS WHEN THE QUESTION CHANGES. It used to stay open across the whole quiz on the
+   theory that an evening of looking things up should not need it reopening fifteen times;
+   in practice he ended up scrolling past an empty box on every question he had nothing to
+   say about. The CONTENT is per question and always was. */
+const rpanel = $('#research'), rtoggle = $('#rtoggle'), rbody = $('#rbody');
+const rtext = $('#rtext'), rfix = $('#rfix'), rshots = $('#rshots'), rsay = $('#rsay');
+let rOpen = false;
+let rFor = null;          // the qid the box currently holds
+let rTimer = null;
+
+function showResearch(on){ if(rpanel) rpanel.classList.toggle('hide', !on); }
+
+/* Write both textareas back to the question they belong to. Called before the box is pointed
+   at a different question, on blur, on a debounce while typing, and on the way out of the
+   page — the textareas are the live copy and everything else reads from R. */
+function flushResearch(){
+  if(rFor === null || !rtext) return;
+  const cur = rget(rFor);
+  if(!rput(rFor, rtext.value, cur.i, rfix ? rfix.value : cur.f)) warnFull();
+  paintToggle();
+}
+function mountResearch(id){
+  if(!rpanel) return;
+  /* FLUSHED ON EVERY MOUNT, INCLUDING A RE-MOUNT OF THE SAME QUESTION. Below this line the
+     panes are overwritten from R, so anything still sitting in the debounce is gone — and
+     answering re-mounts. Type a sentence, click an option inside 400ms, and the sentence was
+     silently deleted. Only the cross-question case used to flush, which is why that went
+     unnoticed: it needs the two events within a fifth of a second of each other. */
+  if(rFor !== null){ clearTimeout(rTimer); flushResearch(); }
+  // A NEW question, so the box goes away with the old one. Same question re-rendered leaves
+  // it exactly as he left it, mid-paste and all.
+  if(rFor !== null && rFor !== id) rOpen = false;
+  rFor = id;
+  const r = rget(id);
+  rtext.value = r.t;
+  if(rfix) rfix.value = r.f;
+  rbody.classList.toggle('hide', !rOpen);
+  rsay.textContent = ''; rsay.classList.remove('warn');
+  drawShots();
+  paintToggle();
+}
+/* The row says what is behind it, so a question he has already written on is visible
+   without opening anything. */
+function paintToggle(){
+  if(!rtoggle) return;
+  const r = rget(rFor), n = r.i.length, bits = [];
+  if(r.t.trim()) bits.push('notes');
+  if(n) bits.push(n + (n > 1 ? ' images' : ' image'));
+  if(r.f.trim()) bits.push('a fix');
+  rtoggle.textContent = bits.length ? ('My research · ' + bits.join(', '))
+                                    : '+ Add research or a fix';
+  rtoggle.classList.toggle('has', !!bits.length);
+}
+function drawShots(){
+  const imgs = rget(rFor).i;
+  rshots.classList.toggle('hide', !imgs.length);
+  rshots.innerHTML = imgs.map((src, n) =>
+    '<span class="shot"><img src="' + src + '" alt="Pasted image ' + (n+1) + '">'
+    + '<button class="x" data-rm="' + n + '" aria-label="Remove image">×</button></span>').join('');
+  rshots.querySelectorAll('[data-rm]').forEach(b => {
+    b.onclick = () => {
+      const imgs2 = rget(rFor).i.slice();
+      imgs2.splice(+b.dataset.rm, 1);
+      rput(rFor, rtext.value, imgs2, rfix ? rfix.value : '');
+      drawShots(); paintToggle();
+      rsay.textContent = ''; rsay.classList.remove('warn');
+    };
+  });
+}
+
+/* IMAGES ARE SHRUNK BEFORE THEY ARE STORED, and that is not a nicety — localStorage is a
+   few megabytes for the whole origin, and one full-size screenshot off a web page is
+   comfortably a megabyte of base64. Long edge 1100px, WebP where the browser has it,
+   JPEG where it does not. A diagram is still readable and a page's worth of them fits. */
+function shrink(file, cb){
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  img.onload = () => {
+    const max = 1100;
+    const s = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+    const c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round(img.naturalWidth * s));
+    c.height = Math.max(1, Math.round(img.naturalHeight * s));
+    const ctx = c.getContext('2d');
+    // JPEG has no transparency and paints it black, so a white plate goes down first —
+    // most diagrams he will paste are black line art on a transparent background.
+    ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, c.width, c.height);
+    ctx.drawImage(img, 0, 0, c.width, c.height);
+    URL.revokeObjectURL(url);
+    let out = '';
+    try{ out = c.toDataURL('image/webp', 0.72); }catch(e){}
+    if(out.slice(0, 15) !== 'data:image/webp') out = c.toDataURL('image/jpeg', 0.78);
+    cb(out);
+  };
+  img.onerror = () => { URL.revokeObjectURL(url); cb(null); };
+  img.src = url;
+}
+function warnFull(){
+  rsay.textContent = 'This browser is out of room — remove an image and try again.';
+  rsay.classList.add('warn');
+}
+
+/* ONE WAY IN, from the row or from `r`, and it lands him in the box ready to paste:
+   scrolled to, focused, caret at the end. `block:'center'` rather than `'nearest'` because
+   the box opens below the fold on a long question and 'nearest' stops the moment its top
+   edge is visible — which is not far enough to type in. The LEFT pane takes the focus: `r`
+   means "I want to paste this now", and what he pastes is research. */
+function openResearch(pane){
+  if(!rpanel || rpanel.classList.contains('hide')) return;
+  rOpen = true;
+  rbody.classList.remove('hide');
+  const el = (pane === 'fix' && rfix) ? rfix : rtext;
+  el.focus();
+  el.setSelectionRange(el.value.length, el.value.length);
+  rbody.scrollIntoView({block:'center', behavior:'smooth'});
+}
+/* `f` GOES STRAIGHT TO THE RIGHT-HAND PANE, and it never closes the box — it moves the caret
+   into it, whether the box was shut or already open on the other pane. That asymmetry with
+   `r` is the honest one: `r` is a mode he sits in for a while, `f` is one sentence and out,
+   and a key that sometimes closed the box he was aiming at would be the wrong tool for it.
+   Esc is the closer, from either pane. */
+function openFix(){ openResearch('fix'); }
+/* ONE WAY OUT, and it saves on the way — the debounce may not have fired, and a box that
+   swallowed the last sentence he typed would be worse than one that never closed. The blur
+   matters as much as the hide: with the caret still parked in a hidden textarea, every
+   option key afterwards would be typed into it instead of answering. */
+function closeResearch(){
+  if(!rpanel) return;
+  clearTimeout(rTimer);
+  flushResearch();
+  rOpen = false;
+  rbody.classList.add('hide');
+  const a = document.activeElement;
+  if(a && rbody.contains(a)) a.blur();
+}
+function toggleResearch(){
+  if(!rpanel || rpanel.classList.contains('hide')) return;
+  if(rOpen) closeResearch(); else openResearch();
+}
+
+if(rpanel){
+  rtoggle.onclick = toggleResearch;
+  [rtext, rfix].forEach(el => {
+    if(!el) return;
+    el.addEventListener('input', () => { clearTimeout(rTimer); rTimer = setTimeout(flushResearch, 400); });
+    el.addEventListener('blur', flushResearch);
+  });
+
+  /* ENTER-MOVES-ON IS NOT HANDLED HERE. It lives in the one document keydown handler, with
+     every other key on the quiz tab — see the ENTER IS THE ONE EXCEPTION block there. A
+     second listener on this element would be a second path to the same action, and briefly
+     was: both fired on one press and the quiz advanced two questions. */
+
+  /* NO preventDefault. A copied web selection puts BOTH a text flavour and an image file on
+     the clipboard; swallowing the event to grab the image would throw the text away. The
+     text lands in the textarea by itself and the files are picked off beside it. */
+  rbody.addEventListener('paste', e => {
+    const items = (e.clipboardData && e.clipboardData.items) || [];
+    const files = [];
+    for(let n = 0; n < items.length; n++){
+      if(items[n].kind === 'file' && /^image\//.test(items[n].type)){
+        const f = items[n].getAsFile();
+        if(f) files.push(f);
+      }
+    }
+    if(!files.length) return;
+    const target = rFor;
+    rsay.textContent = 'Adding ' + files.length + ' image' + (files.length > 1 ? 's' : '') + '…';
+    rsay.classList.remove('warn');
+    let left = files.length;
+    files.forEach(f => shrink(f, data => {
+      left--;
+      if(data && target === rFor){
+        // Hold the list as it was: a failed rput has already written the oversized entry
+        // into R, so the revert needs a copy taken BEFORE the attempt, not after it.
+        const prev = rget(target).i.slice(), fx = rfix ? rfix.value : '';
+        if(rput(target, rtext.value, prev.concat([data]), fx)){ drawShots(); paintToggle(); }
+        else { rput(target, rtext.value, prev, fx); warnFull(); return; }
+      }
+      if(left === 0 && !rsay.classList.contains('warn')) rsay.textContent = '';
+    }));
+  });
+  addEventListener('beforeunload', flushResearch);
+}
+
+/* One question can be dropped from the run, the way the notebook lets him delete one —
+   except nothing is deleted in NotebookLM, so a rebuild brings it back and the end card
+   can put it back at any time.
+
+   SKIPPING THE LAST QUESTION SUBMITS. It used to send him back to question 1, because the
+   skipped index left `active()` and draw()'s fallback was `act[0]`. Deleting the last item
+   in a list means the list is finished, so this does exactly what Finish does. */
+function openMenu(){
+  const host = $('.more');
+  if(host.querySelector('.menu')) return closeMenu();
+  const m = document.createElement('div');
+  m.className = 'menu';
+  m.innerHTML = '<button id="skipq">Skip this question</button>';
+  host.appendChild(m);
+  m.querySelector('#skipq').onclick = ()=>{
+    const list = runList(), pos = list.indexOf(S.i);
+    if(list.length <= 1) return closeMenu();        // never skip the last one standing
+    const wasLast = pos === list.length - 1;
+    S.skipped[qk(S.i)] = true;
+    delete S.answers[qk(S.i)];
+    delete S.pass2[qk(S.i)];
+    delete S.starred[qk(S.i)];                     // a deleted question is not a starred one
+    if(S.unsure) delete S.unsure[qk(S.i)];         // nor one that still needs work
+    closeMenu();
+    syncTabs();
+    if(wasLast){ finish(); return; }
+    // After the removal the list has shrunk, so the item now AT `pos` is the one that
+    // followed the skipped question. Forwards, never back to the top.
+    S.i = runList()[pos];
+    S.hintOpen = false;
+    lastShown = -1;
+    save(); question(); window.scrollTo(0,0);
+  };
+  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
+}
+function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(); }
+
+function finish(){
+  S.done = true; S.at = new Date().toISOString();
+  recycling = false;          // the clean-up pass is over; a second pass starts in order
+  save(); end(); window.scrollTo(0,0);
+}
+
+/* One scored breakdown, keyed by whatever `keyOf` pulls off a question. Returns '' when no
+   question carries the field, which is what keeps the subchapter quiz's end card identical.
+   Rows come out in SRC_ORDER when the key is a glyph and in natural order otherwise, so the
+   provenance table always reads down his priority ladder even if the paper is shuffled. */
+function group(act, keyOf, head, label){
+  const by = {};
+  act.forEach(i=>{
+    // A CROSS-SECTION QUESTION COUNTS IN BOTH SECTIONS, because it tested both. It is one
+    // question on the paper and two lines in the report, so the column does not add up to
+    // the total — which is correct, and the alternative is worse: filing it under whichever
+    // section happened to be written first would hide the other one's weakness entirely.
+    const ks = [].concat(keyOf(i) || []);
+    ks.forEach(k=>{
+      if(!k) return;
+      by[k] = by[k] || {n:0,t:0};
+      by[k].t++;
+      if(finalRight(i)) by[k].n++;
+    });
+  });
+  let keys = Object.keys(by);
+  if(!keys.length) return '';
+  const ranked = keys.filter(k => SRC_ORDER.indexOf(k) >= 0).length === keys.length;
+  keys = ranked ? SRC_ORDER.filter(k => by[k])
+                : keys.sort((a,b)=>a.localeCompare(b, undefined, {numeric:true}));
+  let h = '<div class="topics"><h3>'+esc(head)+'</h3>';
+  keys.forEach(k=>{
+    h += '<div class="trow"><span>'+(label ? label(k) : esc(k))+'</span>'
+       + '<span class="n">'+by[k].n+'/'+by[k].t+'</span>'
+       + '<span class="tbar"><i style="width:'+(by[k].n/by[k].t*100)+'%"></i></span></div>';
+  });
+  return h + '</div>';
+}
+
+function end(){
+  const act = active(S), n = score(S), t = act.length;
+  const pct = t ? Math.round(n/t*100) : 0;
+  const red = redeemed().length;
+  let h = '<p class="score">'+n+' <small>/ '+t+'</small></p>'
+        + '<p class="sub">'+pct+'% · '+when(S.at)+'</p>'
+        + '<div class="chart"><i class="r" style="width:'+(t?n/t*100:0)+'%"></i>'
+        + '<i class="w" style="width:'+(t?(t-n)/t*100:0)+'%"></i></div>'
+        + '<p class="legend"><span>'+G_OK+' <b>'+n+'</b> correct</span>'
+        + '<span>'+G_NO+' <b>'+(t-n)+'</b> wrong</span>'
+        // The chart stays TWO segments. A third fill for redemptions would need its own
+        // grayscale-safe hatch and would make the one number he reads harder to read; the
+        // count says it in words instead.
+        + (red ? '<span>+<b>'+red+'</b> on the second pass</span>' : '') + '</p>';
+
+  const by = {};
+  act.forEach(i=>{
+    const q = D.questions[i], k = q.topic || '';
+    if(!k) return;
+    by[k] = by[k] || {n:0,t:0};
+    by[k].t++;
+    if(finalRight(i)) by[k].n++;
+  });
+  const keys = Object.keys(by);
+  if(keys.length){
+    h += '<div class="topics"><h3>Topics covered</h3>';
+    keys.forEach(k=>{
+      h += '<div class="trow"><span>'+esc(k)+'</span><span class="n">'+by[k].n+'/'+by[k].t+'</span>'
+         + '<span class="tbar"><i style="width:'+(by[k].n/by[k].t*100)+'%"></i></span></div>';
+    });
+    h += '</div>';
+  }
+
+  /* THE TWO EXAM-ONLY TABLES. Both are built from fields a subchapter quiz never carries, so
+     both are simply absent there — no flag, no branch anywhere else, and nothing about the
+     quiz page changed the day these were added.
+
+     BY SUBCHAPTER is the one he asked for by name: a paper spanning seven sections that can
+     only report one number tells him he scored 78% and nothing about where to go back to.
+     BY WHY IT WAS ASKED is the one that closes the loop — it is the only place that answers
+     whether the thing he got wrong last week actually stuck. */
+  h += group(act, i => [D.questions[i].sec, D.questions[i].link], 'By subchapter', null);
+  h += group(act, i => D.questions[i].src, 'Why it was asked',
+             g => SRC[g] ? esc(g) + '  ' + esc(SRC[g]) : esc(g));
+
+  if(S.history.length){
+    h += '<p class="hist">Earlier attempts: ' + S.history.slice().reverse()
+        .map(a=>'<span>'+a.score+'/'+a.total+' on '+when(a.at)+'</span>').join(' · ') + '</p>';
+  }
+  const nskip = Object.keys(S.skipped||{}).length;
+  if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
+              + '<button class="link" id="unskip">put them back</button></p>';
+  if(S.rebuilt) h += '<p class="note">These questions were rebuilt since your last attempt.</p>';
+  h += '<p class="note"><a href="'+D.root+'">All my quizzes</a>'
+     + (D.notebook ? ' · <a href="'+D.notebook+'">Open in Gemini Notebook</a>' : '') + '</p>';
+
+  $('#quizview').innerHTML = h;
+  const u = $('#unskip');
+  if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  $('#rail').style.width = '100%';
+  $('#band').classList.add('off');
+  showResearch(false);
+  $('#footer').classList.remove('hide');
+  $('#back').classList.add('hide');
+  $('#hintbtn').classList.add('hide');
+  $('#hinttext').classList.add('hide');
+  $('#redo').classList.add('hide');
+  $('#next').classList.add('hide');
+  $('#review').classList.remove('hide');
+  $('#review').textContent = 'Review quiz';
+  $('#retake').classList.remove('hide');
+  // No wrong answers left to retry → no button at all, which is also what stops the second
+  // pass looping into a third: anything answered on pass two leaves pending2() for good.
+  $('#pass2').classList.toggle('hide', pending2().length === 0);
+  renderScore();
+  lastShown = -1;
+  centreBlock();
+}
+
+/* One question's full record: the right answer, what he chose on each pass, the rationale.
+   Shared by the review list and the Starred tab so the two can never drift apart. */
+function itemHTML(i, n){
+  const q = D.questions[i], first = ans(i), second = ans2(i);
+  let h = '<div class="item">';
+  if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
+  h += '<p class="qq">'+(n===undefined?'':(n+1)+'. ')+esc(q.q)+'</p>'
+     + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
+  if(!firstRight(i)){
+    h += '<p class="rline mine"><span class="g">'+G_NO+'</span><span>You chose: '
+       + (first===undefined ? 'nothing' : esc(q.options[first])) + '</span></p>';
+    if(second !== undefined){
+      h += '<p class="rline mine"><span class="g">'+(second===q.correct?G_OK:G_NO)+'</span>'
+         + '<span>Second pass: '+esc(q.options[second])
+         + (second===q.correct ? ' — redeemed' : '') + '</span></p>';
+    }
+  }
+  const why = q.rationales ? q.rationales[q.correct] : '';
+  if(why) h += '<p class="why" style="padding-left:0">'+esc(why)+'</p>';
+  return h + '</div>';
+}
+
+function review(){
+  let h = '<div class="rev"><h3>Every question</h3>';
+  active(S).forEach((i,n)=>{ h += itemHTML(i, n); });
+  h += '</div>';
+  $('#quizview').innerHTML = h;
+  $('#band').classList.add('off');
+  showResearch(false);
+  $('#footer').classList.remove('hide');
+  $('#back').classList.add('hide');
+  $('#hintbtn').classList.add('hide');
+  $('#hinttext').classList.add('hide');
+  $('#redo').classList.add('hide');
+  $('#next').classList.add('hide');
+  $('#pass2').classList.add('hide');
+  $('#review').classList.remove('hide');
+  $('#review').textContent = 'Summary';
+  $('#retake').classList.remove('hide');
+  quizPad = BASE_PAD + 'px';                      // a long list, never centred
+  $('main').style.paddingTop = quizPad;
+  window.scrollTo(0,0);
+}
+
+/* ---- the Starred tab ---------------------------------------------------------------
+   Its own view rather than a section of the review list, because the point is to find them
+   again quickly on a later visit — including on a quiz he has not retaken. Right or wrong
+   does not matter; "this one is important" is the only thing being recorded. */
+function drawStarred(){
+  const list = D.questions.map((_,i)=>i).filter(i => S.starred[qk(i)]);
+  if(!list.length){
+    $('#starredview').innerHTML = '<h3>Starred</h3><p class="empty">Nothing starred yet. '
+      + 'Use the ☆ beside a question.</p>';
+    return;
+  }
+  let h = '<h3>Starred · '+list.length+'</h3>';
+  list.forEach((i,n)=>{
+    h += itemHTML(i, n).replace('</div>',
+      '<p class="rline"><button class="link" data-unstar="'+i+'">Unstar</button></p></div>');
+  });
+  $('#starredview').innerHTML = h;
+  $('#starredview').querySelectorAll('[data-unstar]').forEach(b=>{
+    b.onclick = ()=>{ delete S.starred[qk(+b.dataset.unstar)]; save(); syncTabs(); drawStarred(); };
+  });
+}
+
+/* ---- the score, written where he copies from ---------------------------------------- */
+/* THE PROJECTED SCORE DOCKS A MARK FOR EVERY HINT, which is his rule and his reasoning:
+   a high score with a lot of hints "is actually a sign that you didn't know them very
+   well". So `(right − hints) / total`, floored at zero — the number he would have got
+   with the hints shut. It never touches the real score; both are printed, and the gap
+   between them is the thing worth looking at.
+
+   Hints are counted per question, so this cannot go more negative than the score itself. */
+function scoreParts(){
+  const act = active(S), n = score(S), t = act.length, red = redeemed().length;
+  const hints = act.filter(i => (S.hints || {})[qk(i)]).length;
+  const proj = Math.max(0, n - hints);
+  return {n:n, t:t, pct: t ? Math.round(n/t*100) : 0, red:red, first:n-red, wrong:t-n,
+          skipped: Object.keys(S.skipped||{}).length,
+          hints:hints, proj:proj, projpct: t ? Math.round(proj/t*100) : 0};
+}
+function hintLine(p){
+  if(!p.hints) return 'No hints used';
+  return p.hints + ' hint' + (p.hints > 1 ? 's' : '') + ' used · projected '
+       + p.proj + ' / ' + p.t + ' (' + p.projpct + '%) with the hints docked';
+}
+function scoreMarkdown(){
+  if(!S.done) return '';
+  const p = scoreParts();
+  return '**Quiz:** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
+       + (p.red ? ', +' + p.red + ' redeemed' : '') + ', ' + p.wrong + ' wrong'
+       + (p.skipped ? ', ' + p.skipped + ' skipped' : '') + ' · ' + when(S.at)
+       + '\n**Hints:** ' + hintLine(p);
+}
+function renderScore(){
+  const el = $('#scorecard');
+  if(!el) return;
+  el.classList.toggle('hide', !S.done);
+  if(!S.done) return;
+  const p = scoreParts();
+  el.innerHTML = '<b>'+p.n+' / '+p.t+'</b><span>'+p.pct+'% · '+p.first+' right'
+    + (p.red ? ', +'+p.red+' on the second pass' : '') + ', '+p.wrong+' wrong'
+    + (p.skipped ? ' · '+p.skipped+' skipped' : '') + ' · '+when(S.at)+'</span>'
+    + '<span class="proj">'+hintLine(p)+'</span>';
+}
+
+function when(iso){
+  if(!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString(undefined,{month:'short',day:'numeric'})
+       + ' ' + d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+}
+
+/* ---- controls ------------------------------------------------------------------ */
+function goTo(i){
+  S.i = i; S.hintOpen = false; save(); question(); window.scrollTo(0,0);
+}
+/* Everything in this pass he has not answered. On the second pass that means not
+   re-answered, because `pick()` reads the pass he is on. */
+function gaps(){ return runList().filter(i => pick(i) === undefined); }
+
+/* THE END OF THE LIST IS NOT THE END OF THE QUIZ (08-12, his ask). Enter moves on whether or
+   not he answered, so a run can reach the last question with holes in it — and a quiz handed
+   in with holes is just a lower score for no reason. So the last question sends him back to
+   the first thing he left blank, and from then on forward means "the next blank one" until
+   there are none, which is the moment Finish becomes real.
+
+   `recycling` is the mode, and it has to be a mode rather than a rule about gaps: before he
+   has reached the end, forward means the next question in order — that is a quiz. After it,
+   forward means the next hole — that is a clean-up pass. The same key, two jobs, and which
+   one it is doing is decided by whether he has been to the end yet.
+
+   NOT SAVED. A reload starts him at the top of the list again, where in-order is right. */
+let recycling = false;
+function advance(){
+  const act = runList(), pos = act.indexOf(S.i), left = gaps();
+  if(recycling){
+    if(!left.length){ finish(); return; }
+    const nx = left.find(j => j > S.i);
+    const to = nx !== undefined ? nx : left[0];
+    if(to === S.i) return;                        // the last hole is the one he is looking at
+    goTo(to); return;
+  }
+  if(pos < act.length - 1){ goTo(act[pos + 1]); return; }
+  if(left.length){ recycling = true; goTo(left[0]); return; }
+  finish();
+}
+function step(dir){
+  if(dir > 0){ advance(); return; }
+  const act = runList(), nx = act[act.indexOf(S.i) - 1];
+  if(nx === undefined) return;
+  goTo(nx);
+}
+$('#next').onclick = ()=> step(1);
+$('#back').onclick = ()=> step(-1);
+$('#review').onclick = ()=>{ S.reviewing = !S.reviewing; draw(); };
+/* THE SECOND PASS — the preferred way out of the end card, and the one that keeps
+   everything. It re-runs only what he got wrong, on a list frozen at the moment he presses
+   it, and a right answer here redeems the question in the final score. */
+$('#pass2').onclick = ()=>{
+  const list = pending2();
+  if(!list.length) return;
+  S.phase = 2; S.p2list = list; S.i = list[0];
+  S.done = false; S.reviewing = false; S.hintOpen = false;
+  lastShown = -1;
+  save(); draw(); window.scrollTo(0,0);
+};
+/* RETAKE CLEARS, which is why it sits apart from the other two. The attempt goes into
+   history first so nothing is lost, and the questions he deleted or starred stay that way —
+   they are decisions about the quiz, not part of one attempt at it. */
+$('#retake').onclick = ()=>{
+  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length});
+  const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
+  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  lastShown = -1;
+  save(); syncTabs(); renderScore(); draw();
+};
+document.querySelectorAll('.tab').forEach(b=> b.onclick = ()=> setTab(b.dataset.tab));
+
+/* ---- his own additions -------------------------------------------------------------
+   A textarea, localStorage, and string work. NO API, no model, nothing paid — the
+   formatting below is deterministic, which is the whole reason it can be free.
+
+   The loop this closes: he pastes the result into the subchapter's Notion row, and the
+   weekly exam already scrapes that row first (board-notes.md → exam-notes.md). So anything
+   he adds here becomes exam content without touching the pipeline. */
+const NKEY = KEY + ':notes';
+const ta = $('#mynotes'), savedmsg = $('#savedmsg');
+
+function loadNotes(){ try{ return localStorage.getItem(NKEY) || ''; }catch(e){ return ''; } }
+function saveNotes(){
+  try{ localStorage.setItem(NKEY, ta.value); }catch(e){}
+  savedmsg.textContent = ta.value.trim() ? 'Saved in this browser' : '';
+}
+
+/* His shorthand → the sheet's own markdown shape, so the paste reads as one document
+   rather than a tidy half and a raw half. Bolds the term before a `:` or a dash, keeps his
+   indentation as nesting, and numbers everything (markdown renumbers `1.` itself, and
+   Notion honours that on paste). A line he already formatted is left alone. */
+function fmtLine(t){
+  if(/\*\*/.test(t)) return t;
+  let m = t.match(/^([^:]{1,60}?):\s+(.+)$/);
+  if(!m) m = t.match(/^(.{1,60}?)\s+[—–-]\s+(.+)$/);
+  return m ? '**' + m[1].trim() + '** — ' + m[2].trim() : t;
+}
+function noteMarkdown(){
+  const out = [];
+  (ta.value || '').split('\n').forEach(raw=>{
+    const line = raw.replace(/\t/g, '  ');
+    const m = line.match(/^(\s*)(?:[-*+]\s+|\d+[.)]\s+)?(.*)$/);
+    const text = m[2].trim();
+    if(!text) return;
+    const depth = Math.min(Math.floor(m[1].length / 2), 2);
+    out.push('   '.repeat(depth) + '1. ' + fmtLine(text));
+  });
+  return out.join('\n');
+}
+/* ---- ☆ and ? read back on the sheet --------------------------------------------------
+   Both marks end up in the same place for the same reason he gave: he stopped and marked
+   the question, so it is worth having beside the sheet when he pastes it into Notion — and
+   the ? ones especially, because a lucky guess leaves no other trace. Each entry is the
+   full record from `itemHTML`, so the sheet and the review list can never disagree. */
+function markedList(map){
+  const out = [];
+  D.questions.forEach((q, i) => { if((map || {})[q.qid]) out.push({n: i + 1, i: i, q: q}); });
+  return out;
+}
+
+/* WHAT HE GOT WRONG — the one part of the record that never left the browser.
+   Starred, Needs work and My research have ridden the Copy into Notion since 08-11, and the
+   week's exam is built from that Notion row; the wrong answers were the missing rung, so the
+   exam could prefer a question he flagged but not one he actually failed. This is that rung,
+   and it costs one section in a paste he already makes.
+
+   FINAL verdicts, so a question redeemed on the second pass is NOT listed — he ended the
+   attempt knowing it. Skipped questions are excluded for the same reason as everywhere else:
+   they were taken out of the run. */
+function missedList(){
+  const out = [];
+  active(S).forEach(i => {
+    if(ans(i) !== undefined && !finalRight(i)) out.push({n: i + 1, i: i, q: D.questions[i]});
+  });
+  return out.sort((a,b)=>a.n-b.n);
+}
+function renderMarked(sel, list, head, say){
+  const box = $(sel);
+  if(!box) return;
+  box.classList.toggle('hide', !list.length);
+  if(!list.length) return;
+  let h = '<h3>' + head + ' · ' + list.length + '</h3><p class="say">' + say + '</p>';
+  list.forEach(x => { h += itemHTML(x.i, x.n - 1); });
+  box.innerHTML = h;
+}
+function markedMarkdown(list, head){
+  if(!list.length) return '';
+  let out = '\n\n## ' + head + '\n';
+  list.forEach(x => {
+    const q = x.q, why = q.rationales ? q.rationales[q.correct] : '';
+    out += '\n### ' + x.n + '. ' + q.q + '\n\n'
+         + '**Answer:** ' + q.options[q.correct] + '\n'
+         + (why ? '\n' + why + '\n' : '');
+  });
+  return out;
+}
+function markedHTML(list, head){
+  if(!list.length) return '';
+  let h = '<h2>' + head + '</h2>';
+  list.forEach(x => {
+    const q = x.q, why = q.rationales ? q.rationales[q.correct] : '';
+    h += '<h3>' + x.n + '. ' + esc(q.q) + '</h3>'
+       + '<p><strong>Answer:</strong> ' + esc(q.options[q.correct]) + '</p>'
+       + (why ? '<p>' + esc(why) + '</p>' : '');
+  });
+  return h;
+}
+
+/* ---- what he found, read back on the sheet ------------------------------------------
+   Grouped by the question, in question order, and NOT filtered by anything: a question he
+   skipped still keeps its research, because the research is his and the skip was about the
+   question. Numbering is the question's own position, so it does not move when the run does. */
+function researchList(){
+  const out = [];
+  D.questions.forEach((q, i) => {
+    const r = rget(q.qid);
+    if(r.t.trim() || r.i.length) out.push({n: i + 1, q: q, r: r});
+  });
+  return out;
+}
+/* The right-hand pane, listed on its own. A question can appear in one list, the other, or
+   both — they are two different statements about it and neither implies the other. */
+function fixList(){
+  const out = [];
+  D.questions.forEach((q, i) => {
+    const r = rget(q.qid);
+    if(r.f.trim()) out.push({n: i + 1, q: q, r: r});
+  });
+  return out;
+}
+function paras(t){
+  return t.trim().split(/\n{2,}/)
+          .map(p => '<p>' + esc(p).replace(/\n/g, '<br>') + '</p>').join('');
+}
+/* Everything the sheet grows below the book's own material, in the order the Copy writes
+   it: what he marked, then what he went and found. */
+function renderSheetExtras(){
+  renderMarked('#starredsheet', markedList(S.starred), 'Starred',
+               'Marked while answering, right or wrong.');
+  renderMarked('#unsuresheet', markedList(S.unsure), 'Needs work',
+               'Marked ? — no idea at the time, so the answer is not proof of anything.');
+  renderResearch();
+  renderFixes();
+}
+function renderResearch(){
+  const el = $('#researchview');
+  if(!el) return;
+  // The textarea is the live copy while a question is on screen, so write it back before
+  // reading R — otherwise the sheet shows everything except the paragraph he just typed.
+  flushResearch();
+  const list = researchList();
+  el.classList.toggle('hide', !list.length);
+  if(!list.length) return;
+  let h = '<h3>My research</h3><p class="say">What you pasted while answering, under the '
+        + 'question that sent you looking. Copy takes this with the sheet.</p>';
+  list.forEach(x => {
+    h += '<div class="ritem"><p class="rq">' + x.n + '. ' + esc(x.q.q) + '</p>';
+    if(x.r.t.trim()) h += '<div class="rtxt">' + paras(x.r.t) + '</div>';
+    x.r.i.forEach((src, k) => {
+      h += '<img class="rimg" src="' + src + '" alt="Pasted image ' + (k+1) + '">';
+    });
+    h += '</div>';
+  });
+  el.innerHTML = h;
+}
+/* THE QUESTION IS PRINTED WITH THE FIX, and it has to be: the next exam is asked to rewrite
+   a specific question, and it never sees this quiz's paper — `exam-prior-questions.md` is
+   given to it as the do-not-repeat list, not as something to work from. The stem and the
+   right answer sitting under his instruction are the whole of what it has to go on. */
+function renderFixes(){
+  const el = $('#fixview');
+  if(!el) return;
+  flushResearch();
+  const list = fixList();
+  el.classList.toggle('hide', !list.length);
+  if(!list.length) return;
+  let h = '<h3>Fix these questions</h3><p class="say">What was wrong with the question '
+        + 'itself. The next exam is told to rewrite these the way you said, not to test what '
+        + 'you wrote here.</p>';
+  list.forEach(x => {
+    h += '<div class="ritem"><p class="rq">' + x.n + '. ' + esc(x.q.q) + '</p>'
+       + '<p class="rans"><strong>Answer:</strong> ' + esc(x.q.options[x.q.correct]) + '</p>'
+       + '<div class="rtxt">' + paras(x.r.f) + '</div></div>';
+  });
+  el.innerHTML = h;
+}
+
+/* THE IMAGES DO NOT GO IN THE PLAIN TEXT, and that is the point of the two flavours below.
+   A pasted screenshot is a couple of hundred kilobytes of base64; dropping that into the
+   markdown would make one Notion row unreadable and the paste enormous. So the text
+   flavour names each image and the HTML flavour carries it. */
+function researchMarkdown(){
+  const list = researchList();
+  if(!list.length) return '';
+  let out = '\n\n## My research\n';
+  list.forEach(x => {
+    out += '\n### ' + x.n + '. ' + x.q.q + '\n\n';
+    const t = x.r.t.trim();
+    if(t) out += t + '\n\n';
+    if(x.r.i.length){
+      x.r.i.forEach((_, k) => { out += '_[image ' + (k+1) + ' — on the quiz page]_\n'; });
+      out += '\n';
+    }
+  });
+  return out.replace(/\n+$/, '\n');
+}
+/* TWO HEADINGS WHOSE TEXT IS LOAD-BEARING. `notion_board.py notes` splits both of these out
+   of the row body BY NAME — `split_fixes()`, and `FIX_HEADING` / `SKIP_HEADING` there are
+   these two strings. Everything else on the row stays material. Rename one here and it
+   silently becomes material again, which is the bug this whole split exists to fix. */
+const FIXHEAD = 'Fix these questions';
+const SKIPHEAD = 'Skipped';
+
+/* THE CARDS HE DELETED, and this section exists to keep them OUT of things (08-14, his rule:
+   skipped cards *"are never reformed and never appear"*, on any exam, v2 or v3).
+
+   It is the one place on this page where a skipped question is written down. Everywhere else
+   they are gone by design — out of the run, out of the score, out of the denominator, out of
+   the sheet — because they were taken out of the quiz. But "gone" only ever meant gone from
+   THIS browser: the exam is built from what he pastes into Notion, so a card he deleted here
+   was invisible to it and perfectly likely to come back as an exam question. This is the one
+   line of the paste that stops that, and `remember_skipped()` files it permanently.
+
+   It says so in the heading's own body text because it will be read by a person too, and a
+   bare list of questions under his notes reads exactly like a list of things to be tested. */
+function skipMarkdown(){
+  const list = markedList(S.skipped);
+  if(!list.length) return '';
+  let out = '\n\n## ' + SKIPHEAD + '\n\n'
+          + '_Deleted while taking the quiz. Not material — these are the ideas to stop '
+          + 'asking about._\n';
+  list.forEach(x => { out += '\n### ' + x.n + '. ' + x.q.q + '\n'; });
+  return out.replace(/\n+$/, '\n');
+}
+function fixMarkdown(){
+  const list = fixList();
+  if(!list.length) return '';
+  let out = '\n\n## ' + FIXHEAD + '\n';
+  list.forEach(x => {
+    out += '\n### ' + x.n + '. ' + x.q.q + '\n\n'
+         + '**Answer:** ' + x.q.options[x.q.correct] + '\n\n'
+         + '**Change it to:** ' + x.r.f.trim() + '\n';
+  });
+  return out.replace(/\n+$/, '\n');
+}
+
+/* THE SCORE RIDES ALONG WITH THE COPY. One press still takes score + sheet + his own notes
+   as a single markdown block, which is what Notion parses on paste — so the row that the
+   week's exam is built from also records how the quiz went, and he can see later whether
+   this section needs testing again. His research is last, so the shape of the paste he
+   already knows is unchanged and the new material is appended under it. */
+function fullMarkdown(){
+  const mine = noteMarkdown();
+  const sc = scoreMarkdown();
+  return (sc ? sc + '\n\n' : '') + (D.sheet || '')
+       + (mine ? '\n\n## My notes\n\n' + mine + '\n' : '')
+       + markedMarkdown(markedList(S.starred), 'Starred')
+       + markedMarkdown(missedList(), 'Missed')
+       + markedMarkdown(markedList(S.unsure), 'Needs work')
+       + researchMarkdown()
+       + fixMarkdown()
+       + skipMarkdown()
+       + frqMarkdown();
+}
+
+/* THE HTML FLAVOUR EXISTS ONLY FOR THE IMAGES, and it is only put on the clipboard when
+   there is one. That rule is what protects the paste he already relies on: with no images
+   the clipboard holds plain markdown and Notion parses it exactly as it does today. With
+   images there is no other way — no clipboard format carries markdown AND a picture — so
+   the whole document goes over as HTML, which Notion also turns into real blocks.
+
+   The sheet's own HTML is reused rather than re-rendered: #sheetmd already holds what
+   md_to_html produced, so the two can never drift. */
+function fullHTML(){
+  let h = '';
+  const sc = scoreMarkdown();
+  if(sc) h += tinyMd(sc);
+  const md = $('#sheetmd');
+  if(md) h += md.innerHTML;
+  const mine = noteMarkdown();
+  if(mine) h += '<h2>My notes</h2>' + tinyMd(mine);
+  h += markedHTML(markedList(S.starred), 'Starred');
+  h += markedHTML(missedList(), 'Missed');
+  h += markedHTML(markedList(S.unsure), 'Needs work');
+  const list = researchList();
+  if(list.length){
+    h += '<h2>My research</h2>';
+    list.forEach(x => {
+      h += '<h3>' + x.n + '. ' + esc(x.q.q) + '</h3>';
+      if(x.r.t.trim()) h += paras(x.r.t);
+      x.r.i.forEach(src => { h += '<p><img src="' + src + '"></p>'; });
+    });
+  }
+  const fixes = fixList();
+  if(fixes.length){
+    h += '<h2>' + FIXHEAD + '</h2>';
+    fixes.forEach(x => {
+      h += '<h3>' + x.n + '. ' + esc(x.q.q) + '</h3>'
+         + '<p><strong>Answer:</strong> ' + esc(x.q.options[x.q.correct]) + '</p>'
+         + '<p><strong>Change it to:</strong> ' + esc(x.r.f.trim()) + '</p>';
+    });
+  }
+  /* The HTML flavour has to carry this too. It goes on the clipboard INSTEAD of the markdown
+     whenever there is a pasted image anywhere on the quiz, so anything missing here is
+     missing from the Notion row on exactly those weeks — and a skipped card that does not
+     reach the row is a card the exam is free to ask about again. */
+  const skips = markedList(S.skipped);
+  if(skips.length){
+    h += '<h2>' + SKIPHEAD + '</h2>'
+       + '<p><em>Deleted while taking the quiz. Not material — these are the ideas to stop '
+       + 'asking about.</em></p>';
+    skips.forEach(x => { h += '<h3>' + x.n + '. ' + esc(x.q.q) + '</h3>'; });
+  }
+  const fm = frqMarkdown();
+  if(fm) h += tinyMd(fm);
+  return '<meta charset="utf-8">' + h;
+}
+
+/* A 25-line renderer so Preview shows the same shape the paste will have. Lists and bold
+   only — anything more and this would be a markdown library, which is the dependency the
+   whole file exists to avoid. */
+function tinyMd(md){
+  const esc2 = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const inline = s => esc2(s).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  let html = '', stack = [];
+  md.split('\n').forEach(line=>{
+    if(!line.trim()) return;
+    const h = line.match(/^(#{1,4})\s+(.*)$/);
+    if(h){ while(stack.length){ html += '</ol>'; stack.pop(); }
+           html += '<h' + Math.min(h[1].length+1,5) + '>' + inline(h[2]) + '</h' + Math.min(h[1].length+1,5) + '>'; return; }
+    const m = line.match(/^(\s*)(?:[-*+]|\d+[.)])\s+(.*)$/);
+    if(!m){ while(stack.length){ html += '</ol>'; stack.pop(); } html += '<p>' + inline(line.trim()) + '</p>'; return; }
+    const d = Math.floor(m[1].length / 3);
+    while(stack.length > d + 1){ html += '</ol>'; stack.pop(); }
+    while(stack.length < d + 1){ html += '<ol>'; stack.push(1); }
+    html += '<li>' + inline(m[2]) + '</li>';
+  });
+  while(stack.length){ html += '</ol>'; stack.pop(); }
+  return html;
+}
+
+if(ta){
+  ta.value = loadNotes();
+  saveNotes();
+  let t = null;
+  ta.addEventListener('input', ()=>{ clearTimeout(t); t = setTimeout(saveNotes, 400); });
+  ta.addEventListener('blur', saveNotes);
+  $('#previewnotes').onclick = ()=>{
+    const p = $('#minepreview'), on = p.classList.contains('hide');
+    p.innerHTML = on ? (noteMarkdown() ? tinyMd(noteMarkdown())
+                                       : '<p>Nothing written yet.</p>') : '';
+    p.classList.toggle('hide', !on);
+    $('#previewnotes').textContent = on ? 'Hide preview' : 'Preview';
+  };
+}
+
+/* COPIES THE MARKDOWN, NOT THE RENDERED TEXT. He pastes this into Notion, and Notion parses
+   markdown on paste — so the headings, the numbering and the bold terms all survive as real
+   Notion blocks. Copying the visible text would paste one flat wall. */
+const cp = $('#copysheet');
+if(cp) cp.onclick = async ()=>{
+  flushResearch();
+  // Both strings are built BEFORE the first await: Safari only honours a clipboard write
+  // inside the gesture that asked for it, and work done after an await is outside it.
+  const md = fullMarkdown();
+  const shots = researchList().some(x => x.r.i.length);
+  const html = shots ? fullHTML() : '';
+  let done = false;
+  if(shots && window.ClipboardItem && navigator.clipboard && navigator.clipboard.write){
+    try{
+      await navigator.clipboard.write([new ClipboardItem({
+        'text/html':  new Blob([html], {type: 'text/html'}),
+        'text/plain': new Blob([md],   {type: 'text/plain'})
+      })]);
+      done = true;
+    }catch(e){}                      // fall through to the plain paste rather than nothing
+  }
+  if(!done){
+    try{ await navigator.clipboard.writeText(md); done = true; }
+    catch(e){
+      const t = document.createElement('textarea');
+      t.value = md; t.style.position='fixed'; t.style.opacity='0';
+      document.body.appendChild(t); t.select();
+      try{ document.execCommand('copy'); }catch(_){}
+      t.remove();
+    }
+  }
+  cp.textContent = shots ? 'Copied + images' : 'Copied';
+  cp.classList.add('copied');
+  setTimeout(()=>{ cp.textContent = 'Copy'; cp.classList.remove('copied'); }, 1600);
+};
+
+// Re-centre when the window changes shape; the frozen padding would be wrong afterwards.
+// Against the ANSWERED height, like every other call — measuring what is on screen is the
+// bug this file already fixed once.
+addEventListener('resize', ()=>{
+  fitTitle();
+  if(D.tab==='quiz' && !S.reviewing && !S.done) centreBlock(S.i);
+});
+
+document.addEventListener('keydown', e=>{
+  const t = e.target;
+  /* ESC IS THE WAY OUT FROM INSIDE THE BOX, and it has to be checked before the rule below
+     lets typing through. `r` cannot do this job: once the caret is in the pane, `r` is the
+     letter r — the first character of "radius", "reflex" and "rephrase" — so a second `r`
+     that closed the box would eat it. Esc is read while typing; `r` toggles from outside. */
+  if(e.key === 'Escape' && rbody && !rbody.classList.contains('hide')){
+    e.preventDefault(); closeResearch(); return;
+  }
+  /* TYPING IS NOT ANSWERING. The research box is a textarea ON THE QUIZ TAB, so without
+     this every letter he types would be read as an option key and `h` would open the hint —
+     the notes box on the sheet tab was only safe because that tab returns above.
+
+     ENTER IS THE ONE EXCEPTION, AND ONLY IN THE TWO RESEARCH PANES (08-12, his ask):
+     *"when I press enter it moves onto the next question. I move onto the next question
+     whenever I press enter."* One key means one thing everywhere on the quiz tab, including
+     from inside the box he was just typing in. SHIFT+ENTER IS THE NEWLINE — a textarea
+     still needs one, and this is the swap every chat box has already taught his hands.
+     It closes on the way out, which flushes what he typed and takes the caret with it;
+     without the blur the next keystroke would still be going into a hidden textarea.
+     The sheet's notes box is NOT in this: it is not a question and has nowhere to go. */
+  if(t && (t.tagName === 'TEXTAREA' || t.tagName === 'INPUT' || t.isContentEditable)){
+    if(e.key === 'Enter' && !e.shiftKey && (t.id === 'rtext' || t.id === 'rfix')
+       && D.tab === 'quiz' && !S.done && !S.reviewing){
+      e.preventDefault();
+      closeResearch();
+      step(1);
+    }
+    return;
+  }
+
+  /* THE WHOLE END OF A QUIZ IS ONE KEY. Enter walks it in the order he works in — second
+     pass, then the review list, then the sheet — and `c` on the sheet copies. Enter already
+     meant "next" all the way through the questions, so it just carries on meaning it past
+     the last one instead of stopping dead at the end card.
+
+     Each step is taken by CLICKING THE REAL BUTTON, so there is one path into a second pass
+     and one into the review list, whether he pressed the key or the button. A step with no
+     button on screen is skipped rather than faked: no wrong answers means no 2nd Pass, so
+     Enter goes straight to the review list. */
+  if(D.tab === 'sheet'){
+    if(e.key === 'c' || e.key === 'C'){ const b = $('#copysheet'); if(b) b.click(); }
+    return;
+  }
+  if(D.tab !== 'quiz') return;
+  if(S.done || S.reviewing){
+    if(e.key !== 'Enter') return;
+    e.preventDefault();
+    if(!S.reviewing && pending2().length){ $('#pass2').click(); return; }
+    if(!S.reviewing){ $('#review').click(); return; }
+    if(D.hasSheet) setTab('sheet');
+    return;
+  }
+  const q = D.questions[S.i];
+  // Forward is forward whether or not he answered — see advance() for where the last
+  // question goes now. The old `if(!$('#next').disabled)` guard is gone with the disabling.
+  if(e.key === 'Enter' || e.key === 'ArrowRight'){ step(1); return; }
+  if(e.key === 'ArrowLeft'){ if(!$('#back').disabled) step(-1); return; }
+  // `h` IS THE HINT, not option H. Every quiz here has four options, so H as an option key
+  // has never been reachable; if one ever has eight, the eighth is still `8`.
+  if(e.key === 'h' || e.key === 'H'){ toggleHint(); return; }
+  // `r` TOGGLES THE RESEARCH BOX and, opening, puts him in it — the point of the key is "I
+  // want to paste this now". R is past H, so it can never be an option key. From inside the
+  // box `r` is a letter and Esc is what shuts it; see the Escape branch at the top.
+  if(e.key === 'r' || e.key === 'R'){ e.preventDefault(); toggleResearch(); return; }
+  /* `f` OPENS THE BOX ON THE FIX PANE. It is claimed BEFORE the option lookup below, and
+     unlike `h` and `r` that costs something real: F is the SIXTH option letter, so a quiz
+     with six or more options would lose `f` as an answer key. Every quiz and exam this
+     system has ever generated has four, and the prompts do not offer a way to ask for more,
+     so the cost is theoretical — but it is a tighter margin than `h` (eighth) or `r` (past
+     the end), and if that ever changes this is the line that breaks. */
+  if(e.key === 'f' || e.key === 'F'){ e.preventDefault(); openFix(); return; }
+  // `s` STARS and `/` TAGS IT "no idea" — the two marks he makes while reading, on the two
+  // keys nearest that. Both are past G, so neither can ever be an option key. `?` is bound
+  // beside `/` because it is the same key with a shift on it and the glyph he sees is `?`;
+  // preventDefault stops Firefox's quick-find opening underneath the page.
+  if(e.key === 's' || e.key === 'S'){ toggleStar(S.i); return; }
+  if(e.key === '/' || e.key === '?'){ e.preventDefault(); toggleUnsure(S.i); return; }
+  /* THE KEY NAMES A POSITION ON SCREEN, not an option. `2` and `B` mean the second card he
+     can see, which is the only thing either of them could mean to him — after a Redo has
+     reshuffled the cards that is no longer option 2, so it goes through optOrder() to find
+     which one it now is. Before any Redo the map is the identity and this is what it was. */
+  let pos = -1;
+  if(/^[1-9]$/.test(e.key)) pos = +e.key - 1;
+  else if(/^[a-gA-G]$/.test(e.key)) pos = D.letters.indexOf(e.key.toUpperCase());
+  if(pos >= 0 && pos < q.options.length && pick(S.i) === undefined){
+    // click the real button rather than repeating its handler — one path for answering
+    const btn = $('#quizview').querySelector('.opt[data-k="' + optOrder(S.i)[pos] + '"]');
+    if(btn) btn.click();
+  }
+});
+
+save();
+syncTabs();
+renderScore();
+setTab(D.tab || 'quiz');
+</script>
+</body>
+</html>
