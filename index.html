@@ -192,20 +192,34 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
 .rtoggle:hover{color:var(--text)}
 .rtoggle.has{color:var(--text)}
 .rbody{margin:12px 0 0}
-/* HALF EACH, and they collapse to stacked well before the panes get too narrow to read a
-   pasted paragraph in. The label sits inside the <label> so clicking it lands the caret. */
-.rcols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media (max-width:720px){.rcols{grid-template-columns:1fr}}
-.rcol{display:flex;flex-direction:column;gap:6px;min-width:0}
-.rlab{color:var(--muted);font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;
- display:flex;align-items:center;gap:6px}
-.rlab kbd{font:inherit;font-size:.68rem;text-transform:none;letter-spacing:0;line-height:1;
+/* ONE BOX, THREE PANES, AND ONLY ONE ON SCREEN (08-16, his ask). They used to sit side by
+   side at half width each, which was already tight for a pasted paragraph — a third one
+   would have made each a third of 660px. His words: *"just one textbox … but when I press r
+   it opens it for research, when I click off the box and on the main page and press f, it
+   opens another textbox in the similar area."* So the pane is chosen by a key or a chip and
+   the box is FULL WIDTH whichever one is showing.
+   All three textareas stay in the DOM and only the hidden ones are display:none — every
+   flush reads all three `.value`s at once, so switching panes cannot lose a keystroke. */
+.rtabs{display:flex;gap:5px;margin:0 0 9px;flex-wrap:wrap}
+.rtab{background:none;border:1px solid transparent;color:var(--muted);font:inherit;
+ font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;padding:5px 10px;
+ border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+ user-select:none;-webkit-user-select:none}
+.rtab:hover{color:var(--text);background:var(--surface)}
+.rtab[aria-selected="true"]{color:var(--text);border-color:var(--line);
+ background:var(--surface-hi)}
+.rtab kbd{font:inherit;font-size:.68rem;text-transform:none;letter-spacing:0;line-height:1;
  padding:2px 5px;border:1px solid var(--line);border-radius:5px;background:var(--surface)}
-#rtext,#rfix{width:100%;min-height:104px;resize:vertical;background:var(--surface);
+/* A pane with something in it says so without being opened. A DOT, not a colour change, so
+   it reads in grayscale like every other state on this page. */
+.rtab i{width:5px;height:5px;border-radius:999px;background:var(--text);opacity:0}
+.rtab.has i{opacity:1}
+.rpane{width:100%;min-height:132px;resize:vertical;background:var(--surface);
  color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
  padding:11px 13px;font:inherit;font-size:.9rem;line-height:1.55;outline:none}
-#rtext:focus,#rfix:focus{border-color:var(--accent)}
-#rtext::placeholder,#rfix::placeholder{color:var(--muted);opacity:.7}
+.rpane.hide{display:none}
+.rpane:focus{border-color:var(--accent)}
+.rpane::placeholder{color:var(--muted);opacity:.7}
 .rshots{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
 .shot{position:relative;display:block;line-height:0}
 .shot img{max-height:88px;max-width:150px;border-radius:9px;border:1px solid var(--line)}
@@ -214,6 +228,14 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
  color:var(--text);font:inherit;font-size:.8rem;cursor:pointer;padding:0}
 .rsay{color:var(--muted);font-size:.76rem;margin:9px 0 0;min-height:1em}
 .rsay.warn{color:var(--wrong)}
+
+/* A reflection printed under its question on the Starred tab. Indented off a rule so it
+   reads as HIS writing rather than as another line of the question's record. */
+.rtxt.refl{border-left:2px solid var(--line);padding:2px 0 2px 13px;margin:12px 0 0}
+.rtxt.refl ul,.rtxt.refl ol{margin:0 0 0 18px;padding:0}
+.rtxt.refl li,.rtxt.refl p{color:var(--muted);font-size:.9rem;margin:0 0 4px}
+kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid var(--line);
+ border-radius:5px;background:var(--surface)}
 
 /* the same material, read back on the study sheet */
 .ritem{border-top:1px solid var(--line);padding:16px 0 4px}
@@ -329,6 +351,9 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
 .rev{padding:6px 0 36px}
 .item{border-top:1px solid var(--line);padding:20px 0}
 .item .qq{font-size:1rem;margin:0 0 12px}
+/* The Starred tab's own header note and count, which the study sheet styles under `.own`. */
+.rev > .say{color:var(--muted);font-size:.85rem;margin:0 0 4px;max-width:62ch}
+.rev h3 .say{text-transform:none;letter-spacing:0;font-size:.72rem;color:var(--muted)}
 .rline{display:flex;gap:10px;align-items:flex-start;padding:3px 0;font-size:.92rem}
 .rline .g{min-width:1.2em}
 .rline.mine{color:var(--muted)}

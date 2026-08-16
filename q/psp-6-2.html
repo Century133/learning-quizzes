@@ -195,20 +195,34 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
 .rtoggle:hover{color:var(--text)}
 .rtoggle.has{color:var(--text)}
 .rbody{margin:12px 0 0}
-/* HALF EACH, and they collapse to stacked well before the panes get too narrow to read a
-   pasted paragraph in. The label sits inside the <label> so clicking it lands the caret. */
-.rcols{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-@media (max-width:720px){.rcols{grid-template-columns:1fr}}
-.rcol{display:flex;flex-direction:column;gap:6px;min-width:0}
-.rlab{color:var(--muted);font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;
- display:flex;align-items:center;gap:6px}
-.rlab kbd{font:inherit;font-size:.68rem;text-transform:none;letter-spacing:0;line-height:1;
+/* ONE BOX, THREE PANES, AND ONLY ONE ON SCREEN (08-16, his ask). They used to sit side by
+   side at half width each, which was already tight for a pasted paragraph — a third one
+   would have made each a third of 660px. His words: *"just one textbox … but when I press r
+   it opens it for research, when I click off the box and on the main page and press f, it
+   opens another textbox in the similar area."* So the pane is chosen by a key or a chip and
+   the box is FULL WIDTH whichever one is showing.
+   All three textareas stay in the DOM and only the hidden ones are display:none — every
+   flush reads all three `.value`s at once, so switching panes cannot lose a keystroke. */
+.rtabs{display:flex;gap:5px;margin:0 0 9px;flex-wrap:wrap}
+.rtab{background:none;border:1px solid transparent;color:var(--muted);font:inherit;
+ font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;padding:5px 10px;
+ border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+ user-select:none;-webkit-user-select:none}
+.rtab:hover{color:var(--text);background:var(--surface)}
+.rtab[aria-selected="true"]{color:var(--text);border-color:var(--line);
+ background:var(--surface-hi)}
+.rtab kbd{font:inherit;font-size:.68rem;text-transform:none;letter-spacing:0;line-height:1;
  padding:2px 5px;border:1px solid var(--line);border-radius:5px;background:var(--surface)}
-#rtext,#rfix{width:100%;min-height:104px;resize:vertical;background:var(--surface);
+/* A pane with something in it says so without being opened. A DOT, not a colour change, so
+   it reads in grayscale like every other state on this page. */
+.rtab i{width:5px;height:5px;border-radius:999px;background:var(--text);opacity:0}
+.rtab.has i{opacity:1}
+.rpane{width:100%;min-height:132px;resize:vertical;background:var(--surface);
  color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
  padding:11px 13px;font:inherit;font-size:.9rem;line-height:1.55;outline:none}
-#rtext:focus,#rfix:focus{border-color:var(--accent)}
-#rtext::placeholder,#rfix::placeholder{color:var(--muted);opacity:.7}
+.rpane.hide{display:none}
+.rpane:focus{border-color:var(--accent)}
+.rpane::placeholder{color:var(--muted);opacity:.7}
 .rshots{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
 .shot{position:relative;display:block;line-height:0}
 .shot img{max-height:88px;max-width:150px;border-radius:9px;border:1px solid var(--line)}
@@ -217,6 +231,14 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
  color:var(--text);font:inherit;font-size:.8rem;cursor:pointer;padding:0}
 .rsay{color:var(--muted);font-size:.76rem;margin:9px 0 0;min-height:1em}
 .rsay.warn{color:var(--wrong)}
+
+/* A reflection printed under its question on the Starred tab. Indented off a rule so it
+   reads as HIS writing rather than as another line of the question's record. */
+.rtxt.refl{border-left:2px solid var(--line);padding:2px 0 2px 13px;margin:12px 0 0}
+.rtxt.refl ul,.rtxt.refl ol{margin:0 0 0 18px;padding:0}
+.rtxt.refl li,.rtxt.refl p{color:var(--muted);font-size:.9rem;margin:0 0 4px}
+kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid var(--line);
+ border-radius:5px;background:var(--surface)}
 
 /* the same material, read back on the study sheet */
 .ritem{border-top:1px solid var(--line);padding:16px 0 4px}
@@ -332,6 +354,9 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
 .rev{padding:6px 0 36px}
 .item{border-top:1px solid var(--line);padding:20px 0}
 .item .qq{font-size:1rem;margin:0 0 12px}
+/* The Starred tab's own header note and count, which the study sheet styles under `.own`. */
+.rev > .say{color:var(--muted);font-size:.85rem;margin:0 0 4px;max-width:62ch}
+.rev h3 .say{text-transform:none;letter-spacing:0;font-size:.72rem;color:var(--muted)}
 .rline{display:flex;gap:10px;align-items:flex-start;padding:3px 0;font-size:.92rem}
 .rline .g{min-width:1.2em}
 .rline.mine{color:var(--muted)}
@@ -512,20 +537,22 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
          throw away what he is halfway through pasting. -->
     <div class="research hide" id="research">
       <button class="rtoggle" id="rtoggle">+ Add research or a fix</button>
-      <!-- Two panes, and the labels are the whole point of the split: the left one is
-           material the exam will test him on, the right one is an instruction the exam will
-           obey. Esc shuts the box; so does moving to the next question. -->
+      <!-- ONE box, THREE panes, one on screen at a time — chosen by r / f / t or by the
+           chips. The split is the whole point: Research is material the exam will test him
+           on, Fix is an instruction the exam will obey, Reflection is neither and never
+           reaches the exam at all. Esc shuts the box; so does moving to the next question.
+           `* ` then a space makes a bullet in any of them; Shift+Enter continues it. -->
       <div class="rbody hide" id="rbody">
-        <div class="rcols">
-          <label class="rcol">
-            <span class="rlab">Research <kbd>r</kbd></span>
-            <textarea id="rtext" spellcheck="false" placeholder="Paste what you found — an explanation, a definition, a diagram. Images paste straight in."></textarea>
-          </label>
-          <label class="rcol">
-            <span class="rlab">Fix this question <kbd>f</kbd></span>
-            <textarea id="rfix" spellcheck="true" placeholder="What was wrong with it. &quot;Never says which joint.&quot; &quot;Two options are both right.&quot; &quot;Ask what it causes, not what it is.&quot; Enter saves it and moves on."></textarea>
-          </label>
+        <div class="rtabs" id="rtabs">
+          <button class="rtab" data-pane="research" aria-selected="true">Research <kbd>r</kbd><i></i></button>
+          <button class="rtab" data-pane="fix" aria-selected="false">Fix this question <kbd>f</kbd><i></i></button>
+          <button class="rtab" data-pane="refl" aria-selected="false">Reflection <kbd>t</kbd><i></i></button>
         </div>
+        <textarea class="rpane" id="rtext" spellcheck="false" placeholder="Paste what you found — an explanation, a definition, a diagram. Images paste straight in."></textarea>
+        <textarea class="rpane hide" id="rfix" spellcheck="true" placeholder="What was wrong with the question. &quot;Never says which joint.&quot; &quot;Two options are both right.&quot; &quot;Ask what it causes, not what it is.&quot; Enter saves it and moves on."></textarea>
+        <textarea class="rpane hide" id="rrefl" spellcheck="true" placeholder="Your own thinking on this concept, and where it could apply. Never becomes an exam question.
+* comes back to the Ben Franklin effect
+* could use this on the induction week"></textarea>
         <div class="rshots hide" id="rshots"></div>
         <p class="rsay" id="rsay"></p>
       </div>
@@ -1021,7 +1048,15 @@ const NOUN = ((D.frq && D.frq.length) || D.questions.some(q=>q.sec)) ? 'Exam' : 
    question itself: the stem omitted a detail, the options were ambiguous, the idea should be
    asked from the other end. They ride together here because they are written in the same
    moment, and they are split everywhere downstream because one is content and the other is
-   direction. An old entry has no `f` and reads as ''. */
+   direction. An old entry has no `f` and reads as ''.
+
+   `x` IS THE THIRD AND IT IS THE ONE THAT NEVER COMES BACK AS A QUESTION (08-16). His words:
+   *"as I test myself on concepts I return to them with more knowledge and part of me wants
+   to write on it"*, and *"reflections should take on that outside content and should function
+   like potential applications in the future."* So the three are: what he FOUND (`t`, material
+   → tested), what the QUESTION should have been (`f`, direction → obeyed), and what HE
+   THINKS and where it could apply (`x`, neither → carved out of the row body by
+   `split_fixes` and read by nothing). An old entry has no `x` and reads as ''. */
 const RKEY = KEY + ':research';
 function loadResearch(){
   try{ const r = JSON.parse(localStorage.getItem(RKEY) || '{}');
@@ -1031,12 +1066,12 @@ function loadResearch(){
 let R = loadResearch();
 function rget(id){
   const r = R[id];
-  return {t: (r && r.t) || '', i: (r && r.i) || [], f: (r && r.f) || ''};
+  return {t: (r && r.t) || '', i: (r && r.i) || [], f: (r && r.f) || '', x: (r && r.x) || ''};
 }
-function rput(id, t, imgs, fix){
-  fix = fix || '';
-  if(!t.trim() && !imgs.length && !fix.trim()) delete R[id];
-  else R[id] = {t: t, i: imgs, f: fix};
+function rput(id, t, imgs, fix, refl){
+  fix = fix || ''; refl = refl || '';
+  if(!t.trim() && !imgs.length && !fix.trim() && !refl.trim()) delete R[id];
+  else R[id] = {t: t, i: imgs, f: fix, x: refl};
   try{ localStorage.setItem(RKEY, JSON.stringify(R)); return true; }
   catch(e){ return false; }                       // quota — the caller puts it back
 }
@@ -1242,7 +1277,11 @@ function copyText(text, btn, back){
    the quiz shipped with one — a linguistics quiz built before topic tags has none. If that
    leaves one tab, the whole group goes: a lone "Quiz" button is chrome that says nothing. */
 function syncTabs(){
-  const nstar = Object.keys(S.starred||{}).length;
+  // A REFLECTION OPENS THE TAB TOO, since 08-16 — it is the only place one is ever read back,
+  // so a reflection on a question he never starred must not be invisible. `topList()` is the
+  // same function the tab renders from, so what the strip says and what the tab holds cannot
+  // disagree.
+  const nstar = topList().length;
   const nfrq = (D.frq || []).length;
   document.querySelector('.tab[data-tab="starred"]').classList.toggle('hide', !nstar);
   document.querySelector('.tab[data-tab="sheet"]').classList.toggle('hide', !D.hasSheet);
@@ -1604,7 +1643,8 @@ function toggleUnsure(i){
 }
 
 /* ---- the research box ----------------------------------------------------------------
-   One box per question, opened from a row under the options, holding TWO panes side by side.
+   One box per question, opened from a row under the options, holding THREE panes of which
+   exactly one is on screen — Research, Fix this question, Reflection.
 
    WHY TWO AND NOT ONE (08-12). Everything he wrote here used to land under a single
    `## My research` heading, and the exam prompt reads that heading as MATERIAL — the rung-4
@@ -1620,20 +1660,30 @@ function toggleUnsure(i){
    in practice he ended up scrolling past an empty box on every question he had nothing to
    say about. The CONTENT is per question and always was. */
 const rpanel = $('#research'), rtoggle = $('#rtoggle'), rbody = $('#rbody');
-const rtext = $('#rtext'), rfix = $('#rfix'), rshots = $('#rshots'), rsay = $('#rsay');
+const rtext = $('#rtext'), rfix = $('#rfix'), rrefl = $('#rrefl');
+const rshots = $('#rshots'), rsay = $('#rsay');
+/* The pane on screen. STICKY ACROSS QUESTIONS like `rOpen`, and for the same reason: he
+   works in one mode for a stretch, and a box that snapped back to Research on every question
+   would need re-choosing fifteen times an evening. */
+let rPane = 'research';
+const PANES = {research: rtext, fix: rfix, refl: rrefl};
 let rOpen = false;
 let rFor = null;          // the qid the box currently holds
 let rTimer = null;
 
 function showResearch(on){ if(rpanel) rpanel.classList.toggle('hide', !on); }
 
-/* Write both textareas back to the question they belong to. Called before the box is pointed
-   at a different question, on blur, on a debounce while typing, and on the way out of the
-   page — the textareas are the live copy and everything else reads from R. */
+/* Write ALL THREE textareas back to the question they belong to. Called before the box is
+   pointed at a different question, on blur, on a debounce while typing, and on the way out of
+   the page — the textareas are the live copy and everything else reads from R.
+   All three at once, never just the visible one: the hidden panes are `display:none`, not
+   unmounted, so their `.value` is still the truth for their pane and writing only the
+   showing one would blank the other two on the first keystroke. */
 function flushResearch(){
   if(rFor === null || !rtext) return;
   const cur = rget(rFor);
-  if(!rput(rFor, rtext.value, cur.i, rfix ? rfix.value : cur.f)) warnFull();
+  if(!rput(rFor, rtext.value, cur.i, rfix ? rfix.value : cur.f,
+           rrefl ? rrefl.value : cur.x)) warnFull();
   paintToggle();
 }
 function mountResearch(id){
@@ -1651,10 +1701,26 @@ function mountResearch(id){
   const r = rget(id);
   rtext.value = r.t;
   if(rfix) rfix.value = r.f;
+  if(rrefl) rrefl.value = r.x;
   rbody.classList.toggle('hide', !rOpen);
   rsay.textContent = ''; rsay.classList.remove('warn');
   drawShots();
+  paintPane();
   paintToggle();
+}
+/* Which pane is showing, and which of the three already have something in them. Split out of
+   `openResearch` because it is also called on every mount — the dots belong to the question,
+   not to the last key he pressed. */
+function paintPane(){
+  const r = rget(rFor), has = {research: !!(r.t.trim() || r.i.length),
+                               fix: !!r.f.trim(), refl: !!r.x.trim()};
+  Object.keys(PANES).forEach(k => {
+    if(PANES[k]) PANES[k].classList.toggle('hide', k !== rPane);
+  });
+  document.querySelectorAll('.rtab').forEach(b => {
+    b.setAttribute('aria-selected', b.dataset.pane === rPane);
+    b.classList.toggle('has', !!has[b.dataset.pane]);
+  });
 }
 /* The row says what is behind it, so a question he has already written on is visible
    without opening anything. */
@@ -1664,8 +1730,9 @@ function paintToggle(){
   if(r.t.trim()) bits.push('notes');
   if(n) bits.push(n + (n > 1 ? ' images' : ' image'));
   if(r.f.trim()) bits.push('a fix');
-  rtoggle.textContent = bits.length ? ('My research · ' + bits.join(', '))
-                                    : '+ Add research or a fix';
+  if(r.x.trim()) bits.push('a reflection');
+  rtoggle.textContent = bits.length ? ('My box · ' + bits.join(', '))
+                                    : '+ Research, a fix, or a reflection';
   rtoggle.classList.toggle('has', !!bits.length);
 }
 function drawShots(){
@@ -1678,8 +1745,8 @@ function drawShots(){
     b.onclick = () => {
       const imgs2 = rget(rFor).i.slice();
       imgs2.splice(+b.dataset.rm, 1);
-      rput(rFor, rtext.value, imgs2, rfix ? rfix.value : '');
-      drawShots(); paintToggle();
+      rput(rFor, rtext.value, imgs2, rfix ? rfix.value : '', rrefl ? rrefl.value : '');
+      drawShots(); paintToggle(); paintPane();
       rsay.textContent = ''; rsay.classList.remove('warn');
     };
   });
@@ -1717,26 +1784,32 @@ function warnFull(){
   rsay.classList.add('warn');
 }
 
-/* ONE WAY IN, from the row or from `r`, and it lands him in the box ready to paste:
+/* ONE WAY IN, from a chip or from r / f / t, and it lands him in the box ready to type:
    scrolled to, focused, caret at the end. `block:'center'` rather than `'nearest'` because
    the box opens below the fold on a long question and 'nearest' stops the moment its top
-   edge is visible — which is not far enough to type in. The LEFT pane takes the focus: `r`
-   means "I want to paste this now", and what he pastes is research. */
+   edge is visible — which is not far enough to type in.
+
+   ONE RULE FOR ALL THREE KEYS (08-16): the key switches to its pane, and pressing the key
+   for the pane already showing closes the box. It used to be that `r` toggled and `f` never
+   closed, which was right when they were two panes side by side and both always visible —
+   with one pane on screen at a time there is only one question a key can be answering
+   ("show me this one"), and one rule for three keys is the only version he can hold in his
+   head. Esc still closes from inside, where every letter is just a letter. */
 function openResearch(pane){
   if(!rpanel || rpanel.classList.contains('hide')) return;
+  const want = PANES[pane] ? pane : 'research';
+  if(rOpen && rPane === want){ closeResearch(); return; }
+  rPane = want;
   rOpen = true;
   rbody.classList.remove('hide');
-  const el = (pane === 'fix' && rfix) ? rfix : rtext;
+  paintPane();
+  const el = PANES[rPane];
   el.focus();
   el.setSelectionRange(el.value.length, el.value.length);
   rbody.scrollIntoView({block:'center', behavior:'smooth'});
 }
-/* `f` GOES STRAIGHT TO THE RIGHT-HAND PANE, and it never closes the box — it moves the caret
-   into it, whether the box was shut or already open on the other pane. That asymmetry with
-   `r` is the honest one: `r` is a mode he sits in for a while, `f` is one sentence and out,
-   and a key that sometimes closed the box he was aiming at would be the wrong tool for it.
-   Esc is the closer, from either pane. */
 function openFix(){ openResearch('fix'); }
+function openRefl(){ openResearch('refl'); }
 /* ONE WAY OUT, and it saves on the way — the debounce may not have fired, and a box that
    swallowed the last sentence he typed would be worse than one that never closed. The blur
    matters as much as the hide: with the caret still parked in a hidden textarea, every
@@ -1752,15 +1825,100 @@ function closeResearch(){
 }
 function toggleResearch(){
   if(!rpanel || rpanel.classList.contains('hide')) return;
-  if(rOpen) closeResearch(); else openResearch();
+  if(rOpen) closeResearch(); else openResearch(rPane);
+}
+
+/* ---- `* ` MAKES A BULLET, ANYWHERE HE TYPES (08-16, his ask) --------------------------
+   *"I much prefer them to be like in notion where you can do `* ` with the space inside to
+   create a bullet point. My mind thinks in them."*
+
+   A textarea holds plain text and cannot render a list, so the bullet IS a character: `* `
+   becomes `• `, and the markdown writers turn `• ` back into `- ` on the way to Notion,
+   where it lands as a real bullet block. Three behaviours, all Notion's:
+
+     `* ` or `- ` at the start of a line  → becomes `• `
+     newline at the end of a bullet       → the next line starts as a bullet
+     newline on an EMPTY bullet           → the bullet is removed and the list ends
+
+   WHICH KEY MAKES A NEWLINE IS NOT THE SAME IN BOTH PLACES, and that is not an
+   inconsistency to fix. In the question box plain Enter means "next question" (08-12, his
+   rule) and Shift+Enter is the newline; on the sheet's notes box there is nowhere to go, so
+   Enter is the newline. `bulletNewline()` is given whichever key applies. */
+function setVal(el, v, caret){
+  el.value = v;
+  el.setSelectionRange(caret, caret);
+  // The debounce lives on the `input` listener, and a programmatic `.value` write does not
+  // fire one — without this the bullet he just made is not saved until he types again.
+  el.dispatchEvent(new Event('input', {bubbles: true}));
+}
+function lineStart(v, at){ const n = v.lastIndexOf('\n', at - 1); return n + 1; }
+/* ON `input`, NOT ON A KEYUP. A keyup is not fired by every way text arrives — an IME, an
+   autocomplete, a dictation, and the automation this was tested with all change the value
+   without one — and a bullet rule that works only when the space came from a physical key is
+   a rule he will hit the exception to. `input` is the one event every path fires.
+   It cannot loop: after the swap the line reads `• `, which this pattern does not match.
+   And it converts almost nothing by accident — the WHOLE line up to the caret has to be
+   exactly `* `, so pasting a paragraph with an asterisk in it is untouched. */
+function bulletType(el){
+  const v = el.value, at = el.selectionStart;
+  if(at !== el.selectionEnd) return;
+  const s = lineStart(v, at);
+  const m = v.slice(s, at).match(/^([ \t]*)([*-]) $/);
+  if(!m) return;
+  const head = m[1] + '• ';
+  setVal(el, v.slice(0, s) + head + v.slice(at), s + head.length);
+}
+/* -> true if it handled the key, in which case the caller preventDefaults. */
+function bulletNewline(el){
+  const v = el.value, at = el.selectionStart;
+  if(at !== el.selectionEnd) return false;
+  const s = lineStart(v, at);
+  const m = v.slice(s, at).match(/^([ \t]*)• (.*)$/);
+  if(!m) return false;
+  if(!m[2].trim()){                       // an empty bullet ends the list, as in Notion
+    setVal(el, v.slice(0, s) + v.slice(at), s);
+    return true;
+  }
+  const head = '\n' + m[1] + '• ';
+  setVal(el, v.slice(0, at) + head + v.slice(at), at + head.length);
+  return true;
+}
+/* Tab NESTS a bullet and Shift+Tab lifts it, two spaces at a time — the same depth the
+   markdown writers read. It is claimed ONLY on a bullet line, so Tab out of an empty box
+   still moves focus and the keyboard is never trapped. */
+function bulletIndent(el, out){
+  const v = el.value, at = el.selectionStart;
+  const s = lineStart(v, at);
+  if(!/^[ \t]*• /.test(v.slice(s))) return false;
+  if(out){
+    const m = v.slice(s).match(/^[ \t]{1,2}/);
+    if(!m) return true;                   // already flush left; the key is still swallowed
+    setVal(el, v.slice(0, s) + v.slice(s + m[0].length), Math.max(s, at - m[0].length));
+  } else {
+    setVal(el, v.slice(0, s) + '  ' + v.slice(s), at + 2);
+  }
+  return true;
 }
 
 if(rpanel){
   rtoggle.onclick = toggleResearch;
-  [rtext, rfix].forEach(el => {
+  document.querySelectorAll('.rtab').forEach(b => {
+    // Clicking the chip for the pane already showing must NOT close the box — he is aiming
+    // at a target on screen, unlike the key, which he presses from outside.
+    b.onclick = () => { if(rPane === b.dataset.pane){ PANES[rPane].focus(); return; }
+                        rPane = b.dataset.pane; paintPane(); PANES[rPane].focus(); };
+  });
+  [rtext, rfix, rrefl].forEach(el => {
     if(!el) return;
-    el.addEventListener('input', () => { clearTimeout(rTimer); rTimer = setTimeout(flushResearch, 400); });
+    el.addEventListener('input', () => { bulletType(el);
+                                         clearTimeout(rTimer); rTimer = setTimeout(flushResearch, 400); });
     el.addEventListener('blur', flushResearch);
+    el.addEventListener('keydown', e => {
+      if(e.key === 'Tab' && bulletIndent(el, e.shiftKey)){ e.preventDefault(); return; }
+      // SHIFT+Enter is the newline in here, so it is the one that continues a bullet. Plain
+      // Enter is "next question" and is handled in the one document keydown handler.
+      if(e.key === 'Enter' && e.shiftKey && bulletNewline(el)) e.preventDefault();
+    });
   });
 
   /* ENTER-MOVES-ON IS NOT HANDLED HERE. It lives in the one document keydown handler, with
@@ -1790,9 +1948,10 @@ if(rpanel){
       if(data && target === rFor){
         // Hold the list as it was: a failed rput has already written the oversized entry
         // into R, so the revert needs a copy taken BEFORE the attempt, not after it.
-        const prev = rget(target).i.slice(), fx = rfix ? rfix.value : '';
-        if(rput(target, rtext.value, prev.concat([data]), fx)){ drawShots(); paintToggle(); }
-        else { rput(target, rtext.value, prev, fx); warnFull(); return; }
+        const prev = rget(target).i.slice(), fx = rfix ? rfix.value : '',
+              rx = rrefl ? rrefl.value : '';
+        if(rput(target, rtext.value, prev.concat([data]), fx, rx)){ drawShots(); paintToggle(); paintPane(); }
+        else { rput(target, rtext.value, prev, fx, rx); warnFull(); return; }
       }
       if(left === 0 && !rsay.classList.contains('warn')) rsay.textContent = '';
     }));
@@ -2153,26 +2312,116 @@ function review(){
   window.scrollTo(0,0);
 }
 
-/* ---- the Starred tab ---------------------------------------------------------------
+/* ---- the Starred tab, which now also holds the reflections (08-16) -------------------
    Its own view rather than a section of the review list, because the point is to find them
    again quickly on a later visit — including on a quiz he has not retaken. Right or wrong
-   does not matter; "this one is important" is the only thing being recorded. */
+   does not matter; "this one is important" is the only thing being recorded.
+
+   HIS INSTRUCTION: *"the top sections should house starred and those with reflection
+   components. On the main sheet it should have questions that have been starred (no
+   reflection) and questions with their fix boxes, and research with its research."* So this
+   tab is the one place a reflection is ever written down, and the study sheet — which is the
+   paste the week's exam is built from — never carries one. A question qualifies for this
+   list by being starred OR by having a reflection; the two are independent. */
+function topList(){
+  const out = [];
+  D.questions.forEach((q, i) => {
+    const x = rget(q.qid).x.trim();
+    if(S.starred[q.qid] || x) out.push({n: i + 1, i: i, q: q, x: x});
+  });
+  return out;
+}
 function drawStarred(){
-  const list = D.questions.map((_,i)=>i).filter(i => S.starred[qk(i)]);
+  flushResearch();                 // the pane on screen is the live copy — see renderResearch
+  const list = topList();
+  const box = $('#starredview');
   if(!list.length){
-    $('#starredview').innerHTML = '<h3>Starred</h3><p class="empty">Nothing starred yet. '
-      + 'Use the ☆ beside a question.</p>';
+    box.innerHTML = '<h3>Starred</h3><p class="empty">Nothing starred yet. '
+      + 'Use the ☆ beside a question, or write a reflection with <kbd>t</kbd>.</p>';
     return;
   }
-  let h = '<h3>Starred · '+list.length+'</h3>';
-  list.forEach((i,n)=>{
-    h += itemHTML(i, n).replace('</div>',
-      '<p class="rline"><button class="link" data-unstar="'+i+'">Unstar</button></p></div>');
+  const nx = list.filter(x => x.x).length;
+  let h = '<h3>Starred · ' + list.length
+        + (nx ? ' <span class="say">· ' + nx + ' with a reflection</span>' : '') + '</h3>'
+        + '<div class="sheettools"><button class="link" id="copystar">Copy</button>'
+        + '<button class="link" id="copyrefl">Copy reflections only</button></div>'
+        + '<p class="say">Copy writes the concept, the question, the answers and your '
+        + 'reflection, in blocks Notion keeps apart. It is not read by any exam.</p>';
+  list.forEach(x => {
+    // ONE replace, and the tail is assembled first on purpose: itemHTML's only `</div>` is
+    // its own closing one, so chaining a second .replace() would land inside whatever the
+    // first one just inserted.
+    let tail = x.x ? '<div class="rtxt refl">' + tinyMd(boxMarkdown(x.x)) + '</div>' : '';
+    tail += '<p class="rline">';
+    if(S.starred[x.q.qid]) tail += '<button class="link" data-unstar="' + x.i + '">Unstar</button>';
+    tail += '<button class="link" data-refl="' + x.i + '">'
+          + (x.x ? 'Edit reflection' : 'Add a reflection') + '</button>'
+          + '<button class="link" data-copy1="' + x.i + '">Copy this one</button></p>';
+    // Its OWN number, not its position in this list — the copy prints the same one, and a
+    // reflection he pastes into Notion has to point at a question he can find again.
+    h += itemHTML(x.i, x.n - 1).replace('</div>', tail + '</div>');
   });
-  $('#starredview').innerHTML = h;
-  $('#starredview').querySelectorAll('[data-unstar]').forEach(b=>{
+  box.innerHTML = h;
+  box.querySelectorAll('[data-unstar]').forEach(b=>{
     b.onclick = ()=>{ delete S.starred[qk(+b.dataset.unstar)]; save(); syncTabs(); drawStarred(); };
   });
+  // Straight from the list to the box on the question, because that is where a reflection is
+  // written — the tab is where they are read back and copied, not a second editor.
+  box.querySelectorAll('[data-refl]').forEach(b=>{
+    b.onclick = ()=>{ S.i = +b.dataset.refl; S.done = false; S.reviewing = false;
+                      lastShown = -1; save();
+                      // rOpen down first, or openRefl() reads "already on this pane" and
+                      // closes the box it was asked to open.
+                      rOpen = false; setTab('quiz'); openRefl(); };
+  });
+  box.querySelectorAll('[data-copy1]').forEach(b=>{
+    b.onclick = ()=> copyText(oneReflection(topList()
+                      .filter(x => x.i === +b.dataset.copy1)[0]), b, 'Copy this one');
+  });
+  $('#copystar').onclick = ()=> copyText(reflMarkdown(), $('#copystar'), 'Copy');
+  $('#copyrefl').onclick = ()=> copyText(reflOnlyMarkdown(), $('#copyrefl'),
+                                         'Copy reflections only');
+}
+
+/* ---- what the Copy on that tab writes -------------------------------------------------
+   HIS SHAPE, off the screenshot he sent: the concept, then the question, then the right
+   answer, then the wrong ones, then what he wrote. *"Make it short though and i can focus
+   moreso on the textbox since that the periority : the other are just details to use to
+   write in my own way."* So every detail line is ONE line and the reflection is the block
+   with room in it.
+
+   EVERY BLOCK IS SEPARATED BY A BLANK LINE, which is the whole of the *"sometimes it sticks
+   together weirdly when I paste"* fix: Notion merges consecutive lines into one paragraph,
+   so the answer and the rationale used to arrive glued to the stem.
+
+   ONE HEADING FOR THE WHOLE THING, `## Reflections`, and it is load-bearing — see REFLHEAD. */
+const REFLHEAD = 'Reflections';
+function oneReflection(x){
+  if(!x) return '';
+  const q = x.q, mine = ans(x.i), why = q.rationales ? q.rationales[q.correct] : '';
+  const wrong = q.options.map((o, k) => ({o: o, k: k}))
+                         .filter(o => o.k !== q.correct)
+                         .map(o => o.o + (o.k === mine ? ' (you chose)' : ''));
+  let out = '### ' + (q.topic || ('Question ' + x.n)) + '\n\n'
+          + '**' + x.n + '.** ' + q.q + '\n\n'
+          + G_OK + ' ' + q.options[q.correct] + '\n\n'
+          + G_NO + ' ' + wrong.join(' · ') + '\n';
+  if(why) out += '\n' + why + '\n';
+  if(x.x) out += '\n' + boxMarkdown(x.x) + '\n';
+  return out;
+}
+function reflMarkdown(){
+  const list = topList();
+  if(!list.length) return '';
+  return '## ' + REFLHEAD + '\n\n' + list.map(oneReflection).join('\n');
+}
+/* THE TEXTBOX ON ITS OWN, *"copy it independently"* — his thinking with just enough of a
+   label to know which question it came off, and none of the answers. */
+function reflOnlyMarkdown(){
+  const list = topList().filter(x => x.x);
+  if(!list.length) return '';
+  return '## ' + REFLHEAD + '\n\n' + list.map(x =>
+    '### ' + (x.q.topic || ('Question ' + x.n)) + '\n\n' + boxMarkdown(x.x) + '\n').join('\n');
 }
 
 /* ---- the score, written where he copies from ---------------------------------------- */
@@ -2322,17 +2571,49 @@ function fmtLine(t){
   if(!m) m = t.match(/^(.{1,60}?)\s+[—–-]\s+(.+)$/);
   return m ? '**' + m[1].trim() + '** — ' + m[2].trim() : t;
 }
+/* A LINE HE BULLETED STAYS A BULLET (08-16). Everything used to come out as `1. `, which
+   markdown renumbers and Notion honours — fine for a list of terms, wrong now that `* ` in
+   the box means he chose a bullet. So `•` (and a `-`/`*` he typed himself) becomes `- ` and
+   everything else still becomes `1. `. Both are real Notion blocks on paste. */
 function noteMarkdown(){
   const out = [];
   (ta.value || '').split('\n').forEach(raw=>{
     const line = raw.replace(/\t/g, '  ');
-    const m = line.match(/^(\s*)(?:[-*+]\s+|\d+[.)]\s+)?(.*)$/);
-    const text = m[2].trim();
+    const m = line.match(/^(\s*)(•\s+|[-*+]\s+|\d+[.)]\s+)?(.*)$/);
+    const text = m[3].trim();
     if(!text) return;
     const depth = Math.min(Math.floor(m[1].length / 2), 2);
-    out.push('   '.repeat(depth) + '1. ' + fmtLine(text));
+    const bullet = /^(•|[-*+])\s/.test(m[2] || '');
+    out.push('   '.repeat(depth) + (bullet ? '- ' : '1. ') + fmtLine(text));
   });
   return out.join('\n');
+}
+/* WHAT HE TYPED IN A BOX, TURNED INTO BLOCKS NOTION WILL PARSE — and this is the function
+   that answers *"sometimes it sticks together weirdly when I paste."*
+
+   Notion merges consecutive lines into ONE paragraph block unless a blank line separates
+   them, so a reflection written as four short lines arrived as one run-on sentence. Every
+   block that comes out of here is separated by a blank line, and a bullet is emitted as
+   `- `, which Notion turns into a real bulleted block rather than text with a dash in it. */
+function boxMarkdown(text){
+  const out = [];
+  String(text || '').split('\n').forEach(raw => {
+    const line = raw.replace(/\t/g, '  ');
+    const m = line.match(/^(\s*)(•\s+|[-*+]\s+)?(.*)$/);
+    const body = m[3].trim();
+    if(!body) return;
+    const depth = Math.min(Math.floor(m[1].length / 2), 2);
+    out.push(m[2] ? '   '.repeat(depth) + '- ' + body : body);
+  });
+  // A run of bullets is one list and must NOT be broken up; two paragraphs, or a paragraph
+  // next to a list, need the blank line between them or Notion glues them together.
+  let md = '';
+  out.forEach((l, k) => {
+    const bul = /^\s*- /.test(l), prevBul = k ? /^\s*- /.test(out[k-1]) : false;
+    if(k) md += (bul && prevBul) ? '\n' : '\n\n';
+    md += l;
+  });
+  return md;
 }
 /* ---- ☆ and ? read back on the sheet --------------------------------------------------
    Both marks end up in the same place for the same reason he gave: he stopped and marked
@@ -2482,7 +2763,9 @@ function researchMarkdown(){
   let out = '\n\n## My research\n';
   list.forEach(x => {
     out += '\n### ' + x.n + '. ' + x.q.q + '\n\n';
-    const t = x.r.t.trim();
+    // Through boxMarkdown so his bullets arrive as bullets and two lines do not arrive as
+    // one paragraph — see the note there about how Notion joins consecutive lines.
+    const t = boxMarkdown(x.r.t).trim();
     if(t) out += t + '\n\n';
     if(x.r.i.length){
       x.r.i.forEach((_, k) => { out += '_[image ' + (k+1) + ' — on the quiz page]_\n'; });
@@ -2491,10 +2774,11 @@ function researchMarkdown(){
   });
   return out.replace(/\n+$/, '\n');
 }
-/* TWO HEADINGS WHOSE TEXT IS LOAD-BEARING. `notion_board.py notes` splits both of these out
-   of the row body BY NAME — `split_fixes()`, and `FIX_HEADING` / `SKIP_HEADING` there are
-   these two strings. Everything else on the row stays material. Rename one here and it
-   silently becomes material again, which is the bug this whole split exists to fix. */
+/* THREE HEADINGS WHOSE TEXT IS LOAD-BEARING. `notion_board.py notes` splits all three out of
+   the row body BY NAME — `split_fixes()`, and `FIX_HEADING` / `SKIP_HEADING` / `REFL_HEADING`
+   there are these three strings. Everything else on the row stays material. Rename one here
+   and it silently becomes material again, which is the bug this whole split exists to fix.
+   `REFLHEAD` is declared with the Starred tab's Copy, beside the function that writes it. */
 const FIXHEAD = 'Fix these questions';
 const SKIPHEAD = 'Skipped';
 
@@ -2526,7 +2810,7 @@ function fixMarkdown(){
   list.forEach(x => {
     out += '\n### ' + x.n + '. ' + x.q.q + '\n\n'
          + '**Answer:** ' + x.q.options[x.q.correct] + '\n\n'
-         + '**Change it to:** ' + x.r.f.trim() + '\n';
+         + '**Change it to:**\n\n' + boxMarkdown(x.r.f).trim() + '\n';
   });
   return out.replace(/\n+$/, '\n');
 }
@@ -2609,20 +2893,25 @@ function fullHTML(){
 function tinyMd(md){
   const esc2 = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const inline = s => esc2(s).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  // THE STACK HOLDS TAG NAMES, not just a depth, since 08-16: `- ` is a bullet and `1. ` is
+  // numbered, and the preview has to show which he wrote or it is not a preview of the paste.
   let html = '', stack = [];
+  const shut = () => { while(stack.length) html += '</' + stack.pop() + '>'; };
   md.split('\n').forEach(line=>{
     if(!line.trim()) return;
     const h = line.match(/^(#{1,4})\s+(.*)$/);
-    if(h){ while(stack.length){ html += '</ol>'; stack.pop(); }
+    if(h){ shut();
            html += '<h' + Math.min(h[1].length+1,5) + '>' + inline(h[2]) + '</h' + Math.min(h[1].length+1,5) + '>'; return; }
-    const m = line.match(/^(\s*)(?:[-*+]|\d+[.)])\s+(.*)$/);
-    if(!m){ while(stack.length){ html += '</ol>'; stack.pop(); } html += '<p>' + inline(line.trim()) + '</p>'; return; }
-    const d = Math.floor(m[1].length / 3);
-    while(stack.length > d + 1){ html += '</ol>'; stack.pop(); }
-    while(stack.length < d + 1){ html += '<ol>'; stack.push(1); }
-    html += '<li>' + inline(m[2]) + '</li>';
+    const m = line.match(/^(\s*)([-*+]|\d+[.)])\s+(.*)$/);
+    if(!m){ shut(); html += '<p>' + inline(line.trim()) + '</p>'; return; }
+    const d = Math.floor(m[1].length / 3), tag = /^\d/.test(m[2]) ? 'ol' : 'ul';
+    while(stack.length > d + 1) html += '</' + stack.pop() + '>';
+    // A list that changes kind at the same depth is a new list, not a continued one.
+    if(stack.length === d + 1 && stack[d] !== tag){ html += '</' + stack.pop() + '>'; }
+    while(stack.length < d + 1){ html += '<' + tag + '>'; stack.push(tag); }
+    html += '<li>' + inline(m[3]) + '</li>';
   });
-  while(stack.length){ html += '</ol>'; stack.pop(); }
+  shut();
   return html;
 }
 
@@ -2630,8 +2919,14 @@ if(ta){
   ta.value = loadNotes();
   saveNotes();
   let t = null;
-  ta.addEventListener('input', ()=>{ clearTimeout(t); t = setTimeout(saveNotes, 400); });
+  ta.addEventListener('input', ()=>{ bulletType(ta); clearTimeout(t); t = setTimeout(saveNotes, 400); });
   ta.addEventListener('blur', saveNotes);
+  // Bullets here too, and PLAIN Enter is the newline — this box is not a question and has
+  // nowhere to move on to, which is why the document handler leaves it alone.
+  ta.addEventListener('keydown', e => {
+    if(e.key === 'Tab' && bulletIndent(ta, e.shiftKey)){ e.preventDefault(); return; }
+    if(e.key === 'Enter' && !e.shiftKey && bulletNewline(ta)) e.preventDefault();
+  });
   $('#previewnotes').onclick = ()=>{
     const p = $('#minepreview'), on = p.classList.contains('hide');
     p.innerHTML = on ? (noteMarkdown() ? tinyMd(noteMarkdown())
@@ -2707,7 +3002,7 @@ document.addEventListener('keydown', e=>{
      without the blur the next keystroke would still be going into a hidden textarea.
      The sheet's notes box is NOT in this: it is not a question and has nowhere to go. */
   if(t && (t.tagName === 'TEXTAREA' || t.tagName === 'INPUT' || t.isContentEditable)){
-    if(e.key === 'Enter' && !e.shiftKey && (t.id === 'rtext' || t.id === 'rfix')
+    if(e.key === 'Enter' && !e.shiftKey && PANES[rPane] && t === PANES[rPane]
        && D.tab === 'quiz' && !S.done && !S.reviewing){
       e.preventDefault();
       closeResearch();
@@ -2746,10 +3041,10 @@ document.addEventListener('keydown', e=>{
   // `h` IS THE HINT, not option H. Every quiz here has four options, so H as an option key
   // has never been reachable; if one ever has eight, the eighth is still `8`.
   if(e.key === 'h' || e.key === 'H'){ toggleHint(); return; }
-  // `r` TOGGLES THE RESEARCH BOX and, opening, puts him in it — the point of the key is "I
-  // want to paste this now". R is past H, so it can never be an option key. From inside the
-  // box `r` is a letter and Esc is what shuts it; see the Escape branch at the top.
-  if(e.key === 'r' || e.key === 'R'){ e.preventDefault(); toggleResearch(); return; }
+  // `r` OPENS THE BOX ON THE RESEARCH PANE — the point of the key is "I want to paste this
+  // now". R is past H, so it can never be an option key. From inside the box `r` is a letter
+  // and Esc is what shuts it; see the Escape branch at the top.
+  if(e.key === 'r' || e.key === 'R'){ e.preventDefault(); openResearch('research'); return; }
   /* `f` OPENS THE BOX ON THE FIX PANE. It is claimed BEFORE the option lookup below, and
      unlike `h` and `r` that costs something real: F is the SIXTH option letter, so a quiz
      with six or more options would lose `f` as an answer key. Every quiz and exam this
@@ -2757,6 +3052,20 @@ document.addEventListener('keydown', e=>{
      so the cost is theoretical — but it is a tighter margin than `h` (eighth) or `r` (past
      the end), and if that ever changes this is the line that breaks. */
   if(e.key === 'f' || e.key === 'F'){ e.preventDefault(); openFix(); return; }
+  /* `t` IS THE REFLECTION PANE — "thoughts", his own word for what goes in it. It had to be
+     past G like the rest, and every letter that spells the word is either an option key (e)
+     or already taken (r, f), so the mnemonic is the noun rather than the label. */
+  if(e.key === 't' || e.key === 'T'){ e.preventDefault(); openRefl(); return; }
+  /* `u` IS REDO, and it is `u` because `r` was already research (08-16). He asked for the
+     key and said he had wanted `r` for it — but `r` has meant the box since 08-11 and moving
+     it would cost the one key he uses most to swap in the one he uses after a mis-click.
+     `u` for undo is what the button actually does: it is the mis-click undo. It goes through
+     the BUTTON, whose visibility is already the gate — hidden until he has answered. */
+  if(e.key === 'u' || e.key === 'U'){
+    const b = $('#redo');
+    if(b && !b.classList.contains('hide')) b.click();
+    return;
+  }
   // `s` STARS and `/` TAGS IT "no idea" — the two marks he makes while reading, on the two
   // keys nearest that. Both are past G, so neither can ever be an option key. `?` is bound
   // beside `/` because it is the same key with a shift on it and the glyph he sees is `?`;
