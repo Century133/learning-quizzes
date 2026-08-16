@@ -122,8 +122,8 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
  border:1px solid transparent;border-radius:var(--radius);padding:var(--opad);
  color:var(--text);font:inherit;font-size:var(--osize);cursor:pointer;
  transition:background .16s ease,border-color .16s ease,opacity .16s ease}
-.opt:hover:not(:disabled){background:var(--surface-hi)}
-.opt:disabled{cursor:default}
+.opt:hover:not(.locked){background:var(--surface-hi)}
+.opt.locked{cursor:default}
 .line{display:flex;gap:12px;align-items:flex-start;line-height:1.4}
 .line .k{color:var(--muted);min-width:1.25em}
 .line .t{flex:1}
@@ -176,7 +176,7 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
 .q,.qq,.why,.lab,.hinttext,.rline,.tag,.sheet,.topics,.legend{
  user-select:text;-webkit-user-select:text}
 .opt{user-select:none;-webkit-user-select:none}
-.opt:disabled,.opt:disabled *{user-select:text;-webkit-user-select:text;cursor:auto}
+.opt.locked,.opt.locked *{user-select:text;-webkit-user-select:text;cursor:auto}
 .star,.dots,.tab,button.pill{user-select:none;-webkit-user-select:none}
 
 /* ---- HIS RESEARCH, one box per question ----
@@ -294,6 +294,39 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .tbar{grid-column:1/-1;height:3px;background:var(--line);border-radius:999px;
  overflow:hidden}
 .tbar i{display:block;height:100%;background:var(--text)}
+/* A subchapter he has not sat gets a rail with nothing in it rather than a 0% bar, because a
+   bar at zero reads as "scored nothing" and the whole point is that it has not been asked. */
+.tbar.waiting{background:repeating-linear-gradient(90deg,var(--line) 0 3px,transparent 3px 6px)}
+.topics.parts .trow em{font-style:normal;color:var(--muted);font-size:.8rem;margin-left:8px}
+.ptotal{margin:14px 0 0;color:var(--muted);font-size:.88rem}
+.ptotal b{color:var(--text);font-variant-numeric:tabular-nums;font-size:1.05rem;
+ font-weight:600;margin-right:8px}
+
+/* ---- THE SUBCHAPTER PICKER (08-16) ----
+   Deliberately the same furniture as the end card — same heading treatment, same rails, same
+   tabular numbers — because it IS the end card most of the time he sees it: he opens the link
+   and this screen tells him what he has scored and what is left. A separate visual language
+   for "choose" and "review" would make one screen look like two. */
+.picker{padding:2px 0 8px}
+.picker h3{font-size:1.35rem;font-weight:600;letter-spacing:-.01em;margin:0 0 8px}
+.psub{color:var(--muted);font-size:.9rem;margin:0 0 22px;max-width:46ch}
+.pscore{margin:0 0 22px}
+.pscore b{font-size:1.5rem;font-variant-numeric:tabular-nums;font-weight:600}
+.pscore span{color:var(--muted);font-size:.88rem;margin-left:10px}
+.prows{display:flex;flex-direction:column;gap:8px;margin:0 0 24px}
+.prow{display:grid;grid-template-columns:22px auto 1fr;gap:4px 12px;align-items:center;
+ width:100%;text-align:left;font:inherit;cursor:pointer;padding:13px 16px;
+ border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--text)}
+.prow:hover{border-color:var(--muted)}
+.prow.pon{border-color:var(--accent)}
+.pmark{color:var(--accent);font-size:.95rem;line-height:1}
+.plabel{font-variant-numeric:tabular-nums;font-weight:600}
+.plabel em{font-style:normal;font-weight:400;color:var(--muted);margin-left:8px}
+.pnote{color:var(--muted);font-size:.86rem;justify-self:end}
+.pbar{grid-column:2/-1;height:3px;background:var(--line);border-radius:999px;overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--text)}
+.pgo{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)}
 
 /* ---- review list ---- */
 .rev{padding:6px 0 36px}
@@ -389,6 +422,27 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
  color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
  padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.6;outline:none;margin-top:16px}
 .frqin:focus{border-color:var(--accent)}
+/* THE STICKY HEADER WAS EATING THE CLICK (08-16). It is 49px tall with z-index 5, so the top
+   strip of a box scrolled under it is dead to the mouse — and the top strip is exactly where
+   the "Write your answer." placeholder is, so the box reads as broken. His words: *"I cant
+   even click the textbox for this exam."* `scroll-margin-top` keeps the card clear of the
+   header whenever anything scrolls it into view; the click handler on the card is the belt to
+   that braces, since he can also scroll there by hand. */
+.frq{scroll-margin-top:64px}
+
+/* The only thing on this page allowed to shout. It sits over everything because a saved
+   answer is the one promise the page makes. */
+#savewarn{position:fixed;left:12px;right:12px;bottom:12px;z-index:60;padding:12px 16px;
+ border-radius:12px;font-size:.86rem;line-height:1.4;background:#7f1d1d;color:#fff;
+ box-shadow:0 6px 24px rgba(0,0,0,.4)}
+#savewarn.hide{display:none}
+
+/* WHERE FORWARD MEANS "THE NEXT BLANK ONE". Reaching the end of the list with holes in it
+   sends him back to the first one — right, and invisible until 08-16, when he read it as the
+   paper losing his place: *"when I thought I was done I wasnt… questions are ghosting until
+   the end."* The counter says so now, and the rail stops pretending the run is nearly over. */
+.fillnote{display:inline-flex;align-items:center;gap:6px;color:var(--accent);
+ font-size:.7rem;letter-spacing:.07em;text-transform:uppercase}
 .frqin::placeholder{color:var(--muted);opacity:.7}
 .acts.inline{margin-top:12px}
 .rubric{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
@@ -574,12 +628,13 @@ Self-control is finite - one hard task leaves less for the next"></textarea>
     <button class="pill ghost hide" id="retake">Retake</button>
     <span class="spacer"></span>
     <button class="pill hide" id="review">Review quiz</button>
-    <button class="pill primary hide" id="pass2">2nd Pass</button>
+    <button class="pill ghost hide" id="pass2">2nd Pass</button>
+    <button class="pill primary hide" id="towritten">Written half</button>
     <button class="pill primary" id="next">Next</button>
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "el-8-7", "title": "8.7 Violating vs. flouting a maxim", "subtitle": "Chapter 8 · Pragmatics", "book": "EL", "hash": "af04ec0d2dc43307", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "A friend asks where you are, and you text back, 'I am in Vancouver.' Two minutes later, you text, 'Actually, I am in Ottawa.' How does this affect the flow of your conversation?", "options": ["The friend will naturally assume the second location is a sarcastic joke about the first one.", "The friend will perceive you as being highly cooperative for providing an update so quickly.", "The conversation becomes anomalous and requires a repair of the facts before moving forward.", "The conversation continues smoothly because the most recent information is always assumed to be the update."], "rationales": ["Without specific context or obvious impossibility, a simple contradiction is more likely to be seen as a mistake or a lie rather than sarcasm.", "Providing conflicting factual information is generally viewed as uncooperative because it obscures the truth of the situation.", "Contradicting oneself on basic facts without explanation creates a breakdown in discourse that usually requires a correction or clarification.", "Directly contradicting a previous statement within seconds usually triggers a 'Wait, what?' response rather than a smooth transition."], "correct": 2, "hint": "consider how people react when the basic facts of a conversation don't line up.", "topic": "Maxim violations", "sec": "", "src": "", "link": "", "qid": "ea5e08ea71"}, {"q": "Imagine you and a colleague both know that your office is in Seattle. When asked where the meeting is, you reply, 'It is in the Seattle office, in Florida.' Which outcome is most likely?", "options": ["The colleague will be confused and spend the afternoon looking for flights to Florida.", "The colleague will think you are trying to lie to them about the meeting location.", "The colleague assumes you are joking or being sarcastic to imply the location is obvious.", "The conversation will break down because the Maxim of Quality was violated accidentally."], "rationales": ["Because the falsehood is obvious to both participants, it is less likely to be taken as a serious factual error.", "Lying usually involves an attempt to be believable; claiming a local office is in another state is too obvious to be a successful lie.", "When a speaker says something that is obviously and deliberately false to both parties, it signals that the literal meaning should be ignored for an implied one.", "This scenario describes a deliberate use of falsity to create a specific meaning, rather than an accidental error that breaks the discourse."], "correct": 2, "hint": "think about the intention behind saying something that everyone knows is impossible.", "topic": "Flouting maxims", "sec": "", "src": "", "link": "", "qid": "bbf1660037"}, {"q": "If you are writing an email and want to use sarcasm, which of these strategies is suggested by the text to ensure your meaning is clear?", "options": ["Avoid using punctuation so the reader focuses only on the words themselves.", "Ensure that the falsehood you are using is subtle so the reader has to think about it.", "State the implied meaning directly afterward if there is a risk the reader will take it literally.", "Use complex vocabulary to signal that you are not being literal."], "rationales": ["The text mentions that intonation and expressions help indicate intent; removing formatting in writing would likely make the message harder to interpret.", "For flouting to work, the text indicates the violation should be very noticeable or obvious to the addressee.", "The text suggests that if a discourse strategy like sarcasm is missed, the speaker may need to utter the intended meaning out loud to clarify.", "Word choice complexity does not necessarily signal sarcasm; the text focuses on the obviousness of the falsehood and direct clarification."], "correct": 2, "hint": "consider what a speaker might do if their sarcasm is taken as a literal lie.", "topic": "Communicative strategies", "sec": "", "src": "", "link": "", "qid": "f250c6d509"}, {"q": "In a text exchange, someone says something that is clearly untrue. You respond with 'Wait, what?' followed by a request to straighten out the facts. What does this reaction indicate?", "options": ["The speaker is using a common native discourse strategy for humor.", "You have successfully identified a subtle implicature.", "The conversation is progressing efficiently toward a shared goal.", "The conversation has broken down because a communicative rule was violated."], "rationales": ["A 'Wait, what?' reaction usually follows a breakdown in cooperation or a confusing violation, rather than a successful attempt at humor.", "Successfully identifying an implicature would mean understanding the hidden meaning, rather than being confused and needing to fix the facts.", "Having to stop and repair the discourse is an indication that the conversation has stalled or gone wrong, rather than progressing efficiently.", "The need to repair the discourse and straighten out facts indicates that the speaker was perceived as uncooperative or that the conversation became anomalous."], "correct": 3, "hint": "think about the goal of discourse when facts become confusing.", "topic": "Quality Maxim", "sec": "", "src": "", "link": "", "qid": "9fc3f89a91"}, {"q": "Which of these scenarios best illustrates 'flouting' the truth to get a point across?", "options": ["Telling a friend 'Oh sure, I love walking 10 miles in the rain' when you are clearly exhausted and wet.", "Purposefully telling a lie about your age so that someone will find you more impressive.", "Answering 'I don't know' to a question when you actually do know the answer.", "Accidentally giving someone the wrong street address because you forgot the correct one."], "rationales": ["By saying something obviously false in a context where the truth is clear, the speaker creates an implicature of the opposite meaning.", "Lying involves trying to make the listener believe the falsehood is true, which is a violation rather than a flout.", "Concealing information is a violation of cooperation that prevents the listener from discovering the truth, rather than creating a new implied meaning.", "An accidental mistake is a violation of quality that results in misinformation, not a deliberate move to create a hidden meaning."], "correct": 0, "hint": "look for a situation where the speaker wants the listener to know they are being untruthful.", "topic": "Flouting maxims", "sec": "", "src": "", "link": "", "qid": "2b88f3d035"}, {"q": "A speaker says something that sounds like a lie, but they use an exaggerated tone of voice and a wink. Why are these non-verbal cues important?", "options": ["They provide a way for the speaker to hide the fact that they are violating a maxim.", "They are only used by people who do not understand native discourse strategies.", "They show that the speaker has made a mistake and is trying to repair the conversation.", "They indicate that the speaker is flouting a rule to create a specific meaning rather than just being uncooperative."], "rationales": ["Exaggerated tones and winks make the untruth more obvious, not more hidden.", "The text suggests these cues are standard tools for helping listeners identify when a maxim is being flouted.", "Repairing a conversation involves straightening out facts, whereas these cues signal that the 'false' statement was intentional.", "Intonation and facial expressions help the listener realize the speaker is being obviously untruthful on purpose."], "correct": 3, "hint": "consider how we signal to others that we aren't being literal.", "topic": "Flouting maxims", "sec": "", "src": "", "link": "", "qid": "cb30cc1092"}, {"q": "When you catch someone in a contradiction and think, 'Something has gone wrong in this discussion,' what is your intuition telling you?", "options": ["The conversation is following a standard native discourse strategy.", "The person is adhering strictly to the Maxim of Quality.", "The person is skillfully using implicature to save time.", "The person has been uncooperative by violating a conversational rule."], "rationales": ["While violations happen, the feeling that 'something has gone wrong' signals a failure in standard cooperative communication.", "The Maxim of Quality requires being truthful; a contradiction is a sign that this rule has been broken.", "Implicature usually leads to understanding a deeper meaning, not a feeling that the discourse itself has broken down.", "When a maxim is violated, participants feel the discourse is anomalous and that cooperation has failed."], "correct": 3, "hint": "focus on the internal 'alarm' that goes off when a conversation becomes confusing.", "topic": "Maxim violations", "sec": "", "src": "", "link": "", "qid": "2b102bff6c"}, {"q": "Why might a sarcasm-heavy text message be interpreted as a flat-out lie by some readers but not others?", "options": ["Some readers do not believe that it is possible to violate a maxim deliberately.", "Communication through implied meaning is not a universal discourse strategy used by everyone.", "Written text is technically impossible to repair once the 'Send' button is pressed.", "The Maxim of Quality is interpreted differently in different cities like Toronto and Vancouver."], "rationales": ["The issue isn't a belief about the possibility, but rather a difference in the strategies used to process indirect communication.", "The text notes that implicature may not be part of everyone's native strategies, making sarcasm as confusing as a mistake for some.", "Conversations can be repaired in writing by sending follow-up messages or clarifications, just as in spoken language.", "While location was used in an example, the text focuses on general discourse strategies rather than regional definitions of truth."], "correct": 1, "hint": "think about why the same sentence might work for one person but fail for another.", "topic": "Native discourse strategies", "sec": "", "src": "", "link": "", "qid": "e114e8b86f"}, {"q": "In the example 'No, Toronto, Saskatchewan,' why is this considered flouting rather than just a lie?", "options": ["The speaker assumes the listener knows the statement is false, creating an implied 'yes' instead.", "The speaker actually believes there is a city by that name, so it isn't a lie.", "It is a lie, but it is a lie that helps the conversation move faster.", "The speaker corrected themselves immediately after saying it."], "rationales": ["Flouting involves appearing to violate a rule in a very obvious way to convey a message that isn't explicitly stated.", "The context of the example is that both participants know the city does not exist in that province.", "The text distinguishes between a lie (violation) and a flout; the latter is about creating implicature, not just being untruthful for speed.", "The example shows the speaker intentionally using the false location to be sarcastic, not as an error they quickly fixed."], "correct": 0, "hint": "consider the shared knowledge between the two people talking.", "topic": "Flouting maxims", "sec": "", "src": "", "link": "", "qid": "e0743811ee"}, {"q": "Which of these is a necessary condition for a statement to be considered a 'flout' of the Maxim of Quality?", "options": ["The speaker must provide a citation or evidence that they are about to be untruthful.", "The statement must be true in at least one other geographical location.", "The violation must be very noticeable and obvious to the person listening.", "The listener must be a non-native speaker of the language being used."], "rationales": ["Evidence is part of the literal Maxim of Quality; flouting relies on the lack of truth being obvious without formal citations.", "The specific truth elsewhere is irrelevant; what matters is that the statement is clearly false in the current conversational context.", "To create an implicature, the speaker must appear to violate the maxim in an unmistakable way so the listener looks for a hidden meaning.", "While native strategies differ, flouting is a general communicative concept that can happen in any language among any speakers."], "correct": 2, "hint": "focus on what makes the 'trick' work for the listener.", "topic": "Flouting maxims", "sec": "", "src": "", "link": "", "qid": "de01d9ccc0"}], "hasSheet": true, "frq": [], "notebook": "https://notebooklm.google.com/notebook/2593f308-1e5d-4d51-ace7-2db8cbc5e8ff/artifact/9d0503f9-7ffb-49e9-8764-eddbd24b6f71", "root": "../index.html", "tab": "quiz", "sheet": "### 1. Maxim violations\nDiscourse repair serves as a necessary recalibration of the shared communicative environment when the Cooperative Principle is compromised by a clandestine violation of a conversational maxim.\n\n**Key Terms**\n1. **Maxim violation** — The act of being uncooperative in a manner that causes the conversation to become anomalous or break down; unlike flouting, this is often a clandestine failure to sustain the Cooperative Principle. \n    * *Example*: Bo informing Aya he lives in Ottawa and then stating he lives in Toronto moments later.\n2. **Discourse repair** — The essential pragmatic process of straightening out contradictory facts or \"common ground\" before a conversation can logically continue.\n\n**Analysis**\n1. **Bo’s residence claim** — In a context where Aya (who lives in Vancouver) and Bo (who lives in Ottawa) met online, Bo provides contradictory statements regarding his residence. This violation causes the discourse to fail because the mutual ground of the conversation has been corrupted by conflicting data; the participants must engage in repair to restore a stable environment for cooperative exchange.\n\n### 2. Flouting maxims\nFlouting represents a sophisticated communicative shift where the speaker relies on the listener’s recognition of a blatant, overt \"error\" to convey a non-literal truth, thereby preserving the Cooperative Principle at a deeper level.\n\n**Key Terms**\n1. **Flouting a maxim** — Appearing to violate a maxim in a deliberate, overt, and obvious manner to signal to the interlocutor that an implicature is intended.\n2. **Implicature** — The additional, non-literal meaning generated when a speaker intentionally and obviously appears to breach a maxim. \n    * *Example*: Saying \"Toronto, Saskatchewan\" to imply \"Yes, of course it's Toronto, Ontario.\"\n\n**Analysis**\n1. **Aya’s \"Toronto, Saskatchewan\" claim** — While discussing weekend plans, Aya claims to have visited a non-existent city. The success of this flout relies entirely on **Mutual Contextual Beliefs**—the fact that both Aya and Bo know there is no Toronto in Saskatchewan. By making a statement that is so obviously false, Aya creates a specific implicature rather than a breakdown in communication.\n\n### 3. Communicative strategies\nTo distinguish overt flouting from clandestine violations, speakers and signers employ specific paralinguistic signals that mark the utterance as non-literal.\n\n**Key Terms**\n1. **Intonation** — A vocal tool in spoken language used to modulate the delivery of an utterance, indicating that the speaker is flouting a maxim rather than speaking literally.\n2. **Facial expressions** — Visual cues used in both spoken and signed languages that serve as pragmatic markers to signal that a maxim is being flouted.\n\n### 4. Quality Maxim\nThe Maxim of Quality constitutes the foundational expectation of epistemic sincerity, requiring that discourse participants contribute only what they believe to be truthful and well-supported.\n\n**Key Terms**\n1. **Maxim of Quality** — The expectation that discourse participants will provide truthful information and refrain from making claims for which they lack adequate evidence.\n\n**Analysis**\n1. **Aya’s intentional falsehood** — When Aya provides information she knows to be false (e.g., the Toronto, Saskatchewan example), she is specifically flouting the Maxim of Quality. Because the breach is overt, the listener interprets it as an implicature rather than a deceptive violation.\n\n### 5. Native discourse strategies\nThe efficacy of flouting as a communicative tool is contingent upon individual and cultural habituation to native discourse strategies, which dictate the processing and interpretation of non-literal meaning.\n\n**Key Terms**\n1. **Native discourse strategies** — Habitual, culturally-informed patterns of communication that determine whether a speaker typically employs or recognizes implicature.\n2. **Sarcasm** — A specific form of flouting that may result in a total breakdown of communication for interlocutors whose native strategies exclude the processing of implicature.\n\n**Analysis**\n1. **Explicit clarification** — For participants whose native strategies do not include implicature, a flout may be indistinguishable from a violation. In such cases, the speaker must clarify the discourse by uttering the implicature part out loud, such as saying, \"Oh, I was being sarcastic; of course it's Toronto, Ontario!\" to resolve the confusion."}</script>
+<script id="quiz-data" type="application/json">{"id": "el-8-7", "title": "8.7 Violating vs. flouting a maxim", "subtitle": "Chapter 8 · Pragmatics", "book": "EL", "hash": "af04ec0d2dc43307", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "A friend asks where you are, and you text back, 'I am in Vancouver.' Two minutes later, you text, 'Actually, I am in Ottawa.' How does this affect the flow of your conversation?", "options": ["The friend will naturally assume the second location is a sarcastic joke about the first one.", "The friend will perceive you as being highly cooperative for providing an update so quickly.", "The conversation becomes anomalous and requires a repair of the facts before moving forward.", "The conversation continues smoothly because the most recent information is always assumed to be the update."], "rationales": ["Without specific context or obvious impossibility, a simple contradiction is more likely to be seen as a mistake or a lie rather than sarcasm.", "Providing conflicting factual information is generally viewed as uncooperative because it obscures the truth of the situation.", "Contradicting oneself on basic facts without explanation creates a breakdown in discourse that usually requires a correction or clarification.", "Directly contradicting a previous statement within seconds usually triggers a 'Wait, what?' response rather than a smooth transition."], "correct": 2, "hint": "consider how people react when the basic facts of a conversation don't line up.", "topic": "Maxim violations", "sec": "", "src": "", "link": "", "qid": "ea5e08ea71"}, {"q": "Imagine you and a colleague both know that your office is in Seattle. When asked where the meeting is, you reply, 'It is in the Seattle office, in Florida.' Which outcome is most likely?", "options": ["The colleague will be confused and spend the afternoon looking for flights to Florida.", "The colleague will think you are trying to lie to them about the meeting location.", "The colleague assumes you are joking or being sarcastic to imply the location is obvious.", "The conversation will break down because the Maxim of Quality was violated accidentally."], "rationales": ["Because the falsehood is obvious to both participants, it is less likely to be taken as a serious factual error.", "Lying usually involves an attempt to be believable; claiming a local office is in another state is too obvious to be a successful lie.", "When a speaker says something that is obviously and deliberately false to both parties, it signals that the literal meaning should be ignored for an implied one.", "This scenario describes a deliberate use of falsity to create a specific meaning, rather than an accidental error that breaks the discourse."], "correct": 2, "hint": "think about the intention behind saying something that everyone knows is impossible.", "topic": "Flouting maxims", "sec": "", "src": "", "link": "", "qid": "bbf1660037"}, {"q": "If you are writing an email and want to use sarcasm, which of these strategies is suggested by the text to ensure your meaning is clear?", "options": ["Avoid using punctuation so the reader focuses only on the words themselves.", "Ensure that the falsehood you are using is subtle so the reader has to think about it.", "State the implied meaning directly afterward if there is a risk the reader will take it literally.", "Use complex vocabulary to signal that you are not being literal."], "rationales": ["The text mentions that intonation and expressions help indicate intent; removing formatting in writing would likely make the message harder to interpret.", "For flouting to work, the text indicates the violation should be very noticeable or obvious to the addressee.", "The text suggests that if a discourse strategy like sarcasm is missed, the speaker may need to utter the intended meaning out loud to clarify.", "Word choice complexity does not necessarily signal sarcasm; the text focuses on the obviousness of the falsehood and direct clarification."], "correct": 2, "hint": "consider what a speaker might do if their sarcasm is taken as a literal lie.", "topic": "Communicative strategies", "sec": "", "src": "", "link": "", "qid": "f250c6d509"}, {"q": "In a text exchange, someone says something that is clearly untrue. You respond with 'Wait, what?' followed by a request to straighten out the facts. What does this reaction indicate?", "options": ["The speaker is using a common native discourse strategy for humor.", "You have successfully identified a subtle implicature.", "The conversation is progressing efficiently toward a shared goal.", "The conversation has broken down because a communicative rule was violated."], "rationales": ["A 'Wait, what?' reaction usually follows a breakdown in cooperation or a confusing violation, rather than a successful attempt at humor.", "Successfully identifying an implicature would mean understanding the hidden meaning, rather than being confused and needing to fix the facts.", "Having to stop and repair the discourse is an indication that the conversation has stalled or gone wrong, rather than progressing efficiently.", "The need to repair the discourse and straighten out facts indicates that the speaker was perceived as uncooperative or that the conversation became anomalous."], "correct": 3, "hint": "think about the goal of discourse when facts become confusing.", "topic": "Quality Maxim", "sec": "", "src": "", "link": "", "qid": "9fc3f89a91"}, {"q": "Which of these scenarios best illustrates 'flouting' the truth to get a point across?", "options": ["Telling a friend 'Oh sure, I love walking 10 miles in the rain' when you are clearly exhausted and wet.", "Purposefully telling a lie about your age so that someone will find you more impressive.", "Answering 'I don't know' to a question when you actually do know the answer.", "Accidentally giving someone the wrong street address because you forgot the correct one."], "rationales": ["By saying something obviously false in a context where the truth is clear, the speaker creates an implicature of the opposite meaning.", "Lying involves trying to make the listener believe the falsehood is true, which is a violation rather than a flout.", "Concealing information is a violation of cooperation that prevents the listener from discovering the truth, rather than creating a new implied meaning.", "An accidental mistake is a violation of quality that results in misinformation, not a deliberate move to create a hidden meaning."], "correct": 0, "hint": "look for a situation where the speaker wants the listener to know they are being untruthful.", "topic": "Flouting maxims", "sec": "", "src": "", "link": "", "qid": "2b88f3d035"}, {"q": "A speaker says something that sounds like a lie, but they use an exaggerated tone of voice and a wink. Why are these non-verbal cues important?", "options": ["They provide a way for the speaker to hide the fact that they are violating a maxim.", "They are only used by people who do not understand native discourse strategies.", "They show that the speaker has made a mistake and is trying to repair the conversation.", "They indicate that the speaker is flouting a rule to create a specific meaning rather than just being uncooperative."], "rationales": ["Exaggerated tones and winks make the untruth more obvious, not more hidden.", "The text suggests these cues are standard tools for helping listeners identify when a maxim is being flouted.", "Repairing a conversation involves straightening out facts, whereas these cues signal that the 'false' statement was intentional.", "Intonation and facial expressions help the listener realize the speaker is being obviously untruthful on purpose."], "correct": 3, "hint": "consider how we signal to others that we aren't being literal.", "topic": "Flouting maxims", "sec": "", "src": "", "link": "", "qid": "cb30cc1092"}, {"q": "When you catch someone in a contradiction and think, 'Something has gone wrong in this discussion,' what is your intuition telling you?", "options": ["The conversation is following a standard native discourse strategy.", "The person is adhering strictly to the Maxim of Quality.", "The person is skillfully using implicature to save time.", "The person has been uncooperative by violating a conversational rule."], "rationales": ["While violations happen, the feeling that 'something has gone wrong' signals a failure in standard cooperative communication.", "The Maxim of Quality requires being truthful; a contradiction is a sign that this rule has been broken.", "Implicature usually leads to understanding a deeper meaning, not a feeling that the discourse itself has broken down.", "When a maxim is violated, participants feel the discourse is anomalous and that cooperation has failed."], "correct": 3, "hint": "focus on the internal 'alarm' that goes off when a conversation becomes confusing.", "topic": "Maxim violations", "sec": "", "src": "", "link": "", "qid": "2b102bff6c"}, {"q": "Why might a sarcasm-heavy text message be interpreted as a flat-out lie by some readers but not others?", "options": ["Some readers do not believe that it is possible to violate a maxim deliberately.", "Communication through implied meaning is not a universal discourse strategy used by everyone.", "Written text is technically impossible to repair once the 'Send' button is pressed.", "The Maxim of Quality is interpreted differently in different cities like Toronto and Vancouver."], "rationales": ["The issue isn't a belief about the possibility, but rather a difference in the strategies used to process indirect communication.", "The text notes that implicature may not be part of everyone's native strategies, making sarcasm as confusing as a mistake for some.", "Conversations can be repaired in writing by sending follow-up messages or clarifications, just as in spoken language.", "While location was used in an example, the text focuses on general discourse strategies rather than regional definitions of truth."], "correct": 1, "hint": "think about why the same sentence might work for one person but fail for another.", "topic": "Native discourse strategies", "sec": "", "src": "", "link": "", "qid": "e114e8b86f"}, {"q": "In the example 'No, Toronto, Saskatchewan,' why is this considered flouting rather than just a lie?", "options": ["The speaker assumes the listener knows the statement is false, creating an implied 'yes' instead.", "The speaker actually believes there is a city by that name, so it isn't a lie.", "It is a lie, but it is a lie that helps the conversation move faster.", "The speaker corrected themselves immediately after saying it."], "rationales": ["Flouting involves appearing to violate a rule in a very obvious way to convey a message that isn't explicitly stated.", "The context of the example is that both participants know the city does not exist in that province.", "The text distinguishes between a lie (violation) and a flout; the latter is about creating implicature, not just being untruthful for speed.", "The example shows the speaker intentionally using the false location to be sarcastic, not as an error they quickly fixed."], "correct": 0, "hint": "consider the shared knowledge between the two people talking.", "topic": "Flouting maxims", "sec": "", "src": "", "link": "", "qid": "e0743811ee"}, {"q": "Which of these is a necessary condition for a statement to be considered a 'flout' of the Maxim of Quality?", "options": ["The speaker must provide a citation or evidence that they are about to be untruthful.", "The statement must be true in at least one other geographical location.", "The violation must be very noticeable and obvious to the person listening.", "The listener must be a non-native speaker of the language being used."], "rationales": ["Evidence is part of the literal Maxim of Quality; flouting relies on the lack of truth being obvious without formal citations.", "The specific truth elsewhere is irrelevant; what matters is that the statement is clearly false in the current conversational context.", "To create an implicature, the speaker must appear to violate the maxim in an unmistakable way so the listener looks for a hidden meaning.", "While native strategies differ, flouting is a general communicative concept that can happen in any language among any speakers."], "correct": 2, "hint": "focus on what makes the 'trick' work for the listener.", "topic": "Flouting maxims", "sec": "", "src": "", "link": "", "qid": "de01d9ccc0"}], "hasSheet": true, "parts": false, "secTitles": {}, "reserve": 0, "frq": [], "notebook": "https://notebooklm.google.com/notebook/2593f308-1e5d-4d51-ace7-2db8cbc5e8ff/artifact/9d0503f9-7ffb-49e9-8764-eddbd24b6f71", "root": "../index.html", "tab": "quiz", "sheet": "### 1. Maxim violations\nDiscourse repair serves as a necessary recalibration of the shared communicative environment when the Cooperative Principle is compromised by a clandestine violation of a conversational maxim.\n\n**Key Terms**\n1. **Maxim violation** — The act of being uncooperative in a manner that causes the conversation to become anomalous or break down; unlike flouting, this is often a clandestine failure to sustain the Cooperative Principle. \n    * *Example*: Bo informing Aya he lives in Ottawa and then stating he lives in Toronto moments later.\n2. **Discourse repair** — The essential pragmatic process of straightening out contradictory facts or \"common ground\" before a conversation can logically continue.\n\n**Analysis**\n1. **Bo’s residence claim** — In a context where Aya (who lives in Vancouver) and Bo (who lives in Ottawa) met online, Bo provides contradictory statements regarding his residence. This violation causes the discourse to fail because the mutual ground of the conversation has been corrupted by conflicting data; the participants must engage in repair to restore a stable environment for cooperative exchange.\n\n### 2. Flouting maxims\nFlouting represents a sophisticated communicative shift where the speaker relies on the listener’s recognition of a blatant, overt \"error\" to convey a non-literal truth, thereby preserving the Cooperative Principle at a deeper level.\n\n**Key Terms**\n1. **Flouting a maxim** — Appearing to violate a maxim in a deliberate, overt, and obvious manner to signal to the interlocutor that an implicature is intended.\n2. **Implicature** — The additional, non-literal meaning generated when a speaker intentionally and obviously appears to breach a maxim. \n    * *Example*: Saying \"Toronto, Saskatchewan\" to imply \"Yes, of course it's Toronto, Ontario.\"\n\n**Analysis**\n1. **Aya’s \"Toronto, Saskatchewan\" claim** — While discussing weekend plans, Aya claims to have visited a non-existent city. The success of this flout relies entirely on **Mutual Contextual Beliefs**—the fact that both Aya and Bo know there is no Toronto in Saskatchewan. By making a statement that is so obviously false, Aya creates a specific implicature rather than a breakdown in communication.\n\n### 3. Communicative strategies\nTo distinguish overt flouting from clandestine violations, speakers and signers employ specific paralinguistic signals that mark the utterance as non-literal.\n\n**Key Terms**\n1. **Intonation** — A vocal tool in spoken language used to modulate the delivery of an utterance, indicating that the speaker is flouting a maxim rather than speaking literally.\n2. **Facial expressions** — Visual cues used in both spoken and signed languages that serve as pragmatic markers to signal that a maxim is being flouted.\n\n### 4. Quality Maxim\nThe Maxim of Quality constitutes the foundational expectation of epistemic sincerity, requiring that discourse participants contribute only what they believe to be truthful and well-supported.\n\n**Key Terms**\n1. **Maxim of Quality** — The expectation that discourse participants will provide truthful information and refrain from making claims for which they lack adequate evidence.\n\n**Analysis**\n1. **Aya’s intentional falsehood** — When Aya provides information she knows to be false (e.g., the Toronto, Saskatchewan example), she is specifically flouting the Maxim of Quality. Because the breach is overt, the listener interprets it as an implicature rather than a deceptive violation.\n\n### 5. Native discourse strategies\nThe efficacy of flouting as a communicative tool is contingent upon individual and cultural habituation to native discourse strategies, which dictate the processing and interpretation of non-literal meaning.\n\n**Key Terms**\n1. **Native discourse strategies** — Habitual, culturally-informed patterns of communication that determine whether a speaker typically employs or recognizes implicature.\n2. **Sarcasm** — A specific form of flouting that may result in a total breakdown of communication for interlocutors whose native strategies exclude the processing of implicature.\n\n**Analysis**\n1. **Explicit clarification** — For participants whose native strategies do not include implicature, a flout may be indistinguishable from a violation. In such cases, the speaker must clarify the discourse by uttering the implicature part out loud, such as saying, \"Oh, I was being sarcastic; of course it's Toronto, Ontario!\" to resolve the confusion."}</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -628,9 +683,14 @@ function srcName(g){ return SRC[g] || ''; }
    `skipped` usable later as a permanent exclusion list when exam reuse is built — see qid()
    in quizpage.py. v1 states are migrated once, on load. */
 function qk(i){ return D.questions[i].qid; }
+/* `only` and `sat` ARE THE SECTIONED EXAM (08-16), and both are inert unless the page was
+   built with parts on. `only` is the list of subchapters THIS sitting covers — null means he
+   has not chosen yet, which is what puts the picker on screen. `sat` records which
+   subchapters he has finished, and nothing else: a section's score is always recomputed from
+   `answers`, never stored, so there is exactly one place a number can come from. */
 function blank(){ return {v:2, hash:D.hash, i:0, answers:{}, pass2:{}, skipped:{}, starred:{},
                           unsure:{}, hints:{}, phase:1, p2list:null, done:false, at:null,
-                          shuf:{}, history:[]}; }
+                          shuf:{}, history:[], only:null, sat:{}, promoted:{}}; }
 function migrate(s){
   // v1 keyed every map on the array index. The hash matches, so the indices are still valid
   // and this is a straight re-key — done once, then never again.
@@ -674,6 +734,12 @@ function load(){
     if(!s.hints) s.hints = {};
     if(!s.pass2) s.pass2 = {};
     if(!s.phase) s.phase = 1;
+    // Absent on every attempt saved before 08-16, and `only: null` is exactly right for one:
+    // it means "not chosen", so an attempt in progress on a paper that has just gained the
+    // picker resumes over the whole paper, which is what it was.
+    if(s.only === undefined) s.only = null;
+    if(!s.sat) s.sat = {};
+    if(!s.promoted) s.promoted = {};
     // Not carried across a rebuild on purpose: blank() empties it. A stored order describes a
     // set of options that may no longer be the same length — optOrder() throws out any that
     // no longer fit, so a stale one is harmless anyway.
@@ -681,14 +747,89 @@ function load(){
     return s;
   }catch(e){ return blank(); }
 }
+/* THE ATTEMPT MUST NEVER FAIL TO SAVE IN SILENCE (08-16). `save()` swallowed every exception,
+   and the one that actually happens is QuotaExceededError: the research box keeps pasted
+   images in localStorage, and once the origin is full EVERY later write is refused — so his
+   answers stopped being recorded while the page carried on as if they were. His report was
+   *"I feel I did answer some of these questions and yet they show up again"*, which is exactly
+   what a refused write looks like from the outside. It now says so, on screen, and keeps
+   saying so until a write succeeds. */
+let saveBroken = false;
+function saveFailed(on){
+  if(on === saveBroken) return;
+  saveBroken = on;
+  let el = $('#savewarn');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'savewarn';
+    document.body.appendChild(el);
+  }
+  el.textContent = 'This browser is out of room — your answers are NOT being saved. '
+                 + 'Remove a pasted image from the research box to free some up.';
+  el.classList.toggle('hide', !on);
+}
 function save(){
-  S.meta = {title:D.title, subtitle:D.subtitle, book:D.book, total:active(S).length,
-            at:S.at, done:S.done, score:score(S)};
-  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+  // ON A SECTIONED PAPER `meta` DESCRIBES THE PAPER, NOT THE SITTING. It is read in exactly
+  // one place — `load()`, when the questions have been rebuilt and the old answers can no
+  // longer be scored — and what belongs in that history line is "he got 24 of 32 on this
+  // exam", not "he got 14 of 16 on the half of it he happened to sit last."
+  const pp = D.parts ? paperStat() : null;
+  S.meta = {title:D.title, subtitle:D.subtitle, book:D.book,
+            total: pp ? pp.t : active(S).length,
+            at:S.at, done:S.done, score: pp ? pp.n : score(S)};
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); saveFailed(false); }
+  catch(e){ saveFailed(true); }
 }
 /* Skipped questions leave the run entirely — out of the count, out of the denominator,
-   out of the topic breakdown. Anything less makes "8 / 10" a lie about a quiz of nine. */
-function active(s){ return D.questions.map((_,i)=>i).filter(i => !(s.skipped||{})[qk(i)]); }
+   out of the topic breakdown. Anything less makes "8 / 10" a lie about a quiz of nine.
+
+   THE SECTION FILTER RIDES HERE AND NOWHERE ELSE (08-16). `active()` is what the run list,
+   the score, the second pass, the end card and the review list are all built on, so putting
+   the sitting's subchapters into this one function is what makes a half-paper behave exactly
+   like a whole one — one direction, one end card, one second pass — with no branch anywhere
+   downstream. `only: null` (not chosen, or a page built without parts) filters nothing. */
+function active(s){
+  const only = D.parts ? (s.only || null) : null;
+  return D.questions.map((_,i)=>i).filter(i => onPaper(s, i)
+    && (!only || only.indexOf(D.questions[i].sec) >= 0));
+}
+/* ---- THE RESERVES (08-16) ------------------------------------------------------------
+   His ask: *"if 1 question is skipped, another one is replaced in that section about it… you
+   have a quota, so you should also create stockpiles (say 2 extra questions per section that
+   immediately replace a skipped question)."*
+
+   `D.reserve` is how many per section were written beyond the quota. They are the LAST ones
+   of their section in build order, which is not arbitrary: `section_pool()` deals spots down
+   his tag priority, so a section's tail is the bottom of the list it could afford to lose.
+
+   A RESERVE IS NOT A QUESTION YET. It is out of the run, out of the denominator and out of
+   every table until a skip in its own section calls it in — at which point it is an ordinary
+   question and nothing downstream can tell it apart. Promotion is recorded on the qid, so it
+   survives a reload and cannot be handed out twice. Skipping with none left behaves exactly
+   as it always did: the paper is one question shorter. */
+function reserveIds(sec){
+  if(!(D.reserve > 0)) return [];
+  const l = D.questions.map((_,i)=>i).filter(i => D.questions[i].sec === sec);
+  return l.slice(Math.max(0, l.length - D.reserve));
+}
+function isReserve(i){
+  const sec = D.questions[i].sec;
+  return !!sec && reserveIds(sec).indexOf(i) >= 0;
+}
+/* Skipped or an unpromoted reserve — the two ways a question is not part of the paper. One
+   predicate so the run, the score, the picker and the section tables can never disagree. */
+function onPaper(s, i){
+  if((s.skipped||{})[qk(i)]) return false;
+  return !isReserve(i) || !!(s.promoted||{})[qk(i)];
+}
+/* Called the instant a question is skipped. Returns the promoted index, or -1. */
+function promoteReserve(sec){
+  if(!sec) return -1;
+  const next = reserveIds(sec).find(i => !S.promoted[qk(i)] && !S.skipped[qk(i)]);
+  if(next === undefined) return -1;
+  S.promoted[qk(next)] = true;
+  return next;
+}
 function ans(i){ return S.answers[qk(i)]; }
 function ans2(i){ return S.pass2[qk(i)]; }
 function firstRight(i){ return ans(i) === D.questions[i].correct; }
@@ -712,6 +853,59 @@ function runList(){
   return active(S);
 }
 function pick(i){ return S.phase === 2 ? ans2(i) : ans(i); }
+
+/* ---- SUBCHAPTERS AS SITTINGS (08-16) -------------------------------------------------
+   His ask: *"a way to section off exams… such that I'm able to practice only one section or
+   maybe two sections of an exam created because of shortened time"*, and then *"the option to
+   do those other sub chapters that I haven't done at a later date, or just display the score
+   of the subsections that I have got done."*
+
+   A QUESTION BELONGS TO ONE SUBCHAPTER — `q.sec`, which every exam question already carries.
+   A cross-section question carries `q.link` as well, and it is deliberately NOT used here:
+   `q.sec` is the section whose paper the question is on (the pool decided that, and the exam
+   prompt says so in as many words), so it is sat once, with that section, and never offered
+   twice. It still REPORTS under both in the end card's By-subchapter table, which is a
+   different question and was already answered.
+
+   NOTHING IS STORED THAT CAN BE COMPUTED. `S.sat[sec]` is a timestamp saying he finished that
+   section and nothing more; every number on screen comes back out of `S.answers` through
+   `secStat()`. A stored score is a second source of truth, and this page already has one
+   scar from that — see `load()`, where a recomputed score turned a real 8/10 into 2/10. */
+function paperSecs(){
+  const out = [];
+  D.questions.forEach((q,i)=>{
+    if(q.sec && onPaper(S, i) && out.indexOf(q.sec) < 0) out.push(q.sec);
+  });
+  return out.sort((a,b)=>a.localeCompare(b, undefined, {numeric:true}));
+}
+function secQs(sec){
+  return D.questions.map((_,i)=>i)
+    .filter(i => D.questions[i].sec === sec && onPaper(S, i));
+}
+function secStat(sec){
+  const l = secQs(sec);
+  const answered = l.filter(i => ans(i) !== undefined).length;
+  return {sec:sec, t:l.length, answered:answered,
+          n: l.filter(i => finalRight(i)).length,
+          done: !!S.sat[sec], started: answered > 0};
+}
+/* THE PAPER, ACROSS EVERY SITTING — the number that answers "how am I doing on this exam",
+   as opposed to "how did I do this evening". Scored over the sections he has actually sat, so
+   a half-finished paper reads 14/16 with a section outstanding rather than a demoralising
+   14/32 that counts questions he has not been asked yet. `all` is what says the paper is
+   finished; until then `left` is what the picker offers him next. */
+function paperStat(){
+  const secs = paperSecs().map(secStat);
+  const done = secs.filter(s => s.done);
+  const left = secs.filter(s => !s.done);
+  const n = done.reduce((a,s)=>a+s.n, 0), t = done.reduce((a,s)=>a+s.t, 0);
+  return {secs:secs, done:done, left:left, n:n, t:t,
+          whole: secs.reduce((a,s)=>a+s.t, 0),
+          pct: t ? Math.round(n/t*100) : 0, all: secs.length > 0 && left.length === 0};
+}
+/* The picker earns its place only where there is a choice to make: parts on, and more than
+   one subchapter on the paper. A one-section exam goes straight in, as it always did. */
+function sectioned(){ return !!D.parts && paperSecs().length > 1; }
 
 /* ---- THE ON-SCREEN OPTION ORDER ------------------------------------------------------
    A DISPLAY LAYER AND NOTHING MORE. `S.shuf[qid]` is a list of ORIGINAL option indices in
@@ -751,6 +945,13 @@ function reshuffleOpts(i){
 }
 let S = load();
 let lastShown = -1;
+
+/* WHAT TO CALL THIS THING (08-16, his ask: *"you should name them exams"*). A paper that
+   carries subchapter tags or a written half is an exam; anything else is a subchapter quiz.
+   Both signals, because the two halves arrived on different days and a paper with only one of
+   them is still an exam. The word is used for the tab, the review button and the pasted score
+   line, so all three agree without three separate conditions. */
+const NOUN = ((D.frq && D.frq.length) || D.questions.some(q=>q.sec)) ? 'Exam' : 'Quiz';
 
 /* ---- HIS RESEARCH, kept apart from the attempt ---------------------------------------
    Its own localStorage key, NOT a field of S, and that is the whole design. S is one
@@ -870,6 +1071,22 @@ function drawFrq(){
   });
   box.innerHTML = h;
 
+  /* CLICKING THE CARD PUTS THE CARET IN THE BOX. The sticky header covers the top strip of
+     whatever is under it, and the placeholder sits in exactly that strip — so the one place he
+     naturally aims is the one place the click does not land. Anywhere in the card that is not
+     already a control now focuses the answer box, which also makes the whole card a target on
+     a phone. `closest` is what keeps Mark, Copy and any selection inside the rubric working. */
+  box.querySelectorAll('section.frq').forEach(sec => {
+    sec.addEventListener('mousedown', e => {
+      if(e.target.closest('button, textarea, a, .rubric')) return;
+      const ta = sec.querySelector('textarea');
+      if(!ta) return;
+      e.preventDefault();
+      ta.focus();
+      ta.setSelectionRange(ta.value.length, ta.value.length);
+    });
+  });
+
   box.querySelectorAll('textarea').forEach(ta => {
     const fi = +ta.dataset.f;
     const count = () => {
@@ -976,6 +1193,7 @@ function syncTabs(){
   const nfrq = (D.frq || []).length;
   document.querySelector('.tab[data-tab="starred"]').classList.toggle('hide', !nstar);
   document.querySelector('.tab[data-tab="sheet"]').classList.toggle('hide', !D.hasSheet);
+  document.querySelector('.tab[data-tab="quiz"]').textContent = NOUN;
   document.querySelector('.tab[data-tab="frq"]').classList.toggle('hide', !nfrq);
   $('#tabs').classList.toggle('hide', !nstar && !D.hasSheet && !nfrq);
   if(D.tab === 'starred' && !nstar) setTab('quiz');
@@ -1100,6 +1318,10 @@ function draw(){
   showResearch(!(S.reviewing || S.done));
   if(S.reviewing) return review();
   if(S.done) return end();
+  // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
+  // the rest of the sitting, so nothing about answering, going back or the second pass has
+  // to know the picker exists.
+  if(sectioned() && !S.only) return picker();
   const act = runList();
   if(!act.length) return end();
   if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
@@ -1122,6 +1344,11 @@ function buildQ(i, picked, fresh, en){
   let h = '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta"><span class="num">' + (pos+1) + ' / ' + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
+        // 10 reads as the paper having lost his place, which is how he read it.
+        + (recycling && S.phase!==2
+           ? '<span class="dot">·</span><span class="fillnote">filling in ' + gaps().length
+             + ' left blank</span>' : '')
         // THE SECTION AND THE GLYPH, on the exam only — a subchapter quiz carries neither and
         // this line is byte-for-byte what it always was. The section is what it says; the
         // glyph is why this question is on the paper at all, and it is deliberately JUST the
@@ -1130,7 +1357,16 @@ function buildQ(i, picked, fresh, en){
         + (q.sec ? '<span class="dot">·</span><span class="sec">' + esc(q.sec)
                  + (q.link ? '<span class="lk">+' + esc(q.link) + '</span>' : '')
                  + '</span>' : '')
-        + (q.topic ? '<span class="dot">·</span><span>' + esc(q.topic) + '</span>' : '')
+        // THE TOPIC NAME IS HELD BACK UNTIL HE HAS ANSWERED. It was giving the answer away:
+        // `8.1 · Inferior scapular angle` sat over a question asking which part of the scapula
+        // anchors the powerful shoulder muscles, so the tag answered it before the options did.
+        // His own exams name no topic; he reverse-engineers where to look from the question.
+        // The section number stays visible — that is the scope pointer, and it is the whole
+        // subchapter, not the idea. The name comes back the moment the answer is locked in,
+        // because that is when it stops being a hint and starts being the label he files it
+        // under (the end card, the review list and the paste all keep reading it).
+        + (q.topic && answered ? '<span class="dot">·</span><span>' + esc(q.topic)
+                 + '</span>' : '')
         + (q.src ? '<span class="dot">·</span><span class="src" title="' + srcName(q.src)
                  + '">' + esc(q.src) + '</span>' : '')
         + '</p>'
@@ -1162,7 +1398,8 @@ function buildQ(i, picked, fresh, en){
       if(lab && fresh) cls += ' fresh';
       why = q.rationales ? (q.rationales[k]||'') : '';
     }
-    h += '<button class="'+cls+'" data-k="'+k+'"'+(answered?' disabled':'')+'>'
+    h += '<button class="'+cls+(answered?' locked':'')+'" data-k="'+k+'"'
+       + (answered?' aria-disabled="true"':'')+'>'
        + '<span class="line"><span class="k">'+D.letters[pos]+'.</span>'
        + '<span class="t">'+esc(o)+'</span>'
        + '<span class="mark">'+mark+'</span></span>';
@@ -1189,6 +1426,12 @@ function question(fresh){
   $('#quizview').innerHTML = buildQ(i, picked, fresh, isNew ? ' enter' : '');
   $('#quizview').querySelectorAll('.opt').forEach(b=>{
     b.onclick = ()=>{
+      // `aria-disabled` AND NOT `disabled`, SINCE 08-16. A real `disabled` button will not let
+      // its text be selected however `user-select` is set — browsers block selection inside a
+      // disabled control — so the rationale he wanted to copy off an answered question could
+      // not be picked up at all: *"Im trying to copy on v2 exams and its not letting me."*
+      // The lock is now the guard on this line, and the class is what styles it.
+      if(b.classList.contains('locked')) return;
       // The first pass is never overwritten — a second-pass answer goes in its own map.
       if(S.phase === 2) S.pass2[qk(i)] = +b.dataset.k; else S.answers[qk(i)] = +b.dataset.k;
       save(); question(true);
@@ -1520,12 +1763,19 @@ function openMenu(){
   m.querySelector('#skipq').onclick = ()=>{
     const list = runList(), pos = list.indexOf(S.i);
     if(list.length <= 1) return closeMenu();        // never skip the last one standing
-    const wasLast = pos === list.length - 1;
+    const sec = D.questions[S.i].sec;
     S.skipped[qk(S.i)] = true;
     delete S.answers[qk(S.i)];
     delete S.pass2[qk(S.i)];
     delete S.starred[qk(S.i)];                     // a deleted question is not a starred one
     if(S.unsure) delete S.unsure[qk(S.i)];         // nor one that still needs work
+    // A RESERVE TAKES ITS PLACE IMMEDIATELY, in the same section and the same sitting, so the
+    // count he is working against does not move: skip question 6 of 11 and it is still 11.
+    // Promoted BEFORE `wasLast` is decided — a skip on the last question with a reserve in
+    // hand is not the end of the paper, it is one more question, and finishing there would
+    // have handed him an end card with a question still owed.
+    const filled = promoteReserve(sec) >= 0;
+    const wasLast = !filled && pos === list.length - 1;
     closeMenu();
     syncTabs();
     if(wasLast){ finish(); return; }
@@ -1543,6 +1793,11 @@ function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(
 function finish(){
   S.done = true; S.at = new Date().toISOString();
   recycling = false;          // the clean-up pass is over; a second pass starts in order
+  // THE SITTING'S SUBCHAPTERS ARE NOW SAT. Written here rather than on the end card because
+  // the end card is also what he sees on every later visit, and re-rendering it must not keep
+  // re-stamping the time. A second pass reopens the run and lands back here when it ends, so
+  // the stamp is the last time the section was actually finished, which is what it should be.
+  if(D.parts && S.only) S.only.forEach(sec=>{ S.sat[sec] = S.at; });
   save(); end(); window.scrollTo(0,0);
 }
 
@@ -1577,6 +1832,112 @@ function group(act, keyOf, head, label){
        + '<span class="tbar"><i style="width:'+(by[k].n/by[k].t*100)+'%"></i></span></div>';
   });
   return h + '</div>';
+}
+
+/* THE PICKER — the one new screen, and the only place the sectioning is visible before he
+   starts. Shown when parts are on, the paper has more than one subchapter, and this sitting
+   has not been chosen yet. Choosing writes `S.only` and everything after it is the ordinary
+   exam: same order, same second pass, same end card, one direction to the end.
+
+   IT IS ALSO THE SCOREBOARD. His second ask — *"or just display the score of the subsections
+   that I have got done"* — is answered by the same screen rather than a separate one, because
+   it is the screen he lands on when he opens the link again. */
+let pickSel = null;
+
+function picker(){
+  const p = paperStat();
+  if(!pickSel) pickSel = p.left.map(s => s.sec);          // default: what is still outstanding
+  const chosen = p.secs.filter(s => pickSel.indexOf(s.sec) >= 0);
+  const nq = chosen.reduce((a,s)=>a+s.t, 0);
+
+  let h = '<div class="picker"><h3>' + (p.done.length ? 'Pick up where you left off'
+                                                      : 'Which sections are you sitting?')
+        + '</h3>';
+  h += '<p class="psub">' + p.whole + ' questions across ' + p.secs.length
+     + ' subchapters. Sit as many as you have time for — the rest keep, and this link '
+     + 'reopens on this screen.</p>';
+
+  if(p.done.length){
+    h += '<p class="pscore"><b>' + p.n + ' / ' + p.t + '</b> <span>' + p.pct + '% across '
+       + p.done.length + ' of ' + p.secs.length + ' subchapters'
+       + (p.all ? ' — the whole paper' : '') + '</span></p>';
+  }
+
+  h += '<div class="prows">';
+  p.secs.forEach(s=>{
+    const on = pickSel.indexOf(s.sec) >= 0;
+    const note = s.done ? ('Finished · ' + s.n + '/' + s.t)
+               : s.started ? (s.answered + ' of ' + s.t + ' answered')
+               : (s.t + ' question' + (s.t > 1 ? 's' : ''));
+    h += '<button class="prow' + (on ? ' pon' : '') + (s.done ? ' pdone' : '')
+       + '" data-sec="' + esc(s.sec) + '">'
+       + '<span class="pmark">' + (on ? G_OK : '') + '</span>'
+       + '<span class="plabel">' + esc(s.sec)
+       + ((D.secTitles||{})[s.sec] ? ' <em>' + esc(D.secTitles[s.sec]) + '</em>' : '')
+       + '</span>'
+       + '<span class="pnote">' + note + '</span>'
+       + (s.done ? '<span class="pbar"><i style="width:' + (s.t ? s.n/s.t*100 : 0)
+                 + '%"></i></span>' : '') + '</button>';
+  });
+  h += '</div>';
+
+  h += '<div class="pgo">'
+     + '<button class="pill go" id="pstart"' + (nq ? '' : ' disabled') + '>'
+     + (nq ? 'Start · ' + nq + ' question' + (nq > 1 ? 's' : '') : 'Pick a subchapter')
+     + '</button>'
+     + (p.left.length && p.left.length < p.secs.length
+        ? '<button class="link" id="pleft">Everything left</button>' : '')
+     + '<button class="link" id="pall">The whole paper</button>'
+     + '</div>';
+
+  if(p.done.length) h += '<p class="note">Finished subchapters keep their answers. Sitting '
+                       + 'one again replaces that score.</p>';
+  h += '</div>';
+
+  $('#quizview').innerHTML = h;
+  $('#rail').style.width = '0%';
+  $('#band').classList.add('off');
+  showResearch(false);
+  ['#back','#hintbtn','#hinttext','#redo','#next','#review','#retake','#pass2']
+    .forEach(k => $(k).classList.add('hide'));
+  $('#footer').classList.add('hide');
+
+  document.querySelectorAll('.prow').forEach(b => b.onclick = ()=>{
+    const k = b.dataset.sec, at = pickSel.indexOf(k);
+    if(at >= 0) pickSel.splice(at, 1); else pickSel.push(k);
+    picker();
+  });
+  const start = $('#pstart');
+  if(start) start.onclick = ()=> beginSitting(pickSel.slice());
+  const left = $('#pleft');
+  if(left) left.onclick = ()=> beginSitting(p.left.map(s=>s.sec));
+  $('#pall').onclick = ()=> beginSitting(p.secs.map(s=>s.sec));
+  renderScore();
+  centreBlock();
+}
+
+/* ONE DIRECTION FROM HERE. A sitting starts at the top of its own list with a clean phase —
+   the answers from any earlier sitting stay in `S.answers` untouched, they are simply not in
+   `active()` any more, which is what lets him come back to a section a fortnight later
+   without the page having kept a second copy of anything. */
+function beginSitting(secs){
+  if(!secs.length) return;
+  S.only = secs;
+  S.phase = 1; S.p2list = null; S.done = false; S.reviewing = false; S.hintOpen = false;
+  // RE-SITTING A FINISHED SECTION MUST ACTUALLY RE-SIT IT. Without this it would open on the
+  // end card, every question already answered, and the "Start" he just pressed would look
+  // broken. Its old answers go, and `sat` with them, because that section is now in progress.
+  secs.forEach(sec=>{
+    if(S.sat[sec]){
+      secQs(sec).forEach(i=>{ delete S.answers[qk(i)]; delete S.pass2[qk(i)]; });
+      delete S.sat[sec];
+    }
+  });
+  const l = runList();
+  S.i = l.length ? l[0] : 0;
+  pickSel = null;
+  lastShown = -1;
+  save(); draw(); window.scrollTo(0,0);
 }
 
 function end(){
@@ -1628,6 +1989,33 @@ function end(){
     h += '<p class="hist">Earlier attempts: ' + S.history.slice().reverse()
         .map(a=>'<span>'+a.score+'/'+a.total+' on '+when(a.at)+'</span>').join(' · ') + '</p>';
   }
+  /* THE PAPER, UNDER THE SITTING (08-16). The score above is this evening's — one subchapter,
+     or two. This is the exam: every subchapter, what it scored or that it is still waiting,
+     and one total across the ones he has actually sat. Absent on an unsectioned page. */
+  if(sectioned()){
+    const p = paperStat();
+    h += '<div class="topics parts"><h3>This exam</h3>';
+    p.secs.forEach(s=>{
+      const sitting = S.only && S.only.indexOf(s.sec) >= 0;
+      h += '<div class="trow"><span>' + esc(s.sec)
+         + (sitting ? '<em> just sat</em>' : '') + '</span>'
+         + '<span class="n">' + (s.done ? s.n + '/' + s.t : '—') + '</span>'
+         + '<span class="tbar' + (s.done ? '' : ' waiting') + '"><i style="width:'
+         + (s.done && s.t ? s.n/s.t*100 : 0) + '%"></i></span></div>';
+    });
+    h += '<p class="ptotal"><b>' + p.n + ' / ' + p.t + '</b> '
+       + (p.all ? 'the whole paper' :
+          'across ' + p.done.length + ' of ' + p.secs.length + ' subchapters · '
+          + p.left.reduce((a,s)=>a+s.t,0) + ' question'
+          + (p.left.reduce((a,s)=>a+s.t,0) > 1 ? 's' : '') + ' still to sit')
+       + '</p></div>';
+    if(p.left.length) h += '<p class="note"><button class="link" id="more">'
+                         + 'Sit another subchapter</button> — ' + p.left.map(s=>esc(s.sec)).join(', ')
+                         + ' left</p>';
+    else h += '<p class="note"><button class="link" id="more">Choose subchapters</button> — '
+            + 'every one is done; sitting one again replaces its score.</p>';
+  }
+
   const nskip = Object.keys(S.skipped||{}).length;
   if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
               + '<button class="link" id="unskip">put them back</button></p>';
@@ -1638,6 +2026,9 @@ function end(){
   $('#quizview').innerHTML = h;
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  const m = $('#more');
+  if(m) m.onclick = ()=>{ S.only = null; S.done = false; S.reviewing = false;
+                          pickSel = null; save(); draw(); window.scrollTo(0,0); };
   $('#rail').style.width = '100%';
   $('#band').classList.add('off');
   showResearch(false);
@@ -1648,11 +2039,16 @@ function end(){
   $('#redo').classList.add('hide');
   $('#next').classList.add('hide');
   $('#review').classList.remove('hide');
-  $('#review').textContent = 'Review quiz';
+  $('#review').textContent = 'Review ' + NOUN.toLowerCase();
   $('#retake').classList.remove('hide');
   // No wrong answers left to retry → no button at all, which is also what stops the second
   // pass looping into a third: anything answered on pass two leaves pending2() for good.
   $('#pass2').classList.toggle('hide', pending2().length === 0);
+  /* THE WRITTEN HALF IS THE PRIMARY WAY OUT OF AN EXAM'S END CARD (08-16, his ask): *"the
+     main button after the end of a large mcq for exams should be to move on onto frqs."* So
+     the second pass keeps its place but loses the accent — it is still there, it is just no
+     longer what the page is pointing at. A quiz has no written half and is unchanged. */
+  $('#towritten').classList.toggle('hide', !(D.frq && D.frq.length));
   renderScore();
   lastShown = -1;
   centreBlock();
@@ -1748,7 +2144,7 @@ function hintLine(p){
 function scoreMarkdown(){
   if(!S.done) return '';
   const p = scoreParts();
-  return '**Quiz:** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
+  return '**' + NOUN + ':** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
        + (p.red ? ', +' + p.red + ' redeemed' : '') + ', ' + p.wrong + ' wrong'
        + (p.skipped ? ', ' + p.skipped + ' skipped' : '') + ' · ' + when(S.at)
        + '\n**Hints:** ' + hintLine(p);
@@ -1814,6 +2210,7 @@ function step(dir){
 }
 $('#next').onclick = ()=> step(1);
 $('#back').onclick = ()=> step(-1);
+$('#towritten').onclick = ()=> setTab('frq');
 $('#review').onclick = ()=>{ S.reviewing = !S.reviewing; draw(); };
 /* THE SECOND PASS — the preferred way out of the end card, and the one that keeps
    everything. It re-runs only what he got wrong, on a list frozen at the moment he presses
@@ -1830,9 +2227,15 @@ $('#pass2').onclick = ()=>{
    history first so nothing is lost, and the questions he deleted or starred stay that way —
    they are decisions about the quiz, not part of one attempt at it. */
 $('#retake').onclick = ()=>{
-  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length});
+  // ON A SECTIONED PAPER THE HISTORY LINE IS THE PAPER, not the last sitting — the same
+  // reasoning as `save()`. `blank()` returns `only: null` and `sat: {}`, so a retake drops
+  // every sitting at once and lands back on the picker, which is what "retake the exam" means.
+  if(S.done){ const p = D.parts ? paperStat() : null;
+              S.history.push({at:S.at, score: p ? p.n : score(S),
+                              total: p ? p.t : active(S).length}); }
   const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
   S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  pickSel = null;
   lastShown = -1;
   save(); syncTabs(); renderScore(); draw();
 };

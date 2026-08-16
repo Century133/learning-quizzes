@@ -119,8 +119,8 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
  border:1px solid transparent;border-radius:var(--radius);padding:var(--opad);
  color:var(--text);font:inherit;font-size:var(--osize);cursor:pointer;
  transition:background .16s ease,border-color .16s ease,opacity .16s ease}
-.opt:hover:not(:disabled){background:var(--surface-hi)}
-.opt:disabled{cursor:default}
+.opt:hover:not(.locked){background:var(--surface-hi)}
+.opt.locked{cursor:default}
 .line{display:flex;gap:12px;align-items:flex-start;line-height:1.4}
 .line .k{color:var(--muted);min-width:1.25em}
 .line .t{flex:1}
@@ -173,7 +173,7 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
 .q,.qq,.why,.lab,.hinttext,.rline,.tag,.sheet,.topics,.legend{
  user-select:text;-webkit-user-select:text}
 .opt{user-select:none;-webkit-user-select:none}
-.opt:disabled,.opt:disabled *{user-select:text;-webkit-user-select:text;cursor:auto}
+.opt.locked,.opt.locked *{user-select:text;-webkit-user-select:text;cursor:auto}
 .star,.dots,.tab,button.pill{user-select:none;-webkit-user-select:none}
 
 /* ---- HIS RESEARCH, one box per question ----
@@ -419,6 +419,27 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
  color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
  padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.6;outline:none;margin-top:16px}
 .frqin:focus{border-color:var(--accent)}
+/* THE STICKY HEADER WAS EATING THE CLICK (08-16). It is 49px tall with z-index 5, so the top
+   strip of a box scrolled under it is dead to the mouse — and the top strip is exactly where
+   the "Write your answer." placeholder is, so the box reads as broken. His words: *"I cant
+   even click the textbox for this exam."* `scroll-margin-top` keeps the card clear of the
+   header whenever anything scrolls it into view; the click handler on the card is the belt to
+   that braces, since he can also scroll there by hand. */
+.frq{scroll-margin-top:64px}
+
+/* The only thing on this page allowed to shout. It sits over everything because a saved
+   answer is the one promise the page makes. */
+#savewarn{position:fixed;left:12px;right:12px;bottom:12px;z-index:60;padding:12px 16px;
+ border-radius:12px;font-size:.86rem;line-height:1.4;background:#7f1d1d;color:#fff;
+ box-shadow:0 6px 24px rgba(0,0,0,.4)}
+#savewarn.hide{display:none}
+
+/* WHERE FORWARD MEANS "THE NEXT BLANK ONE". Reaching the end of the list with holes in it
+   sends him back to the first one — right, and invisible until 08-16, when he read it as the
+   paper losing his place: *"when I thought I was done I wasnt… questions are ghosting until
+   the end."* The counter says so now, and the rail stops pretending the run is nearly over. */
+.fillnote{display:inline-flex;align-items:center;gap:6px;color:var(--accent);
+ font-size:.7rem;letter-spacing:.07em;text-transform:uppercase}
 .frqin::placeholder{color:var(--muted);opacity:.7}
 .acts.inline{margin-top:12px}
 .rubric{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}

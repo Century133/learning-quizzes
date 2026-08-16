@@ -122,8 +122,8 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
  border:1px solid transparent;border-radius:var(--radius);padding:var(--opad);
  color:var(--text);font:inherit;font-size:var(--osize);cursor:pointer;
  transition:background .16s ease,border-color .16s ease,opacity .16s ease}
-.opt:hover:not(:disabled){background:var(--surface-hi)}
-.opt:disabled{cursor:default}
+.opt:hover:not(.locked){background:var(--surface-hi)}
+.opt.locked{cursor:default}
 .line{display:flex;gap:12px;align-items:flex-start;line-height:1.4}
 .line .k{color:var(--muted);min-width:1.25em}
 .line .t{flex:1}
@@ -176,7 +176,7 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
 .q,.qq,.why,.lab,.hinttext,.rline,.tag,.sheet,.topics,.legend{
  user-select:text;-webkit-user-select:text}
 .opt{user-select:none;-webkit-user-select:none}
-.opt:disabled,.opt:disabled *{user-select:text;-webkit-user-select:text;cursor:auto}
+.opt.locked,.opt.locked *{user-select:text;-webkit-user-select:text;cursor:auto}
 .star,.dots,.tab,button.pill{user-select:none;-webkit-user-select:none}
 
 /* ---- HIS RESEARCH, one box per question ----
@@ -294,6 +294,39 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .tbar{grid-column:1/-1;height:3px;background:var(--line);border-radius:999px;
  overflow:hidden}
 .tbar i{display:block;height:100%;background:var(--text)}
+/* A subchapter he has not sat gets a rail with nothing in it rather than a 0% bar, because a
+   bar at zero reads as "scored nothing" and the whole point is that it has not been asked. */
+.tbar.waiting{background:repeating-linear-gradient(90deg,var(--line) 0 3px,transparent 3px 6px)}
+.topics.parts .trow em{font-style:normal;color:var(--muted);font-size:.8rem;margin-left:8px}
+.ptotal{margin:14px 0 0;color:var(--muted);font-size:.88rem}
+.ptotal b{color:var(--text);font-variant-numeric:tabular-nums;font-size:1.05rem;
+ font-weight:600;margin-right:8px}
+
+/* ---- THE SUBCHAPTER PICKER (08-16) ----
+   Deliberately the same furniture as the end card — same heading treatment, same rails, same
+   tabular numbers — because it IS the end card most of the time he sees it: he opens the link
+   and this screen tells him what he has scored and what is left. A separate visual language
+   for "choose" and "review" would make one screen look like two. */
+.picker{padding:2px 0 8px}
+.picker h3{font-size:1.35rem;font-weight:600;letter-spacing:-.01em;margin:0 0 8px}
+.psub{color:var(--muted);font-size:.9rem;margin:0 0 22px;max-width:46ch}
+.pscore{margin:0 0 22px}
+.pscore b{font-size:1.5rem;font-variant-numeric:tabular-nums;font-weight:600}
+.pscore span{color:var(--muted);font-size:.88rem;margin-left:10px}
+.prows{display:flex;flex-direction:column;gap:8px;margin:0 0 24px}
+.prow{display:grid;grid-template-columns:22px auto 1fr;gap:4px 12px;align-items:center;
+ width:100%;text-align:left;font:inherit;cursor:pointer;padding:13px 16px;
+ border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--text)}
+.prow:hover{border-color:var(--muted)}
+.prow.pon{border-color:var(--accent)}
+.pmark{color:var(--accent);font-size:.95rem;line-height:1}
+.plabel{font-variant-numeric:tabular-nums;font-weight:600}
+.plabel em{font-style:normal;font-weight:400;color:var(--muted);margin-left:8px}
+.pnote{color:var(--muted);font-size:.86rem;justify-self:end}
+.pbar{grid-column:2/-1;height:3px;background:var(--line);border-radius:999px;overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--text)}
+.pgo{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)}
 
 /* ---- review list ---- */
 .rev{padding:6px 0 36px}
@@ -389,6 +422,27 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
  color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
  padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.6;outline:none;margin-top:16px}
 .frqin:focus{border-color:var(--accent)}
+/* THE STICKY HEADER WAS EATING THE CLICK (08-16). It is 49px tall with z-index 5, so the top
+   strip of a box scrolled under it is dead to the mouse — and the top strip is exactly where
+   the "Write your answer." placeholder is, so the box reads as broken. His words: *"I cant
+   even click the textbox for this exam."* `scroll-margin-top` keeps the card clear of the
+   header whenever anything scrolls it into view; the click handler on the card is the belt to
+   that braces, since he can also scroll there by hand. */
+.frq{scroll-margin-top:64px}
+
+/* The only thing on this page allowed to shout. It sits over everything because a saved
+   answer is the one promise the page makes. */
+#savewarn{position:fixed;left:12px;right:12px;bottom:12px;z-index:60;padding:12px 16px;
+ border-radius:12px;font-size:.86rem;line-height:1.4;background:#7f1d1d;color:#fff;
+ box-shadow:0 6px 24px rgba(0,0,0,.4)}
+#savewarn.hide{display:none}
+
+/* WHERE FORWARD MEANS "THE NEXT BLANK ONE". Reaching the end of the list with holes in it
+   sends him back to the first one — right, and invisible until 08-16, when he read it as the
+   paper losing his place: *"when I thought I was done I wasnt… questions are ghosting until
+   the end."* The counter says so now, and the rail stops pretending the run is nearly over. */
+.fillnote{display:inline-flex;align-items:center;gap:6px;color:var(--accent);
+ font-size:.7rem;letter-spacing:.07em;text-transform:uppercase}
 .frqin::placeholder{color:var(--muted);opacity:.7}
 .acts.inline{margin-top:12px}
 .rubric{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
@@ -698,12 +752,13 @@ Self-control is finite - one hard task leaves less for the next"></textarea>
     <button class="pill ghost hide" id="retake">Retake</button>
     <span class="spacer"></span>
     <button class="pill hide" id="review">Review quiz</button>
-    <button class="pill primary hide" id="pass2">2nd Pass</button>
+    <button class="pill ghost hide" id="pass2">2nd Pass</button>
+    <button class="pill primary hide" id="towritten">Written half</button>
     <button class="pill primary" id="next">Next</button>
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "psp-3-6", "title": "3.6 How to Feel Better: Coping With Negative Emotions", "subtitle": "Chapter 3 · Social Affect", "book": "PSP", "hash": "209902bf36e47472", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "In Wegner's study where participants were instructed not to think about a white bear for five minutes, what was the consistent outcome regarding their mental state?", "options": ["The thought frequently and spontaneously returned to their consciousness.", "The thought was only successfully suppressed when participants were offered a reward.", "The thought of the bear disappeared completely after the first three minutes.", "They were able to successfully block the thought by focusing on physical sensations."], "rationales": ["Suppression often causes a rebound effect where the forbidden thought becomes more accessible because the mind must monitor for it to avoid it.", "The study found that instructions to avoid a thought led to failure regardless of the participant's intent or external incentives.", "Participants continued to ring the bell throughout the five minutes, showing the thought did not dissipate over time.", "Research indicates that the effort to suppress thoughts actually keeps them 'active' in the background of the mind."], "correct": 0, "hint": "consider the result of trying to ignore a specific image.", "topic": "Thought suppression", "sec": "", "src": "", "link": "", "qid": "c62e9e8ed2"}, {"q": "According to the research by Pennebaker and Beall, what is the expected long-term outcome for a student who spends time writing about a deeply traumatic experience compared to one who writes about a trivial topic?", "options": ["They will develop a tendency to avoid talking to others about their problems to preserve their privacy.", "They will show no difference in physical health but will exhibit higher academic performance.", "They will report an immediate and lasting increase in positive mood and blood pressure stability.", "They will likely experience fewer illnesses and health center visits over the following months."], "rationales": ["The study highlights that opening up, rather than bottling feelings, leads to better outcomes and increased willingness to process emotions.", "The primary measurable benefit found in this specific study was related to physical health and immune function rather than academic scores.", "Initially, these participants actually experience higher blood pressure and more negative moods right after the writing task.", "Confronting negative experiences through writing helps individuals make sense of them and appears to boost long-term physiological health."], "correct": 3, "hint": "focus on the unexpected physiological outcome of facing trauma.", "topic": "Emotional expression", "sec": "", "src": "", "link": "", "qid": "ce0eae8e6a"}, {"q": "Walter Mischel’s marshmallow studies found that four-year-olds who could resist eating a treat immediately to wait for a second one showed which of the following characteristics as adolescents?", "options": ["They achieved significantly higher SAT scores and were rated as more socially adept.", "They were more likely to take risks and seek immediate thrill-seeking activities.", "They developed higher levels of physical strength and athletic endurance.", "They showed a preference for artistic and creative fields over analytical ones."], "rationales": ["Early childhood self-regulation is a strong predictor of later cognitive control, social competence, and academic success.", "The ability to delay gratification is inversely related to impulsivity and risk-taking behavior.", "While self-regulation is a cognitive and emotional skill, the longitudinal study did not identify specific athletic advantages.", "The findings focused on general success markers like coping skills and social competence rather than specific career interests."], "correct": 0, "hint": "look at how early childhood patience correlates with future success.", "topic": "Delay of gratification", "sec": "", "src": "", "link": "", "qid": "9847b9429d"}, {"q": "In the experiment by Muraven, Tice, and Baumeister, how did the instruction to suppress or increase emotional responses during a movie affect the participants' performance on a subsequent hand-grip task?", "options": ["The regulation task had no impact on physical strength, only on mental focus.", "Participants showed a significant decrease in physical stamina and grip duration.", "Participants showed increased strength due to the adrenaline from the emotional scenes.", "Only those who increased their emotional response showed a decline in strength."], "rationales": ["The study demonstrated that regulatory depletion crosses domains, affecting physical tasks after mental regulation.", "The effort spent on emotion regulation consumes limited cognitive resources, leaving less energy for subsequent physical or mental tasks.", "The 'muscle' analogy suggests that self-control is easily fatigued rather than invigorated by use.", "Both the increase-emotional-response and the decrease-emotional-response groups showed significantly more depletion than the control group."], "correct": 1, "hint": "consider how controlling emotions impacts physical stamina.", "topic": "Ego depletion", "sec": "", "src": "", "link": "", "qid": "7d868325e7"}, {"q": "How does the presence of low serotonin levels in the brain influence the decision-making process regarding rewards in animals and humans?", "options": ["It makes individuals more patient and willing to wait for substantial gains.", "It shifts focus away from material rewards toward social validation.", "It eliminates the ability to perceive the value of rewards entirely.", "It leads to a strong preference for small, immediate rewards over larger, delayed ones."], "rationales": ["Deficiencies in this neurotransmitter are typically associated with violent, impulsive, and short-sighted behaviors.", "Serotonin's influence in this context is primarily about the timing of reward consumption and impulse control.", "The value of rewards is still perceived, but the temporal processing is biased toward the present moment.", "Low serotonin levels are linked to impulsiveness and a reduced capacity to cognitively override the desire for immediate gratification."], "correct": 3, "hint": "relate brain chemicals to impulsive behavior.", "topic": "Neurotransmitter influence", "sec": "", "src": "", "link": "", "qid": "1631a94b1b"}, {"q": "Based on the concept of 'hardiness' defined by Suzanne Kobasa, which behavior would a hardy individual likely exhibit when facing a major job loss?", "options": ["Suppressing the anxiety associated with the loss to maintain a calm appearance for family.", "Attribute the event to bad luck and wait for external circumstances to improve.", "Developing a reliance on material wealth to buffer the emotional impact of the loss.", "Taking direct action to understand the cause and seeking valuable lessons for the future."], "rationales": ["Hardiness involves active coping and engagement rather than the maladaptive strategy of suppression.", "Hardiness is characterized by perceived control and taking responsibility for one's outcomes rather than passivity.", "The material wealth of an individual has a much smaller impact on well-being than internal personality factors like hardiness.", "Hardy individuals approach stressors with a sense of commitment and control, viewing challenges as opportunities for growth."], "correct": 3, "hint": "identify the approach taken by those resilient to stress.", "topic": "Psychological hardiness", "sec": "", "src": "", "link": "", "qid": "bb0aec9daf"}, {"q": "What did Christopher Peterson find when he reviewed the health outcomes of college students who were interviewed between 1936 and 1940?", "options": ["Optimistic students were more likely to smoke regularly but lived longer anyway.", "Optimistic students had more physical illnesses but recovered from them faster.", "Optimistic students were less likely to die of violent or accidental causes 50 years later.", "There was no long-term correlation between college attitude and health outcomes after age 40."], "rationales": ["Research by Baker showed that optimists are actually less likely to smoke during stressful periods, contributing to their longevity.", "The study found that they actually experienced fewer deaths from all causes, not just better recovery.", "Positive attitudes in youth predict better health management and lower mortality rates throughout the entire lifespan.", "The longitudinal data showed that early outlook remained a significant predictor even half a century later."], "correct": 2, "hint": "look for the long-term health link identified over decades.", "topic": "Dispositional optimism", "sec": "", "src": "", "link": "", "qid": "0f7ba69abc"}, {"q": "According to Taylor's research on cultural differences, why are Korean students significantly less likely to seek social support than American students?", "options": ["They prefer to use exercise and entertainment as their primary coping mechanisms.", "They fear that asking for help will disrupt group harmony or lead to a loss of face.", "They believe that social support is only effective for physical rather than emotional issues.", "They find that their social networks lack the financial resources to provide help."], "rationales": ["The study found that American students were actually more likely to use exercise than Korean students.", "In collectivist cultures, personal goals are often subordinated to group needs, making the seeking of help seem burdensome to others.", "The difference stems from cultural norms regarding interdependence and social obligations rather than beliefs about efficacy.", "The primary barrier identified in the study was psychological and relational (e.g., loss of face) rather than a lack of resources."], "correct": 1, "hint": "reflect on the motivations for seeking or avoiding help in collectivist settings.", "topic": "Cultural social support", "sec": "", "src": "", "link": "", "qid": "c140874d12"}, {"q": "Brickman and colleagues found that both lottery winners and accident victims reported happiness levels that returned to moderate states. What psychological process explains this?", "options": ["The depletion of emotional resources over time.", "Cognitive dissonance and the denial of negative emotions.", "Habituation and changes in social comparison groups.", "A genetic predisposition that overrides all external life events."], "rationales": ["Resource depletion refers to the temporary loss of willpower, whereas happiness stabilization refers to the return to a baseline state.", "While denial is a common approach, the long-term stabilization of happiness is driven by adaptation and resilience, not suppression.", "People adapt to their current circumstances, and as status changes, they begin comparing themselves to others in their new tier.", "While genetics play a role, the study highlighted the specific mechanism of how people adapt to situational changes."], "correct": 2, "hint": "consider the stability of happiness after major life shifts.", "topic": "Hedonic adaptation", "sec": "", "src": "", "link": "", "qid": "cd6fc35f3e"}, {"q": "Wilson and Gilbert’s research on 'affective forecasting' suggests that people frequently make what mistake when predicting how a future event will impact them?", "options": ["They overestimate how long and how intensely an event will influence their mood.", "They correctly predict the intensity of the emotion but fail to predict the direction.", "They believe that negative events will have a longer impact than positive ones.", "They underestimate the amount of social support they will receive during a crisis."], "rationales": ["Humans tend to focus only on the event in question while ignoring the stability of daily routines and their own inherent resilience.", "People are usually correct about whether an event will be good or bad, but wrong about how long the feeling will last.", "Research shows that people overestimate the durability of both positive and negative emotional states.", "The bias is primarily about the intensity and duration of the emotional reaction itself, regardless of support."], "correct": 0, "hint": "think about our accuracy in predicting the duration of our feelings.", "topic": "Affective forecasting", "sec": "", "src": "", "link": "", "qid": "27be500f5a"}, {"q": "Based on the data provided in Figure 3.8 regarding income and happiness in the United States, what conclusion can be drawn about material wealth?", "options": ["Happiness levels strictly follow the same upward trajectory as personal income.", "Economic recessions are the only times when wealth and happiness are directly linked.", "The pursuit of wealth actually leads to a steady decline in national happiness.", "Increasing buying power does not correlate with a proportional increase in reported well-being."], "rationales": ["The graph shows that while personal income rose dramatically from 1930 to 2000, the percentage of people describing themselves as 'very happy' remained flat.", "The figure illustrates a long-term trend across decades of growth, not just specific responses to market fluctuations.", "The data shows stability in happiness levels rather than a direct decline, indicating a plateau effect.", "Once basic needs are met, additional wealth has diminishing returns on happiness due to habituation and shifting expectations."], "correct": 3, "hint": "consider the relationship between rising income and subjective well-being.", "topic": "Material wealth", "sec": "", "src": "", "link": "", "qid": "2acf96ba9c"}, {"q": "Which strategy has been found by researchers like Baumeister to effectively improve one's overall capacity for emotion regulation?", "options": ["Engaging in high-stress activities to build up a tolerance to adrenaline.", "Practicing unrelated difficult tasks like maintaining good posture or avoiding swearing.", "Watching upsetting movies frequently to desensitize the emotional response.", "Limiting all social contact to avoid the potential for interpersonal frustration."], "rationales": ["High stress typically depletes regulatory resources rather than building them up in the short term.", "Treating self-control like a muscle means it can be strengthened through regular, diverse practice in unrelated areas.", "Desensitization is a different mechanism; self-regulation training specifically focuses on the act of exerting will.", "Social support is a key resource for happiness; avoiding it would likely hinder overall well-being."], "correct": 1, "hint": "think about the 'muscle' analogy for willpower.", "topic": "Self-control training", "sec": "", "src": "", "link": "", "qid": "68c71fa1ae"}, {"q": "In the context of self-regulation, what is the primary risk of attempting to manage high-stress situations when one is physically or mentally exhausted?", "options": ["Emotions are naturally suppressed because the body lacks the energy to express them.", "Individuals experience an increase in 'hardiness' that allows them to push through.", "The brain automatically shifts into a more efficient mode of affective forecasting.", "Individuals are more likely to lose self-control and fail to meet their personal goals."], "rationales": ["Exhaustion often leads to 'emotional outbursts' because the energy required to suppress them has been depleted.", "Hardiness is a stable trait/coping style, not a state induced by exhaustion; exhaustion actually undermines regulation.", "Exhaustion typically leads to more errors in judgment and prediction rather than increased efficiency.", "Fatigue reduces the energy available for cognitive control, making it easier for impulsive or emotional reactions to take over."], "correct": 3, "hint": "consider how tiredness impacts your ability to stay on track.", "topic": "Emotion regulation", "sec": "", "src": "", "link": "", "qid": "35f7fb659c"}, {"q": "According to the buffering effect, social support improves mental health not only through direct aid but also through what secondary mechanism?", "options": ["It forces individuals to conform to group standards, reducing decision-making stress.", "The mere knowledge that others are available if needed provides emotional stability.", "It increases the hormone serotonin through shared physical activities.", "It allows individuals to completely avoid self-awareness during difficult times."], "rationales": ["Conforming to others can actually be emotionally taxing and deplete self-regulatory resources.", "The perception of support acts as a constant psychological safety net, reducing the perceived threat of stressors.", "While social interaction can be pleasant, the buffering effect specifically refers to how support modulates the impact of stress.", "Avoiding self-awareness is considered a maladaptive mechanism (e.g., drug abuse) rather than a benefit of social support."], "correct": 1, "hint": "evaluate how the presence of others changes stress perception.", "topic": "Buffering effect", "sec": "", "src": "", "link": "", "qid": "edb5818b76"}], "hasSheet": true, "frq": [], "notebook": "https://notebooklm.google.com/notebook/791cd0ef-e949-4fd0-9fec-8a610efda32c/artifact/e25c9d91-4afe-4f21-be62-cb5c77ee436e", "root": "../index.html", "tab": "quiz", "sheet": "1. **Thought suppression**\n    - Thought suppression is a common but counterproductive strategy involving the volitional attempt to avoid, ignore, or deny the presence of negative affect.\n    - **Key terms**:\n    1. Thought suppression: The deliberate effort to push intrusive negative thoughts or distressing feelings out of conscious awareness.\n       e.g., Attempting to put a high-stakes exam out of mind instead of engaging in active preparation.\n    - **Names and studies**: Wegner et al. (1987) demonstrated \"paradoxical effects\" in the 5-minute \"white bear\" experiment, where suppression efforts actually increased the frequency of the thought.\n\n2. **Emotional expression**\n    - Externalizing negative thoughts and feelings through verbal or written disclosure is associated with significant longitudinal improvements in mental and physical health.\n    - **Key terms**:\n    1. Emotional expression: The therapeutic process of \"opening up\" about emotional reactions to stressors rather than cognitively bottling them.\n       Type: Maintaining a daily journal to document and process one’s internal emotional states.\n    - **Names and studies**: Pennebaker and Beall (1986) found trauma-writing students had fewer health center visits over 6 months, while Petrie et al. (2004) linked such writing to improved immune function.\n\n3. **Delay of gratification**\n    - This self-regulatory capacity involves the cognitive ability to override immediate impulses in order to secure more valuable rewards in the future.\n    - **Key terms**:\n    1. Self-regulation: The process of setting goals and utilizing cognitive and affective capacities to guide behavior toward those objectives.\n       Component: Establishing specific, measurable goals to direct behavior and monitor progress.\n    - **Names and studies**: Mischel et al. (1989) showed that preschoolers who delayed eating a snack for a larger reward later exhibited higher SAT scores and superior social adeptness as adolescents.\n\n4. **Ego depletion**\n    - The ego depletion model posits that self-control functions as a finite internal resource that becomes progressively exhausted through continued exertion.\n    - **Key terms**:\n    1. Self-control: The effortful management of impulses or the regulation of emotional responses to maintain goal-directed behavior.\n       Metaphor: Self-control acts like a muscle that exhibits fatigue and reduced strength following heavy or prolonged use.\n    - **Names and studies**: Muraven et al. (1998) found regulating movie reactions reduced hand-grip stamina (change of -25.1 for increase, -18.49 for decrease, vs. -1.57 for the control group).\n\n5. **Neurotransmitter influence**\n    - Impulsive behaviors and preferences for immediate rewards are rooted in biological patterns influenced by specific neurochemical concentrations.\n    - **Key terms**:\n    1. Serotonin: A neurotransmitter central to the regulation of emotional responses and the capacity for behavioral self-control.\n       Associated behavior: Low serotonin levels are tied to impulsiveness, violence, and a preference for small immediate rewards over larger delayed rewards.\n    - **Names and studies**: Bizot et al. (1999) found that low serotonin levels in animals predicted a significant preference for immediate gratification over delayed reward.\n\n6. **Psychological hardiness**\n    - Hardiness is an individual-difference measure characterized by a positive outlook and the tendency to take direct, constructive action toward stressors.\n    - **Key terms**:\n    1. Hardiness: A personality trait involving a positive response to stress and a commitment to learning from negative life events.\n       Hardy behavior: Engaging in proactive coping strategies and maintaining rigorous self-care routines during periods of high stress.\n    - **Names and studies**: Maddi, Kahn, and Maddi (1998) demonstrated that hardiness training focusing on effective coping increased life satisfaction and significantly decreased self-reported stress levels.\n\n7. **Dispositional optimism**\n    - Dispositional optimism is the stable tendency to maintain a general expectation that future outcomes will be positive and favorable.\n    - **Key terms**:\n    1. Optimism: A general expectation that good things will happen in the future, facilitating better coping during stressful periods.\n       Health outcome: Optimistic individuals have been shown to make significantly faster recoveries following major surgeries.\n    2. Self-efficacy: The belief in one's ability to execute actions, such as regular exercise, required to produce desired results.\n       Behavioral result: High self-efficacy is a robust predictor of success in quitting smoking and losing weight.\n    - **Names and studies**: Peterson et al. (1998) found that college students who were optimistic between 1936 and 1940 experienced lower 50-year mortality rates and fewer accidental deaths.\n\n8. **Cultural social support**\n    - Cultural \"selfways\" significantly influence how individuals perceive the social costs and benefits of seeking assistance from others during stress.\n    - **Key terms**:\n    1. Collectivist cultures: Eastern societies where individuals are viewed as fundamentally connected, making help-seeking a potential risk to group harmony.\n       Concern: A fear that seeking support might disrupt social equilibrium, elicit criticism, or cause a loss of face.\n    2. Individualist cultures: Western societies that view the self as independent and use relationships to promote personal goals.\n       Use for relationships: Utilizing social networks as an appropriate means to provide direct help or financial assistance for individual aims.\n    - **Names and studies**: Taylor et al. (2004) found American students were more likely to use social support than Korean students, who feared social disapproval or burdening the group.\n\n9. **Hedonic adaptation**\n    - Hedonic adaptation is the psychological process where people habituate to new circumstances until their well-being returns to a baseline moderate level.\n    - **Key terms**:\n    1. Resilience: The inherent ability of individuals to recover from negative events by bringing coping skills into play.\n       Function: Utilizing personal resources to restore a sense of happiness and stability after significant life changes.\n    - **Names and studies**: Brickman, Coates, and Janoff-Bulman (1978) found lottery winners weren't happier than controls, and accident victims were not as unhappy as might be expected.\n\n10. **Affective forecasting**\n    - Affective forecasting refers to the systematic difficulty people have when trying to accurately predict the intensity and duration of their future emotional states.\n    - **Key terms**:\n    1. Focalism: A cognitive bias where people focus solely on a single event, leading to a \"durability bias\" in emotional predictions.\n       Example: Forgetting that one will still be occupied with regular activities like working or socializing regardless of a specific life event.\n    - **Names and studies**: Wilson and Gilbert (2005) research indicates that people consistently overestimate how much positive or negative events will influence their long-term well-being.\n\n11. **Material wealth**\n    - Once basic physiological needs are met, increases in personal wealth have a diminishing impact on long-term happiness due to habituation and comparison.\n    - **Key terms**:\n    1. Social comparison: The process of evaluating one’s status relative to peers, which shifts as one's own wealth increases.\n       Example: Wealthy individuals comparing their success to other affluent people rather than to the general population.\n    - **Names and studies**: Layard (2005) showed in Figure 3.8 that while income rose in the U.S., France, and Japan from 1946–1990, the percentage of \"very happy\" people was stagnant.\n\n12. **Self-control training**\n    - Self-regulation is a skill that can be strengthened through regular practice of disciplined tasks, leading to a \"transfer\" effect on unrelated behaviors.\n    - **Key terms**:\n    1. Physical training: A metaphor suggesting that the regulatory \"muscle\" improves with consistent use on difficult tasks.\n       Exercise: Practicing disciplined behaviors such as maintaining good posture or consciously avoiding swearing.\n    - **Names and studies**: Baumeister et al. (2006) found that practicing posture or avoiding swearing improved laboratory test performance on tasks like maintaining a diet or completing a puzzle.\n\n13. **Emotion regulation**\n    - Emotion regulation involves the cognitive effort required to manage emotional responses to avoid maladaptive behaviors used to \"escape the self.\"\n    - **Key terms**:\n    1. Maladaptive behaviors: Dysfunctional actions, such as binge drinking or drug abuse, used as mechanisms to \"escape the self\" (Baumeister, 1991).\n       Example: Utilizing substance abuse to distract from the discrepancy between the ideal self and the actual self.\n    - **Names and studies**: Vohs and Heatherton (2000) demonstrated that resisting the temptation of snacks (chocolates and cookies) caused participants to give up sooner on subsequent, unrelated tasks.\n\n14. **Buffering effect**\n    - Social support serves as a protective layer that diminishes the physiological and psychological impact of high-stress situations on health.\n    - **Key terms**:\n    1. Direct effects: Tangible assistance, such as financial aid or information sharing, provided by a social network to help manage a stressor.\n       Example: Receiving money or specific advice from a friend during a financial or academic crisis.\n    2. Emotional effects: The psychological benefit derived from the mere perception that others are available to provide support if needed.\n       Example: Feeling an increased sense of self-worth simply because of the presence of a supportive social circle.\n    - **Names and studies**: Ashton et al. (2005) identified social support as a significant longitudinal predictor of reduced physical symptoms in persons living with HIV/AIDS."}</script>
+<script id="quiz-data" type="application/json">{"id": "psp-3-6", "title": "3.6 How to Feel Better: Coping With Negative Emotions", "subtitle": "Chapter 3 · Social Affect", "book": "PSP", "hash": "209902bf36e47472", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "In Wegner's study where participants were instructed not to think about a white bear for five minutes, what was the consistent outcome regarding their mental state?", "options": ["The thought frequently and spontaneously returned to their consciousness.", "The thought was only successfully suppressed when participants were offered a reward.", "The thought of the bear disappeared completely after the first three minutes.", "They were able to successfully block the thought by focusing on physical sensations."], "rationales": ["Suppression often causes a rebound effect where the forbidden thought becomes more accessible because the mind must monitor for it to avoid it.", "The study found that instructions to avoid a thought led to failure regardless of the participant's intent or external incentives.", "Participants continued to ring the bell throughout the five minutes, showing the thought did not dissipate over time.", "Research indicates that the effort to suppress thoughts actually keeps them 'active' in the background of the mind."], "correct": 0, "hint": "consider the result of trying to ignore a specific image.", "topic": "Thought suppression", "sec": "", "src": "", "link": "", "qid": "c62e9e8ed2"}, {"q": "According to the research by Pennebaker and Beall, what is the expected long-term outcome for a student who spends time writing about a deeply traumatic experience compared to one who writes about a trivial topic?", "options": ["They will develop a tendency to avoid talking to others about their problems to preserve their privacy.", "They will show no difference in physical health but will exhibit higher academic performance.", "They will report an immediate and lasting increase in positive mood and blood pressure stability.", "They will likely experience fewer illnesses and health center visits over the following months."], "rationales": ["The study highlights that opening up, rather than bottling feelings, leads to better outcomes and increased willingness to process emotions.", "The primary measurable benefit found in this specific study was related to physical health and immune function rather than academic scores.", "Initially, these participants actually experience higher blood pressure and more negative moods right after the writing task.", "Confronting negative experiences through writing helps individuals make sense of them and appears to boost long-term physiological health."], "correct": 3, "hint": "focus on the unexpected physiological outcome of facing trauma.", "topic": "Emotional expression", "sec": "", "src": "", "link": "", "qid": "ce0eae8e6a"}, {"q": "Walter Mischel’s marshmallow studies found that four-year-olds who could resist eating a treat immediately to wait for a second one showed which of the following characteristics as adolescents?", "options": ["They achieved significantly higher SAT scores and were rated as more socially adept.", "They were more likely to take risks and seek immediate thrill-seeking activities.", "They developed higher levels of physical strength and athletic endurance.", "They showed a preference for artistic and creative fields over analytical ones."], "rationales": ["Early childhood self-regulation is a strong predictor of later cognitive control, social competence, and academic success.", "The ability to delay gratification is inversely related to impulsivity and risk-taking behavior.", "While self-regulation is a cognitive and emotional skill, the longitudinal study did not identify specific athletic advantages.", "The findings focused on general success markers like coping skills and social competence rather than specific career interests."], "correct": 0, "hint": "look at how early childhood patience correlates with future success.", "topic": "Delay of gratification", "sec": "", "src": "", "link": "", "qid": "9847b9429d"}, {"q": "In the experiment by Muraven, Tice, and Baumeister, how did the instruction to suppress or increase emotional responses during a movie affect the participants' performance on a subsequent hand-grip task?", "options": ["The regulation task had no impact on physical strength, only on mental focus.", "Participants showed a significant decrease in physical stamina and grip duration.", "Participants showed increased strength due to the adrenaline from the emotional scenes.", "Only those who increased their emotional response showed a decline in strength."], "rationales": ["The study demonstrated that regulatory depletion crosses domains, affecting physical tasks after mental regulation.", "The effort spent on emotion regulation consumes limited cognitive resources, leaving less energy for subsequent physical or mental tasks.", "The 'muscle' analogy suggests that self-control is easily fatigued rather than invigorated by use.", "Both the increase-emotional-response and the decrease-emotional-response groups showed significantly more depletion than the control group."], "correct": 1, "hint": "consider how controlling emotions impacts physical stamina.", "topic": "Ego depletion", "sec": "", "src": "", "link": "", "qid": "7d868325e7"}, {"q": "How does the presence of low serotonin levels in the brain influence the decision-making process regarding rewards in animals and humans?", "options": ["It makes individuals more patient and willing to wait for substantial gains.", "It shifts focus away from material rewards toward social validation.", "It eliminates the ability to perceive the value of rewards entirely.", "It leads to a strong preference for small, immediate rewards over larger, delayed ones."], "rationales": ["Deficiencies in this neurotransmitter are typically associated with violent, impulsive, and short-sighted behaviors.", "Serotonin's influence in this context is primarily about the timing of reward consumption and impulse control.", "The value of rewards is still perceived, but the temporal processing is biased toward the present moment.", "Low serotonin levels are linked to impulsiveness and a reduced capacity to cognitively override the desire for immediate gratification."], "correct": 3, "hint": "relate brain chemicals to impulsive behavior.", "topic": "Neurotransmitter influence", "sec": "", "src": "", "link": "", "qid": "1631a94b1b"}, {"q": "Based on the concept of 'hardiness' defined by Suzanne Kobasa, which behavior would a hardy individual likely exhibit when facing a major job loss?", "options": ["Suppressing the anxiety associated with the loss to maintain a calm appearance for family.", "Attribute the event to bad luck and wait for external circumstances to improve.", "Developing a reliance on material wealth to buffer the emotional impact of the loss.", "Taking direct action to understand the cause and seeking valuable lessons for the future."], "rationales": ["Hardiness involves active coping and engagement rather than the maladaptive strategy of suppression.", "Hardiness is characterized by perceived control and taking responsibility for one's outcomes rather than passivity.", "The material wealth of an individual has a much smaller impact on well-being than internal personality factors like hardiness.", "Hardy individuals approach stressors with a sense of commitment and control, viewing challenges as opportunities for growth."], "correct": 3, "hint": "identify the approach taken by those resilient to stress.", "topic": "Psychological hardiness", "sec": "", "src": "", "link": "", "qid": "bb0aec9daf"}, {"q": "What did Christopher Peterson find when he reviewed the health outcomes of college students who were interviewed between 1936 and 1940?", "options": ["Optimistic students were more likely to smoke regularly but lived longer anyway.", "Optimistic students had more physical illnesses but recovered from them faster.", "Optimistic students were less likely to die of violent or accidental causes 50 years later.", "There was no long-term correlation between college attitude and health outcomes after age 40."], "rationales": ["Research by Baker showed that optimists are actually less likely to smoke during stressful periods, contributing to their longevity.", "The study found that they actually experienced fewer deaths from all causes, not just better recovery.", "Positive attitudes in youth predict better health management and lower mortality rates throughout the entire lifespan.", "The longitudinal data showed that early outlook remained a significant predictor even half a century later."], "correct": 2, "hint": "look for the long-term health link identified over decades.", "topic": "Dispositional optimism", "sec": "", "src": "", "link": "", "qid": "0f7ba69abc"}, {"q": "According to Taylor's research on cultural differences, why are Korean students significantly less likely to seek social support than American students?", "options": ["They prefer to use exercise and entertainment as their primary coping mechanisms.", "They fear that asking for help will disrupt group harmony or lead to a loss of face.", "They believe that social support is only effective for physical rather than emotional issues.", "They find that their social networks lack the financial resources to provide help."], "rationales": ["The study found that American students were actually more likely to use exercise than Korean students.", "In collectivist cultures, personal goals are often subordinated to group needs, making the seeking of help seem burdensome to others.", "The difference stems from cultural norms regarding interdependence and social obligations rather than beliefs about efficacy.", "The primary barrier identified in the study was psychological and relational (e.g., loss of face) rather than a lack of resources."], "correct": 1, "hint": "reflect on the motivations for seeking or avoiding help in collectivist settings.", "topic": "Cultural social support", "sec": "", "src": "", "link": "", "qid": "c140874d12"}, {"q": "Brickman and colleagues found that both lottery winners and accident victims reported happiness levels that returned to moderate states. What psychological process explains this?", "options": ["The depletion of emotional resources over time.", "Cognitive dissonance and the denial of negative emotions.", "Habituation and changes in social comparison groups.", "A genetic predisposition that overrides all external life events."], "rationales": ["Resource depletion refers to the temporary loss of willpower, whereas happiness stabilization refers to the return to a baseline state.", "While denial is a common approach, the long-term stabilization of happiness is driven by adaptation and resilience, not suppression.", "People adapt to their current circumstances, and as status changes, they begin comparing themselves to others in their new tier.", "While genetics play a role, the study highlighted the specific mechanism of how people adapt to situational changes."], "correct": 2, "hint": "consider the stability of happiness after major life shifts.", "topic": "Hedonic adaptation", "sec": "", "src": "", "link": "", "qid": "cd6fc35f3e"}, {"q": "Wilson and Gilbert’s research on 'affective forecasting' suggests that people frequently make what mistake when predicting how a future event will impact them?", "options": ["They overestimate how long and how intensely an event will influence their mood.", "They correctly predict the intensity of the emotion but fail to predict the direction.", "They believe that negative events will have a longer impact than positive ones.", "They underestimate the amount of social support they will receive during a crisis."], "rationales": ["Humans tend to focus only on the event in question while ignoring the stability of daily routines and their own inherent resilience.", "People are usually correct about whether an event will be good or bad, but wrong about how long the feeling will last.", "Research shows that people overestimate the durability of both positive and negative emotional states.", "The bias is primarily about the intensity and duration of the emotional reaction itself, regardless of support."], "correct": 0, "hint": "think about our accuracy in predicting the duration of our feelings.", "topic": "Affective forecasting", "sec": "", "src": "", "link": "", "qid": "27be500f5a"}, {"q": "Based on the data provided in Figure 3.8 regarding income and happiness in the United States, what conclusion can be drawn about material wealth?", "options": ["Happiness levels strictly follow the same upward trajectory as personal income.", "Economic recessions are the only times when wealth and happiness are directly linked.", "The pursuit of wealth actually leads to a steady decline in national happiness.", "Increasing buying power does not correlate with a proportional increase in reported well-being."], "rationales": ["The graph shows that while personal income rose dramatically from 1930 to 2000, the percentage of people describing themselves as 'very happy' remained flat.", "The figure illustrates a long-term trend across decades of growth, not just specific responses to market fluctuations.", "The data shows stability in happiness levels rather than a direct decline, indicating a plateau effect.", "Once basic needs are met, additional wealth has diminishing returns on happiness due to habituation and shifting expectations."], "correct": 3, "hint": "consider the relationship between rising income and subjective well-being.", "topic": "Material wealth", "sec": "", "src": "", "link": "", "qid": "2acf96ba9c"}, {"q": "Which strategy has been found by researchers like Baumeister to effectively improve one's overall capacity for emotion regulation?", "options": ["Engaging in high-stress activities to build up a tolerance to adrenaline.", "Practicing unrelated difficult tasks like maintaining good posture or avoiding swearing.", "Watching upsetting movies frequently to desensitize the emotional response.", "Limiting all social contact to avoid the potential for interpersonal frustration."], "rationales": ["High stress typically depletes regulatory resources rather than building them up in the short term.", "Treating self-control like a muscle means it can be strengthened through regular, diverse practice in unrelated areas.", "Desensitization is a different mechanism; self-regulation training specifically focuses on the act of exerting will.", "Social support is a key resource for happiness; avoiding it would likely hinder overall well-being."], "correct": 1, "hint": "think about the 'muscle' analogy for willpower.", "topic": "Self-control training", "sec": "", "src": "", "link": "", "qid": "68c71fa1ae"}, {"q": "In the context of self-regulation, what is the primary risk of attempting to manage high-stress situations when one is physically or mentally exhausted?", "options": ["Emotions are naturally suppressed because the body lacks the energy to express them.", "Individuals experience an increase in 'hardiness' that allows them to push through.", "The brain automatically shifts into a more efficient mode of affective forecasting.", "Individuals are more likely to lose self-control and fail to meet their personal goals."], "rationales": ["Exhaustion often leads to 'emotional outbursts' because the energy required to suppress them has been depleted.", "Hardiness is a stable trait/coping style, not a state induced by exhaustion; exhaustion actually undermines regulation.", "Exhaustion typically leads to more errors in judgment and prediction rather than increased efficiency.", "Fatigue reduces the energy available for cognitive control, making it easier for impulsive or emotional reactions to take over."], "correct": 3, "hint": "consider how tiredness impacts your ability to stay on track.", "topic": "Emotion regulation", "sec": "", "src": "", "link": "", "qid": "35f7fb659c"}, {"q": "According to the buffering effect, social support improves mental health not only through direct aid but also through what secondary mechanism?", "options": ["It forces individuals to conform to group standards, reducing decision-making stress.", "The mere knowledge that others are available if needed provides emotional stability.", "It increases the hormone serotonin through shared physical activities.", "It allows individuals to completely avoid self-awareness during difficult times."], "rationales": ["Conforming to others can actually be emotionally taxing and deplete self-regulatory resources.", "The perception of support acts as a constant psychological safety net, reducing the perceived threat of stressors.", "While social interaction can be pleasant, the buffering effect specifically refers to how support modulates the impact of stress.", "Avoiding self-awareness is considered a maladaptive mechanism (e.g., drug abuse) rather than a benefit of social support."], "correct": 1, "hint": "evaluate how the presence of others changes stress perception.", "topic": "Buffering effect", "sec": "", "src": "", "link": "", "qid": "edb5818b76"}], "hasSheet": true, "parts": false, "secTitles": {}, "reserve": 0, "frq": [], "notebook": "https://notebooklm.google.com/notebook/791cd0ef-e949-4fd0-9fec-8a610efda32c/artifact/e25c9d91-4afe-4f21-be62-cb5c77ee436e", "root": "../index.html", "tab": "quiz", "sheet": "1. **Thought suppression**\n    - Thought suppression is a common but counterproductive strategy involving the volitional attempt to avoid, ignore, or deny the presence of negative affect.\n    - **Key terms**:\n    1. Thought suppression: The deliberate effort to push intrusive negative thoughts or distressing feelings out of conscious awareness.\n       e.g., Attempting to put a high-stakes exam out of mind instead of engaging in active preparation.\n    - **Names and studies**: Wegner et al. (1987) demonstrated \"paradoxical effects\" in the 5-minute \"white bear\" experiment, where suppression efforts actually increased the frequency of the thought.\n\n2. **Emotional expression**\n    - Externalizing negative thoughts and feelings through verbal or written disclosure is associated with significant longitudinal improvements in mental and physical health.\n    - **Key terms**:\n    1. Emotional expression: The therapeutic process of \"opening up\" about emotional reactions to stressors rather than cognitively bottling them.\n       Type: Maintaining a daily journal to document and process one’s internal emotional states.\n    - **Names and studies**: Pennebaker and Beall (1986) found trauma-writing students had fewer health center visits over 6 months, while Petrie et al. (2004) linked such writing to improved immune function.\n\n3. **Delay of gratification**\n    - This self-regulatory capacity involves the cognitive ability to override immediate impulses in order to secure more valuable rewards in the future.\n    - **Key terms**:\n    1. Self-regulation: The process of setting goals and utilizing cognitive and affective capacities to guide behavior toward those objectives.\n       Component: Establishing specific, measurable goals to direct behavior and monitor progress.\n    - **Names and studies**: Mischel et al. (1989) showed that preschoolers who delayed eating a snack for a larger reward later exhibited higher SAT scores and superior social adeptness as adolescents.\n\n4. **Ego depletion**\n    - The ego depletion model posits that self-control functions as a finite internal resource that becomes progressively exhausted through continued exertion.\n    - **Key terms**:\n    1. Self-control: The effortful management of impulses or the regulation of emotional responses to maintain goal-directed behavior.\n       Metaphor: Self-control acts like a muscle that exhibits fatigue and reduced strength following heavy or prolonged use.\n    - **Names and studies**: Muraven et al. (1998) found regulating movie reactions reduced hand-grip stamina (change of -25.1 for increase, -18.49 for decrease, vs. -1.57 for the control group).\n\n5. **Neurotransmitter influence**\n    - Impulsive behaviors and preferences for immediate rewards are rooted in biological patterns influenced by specific neurochemical concentrations.\n    - **Key terms**:\n    1. Serotonin: A neurotransmitter central to the regulation of emotional responses and the capacity for behavioral self-control.\n       Associated behavior: Low serotonin levels are tied to impulsiveness, violence, and a preference for small immediate rewards over larger delayed rewards.\n    - **Names and studies**: Bizot et al. (1999) found that low serotonin levels in animals predicted a significant preference for immediate gratification over delayed reward.\n\n6. **Psychological hardiness**\n    - Hardiness is an individual-difference measure characterized by a positive outlook and the tendency to take direct, constructive action toward stressors.\n    - **Key terms**:\n    1. Hardiness: A personality trait involving a positive response to stress and a commitment to learning from negative life events.\n       Hardy behavior: Engaging in proactive coping strategies and maintaining rigorous self-care routines during periods of high stress.\n    - **Names and studies**: Maddi, Kahn, and Maddi (1998) demonstrated that hardiness training focusing on effective coping increased life satisfaction and significantly decreased self-reported stress levels.\n\n7. **Dispositional optimism**\n    - Dispositional optimism is the stable tendency to maintain a general expectation that future outcomes will be positive and favorable.\n    - **Key terms**:\n    1. Optimism: A general expectation that good things will happen in the future, facilitating better coping during stressful periods.\n       Health outcome: Optimistic individuals have been shown to make significantly faster recoveries following major surgeries.\n    2. Self-efficacy: The belief in one's ability to execute actions, such as regular exercise, required to produce desired results.\n       Behavioral result: High self-efficacy is a robust predictor of success in quitting smoking and losing weight.\n    - **Names and studies**: Peterson et al. (1998) found that college students who were optimistic between 1936 and 1940 experienced lower 50-year mortality rates and fewer accidental deaths.\n\n8. **Cultural social support**\n    - Cultural \"selfways\" significantly influence how individuals perceive the social costs and benefits of seeking assistance from others during stress.\n    - **Key terms**:\n    1. Collectivist cultures: Eastern societies where individuals are viewed as fundamentally connected, making help-seeking a potential risk to group harmony.\n       Concern: A fear that seeking support might disrupt social equilibrium, elicit criticism, or cause a loss of face.\n    2. Individualist cultures: Western societies that view the self as independent and use relationships to promote personal goals.\n       Use for relationships: Utilizing social networks as an appropriate means to provide direct help or financial assistance for individual aims.\n    - **Names and studies**: Taylor et al. (2004) found American students were more likely to use social support than Korean students, who feared social disapproval or burdening the group.\n\n9. **Hedonic adaptation**\n    - Hedonic adaptation is the psychological process where people habituate to new circumstances until their well-being returns to a baseline moderate level.\n    - **Key terms**:\n    1. Resilience: The inherent ability of individuals to recover from negative events by bringing coping skills into play.\n       Function: Utilizing personal resources to restore a sense of happiness and stability after significant life changes.\n    - **Names and studies**: Brickman, Coates, and Janoff-Bulman (1978) found lottery winners weren't happier than controls, and accident victims were not as unhappy as might be expected.\n\n10. **Affective forecasting**\n    - Affective forecasting refers to the systematic difficulty people have when trying to accurately predict the intensity and duration of their future emotional states.\n    - **Key terms**:\n    1. Focalism: A cognitive bias where people focus solely on a single event, leading to a \"durability bias\" in emotional predictions.\n       Example: Forgetting that one will still be occupied with regular activities like working or socializing regardless of a specific life event.\n    - **Names and studies**: Wilson and Gilbert (2005) research indicates that people consistently overestimate how much positive or negative events will influence their long-term well-being.\n\n11. **Material wealth**\n    - Once basic physiological needs are met, increases in personal wealth have a diminishing impact on long-term happiness due to habituation and comparison.\n    - **Key terms**:\n    1. Social comparison: The process of evaluating one’s status relative to peers, which shifts as one's own wealth increases.\n       Example: Wealthy individuals comparing their success to other affluent people rather than to the general population.\n    - **Names and studies**: Layard (2005) showed in Figure 3.8 that while income rose in the U.S., France, and Japan from 1946–1990, the percentage of \"very happy\" people was stagnant.\n\n12. **Self-control training**\n    - Self-regulation is a skill that can be strengthened through regular practice of disciplined tasks, leading to a \"transfer\" effect on unrelated behaviors.\n    - **Key terms**:\n    1. Physical training: A metaphor suggesting that the regulatory \"muscle\" improves with consistent use on difficult tasks.\n       Exercise: Practicing disciplined behaviors such as maintaining good posture or consciously avoiding swearing.\n    - **Names and studies**: Baumeister et al. (2006) found that practicing posture or avoiding swearing improved laboratory test performance on tasks like maintaining a diet or completing a puzzle.\n\n13. **Emotion regulation**\n    - Emotion regulation involves the cognitive effort required to manage emotional responses to avoid maladaptive behaviors used to \"escape the self.\"\n    - **Key terms**:\n    1. Maladaptive behaviors: Dysfunctional actions, such as binge drinking or drug abuse, used as mechanisms to \"escape the self\" (Baumeister, 1991).\n       Example: Utilizing substance abuse to distract from the discrepancy between the ideal self and the actual self.\n    - **Names and studies**: Vohs and Heatherton (2000) demonstrated that resisting the temptation of snacks (chocolates and cookies) caused participants to give up sooner on subsequent, unrelated tasks.\n\n14. **Buffering effect**\n    - Social support serves as a protective layer that diminishes the physiological and psychological impact of high-stress situations on health.\n    - **Key terms**:\n    1. Direct effects: Tangible assistance, such as financial aid or information sharing, provided by a social network to help manage a stressor.\n       Example: Receiving money or specific advice from a friend during a financial or academic crisis.\n    2. Emotional effects: The psychological benefit derived from the mere perception that others are available to provide support if needed.\n       Example: Feeling an increased sense of self-worth simply because of the presence of a supportive social circle.\n    - **Names and studies**: Ashton et al. (2005) identified social support as a significant longitudinal predictor of reduced physical symptoms in persons living with HIV/AIDS."}</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -713,21 +768,29 @@ const G_OK = '✓', G_NO = '✕';
 
 /* WHY A QUESTION IS ON THE EXAM. One glyph, set by the generator in the topic tag, and the
    only thing the page does with it is show it and group by it. The ORDER of this object is
-   his priority order (08-11) and the tables below read it, so re-ordering here re-orders the
-   report: the rewrites he asked for first, then starred, then missed, then flagged, then his
-   own research, then the ones he got right and is being asked again from a harder angle.
+   his priority order and the tables below read it, so re-ordering here re-orders the report.
 
-   ✎ SITS ABOVE ☆ (08-12) because it is the only one he wrote as an instruction rather than a
-   mark. The others say "this mattered to me"; ✎ says "this question was wrong, ask it like
-   this" — so on the report it is the first row he should check, since it is the one place the
-   generator can have done as it was told or not. */
+   RE-RANKED 08-14 TO HIS NEW ORDER: *"Wrong questions tested first · Starred · Questions with
+   research (not fix) · Question mark tags · Fix marks · Correct answers."* It has to be kept
+   in step with `POOL_RUNGS` in reinforce.py, which is what actually assigns the glyphs — that
+   list decides which card gets a spot, this one only names the result. Out of step, the
+   report groups a paper by an order the paper was not built in.
+
+   ✎ USED TO SIT FIRST and no longer does. Until 08-12 it was the one he wrote as an
+   instruction rather than a mark, so it led the report; he has since ranked it fifth, and a
+   ✎ question now takes an ordinary spot like every other rung.
+
+   `+` IS NOT A RUNG. Nothing is tagged `+` — it is what a section gets when its quiz was
+   shorter than the quota, which is ordinary rather than exceptional. It is last because a
+   question with no card behind it is the one he has least history with. */
 const SRC = {
-  '✎': 'You asked for this one to be rewritten',
-  '☆': 'Starred in the subchapter quiz',
   '✕': 'You got this wrong',
-  '?': 'You flagged it — no idea at the time',
+  '☆': 'Starred in the subchapter quiz',
   'R': 'Built from your own research',
-  '$': 'You got it right before — asked a different way'
+  '?': 'You flagged it — no idea at the time',
+  '✎': 'You asked for this one to be rewritten',
+  '$': 'You got it right before — asked a different way',
+  '+': 'New — nothing of yours left to re-ask on this section'
 };
 const SRC_ORDER = Object.keys(SRC);
 function srcName(g){ return SRC[g] || ''; }
@@ -744,9 +807,14 @@ function srcName(g){ return SRC[g] || ''; }
    `skipped` usable later as a permanent exclusion list when exam reuse is built — see qid()
    in quizpage.py. v1 states are migrated once, on load. */
 function qk(i){ return D.questions[i].qid; }
+/* `only` and `sat` ARE THE SECTIONED EXAM (08-16), and both are inert unless the page was
+   built with parts on. `only` is the list of subchapters THIS sitting covers — null means he
+   has not chosen yet, which is what puts the picker on screen. `sat` records which
+   subchapters he has finished, and nothing else: a section's score is always recomputed from
+   `answers`, never stored, so there is exactly one place a number can come from. */
 function blank(){ return {v:2, hash:D.hash, i:0, answers:{}, pass2:{}, skipped:{}, starred:{},
                           unsure:{}, hints:{}, phase:1, p2list:null, done:false, at:null,
-                          shuf:{}, history:[]}; }
+                          shuf:{}, history:[], only:null, sat:{}, promoted:{}}; }
 function migrate(s){
   // v1 keyed every map on the array index. The hash matches, so the indices are still valid
   // and this is a straight re-key — done once, then never again.
@@ -790,6 +858,12 @@ function load(){
     if(!s.hints) s.hints = {};
     if(!s.pass2) s.pass2 = {};
     if(!s.phase) s.phase = 1;
+    // Absent on every attempt saved before 08-16, and `only: null` is exactly right for one:
+    // it means "not chosen", so an attempt in progress on a paper that has just gained the
+    // picker resumes over the whole paper, which is what it was.
+    if(s.only === undefined) s.only = null;
+    if(!s.sat) s.sat = {};
+    if(!s.promoted) s.promoted = {};
     // Not carried across a rebuild on purpose: blank() empties it. A stored order describes a
     // set of options that may no longer be the same length — optOrder() throws out any that
     // no longer fit, so a stale one is harmless anyway.
@@ -797,14 +871,89 @@ function load(){
     return s;
   }catch(e){ return blank(); }
 }
+/* THE ATTEMPT MUST NEVER FAIL TO SAVE IN SILENCE (08-16). `save()` swallowed every exception,
+   and the one that actually happens is QuotaExceededError: the research box keeps pasted
+   images in localStorage, and once the origin is full EVERY later write is refused — so his
+   answers stopped being recorded while the page carried on as if they were. His report was
+   *"I feel I did answer some of these questions and yet they show up again"*, which is exactly
+   what a refused write looks like from the outside. It now says so, on screen, and keeps
+   saying so until a write succeeds. */
+let saveBroken = false;
+function saveFailed(on){
+  if(on === saveBroken) return;
+  saveBroken = on;
+  let el = $('#savewarn');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'savewarn';
+    document.body.appendChild(el);
+  }
+  el.textContent = 'This browser is out of room — your answers are NOT being saved. '
+                 + 'Remove a pasted image from the research box to free some up.';
+  el.classList.toggle('hide', !on);
+}
 function save(){
-  S.meta = {title:D.title, subtitle:D.subtitle, book:D.book, total:active(S).length,
-            at:S.at, done:S.done, score:score(S)};
-  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+  // ON A SECTIONED PAPER `meta` DESCRIBES THE PAPER, NOT THE SITTING. It is read in exactly
+  // one place — `load()`, when the questions have been rebuilt and the old answers can no
+  // longer be scored — and what belongs in that history line is "he got 24 of 32 on this
+  // exam", not "he got 14 of 16 on the half of it he happened to sit last."
+  const pp = D.parts ? paperStat() : null;
+  S.meta = {title:D.title, subtitle:D.subtitle, book:D.book,
+            total: pp ? pp.t : active(S).length,
+            at:S.at, done:S.done, score: pp ? pp.n : score(S)};
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); saveFailed(false); }
+  catch(e){ saveFailed(true); }
 }
 /* Skipped questions leave the run entirely — out of the count, out of the denominator,
-   out of the topic breakdown. Anything less makes "8 / 10" a lie about a quiz of nine. */
-function active(s){ return D.questions.map((_,i)=>i).filter(i => !(s.skipped||{})[qk(i)]); }
+   out of the topic breakdown. Anything less makes "8 / 10" a lie about a quiz of nine.
+
+   THE SECTION FILTER RIDES HERE AND NOWHERE ELSE (08-16). `active()` is what the run list,
+   the score, the second pass, the end card and the review list are all built on, so putting
+   the sitting's subchapters into this one function is what makes a half-paper behave exactly
+   like a whole one — one direction, one end card, one second pass — with no branch anywhere
+   downstream. `only: null` (not chosen, or a page built without parts) filters nothing. */
+function active(s){
+  const only = D.parts ? (s.only || null) : null;
+  return D.questions.map((_,i)=>i).filter(i => onPaper(s, i)
+    && (!only || only.indexOf(D.questions[i].sec) >= 0));
+}
+/* ---- THE RESERVES (08-16) ------------------------------------------------------------
+   His ask: *"if 1 question is skipped, another one is replaced in that section about it… you
+   have a quota, so you should also create stockpiles (say 2 extra questions per section that
+   immediately replace a skipped question)."*
+
+   `D.reserve` is how many per section were written beyond the quota. They are the LAST ones
+   of their section in build order, which is not arbitrary: `section_pool()` deals spots down
+   his tag priority, so a section's tail is the bottom of the list it could afford to lose.
+
+   A RESERVE IS NOT A QUESTION YET. It is out of the run, out of the denominator and out of
+   every table until a skip in its own section calls it in — at which point it is an ordinary
+   question and nothing downstream can tell it apart. Promotion is recorded on the qid, so it
+   survives a reload and cannot be handed out twice. Skipping with none left behaves exactly
+   as it always did: the paper is one question shorter. */
+function reserveIds(sec){
+  if(!(D.reserve > 0)) return [];
+  const l = D.questions.map((_,i)=>i).filter(i => D.questions[i].sec === sec);
+  return l.slice(Math.max(0, l.length - D.reserve));
+}
+function isReserve(i){
+  const sec = D.questions[i].sec;
+  return !!sec && reserveIds(sec).indexOf(i) >= 0;
+}
+/* Skipped or an unpromoted reserve — the two ways a question is not part of the paper. One
+   predicate so the run, the score, the picker and the section tables can never disagree. */
+function onPaper(s, i){
+  if((s.skipped||{})[qk(i)]) return false;
+  return !isReserve(i) || !!(s.promoted||{})[qk(i)];
+}
+/* Called the instant a question is skipped. Returns the promoted index, or -1. */
+function promoteReserve(sec){
+  if(!sec) return -1;
+  const next = reserveIds(sec).find(i => !S.promoted[qk(i)] && !S.skipped[qk(i)]);
+  if(next === undefined) return -1;
+  S.promoted[qk(next)] = true;
+  return next;
+}
 function ans(i){ return S.answers[qk(i)]; }
 function ans2(i){ return S.pass2[qk(i)]; }
 function firstRight(i){ return ans(i) === D.questions[i].correct; }
@@ -828,6 +977,59 @@ function runList(){
   return active(S);
 }
 function pick(i){ return S.phase === 2 ? ans2(i) : ans(i); }
+
+/* ---- SUBCHAPTERS AS SITTINGS (08-16) -------------------------------------------------
+   His ask: *"a way to section off exams… such that I'm able to practice only one section or
+   maybe two sections of an exam created because of shortened time"*, and then *"the option to
+   do those other sub chapters that I haven't done at a later date, or just display the score
+   of the subsections that I have got done."*
+
+   A QUESTION BELONGS TO ONE SUBCHAPTER — `q.sec`, which every exam question already carries.
+   A cross-section question carries `q.link` as well, and it is deliberately NOT used here:
+   `q.sec` is the section whose paper the question is on (the pool decided that, and the exam
+   prompt says so in as many words), so it is sat once, with that section, and never offered
+   twice. It still REPORTS under both in the end card's By-subchapter table, which is a
+   different question and was already answered.
+
+   NOTHING IS STORED THAT CAN BE COMPUTED. `S.sat[sec]` is a timestamp saying he finished that
+   section and nothing more; every number on screen comes back out of `S.answers` through
+   `secStat()`. A stored score is a second source of truth, and this page already has one
+   scar from that — see `load()`, where a recomputed score turned a real 8/10 into 2/10. */
+function paperSecs(){
+  const out = [];
+  D.questions.forEach((q,i)=>{
+    if(q.sec && onPaper(S, i) && out.indexOf(q.sec) < 0) out.push(q.sec);
+  });
+  return out.sort((a,b)=>a.localeCompare(b, undefined, {numeric:true}));
+}
+function secQs(sec){
+  return D.questions.map((_,i)=>i)
+    .filter(i => D.questions[i].sec === sec && onPaper(S, i));
+}
+function secStat(sec){
+  const l = secQs(sec);
+  const answered = l.filter(i => ans(i) !== undefined).length;
+  return {sec:sec, t:l.length, answered:answered,
+          n: l.filter(i => finalRight(i)).length,
+          done: !!S.sat[sec], started: answered > 0};
+}
+/* THE PAPER, ACROSS EVERY SITTING — the number that answers "how am I doing on this exam",
+   as opposed to "how did I do this evening". Scored over the sections he has actually sat, so
+   a half-finished paper reads 14/16 with a section outstanding rather than a demoralising
+   14/32 that counts questions he has not been asked yet. `all` is what says the paper is
+   finished; until then `left` is what the picker offers him next. */
+function paperStat(){
+  const secs = paperSecs().map(secStat);
+  const done = secs.filter(s => s.done);
+  const left = secs.filter(s => !s.done);
+  const n = done.reduce((a,s)=>a+s.n, 0), t = done.reduce((a,s)=>a+s.t, 0);
+  return {secs:secs, done:done, left:left, n:n, t:t,
+          whole: secs.reduce((a,s)=>a+s.t, 0),
+          pct: t ? Math.round(n/t*100) : 0, all: secs.length > 0 && left.length === 0};
+}
+/* The picker earns its place only where there is a choice to make: parts on, and more than
+   one subchapter on the paper. A one-section exam goes straight in, as it always did. */
+function sectioned(){ return !!D.parts && paperSecs().length > 1; }
 
 /* ---- THE ON-SCREEN OPTION ORDER ------------------------------------------------------
    A DISPLAY LAYER AND NOTHING MORE. `S.shuf[qid]` is a list of ORIGINAL option indices in
@@ -867,6 +1069,13 @@ function reshuffleOpts(i){
 }
 let S = load();
 let lastShown = -1;
+
+/* WHAT TO CALL THIS THING (08-16, his ask: *"you should name them exams"*). A paper that
+   carries subchapter tags or a written half is an exam; anything else is a subchapter quiz.
+   Both signals, because the two halves arrived on different days and a paper with only one of
+   them is still an exam. The word is used for the tab, the review button and the pasted score
+   line, so all three agree without three separate conditions. */
+const NOUN = ((D.frq && D.frq.length) || D.questions.some(q=>q.sec)) ? 'Exam' : 'Quiz';
 
 /* ---- HIS RESEARCH, kept apart from the attempt ---------------------------------------
    Its own localStorage key, NOT a field of S, and that is the whole design. S is one
@@ -986,6 +1195,22 @@ function drawFrq(){
   });
   box.innerHTML = h;
 
+  /* CLICKING THE CARD PUTS THE CARET IN THE BOX. The sticky header covers the top strip of
+     whatever is under it, and the placeholder sits in exactly that strip — so the one place he
+     naturally aims is the one place the click does not land. Anywhere in the card that is not
+     already a control now focuses the answer box, which also makes the whole card a target on
+     a phone. `closest` is what keeps Mark, Copy and any selection inside the rubric working. */
+  box.querySelectorAll('section.frq').forEach(sec => {
+    sec.addEventListener('mousedown', e => {
+      if(e.target.closest('button, textarea, a, .rubric')) return;
+      const ta = sec.querySelector('textarea');
+      if(!ta) return;
+      e.preventDefault();
+      ta.focus();
+      ta.setSelectionRange(ta.value.length, ta.value.length);
+    });
+  });
+
   box.querySelectorAll('textarea').forEach(ta => {
     const fi = +ta.dataset.f;
     const count = () => {
@@ -1092,6 +1317,7 @@ function syncTabs(){
   const nfrq = (D.frq || []).length;
   document.querySelector('.tab[data-tab="starred"]').classList.toggle('hide', !nstar);
   document.querySelector('.tab[data-tab="sheet"]').classList.toggle('hide', !D.hasSheet);
+  document.querySelector('.tab[data-tab="quiz"]').textContent = NOUN;
   document.querySelector('.tab[data-tab="frq"]').classList.toggle('hide', !nfrq);
   $('#tabs').classList.toggle('hide', !nstar && !D.hasSheet && !nfrq);
   if(D.tab === 'starred' && !nstar) setTab('quiz');
@@ -1216,6 +1442,10 @@ function draw(){
   showResearch(!(S.reviewing || S.done));
   if(S.reviewing) return review();
   if(S.done) return end();
+  // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
+  // the rest of the sitting, so nothing about answering, going back or the second pass has
+  // to know the picker exists.
+  if(sectioned() && !S.only) return picker();
   const act = runList();
   if(!act.length) return end();
   if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
@@ -1238,6 +1468,11 @@ function buildQ(i, picked, fresh, en){
   let h = '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta"><span class="num">' + (pos+1) + ' / ' + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
+        // 10 reads as the paper having lost his place, which is how he read it.
+        + (recycling && S.phase!==2
+           ? '<span class="dot">·</span><span class="fillnote">filling in ' + gaps().length
+             + ' left blank</span>' : '')
         // THE SECTION AND THE GLYPH, on the exam only — a subchapter quiz carries neither and
         // this line is byte-for-byte what it always was. The section is what it says; the
         // glyph is why this question is on the paper at all, and it is deliberately JUST the
@@ -1246,7 +1481,16 @@ function buildQ(i, picked, fresh, en){
         + (q.sec ? '<span class="dot">·</span><span class="sec">' + esc(q.sec)
                  + (q.link ? '<span class="lk">+' + esc(q.link) + '</span>' : '')
                  + '</span>' : '')
-        + (q.topic ? '<span class="dot">·</span><span>' + esc(q.topic) + '</span>' : '')
+        // THE TOPIC NAME IS HELD BACK UNTIL HE HAS ANSWERED. It was giving the answer away:
+        // `8.1 · Inferior scapular angle` sat over a question asking which part of the scapula
+        // anchors the powerful shoulder muscles, so the tag answered it before the options did.
+        // His own exams name no topic; he reverse-engineers where to look from the question.
+        // The section number stays visible — that is the scope pointer, and it is the whole
+        // subchapter, not the idea. The name comes back the moment the answer is locked in,
+        // because that is when it stops being a hint and starts being the label he files it
+        // under (the end card, the review list and the paste all keep reading it).
+        + (q.topic && answered ? '<span class="dot">·</span><span>' + esc(q.topic)
+                 + '</span>' : '')
         + (q.src ? '<span class="dot">·</span><span class="src" title="' + srcName(q.src)
                  + '">' + esc(q.src) + '</span>' : '')
         + '</p>'
@@ -1278,7 +1522,8 @@ function buildQ(i, picked, fresh, en){
       if(lab && fresh) cls += ' fresh';
       why = q.rationales ? (q.rationales[k]||'') : '';
     }
-    h += '<button class="'+cls+'" data-k="'+k+'"'+(answered?' disabled':'')+'>'
+    h += '<button class="'+cls+(answered?' locked':'')+'" data-k="'+k+'"'
+       + (answered?' aria-disabled="true"':'')+'>'
        + '<span class="line"><span class="k">'+D.letters[pos]+'.</span>'
        + '<span class="t">'+esc(o)+'</span>'
        + '<span class="mark">'+mark+'</span></span>';
@@ -1305,6 +1550,12 @@ function question(fresh){
   $('#quizview').innerHTML = buildQ(i, picked, fresh, isNew ? ' enter' : '');
   $('#quizview').querySelectorAll('.opt').forEach(b=>{
     b.onclick = ()=>{
+      // `aria-disabled` AND NOT `disabled`, SINCE 08-16. A real `disabled` button will not let
+      // its text be selected however `user-select` is set — browsers block selection inside a
+      // disabled control — so the rationale he wanted to copy off an answered question could
+      // not be picked up at all: *"Im trying to copy on v2 exams and its not letting me."*
+      // The lock is now the guard on this line, and the class is what styles it.
+      if(b.classList.contains('locked')) return;
       // The first pass is never overwritten — a second-pass answer goes in its own map.
       if(S.phase === 2) S.pass2[qk(i)] = +b.dataset.k; else S.answers[qk(i)] = +b.dataset.k;
       save(); question(true);
@@ -1636,12 +1887,19 @@ function openMenu(){
   m.querySelector('#skipq').onclick = ()=>{
     const list = runList(), pos = list.indexOf(S.i);
     if(list.length <= 1) return closeMenu();        // never skip the last one standing
-    const wasLast = pos === list.length - 1;
+    const sec = D.questions[S.i].sec;
     S.skipped[qk(S.i)] = true;
     delete S.answers[qk(S.i)];
     delete S.pass2[qk(S.i)];
     delete S.starred[qk(S.i)];                     // a deleted question is not a starred one
     if(S.unsure) delete S.unsure[qk(S.i)];         // nor one that still needs work
+    // A RESERVE TAKES ITS PLACE IMMEDIATELY, in the same section and the same sitting, so the
+    // count he is working against does not move: skip question 6 of 11 and it is still 11.
+    // Promoted BEFORE `wasLast` is decided — a skip on the last question with a reserve in
+    // hand is not the end of the paper, it is one more question, and finishing there would
+    // have handed him an end card with a question still owed.
+    const filled = promoteReserve(sec) >= 0;
+    const wasLast = !filled && pos === list.length - 1;
     closeMenu();
     syncTabs();
     if(wasLast){ finish(); return; }
@@ -1659,6 +1917,11 @@ function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(
 function finish(){
   S.done = true; S.at = new Date().toISOString();
   recycling = false;          // the clean-up pass is over; a second pass starts in order
+  // THE SITTING'S SUBCHAPTERS ARE NOW SAT. Written here rather than on the end card because
+  // the end card is also what he sees on every later visit, and re-rendering it must not keep
+  // re-stamping the time. A second pass reopens the run and lands back here when it ends, so
+  // the stamp is the last time the section was actually finished, which is what it should be.
+  if(D.parts && S.only) S.only.forEach(sec=>{ S.sat[sec] = S.at; });
   save(); end(); window.scrollTo(0,0);
 }
 
@@ -1693,6 +1956,112 @@ function group(act, keyOf, head, label){
        + '<span class="tbar"><i style="width:'+(by[k].n/by[k].t*100)+'%"></i></span></div>';
   });
   return h + '</div>';
+}
+
+/* THE PICKER — the one new screen, and the only place the sectioning is visible before he
+   starts. Shown when parts are on, the paper has more than one subchapter, and this sitting
+   has not been chosen yet. Choosing writes `S.only` and everything after it is the ordinary
+   exam: same order, same second pass, same end card, one direction to the end.
+
+   IT IS ALSO THE SCOREBOARD. His second ask — *"or just display the score of the subsections
+   that I have got done"* — is answered by the same screen rather than a separate one, because
+   it is the screen he lands on when he opens the link again. */
+let pickSel = null;
+
+function picker(){
+  const p = paperStat();
+  if(!pickSel) pickSel = p.left.map(s => s.sec);          // default: what is still outstanding
+  const chosen = p.secs.filter(s => pickSel.indexOf(s.sec) >= 0);
+  const nq = chosen.reduce((a,s)=>a+s.t, 0);
+
+  let h = '<div class="picker"><h3>' + (p.done.length ? 'Pick up where you left off'
+                                                      : 'Which sections are you sitting?')
+        + '</h3>';
+  h += '<p class="psub">' + p.whole + ' questions across ' + p.secs.length
+     + ' subchapters. Sit as many as you have time for — the rest keep, and this link '
+     + 'reopens on this screen.</p>';
+
+  if(p.done.length){
+    h += '<p class="pscore"><b>' + p.n + ' / ' + p.t + '</b> <span>' + p.pct + '% across '
+       + p.done.length + ' of ' + p.secs.length + ' subchapters'
+       + (p.all ? ' — the whole paper' : '') + '</span></p>';
+  }
+
+  h += '<div class="prows">';
+  p.secs.forEach(s=>{
+    const on = pickSel.indexOf(s.sec) >= 0;
+    const note = s.done ? ('Finished · ' + s.n + '/' + s.t)
+               : s.started ? (s.answered + ' of ' + s.t + ' answered')
+               : (s.t + ' question' + (s.t > 1 ? 's' : ''));
+    h += '<button class="prow' + (on ? ' pon' : '') + (s.done ? ' pdone' : '')
+       + '" data-sec="' + esc(s.sec) + '">'
+       + '<span class="pmark">' + (on ? G_OK : '') + '</span>'
+       + '<span class="plabel">' + esc(s.sec)
+       + ((D.secTitles||{})[s.sec] ? ' <em>' + esc(D.secTitles[s.sec]) + '</em>' : '')
+       + '</span>'
+       + '<span class="pnote">' + note + '</span>'
+       + (s.done ? '<span class="pbar"><i style="width:' + (s.t ? s.n/s.t*100 : 0)
+                 + '%"></i></span>' : '') + '</button>';
+  });
+  h += '</div>';
+
+  h += '<div class="pgo">'
+     + '<button class="pill go" id="pstart"' + (nq ? '' : ' disabled') + '>'
+     + (nq ? 'Start · ' + nq + ' question' + (nq > 1 ? 's' : '') : 'Pick a subchapter')
+     + '</button>'
+     + (p.left.length && p.left.length < p.secs.length
+        ? '<button class="link" id="pleft">Everything left</button>' : '')
+     + '<button class="link" id="pall">The whole paper</button>'
+     + '</div>';
+
+  if(p.done.length) h += '<p class="note">Finished subchapters keep their answers. Sitting '
+                       + 'one again replaces that score.</p>';
+  h += '</div>';
+
+  $('#quizview').innerHTML = h;
+  $('#rail').style.width = '0%';
+  $('#band').classList.add('off');
+  showResearch(false);
+  ['#back','#hintbtn','#hinttext','#redo','#next','#review','#retake','#pass2']
+    .forEach(k => $(k).classList.add('hide'));
+  $('#footer').classList.add('hide');
+
+  document.querySelectorAll('.prow').forEach(b => b.onclick = ()=>{
+    const k = b.dataset.sec, at = pickSel.indexOf(k);
+    if(at >= 0) pickSel.splice(at, 1); else pickSel.push(k);
+    picker();
+  });
+  const start = $('#pstart');
+  if(start) start.onclick = ()=> beginSitting(pickSel.slice());
+  const left = $('#pleft');
+  if(left) left.onclick = ()=> beginSitting(p.left.map(s=>s.sec));
+  $('#pall').onclick = ()=> beginSitting(p.secs.map(s=>s.sec));
+  renderScore();
+  centreBlock();
+}
+
+/* ONE DIRECTION FROM HERE. A sitting starts at the top of its own list with a clean phase —
+   the answers from any earlier sitting stay in `S.answers` untouched, they are simply not in
+   `active()` any more, which is what lets him come back to a section a fortnight later
+   without the page having kept a second copy of anything. */
+function beginSitting(secs){
+  if(!secs.length) return;
+  S.only = secs;
+  S.phase = 1; S.p2list = null; S.done = false; S.reviewing = false; S.hintOpen = false;
+  // RE-SITTING A FINISHED SECTION MUST ACTUALLY RE-SIT IT. Without this it would open on the
+  // end card, every question already answered, and the "Start" he just pressed would look
+  // broken. Its old answers go, and `sat` with them, because that section is now in progress.
+  secs.forEach(sec=>{
+    if(S.sat[sec]){
+      secQs(sec).forEach(i=>{ delete S.answers[qk(i)]; delete S.pass2[qk(i)]; });
+      delete S.sat[sec];
+    }
+  });
+  const l = runList();
+  S.i = l.length ? l[0] : 0;
+  pickSel = null;
+  lastShown = -1;
+  save(); draw(); window.scrollTo(0,0);
 }
 
 function end(){
@@ -1744,6 +2113,33 @@ function end(){
     h += '<p class="hist">Earlier attempts: ' + S.history.slice().reverse()
         .map(a=>'<span>'+a.score+'/'+a.total+' on '+when(a.at)+'</span>').join(' · ') + '</p>';
   }
+  /* THE PAPER, UNDER THE SITTING (08-16). The score above is this evening's — one subchapter,
+     or two. This is the exam: every subchapter, what it scored or that it is still waiting,
+     and one total across the ones he has actually sat. Absent on an unsectioned page. */
+  if(sectioned()){
+    const p = paperStat();
+    h += '<div class="topics parts"><h3>This exam</h3>';
+    p.secs.forEach(s=>{
+      const sitting = S.only && S.only.indexOf(s.sec) >= 0;
+      h += '<div class="trow"><span>' + esc(s.sec)
+         + (sitting ? '<em> just sat</em>' : '') + '</span>'
+         + '<span class="n">' + (s.done ? s.n + '/' + s.t : '—') + '</span>'
+         + '<span class="tbar' + (s.done ? '' : ' waiting') + '"><i style="width:'
+         + (s.done && s.t ? s.n/s.t*100 : 0) + '%"></i></span></div>';
+    });
+    h += '<p class="ptotal"><b>' + p.n + ' / ' + p.t + '</b> '
+       + (p.all ? 'the whole paper' :
+          'across ' + p.done.length + ' of ' + p.secs.length + ' subchapters · '
+          + p.left.reduce((a,s)=>a+s.t,0) + ' question'
+          + (p.left.reduce((a,s)=>a+s.t,0) > 1 ? 's' : '') + ' still to sit')
+       + '</p></div>';
+    if(p.left.length) h += '<p class="note"><button class="link" id="more">'
+                         + 'Sit another subchapter</button> — ' + p.left.map(s=>esc(s.sec)).join(', ')
+                         + ' left</p>';
+    else h += '<p class="note"><button class="link" id="more">Choose subchapters</button> — '
+            + 'every one is done; sitting one again replaces its score.</p>';
+  }
+
   const nskip = Object.keys(S.skipped||{}).length;
   if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
               + '<button class="link" id="unskip">put them back</button></p>';
@@ -1754,6 +2150,9 @@ function end(){
   $('#quizview').innerHTML = h;
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  const m = $('#more');
+  if(m) m.onclick = ()=>{ S.only = null; S.done = false; S.reviewing = false;
+                          pickSel = null; save(); draw(); window.scrollTo(0,0); };
   $('#rail').style.width = '100%';
   $('#band').classList.add('off');
   showResearch(false);
@@ -1764,11 +2163,16 @@ function end(){
   $('#redo').classList.add('hide');
   $('#next').classList.add('hide');
   $('#review').classList.remove('hide');
-  $('#review').textContent = 'Review quiz';
+  $('#review').textContent = 'Review ' + NOUN.toLowerCase();
   $('#retake').classList.remove('hide');
   // No wrong answers left to retry → no button at all, which is also what stops the second
   // pass looping into a third: anything answered on pass two leaves pending2() for good.
   $('#pass2').classList.toggle('hide', pending2().length === 0);
+  /* THE WRITTEN HALF IS THE PRIMARY WAY OUT OF AN EXAM'S END CARD (08-16, his ask): *"the
+     main button after the end of a large mcq for exams should be to move on onto frqs."* So
+     the second pass keeps its place but loses the accent — it is still there, it is just no
+     longer what the page is pointing at. A quiz has no written half and is unchanged. */
+  $('#towritten').classList.toggle('hide', !(D.frq && D.frq.length));
   renderScore();
   lastShown = -1;
   centreBlock();
@@ -1864,7 +2268,7 @@ function hintLine(p){
 function scoreMarkdown(){
   if(!S.done) return '';
   const p = scoreParts();
-  return '**Quiz:** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
+  return '**' + NOUN + ':** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
        + (p.red ? ', +' + p.red + ' redeemed' : '') + ', ' + p.wrong + ' wrong'
        + (p.skipped ? ', ' + p.skipped + ' skipped' : '') + ' · ' + when(S.at)
        + '\n**Hints:** ' + hintLine(p);
@@ -1930,6 +2334,7 @@ function step(dir){
 }
 $('#next').onclick = ()=> step(1);
 $('#back').onclick = ()=> step(-1);
+$('#towritten').onclick = ()=> setTab('frq');
 $('#review').onclick = ()=>{ S.reviewing = !S.reviewing; draw(); };
 /* THE SECOND PASS — the preferred way out of the end card, and the one that keeps
    everything. It re-runs only what he got wrong, on a list frozen at the moment he presses
@@ -1946,9 +2351,15 @@ $('#pass2').onclick = ()=>{
    history first so nothing is lost, and the questions he deleted or starred stay that way —
    they are decisions about the quiz, not part of one attempt at it. */
 $('#retake').onclick = ()=>{
-  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length});
+  // ON A SECTIONED PAPER THE HISTORY LINE IS THE PAPER, not the last sitting — the same
+  // reasoning as `save()`. `blank()` returns `only: null` and `sat: {}`, so a retake drops
+  // every sitting at once and lands back on the picker, which is what "retake the exam" means.
+  if(S.done){ const p = D.parts ? paperStat() : null;
+              S.history.push({at:S.at, score: p ? p.n : score(S),
+                              total: p ? p.t : active(S).length}); }
   const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
   S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  pickSel = null;
   lastShown = -1;
   save(); syncTabs(); renderScore(); draw();
 };
@@ -2149,11 +2560,34 @@ function researchMarkdown(){
   });
   return out.replace(/\n+$/, '\n');
 }
-/* ITS OWN HEADING, and the heading text is load-bearing. `notion_board.py notes` splits this
-   section out of the row body by name and hands it to the generator as PROMPT, while
-   everything else on the row stays a source. Rename it here and it silently becomes material
-   again — which is the bug this whole split exists to fix. */
+/* TWO HEADINGS WHOSE TEXT IS LOAD-BEARING. `notion_board.py notes` splits both of these out
+   of the row body BY NAME — `split_fixes()`, and `FIX_HEADING` / `SKIP_HEADING` there are
+   these two strings. Everything else on the row stays material. Rename one here and it
+   silently becomes material again, which is the bug this whole split exists to fix. */
 const FIXHEAD = 'Fix these questions';
+const SKIPHEAD = 'Skipped';
+
+/* THE CARDS HE DELETED, and this section exists to keep them OUT of things (08-14, his rule:
+   skipped cards *"are never reformed and never appear"*, on any exam, v2 or v3).
+
+   It is the one place on this page where a skipped question is written down. Everywhere else
+   they are gone by design — out of the run, out of the score, out of the denominator, out of
+   the sheet — because they were taken out of the quiz. But "gone" only ever meant gone from
+   THIS browser: the exam is built from what he pastes into Notion, so a card he deleted here
+   was invisible to it and perfectly likely to come back as an exam question. This is the one
+   line of the paste that stops that, and `remember_skipped()` files it permanently.
+
+   It says so in the heading's own body text because it will be read by a person too, and a
+   bare list of questions under his notes reads exactly like a list of things to be tested. */
+function skipMarkdown(){
+  const list = markedList(S.skipped);
+  if(!list.length) return '';
+  let out = '\n\n## ' + SKIPHEAD + '\n\n'
+          + '_Deleted while taking the quiz. Not material — these are the ideas to stop '
+          + 'asking about._\n';
+  list.forEach(x => { out += '\n### ' + x.n + '. ' + x.q.q + '\n'; });
+  return out.replace(/\n+$/, '\n');
+}
 function fixMarkdown(){
   const list = fixList();
   if(!list.length) return '';
@@ -2181,6 +2615,7 @@ function fullMarkdown(){
        + markedMarkdown(markedList(S.unsure), 'Needs work')
        + researchMarkdown()
        + fixMarkdown()
+       + skipMarkdown()
        + frqMarkdown();
 }
 
@@ -2220,6 +2655,17 @@ function fullHTML(){
          + '<p><strong>Answer:</strong> ' + esc(x.q.options[x.q.correct]) + '</p>'
          + '<p><strong>Change it to:</strong> ' + esc(x.r.f.trim()) + '</p>';
     });
+  }
+  /* The HTML flavour has to carry this too. It goes on the clipboard INSTEAD of the markdown
+     whenever there is a pasted image anywhere on the quiz, so anything missing here is
+     missing from the Notion row on exactly those weeks — and a skipped card that does not
+     reach the row is a card the exam is free to ask about again. */
+  const skips = markedList(S.skipped);
+  if(skips.length){
+    h += '<h2>' + SKIPHEAD + '</h2>'
+       + '<p><em>Deleted while taking the quiz. Not material — these are the ideas to stop '
+       + 'asking about.</em></p>';
+    skips.forEach(x => { h += '<h3>' + x.n + '. ' + esc(x.q.q) + '</h3>'; });
   }
   const fm = frqMarkdown();
   if(fm) h += tinyMd(fm);

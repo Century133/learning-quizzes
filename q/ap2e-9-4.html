@@ -122,8 +122,8 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
  border:1px solid transparent;border-radius:var(--radius);padding:var(--opad);
  color:var(--text);font:inherit;font-size:var(--osize);cursor:pointer;
  transition:background .16s ease,border-color .16s ease,opacity .16s ease}
-.opt:hover:not(:disabled){background:var(--surface-hi)}
-.opt:disabled{cursor:default}
+.opt:hover:not(.locked){background:var(--surface-hi)}
+.opt.locked{cursor:default}
 .line{display:flex;gap:12px;align-items:flex-start;line-height:1.4}
 .line .k{color:var(--muted);min-width:1.25em}
 .line .t{flex:1}
@@ -176,7 +176,7 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
 .q,.qq,.why,.lab,.hinttext,.rline,.tag,.sheet,.topics,.legend{
  user-select:text;-webkit-user-select:text}
 .opt{user-select:none;-webkit-user-select:none}
-.opt:disabled,.opt:disabled *{user-select:text;-webkit-user-select:text;cursor:auto}
+.opt.locked,.opt.locked *{user-select:text;-webkit-user-select:text;cursor:auto}
 .star,.dots,.tab,button.pill{user-select:none;-webkit-user-select:none}
 
 /* ---- HIS RESEARCH, one box per question ----
@@ -294,6 +294,39 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .tbar{grid-column:1/-1;height:3px;background:var(--line);border-radius:999px;
  overflow:hidden}
 .tbar i{display:block;height:100%;background:var(--text)}
+/* A subchapter he has not sat gets a rail with nothing in it rather than a 0% bar, because a
+   bar at zero reads as "scored nothing" and the whole point is that it has not been asked. */
+.tbar.waiting{background:repeating-linear-gradient(90deg,var(--line) 0 3px,transparent 3px 6px)}
+.topics.parts .trow em{font-style:normal;color:var(--muted);font-size:.8rem;margin-left:8px}
+.ptotal{margin:14px 0 0;color:var(--muted);font-size:.88rem}
+.ptotal b{color:var(--text);font-variant-numeric:tabular-nums;font-size:1.05rem;
+ font-weight:600;margin-right:8px}
+
+/* ---- THE SUBCHAPTER PICKER (08-16) ----
+   Deliberately the same furniture as the end card — same heading treatment, same rails, same
+   tabular numbers — because it IS the end card most of the time he sees it: he opens the link
+   and this screen tells him what he has scored and what is left. A separate visual language
+   for "choose" and "review" would make one screen look like two. */
+.picker{padding:2px 0 8px}
+.picker h3{font-size:1.35rem;font-weight:600;letter-spacing:-.01em;margin:0 0 8px}
+.psub{color:var(--muted);font-size:.9rem;margin:0 0 22px;max-width:46ch}
+.pscore{margin:0 0 22px}
+.pscore b{font-size:1.5rem;font-variant-numeric:tabular-nums;font-weight:600}
+.pscore span{color:var(--muted);font-size:.88rem;margin-left:10px}
+.prows{display:flex;flex-direction:column;gap:8px;margin:0 0 24px}
+.prow{display:grid;grid-template-columns:22px auto 1fr;gap:4px 12px;align-items:center;
+ width:100%;text-align:left;font:inherit;cursor:pointer;padding:13px 16px;
+ border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--text)}
+.prow:hover{border-color:var(--muted)}
+.prow.pon{border-color:var(--accent)}
+.pmark{color:var(--accent);font-size:.95rem;line-height:1}
+.plabel{font-variant-numeric:tabular-nums;font-weight:600}
+.plabel em{font-style:normal;font-weight:400;color:var(--muted);margin-left:8px}
+.pnote{color:var(--muted);font-size:.86rem;justify-self:end}
+.pbar{grid-column:2/-1;height:3px;background:var(--line);border-radius:999px;overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--text)}
+.pgo{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)}
 
 /* ---- review list ---- */
 .rev{padding:6px 0 36px}
@@ -389,6 +422,27 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
  color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
  padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.6;outline:none;margin-top:16px}
 .frqin:focus{border-color:var(--accent)}
+/* THE STICKY HEADER WAS EATING THE CLICK (08-16). It is 49px tall with z-index 5, so the top
+   strip of a box scrolled under it is dead to the mouse — and the top strip is exactly where
+   the "Write your answer." placeholder is, so the box reads as broken. His words: *"I cant
+   even click the textbox for this exam."* `scroll-margin-top` keeps the card clear of the
+   header whenever anything scrolls it into view; the click handler on the card is the belt to
+   that braces, since he can also scroll there by hand. */
+.frq{scroll-margin-top:64px}
+
+/* The only thing on this page allowed to shout. It sits over everything because a saved
+   answer is the one promise the page makes. */
+#savewarn{position:fixed;left:12px;right:12px;bottom:12px;z-index:60;padding:12px 16px;
+ border-radius:12px;font-size:.86rem;line-height:1.4;background:#7f1d1d;color:#fff;
+ box-shadow:0 6px 24px rgba(0,0,0,.4)}
+#savewarn.hide{display:none}
+
+/* WHERE FORWARD MEANS "THE NEXT BLANK ONE". Reaching the end of the list with holes in it
+   sends him back to the first one — right, and invisible until 08-16, when he read it as the
+   paper losing his place: *"when I thought I was done I wasnt… questions are ghosting until
+   the end."* The counter says so now, and the rail stops pretending the run is nearly over. */
+.fillnote{display:inline-flex;align-items:center;gap:6px;color:var(--accent);
+ font-size:.7rem;letter-spacing:.07em;text-transform:uppercase}
 .frqin::placeholder{color:var(--muted);opacity:.7}
 .acts.inline{margin-top:12px}
 .rubric{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
@@ -672,12 +726,13 @@ Self-control is finite - one hard task leaves less for the next"></textarea>
     <button class="pill ghost hide" id="retake">Retake</button>
     <span class="spacer"></span>
     <button class="pill hide" id="review">Review quiz</button>
-    <button class="pill primary hide" id="pass2">2nd Pass</button>
+    <button class="pill ghost hide" id="pass2">2nd Pass</button>
+    <button class="pill primary hide" id="towritten">Written half</button>
     <button class="pill primary" id="next">Next</button>
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "ap2e-9-4", "title": "9.4 Synovial Joints", "subtitle": "Chapter 9 · Joints", "book": "A&P 2e", "hash": "a66d9e6af5226efe", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "Since articular cartilage is avascular, which specific component of a synovial joint is responsible for providing the necessary nourishment to the cells within this cartilage?", "options": ["Synovial fluid", "Extrinsic ligaments", "Articular capsule", "Intrapatellar fat pad"], "rationales": ["This thick, slimy fluid secreted by the inner membrane provides nutrients to the articular cartilage since the cartilage lacks its own blood supply.", "Ligaments are bands of fibrous tissue that provide structural support and anchor bones but do not provide metabolic nourishment to internal joint structures.", "The capsule forms the physical boundary of the joint cavity, but it is the fluid within the cavity that carries nutrients to the cartilage.", "Fat pads serve as cushioning between bones rather than as a primary source of nourishment for the hyaline cartilage."], "correct": 0, "hint": "Consider the role of the lubricating liquid secreted into the joint cavity.", "topic": "Synovial membranes", "sec": "", "src": "", "link": "", "qid": "ac91f075b3"}, {"q": "In synovial joints, the articular cartilage acts like a Teflon coating. What is the functional consequence of this cartilage being separate on each bone rather than continuous between them?", "options": ["It increases the structural stability of the joint during weight-bearing.", "It allows the bones to move smoothly and independently against each other.", "It allows for the growth of new bone tissue at the epiphyseal plate.", "It prevents the synovial fluid from leaking into the bone marrow."], "rationales": ["Separated cartilage prioritizes movement and friction reduction over the rigid stability found in cartilaginous joints.", "Independent layers of cartilage allow for the increased mobility characteristic of diarthrosis joints by preventing the bones from being physically fused by tissue.", "The epiphyseal plate is a separate site of growth within the bone, whereas articular cartilage is dedicated to surface articulation.", "The prevention of fluid leakage is a function of the articular capsule and bone density, not the separation of the cartilage layers."], "correct": 1, "hint": "Think about why these joints are classified as diarthroses rather than amphiarthroses.", "topic": "Articular cartilage", "sec": "", "src": "", "link": "", "qid": "4431177471"}, {"q": "An athlete suffers an injury where a ligament fused directly into the wall of the articular capsule is torn. How would a clinician classify this specific type of structural support?", "options": ["Intrinsic ligament", "Extrinsic ligament", "Intracapsular ligament", "Tendon"], "rationales": ["Intrinsic ligaments are those that are physically incorporated into or fused to the wall of the fibrous articular capsule.", "Extrinsic ligaments are located entirely outside of the articular capsule.", "Intracapsular ligaments, such as the cruciate ligaments of the knee, are located inside the capsule space.", "Tendons are structures that connect muscle to bone, acting as 'dynamic ligaments,' but they are not part of the capsule wall itself."], "correct": 0, "hint": "Differentiate between support structures based on their relationship to the capsule wall.", "topic": "Ligamentous support", "sec": "", "src": "", "link": "", "qid": "20eaef078c"}, {"q": "At the knee joint, what is the primary functional role of the C-shaped fibrocartilage structures known as the menisci?", "options": ["Acting as a hinge to restrict the joint to uniaxial movement", "Providing shock absorption and cushioning between the bones", "Secreting synovial fluid to lubricate the joint surfaces", "Anchoring the patella to the tibia during extension"], "rationales": ["The hinge motion is determined by the shape of the articulating bone ends, while the meniscus provides padding within that motion.", "Menisci are larger fibrocartilage discs that specifically provide cushioning and shock absorption between the femur and tibia.", "Fluid secretion is performed by the cells of the synovial membrane, not by fibrocartilage structures.", "The patella is anchored by the patellar ligament, which is a different tissue type from the fibrocartilage meniscus."], "correct": 1, "hint": "Focus on the specific mechanical benefit provided by these large, C-shaped pads.", "topic": "Fibrocartilage structures", "sec": "", "src": "", "link": "", "qid": "0a96feb457"}, {"q": "If a student develops 'student's elbow' (olecranon bursitis), which type of bursa has become inflamed due to pressure between the skin and the underlying bone?", "options": ["Subcutaneous bursa", "Tendon sheath", "Subtendinous bursa", "Submuscular bursa"], "rationales": ["Subcutaneous bursae are specifically located between the skin and an underlying bone, such as at the elbow or kneecap.", "A tendon sheath is a specialized sac that completely surrounds a tendon, whereas a bursa is a simpler sac between structures.", "Subtendinous bursae are positioned between a tendon and a bone to protect the tendon from rubbing.", "Submuscular bursae are found between a muscle and a bone or between adjacent muscles, not directly under the skin."], "correct": 0, "hint": "Identify the sac based on its position relative to the skin and the bony tip of the elbow.", "topic": "Bursa locations", "sec": "", "src": "", "link": "", "qid": "4bf7d81469"}, {"q": "In areas where a muscle tendon crosses a joint through a narrow space, what structure wraps around the tendon to allow for smooth movement during contraction?", "options": ["Articular disc", "Tendonsheath", "Extrinsic ligament", "Synovial membrane"], "rationales": ["Articular discs are located between the articulating surfaces of bones, not surrounding the tendons that cross them.", "Tendon sheaths are connective tissue sacs that surround tendons to reduce friction as they cross joints.", "Extrinsic ligaments provide external stability to the joint but do not provide a lubricating tunnel for tendons.", "The synovial membrane lines the joint capsule, whereas the tendon sheath is a separate structure dedicated to tendon protection."], "correct": 1, "hint": "Look for the structure that functions like a bursa but specifically encircles a fibrous cord.", "topic": "Tendon protection", "sec": "", "src": "", "link": "", "qid": "fd86a4ad86"}, {"q": "Which mechanical arrangement at the atlantoaxial joint between the C1 and C2 vertebrae allows for the side-to-side rotation of the head?", "options": ["A convex surface fitting into a concave surface to allow bending", "Two flat bone surfaces sliding against one another", "A rounded bone portion enclosed within a ring of bone and ligament", "An oval-shaped rounded end articulating with a shallow depression"], "rationales": ["This describes a hinge joint, which allows for bending and straightening but not the rotation required to turn the head.", "This describes a plane joint, which allows for limited gliding rather than the focused rotation seen in the upper neck.", "This describes a pivot joint, where the dens of the axis is held in place against the atlas, allowing rotation around a single axis.", "This describes a condyloid joint, which allows for biaxial movement but is not the mechanism used for the C1 and C2 rotation."], "correct": 2, "hint": "Consider how a central axis allows for rotational movement.", "topic": "Pivot joints", "sec": "", "src": "", "link": "", "qid": "300c09545e"}, {"q": "Why are the elbow and interphalangeal joints functionally classified as uniaxial joints?", "options": ["They allow for rotation around a longitudinal axis.", "They utilize a shallow socket to allow for side-to-side gliding.", "They are supported by both intrinsic and extrinsic ligaments.", "They only allow for bending and straightening along a single axis."], "rationales": ["Rotation is characteristic of pivot or ball-and-socket joints, whereas hinge joints are limited to flexion and extension.", "Side-to-side gliding is found in plane or condyloid joints, not in the uniaxial hinge mechanism of the elbow.", "While many joints have multiple ligaments, uniaxial classification is based on the planes of motion allowed by bone shape, not the number of ligaments.", "Hinge joints like these are restricted to movement in one plane, much like a door hinge, which defines them as uniaxial."], "correct": 3, "hint": "Think about the limitations of a door-like mechanical movement.", "topic": "Hinge joints", "sec": "", "src": "", "link": "", "qid": "254c200273"}, {"q": "The radiocarpal joint of the wrist allows you to both bend your hand and move it side-to-side. What structural shape facilitates these two planes of movement?", "options": ["Two saddle-shaped surfaces fitting together like a rider and a seat", "An elliptical-shaped end fitting into a shallow depression", "A spherical head fitting into a deep cup-like socket", "A cylindrical bone end articulating with a trough-shaped bone"], "rationales": ["While also biaxial, this describes a saddle joint; the radiocarpal joint specifically uses a rounded/depressed elliptical interface.", "Condyloid joints feature an oval articulation that allows for biaxial movement in two perpendicular planes.", "This describes a ball-and-socket joint, which is multiaxial and allows for rotation, unlike the wrist's condyloid joint.", "This shape describes a hinge joint, which would restrict the wrist to only one plane of motion."], "correct": 1, "hint": "Look for the geometric shape that permits movement in two directions but prevents rotation.", "topic": "Condyloid joints", "sec": "", "src": "", "link": "", "qid": "671754ca56"}, {"q": "What functional advantage is provided to the human hand by the saddle joint at the base of the thumb?", "options": ["It allows the thumb to move out of the plane of the palm for opposition.", "It allows for 360-degree rotation of the 1st metacarpal.", "It converts the thumb into a uniaxial hinge for simple gripping.", "It provides a rigid base to support heavy lifting without movement."], "rationales": ["The unique biaxial shape of the first carpometacarpal joint allows the thumb to move across and away from the palm, enabling opposition.", "Saddle joints are biaxial and do not allow for full multiaxial rotation, which is reserved for ball-and-socket joints.", "The thumb's versatility comes from its biaxial saddle joint, not from a limited uniaxial hinge structure.", "Saddle joints are highly mobile; stability for heavy lifting is usually provided by the tighter plane joints of the carpus."], "correct": 0, "hint": "Think about the specific movement that distinguishes human hand dexterity.", "topic": "Saddle joints", "sec": "", "src": "", "link": "", "qid": "ae03147d65"}, {"q": "In the foot, the joints between the tarsal bones allow for small gliding movements. Why are these plane joints sometimes functionally restricted despite their multiaxial shape?", "options": ["The articulating surfaces are of vastly different sizes.", "They are composed primarily of fibrocartilage rather than hyaline cartilage.", "Ligaments and neighboring bones tightly constrain their motion.", "They lack a joint cavity and synovial fluid."], "rationales": ["Plane joints typically feature articulating surfaces that are approximately the same size.", "Plane joints, like other synovial joints, use hyaline articular cartilage on their sliding surfaces.", "Although the flat surfaces of plane joints could theoretically allow multiple movements, physical barriers like ligaments often limit them to simple gliding.", "Plane joints are synovial joints and therefore possess both a joint cavity and synovial fluid."], "correct": 2, "hint": "Consider how external factors can override the theoretical mobility of a joint shape.", "topic": "Plane joints", "sec": "", "src": "", "link": "", "qid": "c2442c4061"}, {"q": "Why does the hip joint have a more limited range of motion compared to the shoulder joint, despite both being ball-and-socket joints?", "options": ["The deep socket and strong ligaments of the hip prioritize stability and weight-bearing.", "The shoulder is a biaxial joint while the hip is multiaxial.", "The hip joint lacks the synovial fluid required for extensive gliding.", "The head of the femur is significantly smaller than the glenoid cavity."], "rationales": ["The depth of the acetabulum and strength of hip ligaments constrain movement to ensure the joint can support body weight.", "Both the shoulder and hip are multiaxial ball-and-socket joints.", "Both joints are synovial and utilize synovial fluid; the difference in range is due to bone and ligament architecture.", "The femur head fits into the deep acetabulum, whereas the humerus head articulates with the much shallower glenoid cavity."], "correct": 0, "hint": "Contrast the requirements for stability versus the requirements for mobility.", "topic": "Ball-and-socket joints", "sec": "", "src": "", "link": "", "qid": "90059cec10"}, {"q": "In the early stages of osteoarthritis, what is the underlying cause of the joint swelling and stiffness that occurs as the articular cartilage thins?", "options": ["Increased production of synovial fluid in response to cartilage stress", "An autoimmune attack on the joint capsule", "The total loss of the articular capsule wall", "The deposition of uric acid crystals within the synovial membrane"], "rationales": ["As cartilage wears down, the joint responds by overproducing lubricating fluid, which stretches the capsule and causes pain/stiffness.", "Autoimmune responses are characteristic of rheumatoid arthritis, whereas osteoarthritis is primarily degenerative.", "The capsule remains but becomes stretched; it is not lost during the progression of osteoarthritis.", "Crystal deposition is the mechanism for gout, not the standard wear-and-tear process of osteoarthritis."], "correct": 0, "hint": "Think about how the joint tries to compensate for increased pressure on the bone.", "topic": "Osteoarthritis pathology", "sec": "", "src": "", "link": "", "qid": "a5c271022a"}, {"q": "Which progression of events distinguishes rheumatoid arthritis from osteoarthritis?", "options": ["Excessive fructose consumption leads to the buildup of crystals in the joint.", "The joint is initially damaged by a bacterial infection that spreads to the heart.", "The immune system attacks the joint capsule and membrane first, leading to severe cartilage damage.", "Wear and tear over time causes the cartilage to thin and the underlying bone to thicken."], "rationales": ["This metabolic pathway is associated with gout, not with rheumatoid arthritis.", "While infections can cause arthritis, rheumatoid arthritis is specifically an autoimmune condition.", "Rheumatoid arthritis is an autoimmune disease that starts with membrane inflammation and eventually destroys cartilage and deforms joints.", "This describes the degenerative 'wear and tear' process of osteoarthritis, not the autoimmune pathology of rheumatoid arthritis."], "correct": 2, "hint": "Consider the source of the initial inflammatory trigger.", "topic": "Rheumatoid arthritis", "sec": "", "src": "", "link": "", "qid": "4283b60637"}, {"q": "A patient with gout experiences sudden joint inflammation. What metabolic failure is the primary driver of this specific condition?", "options": ["An autoimmune response targeting the tendons crossing the joint", "The chronic overuse of the joint leading to articular cartilage erosion", "The inability of the kidneys to properly excrete uric acid", "A genetic mutation that prevents the formation of synovial fluid"], "rationales": ["Gout involves chemical crystal deposits, whereas autoimmune responses involve the immune system attacking healthy tissue.", "Overuse and erosion are characteristics of osteoarthritis, while gout is a metabolic disorder.", "Gout occurs when uric acid levels rise—either through overproduction or poor excretion—and form crystals in the joints.", "Gout involves the composition of the fluid (crystals), not a total lack of fluid production."], "correct": 2, "hint": "Identify the chemical byproduct that crystallizes when it is not removed from the body.", "topic": "Gouty arthritis", "sec": "", "src": "", "link": "", "qid": "9a2549efed"}, {"q": "During a total hip arthroplasty, how is the stability of the artificial joint established within the existing skeletal structure?", "options": ["The artificial acetabulum is fused to the femur using intrinsic ligaments.", "The entire pelvic bone is replaced with a custom-fitted prosthesis.", "The joint is rebuilt using articular discs harvested from the patient's knee.", "A shaft is inserted into the diaphysis of the femur to anchor the replacement head."], "rationales": ["The acetabulum is fitted into the pelvis, and the joint must remain mobile rather than fused.", "Only the damaged articular surfaces—the acetabulum and the femoral head/neck—are typically replaced.", "Arthroplasty uses artificial components (prostheses) rather than biological tissue grafts from other joints.", "In hip replacement, the new femoral head is secured by a shaft that goes inside the long bone's shaft (diaphysis)."], "correct": 3, "hint": "Focus on how the 'ball' component of the replacement is physically attached to the leg bone.", "topic": "Joint replacement", "sec": "", "src": "", "link": "", "qid": "3a2791e8c1"}], "hasSheet": true, "frq": [], "notebook": "https://notebooklm.google.com/notebook/7195586f-1cfe-4068-9c74-b067dc43f0b1/artifact/247a66b4-89cf-4f06-a8d9-5b4c42b1f0b0", "root": "../index.html", "tab": "quiz", "sheet": "## Synovial membranes\nAs the most common type of joint, every synovial joint is functionally classified as a diarthrosis.\n### Key terms\n1.  **Synovial membrane** — a thin tissue layer lining the inner surface of the articular capsule.\n2.  **Synovial fluid** — a thick, slimy lubricating liquid secreted by the synovial membrane.\n   1.  nourishment — the process by which this fluid provides nutrients to the avascular articular cartilage.\n\n## Articular cartilage\nThis topic describes the protective hyaline layer covering the ends of articulating bones.\n### Key terms\n1.  **Articular cartilage** — a thin layer of hyaline cartilage covering the articulating surface of bones.\n   1.  Teflon® coating — a comparison used to describe how the cartilage allows bones to move smoothly without damage.\n\n## Ligamentous support\nThis topic explores the fibrous connective tissues that anchor bones and limit abnormal movement.\n### Key terms\n1.  **Ligaments** — strong bands of fibrous connective tissue that hold bones together.\n2.  **Extrinsic ligament** — a supporting band located outside of the articular capsule.\n3.  **Intrinsic ligament** — a supporting band fused to or incorporated into the wall of the articular capsule.\n4.  **Intracapsular ligament** — a supporting band located inside the articular capsule.\n\n## Fibrocartilage structures\nThis topic covers the specialized pads found within specific joints for fit and shock absorption.\n### Key terms\n1.  **Articular disc** — a small, oval-shaped fibrocartilage structure located between articulating bones.\n   1.  sternoclavicular joint — an example of a joint containing an articular disc.\n2.  **Meniscus** — a larger, C-shaped fibrocartilage structure providing shock absorption.\n   1.  knee joint — the specific location where menisci provide cushioning between bones.\n\n## Bursa locations\nThis topic identifies the fluid-filled sacs that prevent friction between various body tissues.\n### Key terms\n1.  **Bursa** — a thin connective tissue sac filled with lubricating liquid.\n2.  **Subcutaneous bursa** — a sac located between the skin and an underlying bone.\n   1.  prepatellar bursa — an example located over the kneecap.\n   2.  olecranon bursa — an example located at the bony tip of the elbow.\n3.  **Submuscular bursa** — a sac found between a muscle and bone or between adjacent muscles.\n   1.  trochanteric bursa — an example found at the lateral hip.\n4.  **Subtendinous bursa** — a sac located between a muscle tendon and bone.\n   1.  subacromial bursa — an example protecting the shoulder muscle tendon.\n   2.  suprapatellar bursa — an example separating the anterior thigh muscle tendon from the distal femur.\n\n## Tendon protection\nThis topic addresses the structures that facilitate the smooth passage of tendons over joints.\n### Key terms\n1.  **Tendon** — the dense connective tissue structure that attaches a muscle to bone.\n2.  **Tendon sheath** — a small connective tissue sac containing lubricating fluid that surrounds a muscle tendon.\n\n## Pivot joints\nThis topic describes joints allowing rotation around a single axis.\n### Key terms\n1.  **Pivot joint** — a uniaxial diarthrosis where a rounded bone rotates within a ring.\n   1.  atlantoaxial joint — the joint between C1 and C2 vertebrae allowing head rotation.\n   2.  proximal radioulnar joint — a joint allowing forearm rotation via the radius.\n\n## Hinge joints\nThis topic covers joints that function like a door hinge to allow bending and straightening.\n### Key terms\n1.  **Hinge joint** — a uniaxial joint where the convex end of one bone meets the concave end of another.\n   1.  elbow joint — an example formed by the humerus and the ulna.\n\n## Condyloid joints\nThis topic explains biaxial joints involving a shallow depression and a rounded bone end.\n### Key terms\n1.  **Condyloid joint (ellipsoid joint)** — a biaxial joint allowing two planes of movement through an elliptical articulation.\n   1.  radiocarpal joint — a wrist joint between the radius and the rounded scaphoid, lunate, and triquetrum carpal bones.\n\n## Saddle joints\nThis topic details joints where both articulating surfaces are shaped like a rider's saddle.\n### Key terms\n1.  **Saddle joint** — a biaxial joint where articulating surfaces are concave in one direction and convex in the other.\n   1.  first carpometacarpal joint — the joint at the base of the thumb providing opposability.\n\n## Plane joints\nThis topic explores joints with flat surfaces that allow limited gliding movements.\n### Key terms\n1.  **Plane joint (gliding joint)** — a multiaxial joint where flat or slightly curved surfaces slide against each other.\n   1.  intercarpal joints — examples found between the carpal bones of the wrist.\n\n## Ball-and-socket joints\nThis topic describes the joints with the greatest range of motion in the body.\n### Key terms\n1.  **Ball-and-socket joint** — a multiaxial joint where a rounded bone head fits into a concave socket.\n   1.  glenohumeral joint — the shoulder joint formed by the humerus and scapula.\n   2.  hip joint — the joint formed by the femur head and the acetabulum.\n\n## Osteoarthritis pathology\nThis topic examines the \"wear and tear\" degradation of synovial joints.\n### Key terms\n1.  **Osteoarthritis** — the most common form of arthritis associated with aging and articular cartilage erosion.\n   1.  bone thickening — a response to damaged cartilage that produces rough or bumpy articulating surfaces.\n\n## Rheumatoid arthritis\nThis topic details the autoimmune condition that destroys joint capsules and membranes.\n### Key terms\n1.  **Rheumatoid arthritis** — an autoimmune disease attacking joint capsules and membranes, potentially causing joint deformation and disability.\n\n## Gouty arthritis\nThis topic describes the inflammatory condition caused by metabolic byproduct deposits.\n### Key terms\n1.  **Gout** — a form of arthritis from uric acid crystal deposition caused by overproduction of uric acid or renal excretion failure.\n\n## Joint replacement\nThis topic covers the surgical procedure used to restore function to severely damaged joints.\n### Key terms\n1.  **Arthroplasty** — a highly invasive surgical procedure where articular surfaces are replaced with prostheses.\n   1.  prosthesis — artificial components used to replace worn or damaged bone parts."}</script>
+<script id="quiz-data" type="application/json">{"id": "ap2e-9-4", "title": "9.4 Synovial Joints", "subtitle": "Chapter 9 · Joints", "book": "A&P 2e", "hash": "a66d9e6af5226efe", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "Since articular cartilage is avascular, which specific component of a synovial joint is responsible for providing the necessary nourishment to the cells within this cartilage?", "options": ["Synovial fluid", "Extrinsic ligaments", "Articular capsule", "Intrapatellar fat pad"], "rationales": ["This thick, slimy fluid secreted by the inner membrane provides nutrients to the articular cartilage since the cartilage lacks its own blood supply.", "Ligaments are bands of fibrous tissue that provide structural support and anchor bones but do not provide metabolic nourishment to internal joint structures.", "The capsule forms the physical boundary of the joint cavity, but it is the fluid within the cavity that carries nutrients to the cartilage.", "Fat pads serve as cushioning between bones rather than as a primary source of nourishment for the hyaline cartilage."], "correct": 0, "hint": "Consider the role of the lubricating liquid secreted into the joint cavity.", "topic": "Synovial membranes", "sec": "", "src": "", "link": "", "qid": "ac91f075b3"}, {"q": "In synovial joints, the articular cartilage acts like a Teflon coating. What is the functional consequence of this cartilage being separate on each bone rather than continuous between them?", "options": ["It increases the structural stability of the joint during weight-bearing.", "It allows the bones to move smoothly and independently against each other.", "It allows for the growth of new bone tissue at the epiphyseal plate.", "It prevents the synovial fluid from leaking into the bone marrow."], "rationales": ["Separated cartilage prioritizes movement and friction reduction over the rigid stability found in cartilaginous joints.", "Independent layers of cartilage allow for the increased mobility characteristic of diarthrosis joints by preventing the bones from being physically fused by tissue.", "The epiphyseal plate is a separate site of growth within the bone, whereas articular cartilage is dedicated to surface articulation.", "The prevention of fluid leakage is a function of the articular capsule and bone density, not the separation of the cartilage layers."], "correct": 1, "hint": "Think about why these joints are classified as diarthroses rather than amphiarthroses.", "topic": "Articular cartilage", "sec": "", "src": "", "link": "", "qid": "4431177471"}, {"q": "An athlete suffers an injury where a ligament fused directly into the wall of the articular capsule is torn. How would a clinician classify this specific type of structural support?", "options": ["Intrinsic ligament", "Extrinsic ligament", "Intracapsular ligament", "Tendon"], "rationales": ["Intrinsic ligaments are those that are physically incorporated into or fused to the wall of the fibrous articular capsule.", "Extrinsic ligaments are located entirely outside of the articular capsule.", "Intracapsular ligaments, such as the cruciate ligaments of the knee, are located inside the capsule space.", "Tendons are structures that connect muscle to bone, acting as 'dynamic ligaments,' but they are not part of the capsule wall itself."], "correct": 0, "hint": "Differentiate between support structures based on their relationship to the capsule wall.", "topic": "Ligamentous support", "sec": "", "src": "", "link": "", "qid": "20eaef078c"}, {"q": "At the knee joint, what is the primary functional role of the C-shaped fibrocartilage structures known as the menisci?", "options": ["Acting as a hinge to restrict the joint to uniaxial movement", "Providing shock absorption and cushioning between the bones", "Secreting synovial fluid to lubricate the joint surfaces", "Anchoring the patella to the tibia during extension"], "rationales": ["The hinge motion is determined by the shape of the articulating bone ends, while the meniscus provides padding within that motion.", "Menisci are larger fibrocartilage discs that specifically provide cushioning and shock absorption between the femur and tibia.", "Fluid secretion is performed by the cells of the synovial membrane, not by fibrocartilage structures.", "The patella is anchored by the patellar ligament, which is a different tissue type from the fibrocartilage meniscus."], "correct": 1, "hint": "Focus on the specific mechanical benefit provided by these large, C-shaped pads.", "topic": "Fibrocartilage structures", "sec": "", "src": "", "link": "", "qid": "0a96feb457"}, {"q": "If a student develops 'student's elbow' (olecranon bursitis), which type of bursa has become inflamed due to pressure between the skin and the underlying bone?", "options": ["Subcutaneous bursa", "Tendon sheath", "Subtendinous bursa", "Submuscular bursa"], "rationales": ["Subcutaneous bursae are specifically located between the skin and an underlying bone, such as at the elbow or kneecap.", "A tendon sheath is a specialized sac that completely surrounds a tendon, whereas a bursa is a simpler sac between structures.", "Subtendinous bursae are positioned between a tendon and a bone to protect the tendon from rubbing.", "Submuscular bursae are found between a muscle and a bone or between adjacent muscles, not directly under the skin."], "correct": 0, "hint": "Identify the sac based on its position relative to the skin and the bony tip of the elbow.", "topic": "Bursa locations", "sec": "", "src": "", "link": "", "qid": "4bf7d81469"}, {"q": "In areas where a muscle tendon crosses a joint through a narrow space, what structure wraps around the tendon to allow for smooth movement during contraction?", "options": ["Articular disc", "Tendonsheath", "Extrinsic ligament", "Synovial membrane"], "rationales": ["Articular discs are located between the articulating surfaces of bones, not surrounding the tendons that cross them.", "Tendon sheaths are connective tissue sacs that surround tendons to reduce friction as they cross joints.", "Extrinsic ligaments provide external stability to the joint but do not provide a lubricating tunnel for tendons.", "The synovial membrane lines the joint capsule, whereas the tendon sheath is a separate structure dedicated to tendon protection."], "correct": 1, "hint": "Look for the structure that functions like a bursa but specifically encircles a fibrous cord.", "topic": "Tendon protection", "sec": "", "src": "", "link": "", "qid": "fd86a4ad86"}, {"q": "Which mechanical arrangement at the atlantoaxial joint between the C1 and C2 vertebrae allows for the side-to-side rotation of the head?", "options": ["A convex surface fitting into a concave surface to allow bending", "Two flat bone surfaces sliding against one another", "A rounded bone portion enclosed within a ring of bone and ligament", "An oval-shaped rounded end articulating with a shallow depression"], "rationales": ["This describes a hinge joint, which allows for bending and straightening but not the rotation required to turn the head.", "This describes a plane joint, which allows for limited gliding rather than the focused rotation seen in the upper neck.", "This describes a pivot joint, where the dens of the axis is held in place against the atlas, allowing rotation around a single axis.", "This describes a condyloid joint, which allows for biaxial movement but is not the mechanism used for the C1 and C2 rotation."], "correct": 2, "hint": "Consider how a central axis allows for rotational movement.", "topic": "Pivot joints", "sec": "", "src": "", "link": "", "qid": "300c09545e"}, {"q": "Why are the elbow and interphalangeal joints functionally classified as uniaxial joints?", "options": ["They allow for rotation around a longitudinal axis.", "They utilize a shallow socket to allow for side-to-side gliding.", "They are supported by both intrinsic and extrinsic ligaments.", "They only allow for bending and straightening along a single axis."], "rationales": ["Rotation is characteristic of pivot or ball-and-socket joints, whereas hinge joints are limited to flexion and extension.", "Side-to-side gliding is found in plane or condyloid joints, not in the uniaxial hinge mechanism of the elbow.", "While many joints have multiple ligaments, uniaxial classification is based on the planes of motion allowed by bone shape, not the number of ligaments.", "Hinge joints like these are restricted to movement in one plane, much like a door hinge, which defines them as uniaxial."], "correct": 3, "hint": "Think about the limitations of a door-like mechanical movement.", "topic": "Hinge joints", "sec": "", "src": "", "link": "", "qid": "254c200273"}, {"q": "The radiocarpal joint of the wrist allows you to both bend your hand and move it side-to-side. What structural shape facilitates these two planes of movement?", "options": ["Two saddle-shaped surfaces fitting together like a rider and a seat", "An elliptical-shaped end fitting into a shallow depression", "A spherical head fitting into a deep cup-like socket", "A cylindrical bone end articulating with a trough-shaped bone"], "rationales": ["While also biaxial, this describes a saddle joint; the radiocarpal joint specifically uses a rounded/depressed elliptical interface.", "Condyloid joints feature an oval articulation that allows for biaxial movement in two perpendicular planes.", "This describes a ball-and-socket joint, which is multiaxial and allows for rotation, unlike the wrist's condyloid joint.", "This shape describes a hinge joint, which would restrict the wrist to only one plane of motion."], "correct": 1, "hint": "Look for the geometric shape that permits movement in two directions but prevents rotation.", "topic": "Condyloid joints", "sec": "", "src": "", "link": "", "qid": "671754ca56"}, {"q": "What functional advantage is provided to the human hand by the saddle joint at the base of the thumb?", "options": ["It allows the thumb to move out of the plane of the palm for opposition.", "It allows for 360-degree rotation of the 1st metacarpal.", "It converts the thumb into a uniaxial hinge for simple gripping.", "It provides a rigid base to support heavy lifting without movement."], "rationales": ["The unique biaxial shape of the first carpometacarpal joint allows the thumb to move across and away from the palm, enabling opposition.", "Saddle joints are biaxial and do not allow for full multiaxial rotation, which is reserved for ball-and-socket joints.", "The thumb's versatility comes from its biaxial saddle joint, not from a limited uniaxial hinge structure.", "Saddle joints are highly mobile; stability for heavy lifting is usually provided by the tighter plane joints of the carpus."], "correct": 0, "hint": "Think about the specific movement that distinguishes human hand dexterity.", "topic": "Saddle joints", "sec": "", "src": "", "link": "", "qid": "ae03147d65"}, {"q": "In the foot, the joints between the tarsal bones allow for small gliding movements. Why are these plane joints sometimes functionally restricted despite their multiaxial shape?", "options": ["The articulating surfaces are of vastly different sizes.", "They are composed primarily of fibrocartilage rather than hyaline cartilage.", "Ligaments and neighboring bones tightly constrain their motion.", "They lack a joint cavity and synovial fluid."], "rationales": ["Plane joints typically feature articulating surfaces that are approximately the same size.", "Plane joints, like other synovial joints, use hyaline articular cartilage on their sliding surfaces.", "Although the flat surfaces of plane joints could theoretically allow multiple movements, physical barriers like ligaments often limit them to simple gliding.", "Plane joints are synovial joints and therefore possess both a joint cavity and synovial fluid."], "correct": 2, "hint": "Consider how external factors can override the theoretical mobility of a joint shape.", "topic": "Plane joints", "sec": "", "src": "", "link": "", "qid": "c2442c4061"}, {"q": "Why does the hip joint have a more limited range of motion compared to the shoulder joint, despite both being ball-and-socket joints?", "options": ["The deep socket and strong ligaments of the hip prioritize stability and weight-bearing.", "The shoulder is a biaxial joint while the hip is multiaxial.", "The hip joint lacks the synovial fluid required for extensive gliding.", "The head of the femur is significantly smaller than the glenoid cavity."], "rationales": ["The depth of the acetabulum and strength of hip ligaments constrain movement to ensure the joint can support body weight.", "Both the shoulder and hip are multiaxial ball-and-socket joints.", "Both joints are synovial and utilize synovial fluid; the difference in range is due to bone and ligament architecture.", "The femur head fits into the deep acetabulum, whereas the humerus head articulates with the much shallower glenoid cavity."], "correct": 0, "hint": "Contrast the requirements for stability versus the requirements for mobility.", "topic": "Ball-and-socket joints", "sec": "", "src": "", "link": "", "qid": "90059cec10"}, {"q": "In the early stages of osteoarthritis, what is the underlying cause of the joint swelling and stiffness that occurs as the articular cartilage thins?", "options": ["Increased production of synovial fluid in response to cartilage stress", "An autoimmune attack on the joint capsule", "The total loss of the articular capsule wall", "The deposition of uric acid crystals within the synovial membrane"], "rationales": ["As cartilage wears down, the joint responds by overproducing lubricating fluid, which stretches the capsule and causes pain/stiffness.", "Autoimmune responses are characteristic of rheumatoid arthritis, whereas osteoarthritis is primarily degenerative.", "The capsule remains but becomes stretched; it is not lost during the progression of osteoarthritis.", "Crystal deposition is the mechanism for gout, not the standard wear-and-tear process of osteoarthritis."], "correct": 0, "hint": "Think about how the joint tries to compensate for increased pressure on the bone.", "topic": "Osteoarthritis pathology", "sec": "", "src": "", "link": "", "qid": "a5c271022a"}, {"q": "Which progression of events distinguishes rheumatoid arthritis from osteoarthritis?", "options": ["Excessive fructose consumption leads to the buildup of crystals in the joint.", "The joint is initially damaged by a bacterial infection that spreads to the heart.", "The immune system attacks the joint capsule and membrane first, leading to severe cartilage damage.", "Wear and tear over time causes the cartilage to thin and the underlying bone to thicken."], "rationales": ["This metabolic pathway is associated with gout, not with rheumatoid arthritis.", "While infections can cause arthritis, rheumatoid arthritis is specifically an autoimmune condition.", "Rheumatoid arthritis is an autoimmune disease that starts with membrane inflammation and eventually destroys cartilage and deforms joints.", "This describes the degenerative 'wear and tear' process of osteoarthritis, not the autoimmune pathology of rheumatoid arthritis."], "correct": 2, "hint": "Consider the source of the initial inflammatory trigger.", "topic": "Rheumatoid arthritis", "sec": "", "src": "", "link": "", "qid": "4283b60637"}, {"q": "A patient with gout experiences sudden joint inflammation. What metabolic failure is the primary driver of this specific condition?", "options": ["An autoimmune response targeting the tendons crossing the joint", "The chronic overuse of the joint leading to articular cartilage erosion", "The inability of the kidneys to properly excrete uric acid", "A genetic mutation that prevents the formation of synovial fluid"], "rationales": ["Gout involves chemical crystal deposits, whereas autoimmune responses involve the immune system attacking healthy tissue.", "Overuse and erosion are characteristics of osteoarthritis, while gout is a metabolic disorder.", "Gout occurs when uric acid levels rise—either through overproduction or poor excretion—and form crystals in the joints.", "Gout involves the composition of the fluid (crystals), not a total lack of fluid production."], "correct": 2, "hint": "Identify the chemical byproduct that crystallizes when it is not removed from the body.", "topic": "Gouty arthritis", "sec": "", "src": "", "link": "", "qid": "9a2549efed"}, {"q": "During a total hip arthroplasty, how is the stability of the artificial joint established within the existing skeletal structure?", "options": ["The artificial acetabulum is fused to the femur using intrinsic ligaments.", "The entire pelvic bone is replaced with a custom-fitted prosthesis.", "The joint is rebuilt using articular discs harvested from the patient's knee.", "A shaft is inserted into the diaphysis of the femur to anchor the replacement head."], "rationales": ["The acetabulum is fitted into the pelvis, and the joint must remain mobile rather than fused.", "Only the damaged articular surfaces—the acetabulum and the femoral head/neck—are typically replaced.", "Arthroplasty uses artificial components (prostheses) rather than biological tissue grafts from other joints.", "In hip replacement, the new femoral head is secured by a shaft that goes inside the long bone's shaft (diaphysis)."], "correct": 3, "hint": "Focus on how the 'ball' component of the replacement is physically attached to the leg bone.", "topic": "Joint replacement", "sec": "", "src": "", "link": "", "qid": "3a2791e8c1"}], "hasSheet": true, "parts": false, "secTitles": {}, "reserve": 0, "frq": [], "notebook": "https://notebooklm.google.com/notebook/7195586f-1cfe-4068-9c74-b067dc43f0b1/artifact/247a66b4-89cf-4f06-a8d9-5b4c42b1f0b0", "root": "../index.html", "tab": "quiz", "sheet": "## Synovial membranes\nAs the most common type of joint, every synovial joint is functionally classified as a diarthrosis.\n### Key terms\n1.  **Synovial membrane** — a thin tissue layer lining the inner surface of the articular capsule.\n2.  **Synovial fluid** — a thick, slimy lubricating liquid secreted by the synovial membrane.\n   1.  nourishment — the process by which this fluid provides nutrients to the avascular articular cartilage.\n\n## Articular cartilage\nThis topic describes the protective hyaline layer covering the ends of articulating bones.\n### Key terms\n1.  **Articular cartilage** — a thin layer of hyaline cartilage covering the articulating surface of bones.\n   1.  Teflon® coating — a comparison used to describe how the cartilage allows bones to move smoothly without damage.\n\n## Ligamentous support\nThis topic explores the fibrous connective tissues that anchor bones and limit abnormal movement.\n### Key terms\n1.  **Ligaments** — strong bands of fibrous connective tissue that hold bones together.\n2.  **Extrinsic ligament** — a supporting band located outside of the articular capsule.\n3.  **Intrinsic ligament** — a supporting band fused to or incorporated into the wall of the articular capsule.\n4.  **Intracapsular ligament** — a supporting band located inside the articular capsule.\n\n## Fibrocartilage structures\nThis topic covers the specialized pads found within specific joints for fit and shock absorption.\n### Key terms\n1.  **Articular disc** — a small, oval-shaped fibrocartilage structure located between articulating bones.\n   1.  sternoclavicular joint — an example of a joint containing an articular disc.\n2.  **Meniscus** — a larger, C-shaped fibrocartilage structure providing shock absorption.\n   1.  knee joint — the specific location where menisci provide cushioning between bones.\n\n## Bursa locations\nThis topic identifies the fluid-filled sacs that prevent friction between various body tissues.\n### Key terms\n1.  **Bursa** — a thin connective tissue sac filled with lubricating liquid.\n2.  **Subcutaneous bursa** — a sac located between the skin and an underlying bone.\n   1.  prepatellar bursa — an example located over the kneecap.\n   2.  olecranon bursa — an example located at the bony tip of the elbow.\n3.  **Submuscular bursa** — a sac found between a muscle and bone or between adjacent muscles.\n   1.  trochanteric bursa — an example found at the lateral hip.\n4.  **Subtendinous bursa** — a sac located between a muscle tendon and bone.\n   1.  subacromial bursa — an example protecting the shoulder muscle tendon.\n   2.  suprapatellar bursa — an example separating the anterior thigh muscle tendon from the distal femur.\n\n## Tendon protection\nThis topic addresses the structures that facilitate the smooth passage of tendons over joints.\n### Key terms\n1.  **Tendon** — the dense connective tissue structure that attaches a muscle to bone.\n2.  **Tendon sheath** — a small connective tissue sac containing lubricating fluid that surrounds a muscle tendon.\n\n## Pivot joints\nThis topic describes joints allowing rotation around a single axis.\n### Key terms\n1.  **Pivot joint** — a uniaxial diarthrosis where a rounded bone rotates within a ring.\n   1.  atlantoaxial joint — the joint between C1 and C2 vertebrae allowing head rotation.\n   2.  proximal radioulnar joint — a joint allowing forearm rotation via the radius.\n\n## Hinge joints\nThis topic covers joints that function like a door hinge to allow bending and straightening.\n### Key terms\n1.  **Hinge joint** — a uniaxial joint where the convex end of one bone meets the concave end of another.\n   1.  elbow joint — an example formed by the humerus and the ulna.\n\n## Condyloid joints\nThis topic explains biaxial joints involving a shallow depression and a rounded bone end.\n### Key terms\n1.  **Condyloid joint (ellipsoid joint)** — a biaxial joint allowing two planes of movement through an elliptical articulation.\n   1.  radiocarpal joint — a wrist joint between the radius and the rounded scaphoid, lunate, and triquetrum carpal bones.\n\n## Saddle joints\nThis topic details joints where both articulating surfaces are shaped like a rider's saddle.\n### Key terms\n1.  **Saddle joint** — a biaxial joint where articulating surfaces are concave in one direction and convex in the other.\n   1.  first carpometacarpal joint — the joint at the base of the thumb providing opposability.\n\n## Plane joints\nThis topic explores joints with flat surfaces that allow limited gliding movements.\n### Key terms\n1.  **Plane joint (gliding joint)** — a multiaxial joint where flat or slightly curved surfaces slide against each other.\n   1.  intercarpal joints — examples found between the carpal bones of the wrist.\n\n## Ball-and-socket joints\nThis topic describes the joints with the greatest range of motion in the body.\n### Key terms\n1.  **Ball-and-socket joint** — a multiaxial joint where a rounded bone head fits into a concave socket.\n   1.  glenohumeral joint — the shoulder joint formed by the humerus and scapula.\n   2.  hip joint — the joint formed by the femur head and the acetabulum.\n\n## Osteoarthritis pathology\nThis topic examines the \"wear and tear\" degradation of synovial joints.\n### Key terms\n1.  **Osteoarthritis** — the most common form of arthritis associated with aging and articular cartilage erosion.\n   1.  bone thickening — a response to damaged cartilage that produces rough or bumpy articulating surfaces.\n\n## Rheumatoid arthritis\nThis topic details the autoimmune condition that destroys joint capsules and membranes.\n### Key terms\n1.  **Rheumatoid arthritis** — an autoimmune disease attacking joint capsules and membranes, potentially causing joint deformation and disability.\n\n## Gouty arthritis\nThis topic describes the inflammatory condition caused by metabolic byproduct deposits.\n### Key terms\n1.  **Gout** — a form of arthritis from uric acid crystal deposition caused by overproduction of uric acid or renal excretion failure.\n\n## Joint replacement\nThis topic covers the surgical procedure used to restore function to severely damaged joints.\n### Key terms\n1.  **Arthroplasty** — a highly invasive surgical procedure where articular surfaces are replaced with prostheses.\n   1.  prosthesis — artificial components used to replace worn or damaged bone parts."}</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -687,21 +742,29 @@ const G_OK = '✓', G_NO = '✕';
 
 /* WHY A QUESTION IS ON THE EXAM. One glyph, set by the generator in the topic tag, and the
    only thing the page does with it is show it and group by it. The ORDER of this object is
-   his priority order (08-11) and the tables below read it, so re-ordering here re-orders the
-   report: the rewrites he asked for first, then starred, then missed, then flagged, then his
-   own research, then the ones he got right and is being asked again from a harder angle.
+   his priority order and the tables below read it, so re-ordering here re-orders the report.
 
-   ✎ SITS ABOVE ☆ (08-12) because it is the only one he wrote as an instruction rather than a
-   mark. The others say "this mattered to me"; ✎ says "this question was wrong, ask it like
-   this" — so on the report it is the first row he should check, since it is the one place the
-   generator can have done as it was told or not. */
+   RE-RANKED 08-14 TO HIS NEW ORDER: *"Wrong questions tested first · Starred · Questions with
+   research (not fix) · Question mark tags · Fix marks · Correct answers."* It has to be kept
+   in step with `POOL_RUNGS` in reinforce.py, which is what actually assigns the glyphs — that
+   list decides which card gets a spot, this one only names the result. Out of step, the
+   report groups a paper by an order the paper was not built in.
+
+   ✎ USED TO SIT FIRST and no longer does. Until 08-12 it was the one he wrote as an
+   instruction rather than a mark, so it led the report; he has since ranked it fifth, and a
+   ✎ question now takes an ordinary spot like every other rung.
+
+   `+` IS NOT A RUNG. Nothing is tagged `+` — it is what a section gets when its quiz was
+   shorter than the quota, which is ordinary rather than exceptional. It is last because a
+   question with no card behind it is the one he has least history with. */
 const SRC = {
-  '✎': 'You asked for this one to be rewritten',
-  '☆': 'Starred in the subchapter quiz',
   '✕': 'You got this wrong',
-  '?': 'You flagged it — no idea at the time',
+  '☆': 'Starred in the subchapter quiz',
   'R': 'Built from your own research',
-  '$': 'You got it right before — asked a different way'
+  '?': 'You flagged it — no idea at the time',
+  '✎': 'You asked for this one to be rewritten',
+  '$': 'You got it right before — asked a different way',
+  '+': 'New — nothing of yours left to re-ask on this section'
 };
 const SRC_ORDER = Object.keys(SRC);
 function srcName(g){ return SRC[g] || ''; }
@@ -718,9 +781,14 @@ function srcName(g){ return SRC[g] || ''; }
    `skipped` usable later as a permanent exclusion list when exam reuse is built — see qid()
    in quizpage.py. v1 states are migrated once, on load. */
 function qk(i){ return D.questions[i].qid; }
+/* `only` and `sat` ARE THE SECTIONED EXAM (08-16), and both are inert unless the page was
+   built with parts on. `only` is the list of subchapters THIS sitting covers — null means he
+   has not chosen yet, which is what puts the picker on screen. `sat` records which
+   subchapters he has finished, and nothing else: a section's score is always recomputed from
+   `answers`, never stored, so there is exactly one place a number can come from. */
 function blank(){ return {v:2, hash:D.hash, i:0, answers:{}, pass2:{}, skipped:{}, starred:{},
                           unsure:{}, hints:{}, phase:1, p2list:null, done:false, at:null,
-                          shuf:{}, history:[]}; }
+                          shuf:{}, history:[], only:null, sat:{}, promoted:{}}; }
 function migrate(s){
   // v1 keyed every map on the array index. The hash matches, so the indices are still valid
   // and this is a straight re-key — done once, then never again.
@@ -764,6 +832,12 @@ function load(){
     if(!s.hints) s.hints = {};
     if(!s.pass2) s.pass2 = {};
     if(!s.phase) s.phase = 1;
+    // Absent on every attempt saved before 08-16, and `only: null` is exactly right for one:
+    // it means "not chosen", so an attempt in progress on a paper that has just gained the
+    // picker resumes over the whole paper, which is what it was.
+    if(s.only === undefined) s.only = null;
+    if(!s.sat) s.sat = {};
+    if(!s.promoted) s.promoted = {};
     // Not carried across a rebuild on purpose: blank() empties it. A stored order describes a
     // set of options that may no longer be the same length — optOrder() throws out any that
     // no longer fit, so a stale one is harmless anyway.
@@ -771,14 +845,89 @@ function load(){
     return s;
   }catch(e){ return blank(); }
 }
+/* THE ATTEMPT MUST NEVER FAIL TO SAVE IN SILENCE (08-16). `save()` swallowed every exception,
+   and the one that actually happens is QuotaExceededError: the research box keeps pasted
+   images in localStorage, and once the origin is full EVERY later write is refused — so his
+   answers stopped being recorded while the page carried on as if they were. His report was
+   *"I feel I did answer some of these questions and yet they show up again"*, which is exactly
+   what a refused write looks like from the outside. It now says so, on screen, and keeps
+   saying so until a write succeeds. */
+let saveBroken = false;
+function saveFailed(on){
+  if(on === saveBroken) return;
+  saveBroken = on;
+  let el = $('#savewarn');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'savewarn';
+    document.body.appendChild(el);
+  }
+  el.textContent = 'This browser is out of room — your answers are NOT being saved. '
+                 + 'Remove a pasted image from the research box to free some up.';
+  el.classList.toggle('hide', !on);
+}
 function save(){
-  S.meta = {title:D.title, subtitle:D.subtitle, book:D.book, total:active(S).length,
-            at:S.at, done:S.done, score:score(S)};
-  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+  // ON A SECTIONED PAPER `meta` DESCRIBES THE PAPER, NOT THE SITTING. It is read in exactly
+  // one place — `load()`, when the questions have been rebuilt and the old answers can no
+  // longer be scored — and what belongs in that history line is "he got 24 of 32 on this
+  // exam", not "he got 14 of 16 on the half of it he happened to sit last."
+  const pp = D.parts ? paperStat() : null;
+  S.meta = {title:D.title, subtitle:D.subtitle, book:D.book,
+            total: pp ? pp.t : active(S).length,
+            at:S.at, done:S.done, score: pp ? pp.n : score(S)};
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); saveFailed(false); }
+  catch(e){ saveFailed(true); }
 }
 /* Skipped questions leave the run entirely — out of the count, out of the denominator,
-   out of the topic breakdown. Anything less makes "8 / 10" a lie about a quiz of nine. */
-function active(s){ return D.questions.map((_,i)=>i).filter(i => !(s.skipped||{})[qk(i)]); }
+   out of the topic breakdown. Anything less makes "8 / 10" a lie about a quiz of nine.
+
+   THE SECTION FILTER RIDES HERE AND NOWHERE ELSE (08-16). `active()` is what the run list,
+   the score, the second pass, the end card and the review list are all built on, so putting
+   the sitting's subchapters into this one function is what makes a half-paper behave exactly
+   like a whole one — one direction, one end card, one second pass — with no branch anywhere
+   downstream. `only: null` (not chosen, or a page built without parts) filters nothing. */
+function active(s){
+  const only = D.parts ? (s.only || null) : null;
+  return D.questions.map((_,i)=>i).filter(i => onPaper(s, i)
+    && (!only || only.indexOf(D.questions[i].sec) >= 0));
+}
+/* ---- THE RESERVES (08-16) ------------------------------------------------------------
+   His ask: *"if 1 question is skipped, another one is replaced in that section about it… you
+   have a quota, so you should also create stockpiles (say 2 extra questions per section that
+   immediately replace a skipped question)."*
+
+   `D.reserve` is how many per section were written beyond the quota. They are the LAST ones
+   of their section in build order, which is not arbitrary: `section_pool()` deals spots down
+   his tag priority, so a section's tail is the bottom of the list it could afford to lose.
+
+   A RESERVE IS NOT A QUESTION YET. It is out of the run, out of the denominator and out of
+   every table until a skip in its own section calls it in — at which point it is an ordinary
+   question and nothing downstream can tell it apart. Promotion is recorded on the qid, so it
+   survives a reload and cannot be handed out twice. Skipping with none left behaves exactly
+   as it always did: the paper is one question shorter. */
+function reserveIds(sec){
+  if(!(D.reserve > 0)) return [];
+  const l = D.questions.map((_,i)=>i).filter(i => D.questions[i].sec === sec);
+  return l.slice(Math.max(0, l.length - D.reserve));
+}
+function isReserve(i){
+  const sec = D.questions[i].sec;
+  return !!sec && reserveIds(sec).indexOf(i) >= 0;
+}
+/* Skipped or an unpromoted reserve — the two ways a question is not part of the paper. One
+   predicate so the run, the score, the picker and the section tables can never disagree. */
+function onPaper(s, i){
+  if((s.skipped||{})[qk(i)]) return false;
+  return !isReserve(i) || !!(s.promoted||{})[qk(i)];
+}
+/* Called the instant a question is skipped. Returns the promoted index, or -1. */
+function promoteReserve(sec){
+  if(!sec) return -1;
+  const next = reserveIds(sec).find(i => !S.promoted[qk(i)] && !S.skipped[qk(i)]);
+  if(next === undefined) return -1;
+  S.promoted[qk(next)] = true;
+  return next;
+}
 function ans(i){ return S.answers[qk(i)]; }
 function ans2(i){ return S.pass2[qk(i)]; }
 function firstRight(i){ return ans(i) === D.questions[i].correct; }
@@ -802,6 +951,59 @@ function runList(){
   return active(S);
 }
 function pick(i){ return S.phase === 2 ? ans2(i) : ans(i); }
+
+/* ---- SUBCHAPTERS AS SITTINGS (08-16) -------------------------------------------------
+   His ask: *"a way to section off exams… such that I'm able to practice only one section or
+   maybe two sections of an exam created because of shortened time"*, and then *"the option to
+   do those other sub chapters that I haven't done at a later date, or just display the score
+   of the subsections that I have got done."*
+
+   A QUESTION BELONGS TO ONE SUBCHAPTER — `q.sec`, which every exam question already carries.
+   A cross-section question carries `q.link` as well, and it is deliberately NOT used here:
+   `q.sec` is the section whose paper the question is on (the pool decided that, and the exam
+   prompt says so in as many words), so it is sat once, with that section, and never offered
+   twice. It still REPORTS under both in the end card's By-subchapter table, which is a
+   different question and was already answered.
+
+   NOTHING IS STORED THAT CAN BE COMPUTED. `S.sat[sec]` is a timestamp saying he finished that
+   section and nothing more; every number on screen comes back out of `S.answers` through
+   `secStat()`. A stored score is a second source of truth, and this page already has one
+   scar from that — see `load()`, where a recomputed score turned a real 8/10 into 2/10. */
+function paperSecs(){
+  const out = [];
+  D.questions.forEach((q,i)=>{
+    if(q.sec && onPaper(S, i) && out.indexOf(q.sec) < 0) out.push(q.sec);
+  });
+  return out.sort((a,b)=>a.localeCompare(b, undefined, {numeric:true}));
+}
+function secQs(sec){
+  return D.questions.map((_,i)=>i)
+    .filter(i => D.questions[i].sec === sec && onPaper(S, i));
+}
+function secStat(sec){
+  const l = secQs(sec);
+  const answered = l.filter(i => ans(i) !== undefined).length;
+  return {sec:sec, t:l.length, answered:answered,
+          n: l.filter(i => finalRight(i)).length,
+          done: !!S.sat[sec], started: answered > 0};
+}
+/* THE PAPER, ACROSS EVERY SITTING — the number that answers "how am I doing on this exam",
+   as opposed to "how did I do this evening". Scored over the sections he has actually sat, so
+   a half-finished paper reads 14/16 with a section outstanding rather than a demoralising
+   14/32 that counts questions he has not been asked yet. `all` is what says the paper is
+   finished; until then `left` is what the picker offers him next. */
+function paperStat(){
+  const secs = paperSecs().map(secStat);
+  const done = secs.filter(s => s.done);
+  const left = secs.filter(s => !s.done);
+  const n = done.reduce((a,s)=>a+s.n, 0), t = done.reduce((a,s)=>a+s.t, 0);
+  return {secs:secs, done:done, left:left, n:n, t:t,
+          whole: secs.reduce((a,s)=>a+s.t, 0),
+          pct: t ? Math.round(n/t*100) : 0, all: secs.length > 0 && left.length === 0};
+}
+/* The picker earns its place only where there is a choice to make: parts on, and more than
+   one subchapter on the paper. A one-section exam goes straight in, as it always did. */
+function sectioned(){ return !!D.parts && paperSecs().length > 1; }
 
 /* ---- THE ON-SCREEN OPTION ORDER ------------------------------------------------------
    A DISPLAY LAYER AND NOTHING MORE. `S.shuf[qid]` is a list of ORIGINAL option indices in
@@ -841,6 +1043,13 @@ function reshuffleOpts(i){
 }
 let S = load();
 let lastShown = -1;
+
+/* WHAT TO CALL THIS THING (08-16, his ask: *"you should name them exams"*). A paper that
+   carries subchapter tags or a written half is an exam; anything else is a subchapter quiz.
+   Both signals, because the two halves arrived on different days and a paper with only one of
+   them is still an exam. The word is used for the tab, the review button and the pasted score
+   line, so all three agree without three separate conditions. */
+const NOUN = ((D.frq && D.frq.length) || D.questions.some(q=>q.sec)) ? 'Exam' : 'Quiz';
 
 /* ---- HIS RESEARCH, kept apart from the attempt ---------------------------------------
    Its own localStorage key, NOT a field of S, and that is the whole design. S is one
@@ -960,6 +1169,22 @@ function drawFrq(){
   });
   box.innerHTML = h;
 
+  /* CLICKING THE CARD PUTS THE CARET IN THE BOX. The sticky header covers the top strip of
+     whatever is under it, and the placeholder sits in exactly that strip — so the one place he
+     naturally aims is the one place the click does not land. Anywhere in the card that is not
+     already a control now focuses the answer box, which also makes the whole card a target on
+     a phone. `closest` is what keeps Mark, Copy and any selection inside the rubric working. */
+  box.querySelectorAll('section.frq').forEach(sec => {
+    sec.addEventListener('mousedown', e => {
+      if(e.target.closest('button, textarea, a, .rubric')) return;
+      const ta = sec.querySelector('textarea');
+      if(!ta) return;
+      e.preventDefault();
+      ta.focus();
+      ta.setSelectionRange(ta.value.length, ta.value.length);
+    });
+  });
+
   box.querySelectorAll('textarea').forEach(ta => {
     const fi = +ta.dataset.f;
     const count = () => {
@@ -1066,6 +1291,7 @@ function syncTabs(){
   const nfrq = (D.frq || []).length;
   document.querySelector('.tab[data-tab="starred"]').classList.toggle('hide', !nstar);
   document.querySelector('.tab[data-tab="sheet"]').classList.toggle('hide', !D.hasSheet);
+  document.querySelector('.tab[data-tab="quiz"]').textContent = NOUN;
   document.querySelector('.tab[data-tab="frq"]').classList.toggle('hide', !nfrq);
   $('#tabs').classList.toggle('hide', !nstar && !D.hasSheet && !nfrq);
   if(D.tab === 'starred' && !nstar) setTab('quiz');
@@ -1190,6 +1416,10 @@ function draw(){
   showResearch(!(S.reviewing || S.done));
   if(S.reviewing) return review();
   if(S.done) return end();
+  // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
+  // the rest of the sitting, so nothing about answering, going back or the second pass has
+  // to know the picker exists.
+  if(sectioned() && !S.only) return picker();
   const act = runList();
   if(!act.length) return end();
   if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
@@ -1212,6 +1442,11 @@ function buildQ(i, picked, fresh, en){
   let h = '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta"><span class="num">' + (pos+1) + ' / ' + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
+        // 10 reads as the paper having lost his place, which is how he read it.
+        + (recycling && S.phase!==2
+           ? '<span class="dot">·</span><span class="fillnote">filling in ' + gaps().length
+             + ' left blank</span>' : '')
         // THE SECTION AND THE GLYPH, on the exam only — a subchapter quiz carries neither and
         // this line is byte-for-byte what it always was. The section is what it says; the
         // glyph is why this question is on the paper at all, and it is deliberately JUST the
@@ -1220,7 +1455,16 @@ function buildQ(i, picked, fresh, en){
         + (q.sec ? '<span class="dot">·</span><span class="sec">' + esc(q.sec)
                  + (q.link ? '<span class="lk">+' + esc(q.link) + '</span>' : '')
                  + '</span>' : '')
-        + (q.topic ? '<span class="dot">·</span><span>' + esc(q.topic) + '</span>' : '')
+        // THE TOPIC NAME IS HELD BACK UNTIL HE HAS ANSWERED. It was giving the answer away:
+        // `8.1 · Inferior scapular angle` sat over a question asking which part of the scapula
+        // anchors the powerful shoulder muscles, so the tag answered it before the options did.
+        // His own exams name no topic; he reverse-engineers where to look from the question.
+        // The section number stays visible — that is the scope pointer, and it is the whole
+        // subchapter, not the idea. The name comes back the moment the answer is locked in,
+        // because that is when it stops being a hint and starts being the label he files it
+        // under (the end card, the review list and the paste all keep reading it).
+        + (q.topic && answered ? '<span class="dot">·</span><span>' + esc(q.topic)
+                 + '</span>' : '')
         + (q.src ? '<span class="dot">·</span><span class="src" title="' + srcName(q.src)
                  + '">' + esc(q.src) + '</span>' : '')
         + '</p>'
@@ -1252,7 +1496,8 @@ function buildQ(i, picked, fresh, en){
       if(lab && fresh) cls += ' fresh';
       why = q.rationales ? (q.rationales[k]||'') : '';
     }
-    h += '<button class="'+cls+'" data-k="'+k+'"'+(answered?' disabled':'')+'>'
+    h += '<button class="'+cls+(answered?' locked':'')+'" data-k="'+k+'"'
+       + (answered?' aria-disabled="true"':'')+'>'
        + '<span class="line"><span class="k">'+D.letters[pos]+'.</span>'
        + '<span class="t">'+esc(o)+'</span>'
        + '<span class="mark">'+mark+'</span></span>';
@@ -1279,6 +1524,12 @@ function question(fresh){
   $('#quizview').innerHTML = buildQ(i, picked, fresh, isNew ? ' enter' : '');
   $('#quizview').querySelectorAll('.opt').forEach(b=>{
     b.onclick = ()=>{
+      // `aria-disabled` AND NOT `disabled`, SINCE 08-16. A real `disabled` button will not let
+      // its text be selected however `user-select` is set — browsers block selection inside a
+      // disabled control — so the rationale he wanted to copy off an answered question could
+      // not be picked up at all: *"Im trying to copy on v2 exams and its not letting me."*
+      // The lock is now the guard on this line, and the class is what styles it.
+      if(b.classList.contains('locked')) return;
       // The first pass is never overwritten — a second-pass answer goes in its own map.
       if(S.phase === 2) S.pass2[qk(i)] = +b.dataset.k; else S.answers[qk(i)] = +b.dataset.k;
       save(); question(true);
@@ -1610,12 +1861,19 @@ function openMenu(){
   m.querySelector('#skipq').onclick = ()=>{
     const list = runList(), pos = list.indexOf(S.i);
     if(list.length <= 1) return closeMenu();        // never skip the last one standing
-    const wasLast = pos === list.length - 1;
+    const sec = D.questions[S.i].sec;
     S.skipped[qk(S.i)] = true;
     delete S.answers[qk(S.i)];
     delete S.pass2[qk(S.i)];
     delete S.starred[qk(S.i)];                     // a deleted question is not a starred one
     if(S.unsure) delete S.unsure[qk(S.i)];         // nor one that still needs work
+    // A RESERVE TAKES ITS PLACE IMMEDIATELY, in the same section and the same sitting, so the
+    // count he is working against does not move: skip question 6 of 11 and it is still 11.
+    // Promoted BEFORE `wasLast` is decided — a skip on the last question with a reserve in
+    // hand is not the end of the paper, it is one more question, and finishing there would
+    // have handed him an end card with a question still owed.
+    const filled = promoteReserve(sec) >= 0;
+    const wasLast = !filled && pos === list.length - 1;
     closeMenu();
     syncTabs();
     if(wasLast){ finish(); return; }
@@ -1633,6 +1891,11 @@ function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(
 function finish(){
   S.done = true; S.at = new Date().toISOString();
   recycling = false;          // the clean-up pass is over; a second pass starts in order
+  // THE SITTING'S SUBCHAPTERS ARE NOW SAT. Written here rather than on the end card because
+  // the end card is also what he sees on every later visit, and re-rendering it must not keep
+  // re-stamping the time. A second pass reopens the run and lands back here when it ends, so
+  // the stamp is the last time the section was actually finished, which is what it should be.
+  if(D.parts && S.only) S.only.forEach(sec=>{ S.sat[sec] = S.at; });
   save(); end(); window.scrollTo(0,0);
 }
 
@@ -1667,6 +1930,112 @@ function group(act, keyOf, head, label){
        + '<span class="tbar"><i style="width:'+(by[k].n/by[k].t*100)+'%"></i></span></div>';
   });
   return h + '</div>';
+}
+
+/* THE PICKER — the one new screen, and the only place the sectioning is visible before he
+   starts. Shown when parts are on, the paper has more than one subchapter, and this sitting
+   has not been chosen yet. Choosing writes `S.only` and everything after it is the ordinary
+   exam: same order, same second pass, same end card, one direction to the end.
+
+   IT IS ALSO THE SCOREBOARD. His second ask — *"or just display the score of the subsections
+   that I have got done"* — is answered by the same screen rather than a separate one, because
+   it is the screen he lands on when he opens the link again. */
+let pickSel = null;
+
+function picker(){
+  const p = paperStat();
+  if(!pickSel) pickSel = p.left.map(s => s.sec);          // default: what is still outstanding
+  const chosen = p.secs.filter(s => pickSel.indexOf(s.sec) >= 0);
+  const nq = chosen.reduce((a,s)=>a+s.t, 0);
+
+  let h = '<div class="picker"><h3>' + (p.done.length ? 'Pick up where you left off'
+                                                      : 'Which sections are you sitting?')
+        + '</h3>';
+  h += '<p class="psub">' + p.whole + ' questions across ' + p.secs.length
+     + ' subchapters. Sit as many as you have time for — the rest keep, and this link '
+     + 'reopens on this screen.</p>';
+
+  if(p.done.length){
+    h += '<p class="pscore"><b>' + p.n + ' / ' + p.t + '</b> <span>' + p.pct + '% across '
+       + p.done.length + ' of ' + p.secs.length + ' subchapters'
+       + (p.all ? ' — the whole paper' : '') + '</span></p>';
+  }
+
+  h += '<div class="prows">';
+  p.secs.forEach(s=>{
+    const on = pickSel.indexOf(s.sec) >= 0;
+    const note = s.done ? ('Finished · ' + s.n + '/' + s.t)
+               : s.started ? (s.answered + ' of ' + s.t + ' answered')
+               : (s.t + ' question' + (s.t > 1 ? 's' : ''));
+    h += '<button class="prow' + (on ? ' pon' : '') + (s.done ? ' pdone' : '')
+       + '" data-sec="' + esc(s.sec) + '">'
+       + '<span class="pmark">' + (on ? G_OK : '') + '</span>'
+       + '<span class="plabel">' + esc(s.sec)
+       + ((D.secTitles||{})[s.sec] ? ' <em>' + esc(D.secTitles[s.sec]) + '</em>' : '')
+       + '</span>'
+       + '<span class="pnote">' + note + '</span>'
+       + (s.done ? '<span class="pbar"><i style="width:' + (s.t ? s.n/s.t*100 : 0)
+                 + '%"></i></span>' : '') + '</button>';
+  });
+  h += '</div>';
+
+  h += '<div class="pgo">'
+     + '<button class="pill go" id="pstart"' + (nq ? '' : ' disabled') + '>'
+     + (nq ? 'Start · ' + nq + ' question' + (nq > 1 ? 's' : '') : 'Pick a subchapter')
+     + '</button>'
+     + (p.left.length && p.left.length < p.secs.length
+        ? '<button class="link" id="pleft">Everything left</button>' : '')
+     + '<button class="link" id="pall">The whole paper</button>'
+     + '</div>';
+
+  if(p.done.length) h += '<p class="note">Finished subchapters keep their answers. Sitting '
+                       + 'one again replaces that score.</p>';
+  h += '</div>';
+
+  $('#quizview').innerHTML = h;
+  $('#rail').style.width = '0%';
+  $('#band').classList.add('off');
+  showResearch(false);
+  ['#back','#hintbtn','#hinttext','#redo','#next','#review','#retake','#pass2']
+    .forEach(k => $(k).classList.add('hide'));
+  $('#footer').classList.add('hide');
+
+  document.querySelectorAll('.prow').forEach(b => b.onclick = ()=>{
+    const k = b.dataset.sec, at = pickSel.indexOf(k);
+    if(at >= 0) pickSel.splice(at, 1); else pickSel.push(k);
+    picker();
+  });
+  const start = $('#pstart');
+  if(start) start.onclick = ()=> beginSitting(pickSel.slice());
+  const left = $('#pleft');
+  if(left) left.onclick = ()=> beginSitting(p.left.map(s=>s.sec));
+  $('#pall').onclick = ()=> beginSitting(p.secs.map(s=>s.sec));
+  renderScore();
+  centreBlock();
+}
+
+/* ONE DIRECTION FROM HERE. A sitting starts at the top of its own list with a clean phase —
+   the answers from any earlier sitting stay in `S.answers` untouched, they are simply not in
+   `active()` any more, which is what lets him come back to a section a fortnight later
+   without the page having kept a second copy of anything. */
+function beginSitting(secs){
+  if(!secs.length) return;
+  S.only = secs;
+  S.phase = 1; S.p2list = null; S.done = false; S.reviewing = false; S.hintOpen = false;
+  // RE-SITTING A FINISHED SECTION MUST ACTUALLY RE-SIT IT. Without this it would open on the
+  // end card, every question already answered, and the "Start" he just pressed would look
+  // broken. Its old answers go, and `sat` with them, because that section is now in progress.
+  secs.forEach(sec=>{
+    if(S.sat[sec]){
+      secQs(sec).forEach(i=>{ delete S.answers[qk(i)]; delete S.pass2[qk(i)]; });
+      delete S.sat[sec];
+    }
+  });
+  const l = runList();
+  S.i = l.length ? l[0] : 0;
+  pickSel = null;
+  lastShown = -1;
+  save(); draw(); window.scrollTo(0,0);
 }
 
 function end(){
@@ -1718,6 +2087,33 @@ function end(){
     h += '<p class="hist">Earlier attempts: ' + S.history.slice().reverse()
         .map(a=>'<span>'+a.score+'/'+a.total+' on '+when(a.at)+'</span>').join(' · ') + '</p>';
   }
+  /* THE PAPER, UNDER THE SITTING (08-16). The score above is this evening's — one subchapter,
+     or two. This is the exam: every subchapter, what it scored or that it is still waiting,
+     and one total across the ones he has actually sat. Absent on an unsectioned page. */
+  if(sectioned()){
+    const p = paperStat();
+    h += '<div class="topics parts"><h3>This exam</h3>';
+    p.secs.forEach(s=>{
+      const sitting = S.only && S.only.indexOf(s.sec) >= 0;
+      h += '<div class="trow"><span>' + esc(s.sec)
+         + (sitting ? '<em> just sat</em>' : '') + '</span>'
+         + '<span class="n">' + (s.done ? s.n + '/' + s.t : '—') + '</span>'
+         + '<span class="tbar' + (s.done ? '' : ' waiting') + '"><i style="width:'
+         + (s.done && s.t ? s.n/s.t*100 : 0) + '%"></i></span></div>';
+    });
+    h += '<p class="ptotal"><b>' + p.n + ' / ' + p.t + '</b> '
+       + (p.all ? 'the whole paper' :
+          'across ' + p.done.length + ' of ' + p.secs.length + ' subchapters · '
+          + p.left.reduce((a,s)=>a+s.t,0) + ' question'
+          + (p.left.reduce((a,s)=>a+s.t,0) > 1 ? 's' : '') + ' still to sit')
+       + '</p></div>';
+    if(p.left.length) h += '<p class="note"><button class="link" id="more">'
+                         + 'Sit another subchapter</button> — ' + p.left.map(s=>esc(s.sec)).join(', ')
+                         + ' left</p>';
+    else h += '<p class="note"><button class="link" id="more">Choose subchapters</button> — '
+            + 'every one is done; sitting one again replaces its score.</p>';
+  }
+
   const nskip = Object.keys(S.skipped||{}).length;
   if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
               + '<button class="link" id="unskip">put them back</button></p>';
@@ -1728,6 +2124,9 @@ function end(){
   $('#quizview').innerHTML = h;
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  const m = $('#more');
+  if(m) m.onclick = ()=>{ S.only = null; S.done = false; S.reviewing = false;
+                          pickSel = null; save(); draw(); window.scrollTo(0,0); };
   $('#rail').style.width = '100%';
   $('#band').classList.add('off');
   showResearch(false);
@@ -1738,11 +2137,16 @@ function end(){
   $('#redo').classList.add('hide');
   $('#next').classList.add('hide');
   $('#review').classList.remove('hide');
-  $('#review').textContent = 'Review quiz';
+  $('#review').textContent = 'Review ' + NOUN.toLowerCase();
   $('#retake').classList.remove('hide');
   // No wrong answers left to retry → no button at all, which is also what stops the second
   // pass looping into a third: anything answered on pass two leaves pending2() for good.
   $('#pass2').classList.toggle('hide', pending2().length === 0);
+  /* THE WRITTEN HALF IS THE PRIMARY WAY OUT OF AN EXAM'S END CARD (08-16, his ask): *"the
+     main button after the end of a large mcq for exams should be to move on onto frqs."* So
+     the second pass keeps its place but loses the accent — it is still there, it is just no
+     longer what the page is pointing at. A quiz has no written half and is unchanged. */
+  $('#towritten').classList.toggle('hide', !(D.frq && D.frq.length));
   renderScore();
   lastShown = -1;
   centreBlock();
@@ -1838,7 +2242,7 @@ function hintLine(p){
 function scoreMarkdown(){
   if(!S.done) return '';
   const p = scoreParts();
-  return '**Quiz:** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
+  return '**' + NOUN + ':** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
        + (p.red ? ', +' + p.red + ' redeemed' : '') + ', ' + p.wrong + ' wrong'
        + (p.skipped ? ', ' + p.skipped + ' skipped' : '') + ' · ' + when(S.at)
        + '\n**Hints:** ' + hintLine(p);
@@ -1904,6 +2308,7 @@ function step(dir){
 }
 $('#next').onclick = ()=> step(1);
 $('#back').onclick = ()=> step(-1);
+$('#towritten').onclick = ()=> setTab('frq');
 $('#review').onclick = ()=>{ S.reviewing = !S.reviewing; draw(); };
 /* THE SECOND PASS — the preferred way out of the end card, and the one that keeps
    everything. It re-runs only what he got wrong, on a list frozen at the moment he presses
@@ -1920,9 +2325,15 @@ $('#pass2').onclick = ()=>{
    history first so nothing is lost, and the questions he deleted or starred stay that way —
    they are decisions about the quiz, not part of one attempt at it. */
 $('#retake').onclick = ()=>{
-  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length});
+  // ON A SECTIONED PAPER THE HISTORY LINE IS THE PAPER, not the last sitting — the same
+  // reasoning as `save()`. `blank()` returns `only: null` and `sat: {}`, so a retake drops
+  // every sitting at once and lands back on the picker, which is what "retake the exam" means.
+  if(S.done){ const p = D.parts ? paperStat() : null;
+              S.history.push({at:S.at, score: p ? p.n : score(S),
+                              total: p ? p.t : active(S).length}); }
   const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
   S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  pickSel = null;
   lastShown = -1;
   save(); syncTabs(); renderScore(); draw();
 };
@@ -2123,11 +2534,34 @@ function researchMarkdown(){
   });
   return out.replace(/\n+$/, '\n');
 }
-/* ITS OWN HEADING, and the heading text is load-bearing. `notion_board.py notes` splits this
-   section out of the row body by name and hands it to the generator as PROMPT, while
-   everything else on the row stays a source. Rename it here and it silently becomes material
-   again — which is the bug this whole split exists to fix. */
+/* TWO HEADINGS WHOSE TEXT IS LOAD-BEARING. `notion_board.py notes` splits both of these out
+   of the row body BY NAME — `split_fixes()`, and `FIX_HEADING` / `SKIP_HEADING` there are
+   these two strings. Everything else on the row stays material. Rename one here and it
+   silently becomes material again, which is the bug this whole split exists to fix. */
 const FIXHEAD = 'Fix these questions';
+const SKIPHEAD = 'Skipped';
+
+/* THE CARDS HE DELETED, and this section exists to keep them OUT of things (08-14, his rule:
+   skipped cards *"are never reformed and never appear"*, on any exam, v2 or v3).
+
+   It is the one place on this page where a skipped question is written down. Everywhere else
+   they are gone by design — out of the run, out of the score, out of the denominator, out of
+   the sheet — because they were taken out of the quiz. But "gone" only ever meant gone from
+   THIS browser: the exam is built from what he pastes into Notion, so a card he deleted here
+   was invisible to it and perfectly likely to come back as an exam question. This is the one
+   line of the paste that stops that, and `remember_skipped()` files it permanently.
+
+   It says so in the heading's own body text because it will be read by a person too, and a
+   bare list of questions under his notes reads exactly like a list of things to be tested. */
+function skipMarkdown(){
+  const list = markedList(S.skipped);
+  if(!list.length) return '';
+  let out = '\n\n## ' + SKIPHEAD + '\n\n'
+          + '_Deleted while taking the quiz. Not material — these are the ideas to stop '
+          + 'asking about._\n';
+  list.forEach(x => { out += '\n### ' + x.n + '. ' + x.q.q + '\n'; });
+  return out.replace(/\n+$/, '\n');
+}
 function fixMarkdown(){
   const list = fixList();
   if(!list.length) return '';
@@ -2155,6 +2589,7 @@ function fullMarkdown(){
        + markedMarkdown(markedList(S.unsure), 'Needs work')
        + researchMarkdown()
        + fixMarkdown()
+       + skipMarkdown()
        + frqMarkdown();
 }
 
@@ -2194,6 +2629,17 @@ function fullHTML(){
          + '<p><strong>Answer:</strong> ' + esc(x.q.options[x.q.correct]) + '</p>'
          + '<p><strong>Change it to:</strong> ' + esc(x.r.f.trim()) + '</p>';
     });
+  }
+  /* The HTML flavour has to carry this too. It goes on the clipboard INSTEAD of the markdown
+     whenever there is a pasted image anywhere on the quiz, so anything missing here is
+     missing from the Notion row on exactly those weeks — and a skipped card that does not
+     reach the row is a card the exam is free to ask about again. */
+  const skips = markedList(S.skipped);
+  if(skips.length){
+    h += '<h2>' + SKIPHEAD + '</h2>'
+       + '<p><em>Deleted while taking the quiz. Not material — these are the ideas to stop '
+       + 'asking about.</em></p>';
+    skips.forEach(x => { h += '<h3>' + x.n + '. ' + esc(x.q.q) + '</h3>'; });
   }
   const fm = frqMarkdown();
   if(fm) h += tinyMd(fm);

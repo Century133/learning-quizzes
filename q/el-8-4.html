@@ -122,8 +122,8 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
  border:1px solid transparent;border-radius:var(--radius);padding:var(--opad);
  color:var(--text);font:inherit;font-size:var(--osize);cursor:pointer;
  transition:background .16s ease,border-color .16s ease,opacity .16s ease}
-.opt:hover:not(:disabled){background:var(--surface-hi)}
-.opt:disabled{cursor:default}
+.opt:hover:not(.locked){background:var(--surface-hi)}
+.opt.locked{cursor:default}
 .line{display:flex;gap:12px;align-items:flex-start;line-height:1.4}
 .line .k{color:var(--muted);min-width:1.25em}
 .line .t{flex:1}
@@ -176,7 +176,7 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
 .q,.qq,.why,.lab,.hinttext,.rline,.tag,.sheet,.topics,.legend{
  user-select:text;-webkit-user-select:text}
 .opt{user-select:none;-webkit-user-select:none}
-.opt:disabled,.opt:disabled *{user-select:text;-webkit-user-select:text;cursor:auto}
+.opt.locked,.opt.locked *{user-select:text;-webkit-user-select:text;cursor:auto}
 .star,.dots,.tab,button.pill{user-select:none;-webkit-user-select:none}
 
 /* ---- HIS RESEARCH, one box per question ----
@@ -294,6 +294,39 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .tbar{grid-column:1/-1;height:3px;background:var(--line);border-radius:999px;
  overflow:hidden}
 .tbar i{display:block;height:100%;background:var(--text)}
+/* A subchapter he has not sat gets a rail with nothing in it rather than a 0% bar, because a
+   bar at zero reads as "scored nothing" and the whole point is that it has not been asked. */
+.tbar.waiting{background:repeating-linear-gradient(90deg,var(--line) 0 3px,transparent 3px 6px)}
+.topics.parts .trow em{font-style:normal;color:var(--muted);font-size:.8rem;margin-left:8px}
+.ptotal{margin:14px 0 0;color:var(--muted);font-size:.88rem}
+.ptotal b{color:var(--text);font-variant-numeric:tabular-nums;font-size:1.05rem;
+ font-weight:600;margin-right:8px}
+
+/* ---- THE SUBCHAPTER PICKER (08-16) ----
+   Deliberately the same furniture as the end card — same heading treatment, same rails, same
+   tabular numbers — because it IS the end card most of the time he sees it: he opens the link
+   and this screen tells him what he has scored and what is left. A separate visual language
+   for "choose" and "review" would make one screen look like two. */
+.picker{padding:2px 0 8px}
+.picker h3{font-size:1.35rem;font-weight:600;letter-spacing:-.01em;margin:0 0 8px}
+.psub{color:var(--muted);font-size:.9rem;margin:0 0 22px;max-width:46ch}
+.pscore{margin:0 0 22px}
+.pscore b{font-size:1.5rem;font-variant-numeric:tabular-nums;font-weight:600}
+.pscore span{color:var(--muted);font-size:.88rem;margin-left:10px}
+.prows{display:flex;flex-direction:column;gap:8px;margin:0 0 24px}
+.prow{display:grid;grid-template-columns:22px auto 1fr;gap:4px 12px;align-items:center;
+ width:100%;text-align:left;font:inherit;cursor:pointer;padding:13px 16px;
+ border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--text)}
+.prow:hover{border-color:var(--muted)}
+.prow.pon{border-color:var(--accent)}
+.pmark{color:var(--accent);font-size:.95rem;line-height:1}
+.plabel{font-variant-numeric:tabular-nums;font-weight:600}
+.plabel em{font-style:normal;font-weight:400;color:var(--muted);margin-left:8px}
+.pnote{color:var(--muted);font-size:.86rem;justify-self:end}
+.pbar{grid-column:2/-1;height:3px;background:var(--line);border-radius:999px;overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--text)}
+.pgo{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)}
 
 /* ---- review list ---- */
 .rev{padding:6px 0 36px}
@@ -389,6 +422,27 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
  color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
  padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.6;outline:none;margin-top:16px}
 .frqin:focus{border-color:var(--accent)}
+/* THE STICKY HEADER WAS EATING THE CLICK (08-16). It is 49px tall with z-index 5, so the top
+   strip of a box scrolled under it is dead to the mouse — and the top strip is exactly where
+   the "Write your answer." placeholder is, so the box reads as broken. His words: *"I cant
+   even click the textbox for this exam."* `scroll-margin-top` keeps the card clear of the
+   header whenever anything scrolls it into view; the click handler on the card is the belt to
+   that braces, since he can also scroll there by hand. */
+.frq{scroll-margin-top:64px}
+
+/* The only thing on this page allowed to shout. It sits over everything because a saved
+   answer is the one promise the page makes. */
+#savewarn{position:fixed;left:12px;right:12px;bottom:12px;z-index:60;padding:12px 16px;
+ border-radius:12px;font-size:.86rem;line-height:1.4;background:#7f1d1d;color:#fff;
+ box-shadow:0 6px 24px rgba(0,0,0,.4)}
+#savewarn.hide{display:none}
+
+/* WHERE FORWARD MEANS "THE NEXT BLANK ONE". Reaching the end of the list with holes in it
+   sends him back to the first one — right, and invisible until 08-16, when he read it as the
+   paper losing his place: *"when I thought I was done I wasnt… questions are ghosting until
+   the end."* The counter says so now, and the rail stops pretending the run is nearly over. */
+.fillnote{display:inline-flex;align-items:center;gap:6px;color:var(--accent);
+ font-size:.7rem;letter-spacing:.07em;text-transform:uppercase}
 .frqin::placeholder{color:var(--muted);opacity:.7}
 .acts.inline{margin-top:12px}
 .rubric{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
@@ -567,12 +621,13 @@ Self-control is finite - one hard task leaves less for the next"></textarea>
     <button class="pill ghost hide" id="retake">Retake</button>
     <span class="spacer"></span>
     <button class="pill hide" id="review">Review quiz</button>
-    <button class="pill primary hide" id="pass2">2nd Pass</button>
+    <button class="pill ghost hide" id="pass2">2nd Pass</button>
+    <button class="pill primary hide" id="towritten">Written half</button>
     <button class="pill primary" id="next">Next</button>
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "el-8-4", "title": "8.4 Conversational implicatures", "subtitle": "Chapter 8 · Pragmatics", "book": "EL", "hash": "6d55edb70b9a11c6", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "You tell a friend, 'This is a book about the history of China.' Which of these follow-up statements would create a direct logical contradiction with your first sentence?", "options": ["But you will probably find the subject matter boring.", "But it is not the case that this is a book.", "But I have not actually finished reading it yet.", "But it is actually a very short, concise summary."], "rationales": ["The reader's interest level is not an inherent fact of the sentence and does not contradict the literal description.", "An entailment is a necessary truth that cannot be denied without creating a logical clash with the original statement.", "Whether the speaker has finished the book is independent of the fact that the object is a book about China.", "The length of the book is a suggestion or implicature, not a logically required fact, so it can be denied."], "correct": 1, "hint": "look for the piece of information that is strictly guaranteed by the definition of the words used.", "topic": "Logical Entailment", "sec": "", "src": "", "link": "", "qid": "406eb9acd4"}, {"q": "If you say 'This is a book about the history of China' and later add 'but it is not long,' why is this second part acceptable to a listener?", "options": ["Because history books are usually expected to be short summaries.", "Because the literal definition of a book requires it to be at least two hundred pages.", "Because you are changing the subject of the sentence entirely.", "Because the idea that a history book is long is a suggestion that can be taken back."], "rationales": ["Common expectations often suggest history books are long, which is why the speaker might feel the need to clarify that this one is short.", "Length is not part of the literal definition of a book in this linguistic context, which is why the idea of it being long is just an implicature.", "The speaker is still discussing the same object but is clarifying a non-essential characteristic.", "Implicatures are cancellable, meaning you can deny the suggested meaning without contradicting the literal truth of the sentence."], "correct": 3, "hint": "consider how some meanings are just flexible suggestions rather than fixed requirements.", "topic": "Cancellable Meanings", "sec": "", "src": "", "link": "", "qid": "3a04439ffb"}, {"q": "A history enthusiast asks, 'Do you think I will like this book?' and you reply, 'This is a book about the history of China.' What is the listener most likely to conclude?", "options": ["They conclude that the book is objectively a masterpiece.", "They conclude that you have no opinion on the book.", "They conclude that you believe they will enjoy the book.", "They conclude that you are avoiding their question."], "rationales": ["The response suggests the book matches their interests, but it does not entail a statement about the book's universal quality.", "Providing a specific descriptive fact in response to an opinion question usually implies a calculated answer based on that fact.", "When the speaker knows the listener's preferences, they use relevant facts to imply a specific answer to a question.", "While the answer is indirect, the context of the listener's interests makes the intended meaning clear and relevant."], "correct": 2, "hint": "think about how knowing the listener's hobbies changes how they interpret your description.", "topic": "Contextual Influence", "sec": "", "src": "", "link": "", "qid": "95d008a05e"}, {"q": "Suppose you know a friend hates world history. When they ask if they will like a specific book, you say, 'This is a book about the history of China.' Why does the meaning change compared to telling a history fan the same thing?", "options": ["Because the literal meaning of the words changes based on who is listening.", "Because the friend is likely to misinterpret a very simple factual statement.", "Because 'history' is a subjective term that means different things to different people.", "Because the implied meaning depends on the specific context of the conversation."], "rationales": ["The literal facts (that it is a book about China) remain identical regardless of who is listening.", "The friend is actually interpreting the statement correctly by applying the context of their own known dislikes.", "The term 'history' remains consistent, but the 'implicature' or suggested opinion is what shifts.", "Implicatures are context-dependent and can shift from positive to negative based on the situation and participants."], "correct": 3, "hint": "identify the factor that allows the exact same sentence to convey opposite messages.", "topic": "Contextual Influence", "sec": "", "src": "", "link": "", "qid": "ddd1b64b2e"}, {"q": "Which of these remains true about the statement 'This is a book about the history of China' regardless of who you are talking to or what their interests are?", "options": ["The idea that the book was written by an expert historian.", "The fact that the object being discussed is a book.", "The assumption that the book is a very long read.", "The suggestion that the listener will find the book interesting."], "rationales": ["The sentence only identifies the subject matter, not the credentials of the author, which would be an outside assumption.", "Entailments are not context-dependent; they remain true as long as the sentence itself is true.", "Length is an implicature that can change or be cancelled, not a permanent fact of the sentence.", "Whether the book is interesting is a suggestion that changes depending on the person's interests."], "correct": 1, "hint": "focus on the constant, non-negotiable information that is always present.", "topic": "Logical Entailment", "sec": "", "src": "", "link": "", "qid": "ec95a572a9"}, {"q": "Why is a suggested meaning, such as 'I do not think you will like this,' referred to as a 'conversational' implicature?", "options": ["It refers to meanings that are accidentally suggested by a speaker who is not careful.", "It arises from the underlying rules people use to interact and understand each other.", "It only occurs in spoken conversations and never in written emails.", "It is a term used to describe a sentence that is literally false but socially polite."], "rationales": ["While they can be accidental, they are a structured part of how meaning is conveyed through conversational rules.", "These meanings are called conversational because they are generated by the logic of social interaction rather than dictionary definitions.", "Implicatures occur in all forms of communication, including writing, as long as there is an interaction between a sender and receiver.", "Implicatures are not about the truth or falsity of the literal words, but about the extra meaning added to them."], "correct": 1, "hint": "consider the social origin of these extra layers of meaning.", "topic": "Conversational Implicature", "sec": "", "src": "", "link": "", "qid": "686d12fe4c"}, {"q": "You tell a coworker, 'The report is on your desk.' They assume you have finished all the sections. How could you clarify your statement to show that the 'finished' part was just a suggestion and not a guaranteed fact?", "options": ["Argue that the definition of a 'report' does not require a conclusion.", "Add 'but I still need to write the conclusion' to the end of the sentence.", "Wait for them to find the unfinished sections and then explain.", "Apologize for lying about the report's location."], "rationales": ["This attempts to change the literal meaning of the word rather than addressing the suggested meaning of the interaction.", "By adding more information, you cancel the implicature that the report is complete without contradicting the fact that it is on the desk.", "This relies on the coworker's discovery rather than the linguistic property of cancelling a suggested meaning.", "Saying the report is on the desk is still a true statement, so there is no lie to apologize for."], "correct": 1, "hint": "think about how you can immediately qualify a statement to remove an assumption.", "topic": "Cancellable Meanings", "sec": "", "src": "", "link": "", "qid": "6bdf46971f"}, {"q": "In a professional email, why is it important to distinguish between what your words literally guarantee and what they might suggest to the reader?", "options": ["Because literal meanings are always more polite than suggested ones.", "Because using suggested meanings is a sign of poor writing and should be avoided.", "Because readers are legally required to only follow the literal definitions of words.", "Because suggestions can change based on the reader's perspective, while literal facts do not."], "rationales": ["Politeness is often achieved through indirect suggestions rather than blunt literal facts.", "Suggested meanings are a natural and necessary part of conversational rules, even in professional settings.", "Communication relies heavily on suggested meanings; laws and social norms often account for more than just literal definitions.", "Implicatures are context-dependent, meaning different readers might draw different conclusions from the same sentence."], "correct": 3, "hint": "reflect on how the same sentence might be read by different people.", "topic": "Conversational Implicature", "sec": "", "src": "", "link": "", "qid": "a3f690b25d"}, {"q": "Which of these best describes the relationship between the truth of a sentence and the suggestions it makes?", "options": ["A sentence is only true if every possible suggestion it creates is also true.", "If a suggestion is found to be false, the whole sentence is logically a lie.", "Truth only applies to spoken words, while suggestions apply to written ones.", "A sentence can be literally true even if the suggested meaning is false."], "rationales": ["Since suggestions change with context, it would be impossible for a sentence to be permanently true if this were the case.", "A lie involves a false entailment; a false implicature is simply a misleading or cancelled suggestion.", "Both spoken and written language have literal facts (entailments) and suggested meanings (implicatures).", "The truth of the literal statement (the entailments) is independent of whether the implicature is accurate in that situation."], "correct": 3, "hint": "evaluate whether a 'short' history book is still 'a book about history'.", "topic": "Logical Entailment", "sec": "", "src": "", "link": "", "qid": "0cde1ac3c1"}, {"q": "If someone asks for a job recommendation and you respond, 'He has very neat handwriting,' what is the most likely reason the listener thinks this is a bad recommendation?", "options": ["Because the listener is ignoring the literal fact that the person is organized.", "Because the sentence entails that the person is incapable of doing anything else.", "Because 'neat handwriting' is a literal synonym for 'bad employee' in business.", "Because you are providing a minor fact instead of discussing relevant job skills."], "rationales": ["While the listener might see it as organization, the social context of a recommendation makes them look for more significant implied meanings.", "Saying he has neat handwriting does not logically require that he has no other skills; it just fails to mention them.", "There is no literal linguistic rule that equates handwriting with employee quality; it is purely a suggested meaning.", "Conversational rules lead people to expect relevant information; providing an irrelevant detail implies that there are no relevant strengths to share."], "correct": 3, "hint": "consider why a listener expects you to say things that actually matter to their question.", "topic": "Conversational Implicature", "sec": "", "src": "", "link": "", "qid": "4acc6a5944"}], "hasSheet": true, "frq": [], "notebook": "https://notebooklm.google.com/notebook/2593f308-1e5d-4d51-ace7-2db8cbc5e8ff/artifact/1e58eeaa-c6e8-434a-a250-a360b9965a29", "root": "../index.html", "tab": "quiz", "sheet": "## 1. Logical Entailment\nThe relationship where the truth of one sentence guarantees the truth of another.\n\n### Key terms\n1. **Entailment**: A meaning that is necessarily true based on the preceding sentence.\n   1. Sentence: \"This is a book about the history of China\" $\\rightarrow$ Entailment: \"This is a book.\"\n2. **Non-cancellable**: A meaning that cannot be denied without creating a logical contradiction.\n   1. $\\perp$ This is a book about the history of China, but it is not the case that this is a book. (Note: $\\perp$ denotes logical contradiction).\n\n## 2. Cancellable Meanings\nThe study of meanings that can be retracted or denied without creating a logical contradiction.\n\n### Key terms\n1. **Implicature**: A non-entailment that is not necessarily true even if the sentence itself is true.\n   1. Sentence (2b): \"This is a book about the history of China, but it is not the case that this book is long.\"\n2. **Cancellable**: The ability to negate a suggested meaning without resulting in a contradiction.\n   1. Meaning \"This book is long\" can be retracted and clarified as \"a short concise summary.\"\n\n## 3. Contextual Influence\nThe way surrounding circumstances and speaker knowledge determine the meaning of an utterance.\n\n### Key terms\n1. **Context-dependent**: A property where a meaning changes based on the situation or participants.\n   1. Context: Josh likes history $\\rightarrow$ Implicature: \"I think you will like this book\"; Context: Josh dislikes history $\\rightarrow$ Implicature: \"I do not think you will like this book.\"\n2. **Context-independent**: A meaning that remains constant regardless of the environment or speaker.\n   1. Entailment \"This is a book\" remains constant regardless of listener traits or environmental context.\n\n## 4. Conversational Implicature\nThe specific type of implied meaning that stems from the application of dialogue-based norms.\n\n### Key terms\n1. **Conversational rules**: The underlying principles that allow implicatures to arise during interaction.\n\n### Names and studies\n1. **H. P. Grice (1975)** — Authored \"Logic and conversation\" to show that implicatures arise out of specific conversational rules."}</script>
+<script id="quiz-data" type="application/json">{"id": "el-8-4", "title": "8.4 Conversational implicatures", "subtitle": "Chapter 8 · Pragmatics", "book": "EL", "hash": "6d55edb70b9a11c6", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "You tell a friend, 'This is a book about the history of China.' Which of these follow-up statements would create a direct logical contradiction with your first sentence?", "options": ["But you will probably find the subject matter boring.", "But it is not the case that this is a book.", "But I have not actually finished reading it yet.", "But it is actually a very short, concise summary."], "rationales": ["The reader's interest level is not an inherent fact of the sentence and does not contradict the literal description.", "An entailment is a necessary truth that cannot be denied without creating a logical clash with the original statement.", "Whether the speaker has finished the book is independent of the fact that the object is a book about China.", "The length of the book is a suggestion or implicature, not a logically required fact, so it can be denied."], "correct": 1, "hint": "look for the piece of information that is strictly guaranteed by the definition of the words used.", "topic": "Logical Entailment", "sec": "", "src": "", "link": "", "qid": "406eb9acd4"}, {"q": "If you say 'This is a book about the history of China' and later add 'but it is not long,' why is this second part acceptable to a listener?", "options": ["Because history books are usually expected to be short summaries.", "Because the literal definition of a book requires it to be at least two hundred pages.", "Because you are changing the subject of the sentence entirely.", "Because the idea that a history book is long is a suggestion that can be taken back."], "rationales": ["Common expectations often suggest history books are long, which is why the speaker might feel the need to clarify that this one is short.", "Length is not part of the literal definition of a book in this linguistic context, which is why the idea of it being long is just an implicature.", "The speaker is still discussing the same object but is clarifying a non-essential characteristic.", "Implicatures are cancellable, meaning you can deny the suggested meaning without contradicting the literal truth of the sentence."], "correct": 3, "hint": "consider how some meanings are just flexible suggestions rather than fixed requirements.", "topic": "Cancellable Meanings", "sec": "", "src": "", "link": "", "qid": "3a04439ffb"}, {"q": "A history enthusiast asks, 'Do you think I will like this book?' and you reply, 'This is a book about the history of China.' What is the listener most likely to conclude?", "options": ["They conclude that the book is objectively a masterpiece.", "They conclude that you have no opinion on the book.", "They conclude that you believe they will enjoy the book.", "They conclude that you are avoiding their question."], "rationales": ["The response suggests the book matches their interests, but it does not entail a statement about the book's universal quality.", "Providing a specific descriptive fact in response to an opinion question usually implies a calculated answer based on that fact.", "When the speaker knows the listener's preferences, they use relevant facts to imply a specific answer to a question.", "While the answer is indirect, the context of the listener's interests makes the intended meaning clear and relevant."], "correct": 2, "hint": "think about how knowing the listener's hobbies changes how they interpret your description.", "topic": "Contextual Influence", "sec": "", "src": "", "link": "", "qid": "95d008a05e"}, {"q": "Suppose you know a friend hates world history. When they ask if they will like a specific book, you say, 'This is a book about the history of China.' Why does the meaning change compared to telling a history fan the same thing?", "options": ["Because the literal meaning of the words changes based on who is listening.", "Because the friend is likely to misinterpret a very simple factual statement.", "Because 'history' is a subjective term that means different things to different people.", "Because the implied meaning depends on the specific context of the conversation."], "rationales": ["The literal facts (that it is a book about China) remain identical regardless of who is listening.", "The friend is actually interpreting the statement correctly by applying the context of their own known dislikes.", "The term 'history' remains consistent, but the 'implicature' or suggested opinion is what shifts.", "Implicatures are context-dependent and can shift from positive to negative based on the situation and participants."], "correct": 3, "hint": "identify the factor that allows the exact same sentence to convey opposite messages.", "topic": "Contextual Influence", "sec": "", "src": "", "link": "", "qid": "ddd1b64b2e"}, {"q": "Which of these remains true about the statement 'This is a book about the history of China' regardless of who you are talking to or what their interests are?", "options": ["The idea that the book was written by an expert historian.", "The fact that the object being discussed is a book.", "The assumption that the book is a very long read.", "The suggestion that the listener will find the book interesting."], "rationales": ["The sentence only identifies the subject matter, not the credentials of the author, which would be an outside assumption.", "Entailments are not context-dependent; they remain true as long as the sentence itself is true.", "Length is an implicature that can change or be cancelled, not a permanent fact of the sentence.", "Whether the book is interesting is a suggestion that changes depending on the person's interests."], "correct": 1, "hint": "focus on the constant, non-negotiable information that is always present.", "topic": "Logical Entailment", "sec": "", "src": "", "link": "", "qid": "ec95a572a9"}, {"q": "Why is a suggested meaning, such as 'I do not think you will like this,' referred to as a 'conversational' implicature?", "options": ["It refers to meanings that are accidentally suggested by a speaker who is not careful.", "It arises from the underlying rules people use to interact and understand each other.", "It only occurs in spoken conversations and never in written emails.", "It is a term used to describe a sentence that is literally false but socially polite."], "rationales": ["While they can be accidental, they are a structured part of how meaning is conveyed through conversational rules.", "These meanings are called conversational because they are generated by the logic of social interaction rather than dictionary definitions.", "Implicatures occur in all forms of communication, including writing, as long as there is an interaction between a sender and receiver.", "Implicatures are not about the truth or falsity of the literal words, but about the extra meaning added to them."], "correct": 1, "hint": "consider the social origin of these extra layers of meaning.", "topic": "Conversational Implicature", "sec": "", "src": "", "link": "", "qid": "686d12fe4c"}, {"q": "You tell a coworker, 'The report is on your desk.' They assume you have finished all the sections. How could you clarify your statement to show that the 'finished' part was just a suggestion and not a guaranteed fact?", "options": ["Argue that the definition of a 'report' does not require a conclusion.", "Add 'but I still need to write the conclusion' to the end of the sentence.", "Wait for them to find the unfinished sections and then explain.", "Apologize for lying about the report's location."], "rationales": ["This attempts to change the literal meaning of the word rather than addressing the suggested meaning of the interaction.", "By adding more information, you cancel the implicature that the report is complete without contradicting the fact that it is on the desk.", "This relies on the coworker's discovery rather than the linguistic property of cancelling a suggested meaning.", "Saying the report is on the desk is still a true statement, so there is no lie to apologize for."], "correct": 1, "hint": "think about how you can immediately qualify a statement to remove an assumption.", "topic": "Cancellable Meanings", "sec": "", "src": "", "link": "", "qid": "6bdf46971f"}, {"q": "In a professional email, why is it important to distinguish between what your words literally guarantee and what they might suggest to the reader?", "options": ["Because literal meanings are always more polite than suggested ones.", "Because using suggested meanings is a sign of poor writing and should be avoided.", "Because readers are legally required to only follow the literal definitions of words.", "Because suggestions can change based on the reader's perspective, while literal facts do not."], "rationales": ["Politeness is often achieved through indirect suggestions rather than blunt literal facts.", "Suggested meanings are a natural and necessary part of conversational rules, even in professional settings.", "Communication relies heavily on suggested meanings; laws and social norms often account for more than just literal definitions.", "Implicatures are context-dependent, meaning different readers might draw different conclusions from the same sentence."], "correct": 3, "hint": "reflect on how the same sentence might be read by different people.", "topic": "Conversational Implicature", "sec": "", "src": "", "link": "", "qid": "a3f690b25d"}, {"q": "Which of these best describes the relationship between the truth of a sentence and the suggestions it makes?", "options": ["A sentence is only true if every possible suggestion it creates is also true.", "If a suggestion is found to be false, the whole sentence is logically a lie.", "Truth only applies to spoken words, while suggestions apply to written ones.", "A sentence can be literally true even if the suggested meaning is false."], "rationales": ["Since suggestions change with context, it would be impossible for a sentence to be permanently true if this were the case.", "A lie involves a false entailment; a false implicature is simply a misleading or cancelled suggestion.", "Both spoken and written language have literal facts (entailments) and suggested meanings (implicatures).", "The truth of the literal statement (the entailments) is independent of whether the implicature is accurate in that situation."], "correct": 3, "hint": "evaluate whether a 'short' history book is still 'a book about history'.", "topic": "Logical Entailment", "sec": "", "src": "", "link": "", "qid": "0cde1ac3c1"}, {"q": "If someone asks for a job recommendation and you respond, 'He has very neat handwriting,' what is the most likely reason the listener thinks this is a bad recommendation?", "options": ["Because the listener is ignoring the literal fact that the person is organized.", "Because the sentence entails that the person is incapable of doing anything else.", "Because 'neat handwriting' is a literal synonym for 'bad employee' in business.", "Because you are providing a minor fact instead of discussing relevant job skills."], "rationales": ["While the listener might see it as organization, the social context of a recommendation makes them look for more significant implied meanings.", "Saying he has neat handwriting does not logically require that he has no other skills; it just fails to mention them.", "There is no literal linguistic rule that equates handwriting with employee quality; it is purely a suggested meaning.", "Conversational rules lead people to expect relevant information; providing an irrelevant detail implies that there are no relevant strengths to share."], "correct": 3, "hint": "consider why a listener expects you to say things that actually matter to their question.", "topic": "Conversational Implicature", "sec": "", "src": "", "link": "", "qid": "4acc6a5944"}], "hasSheet": true, "parts": false, "secTitles": {}, "reserve": 0, "frq": [], "notebook": "https://notebooklm.google.com/notebook/2593f308-1e5d-4d51-ace7-2db8cbc5e8ff/artifact/1e58eeaa-c6e8-434a-a250-a360b9965a29", "root": "../index.html", "tab": "quiz", "sheet": "## 1. Logical Entailment\nThe relationship where the truth of one sentence guarantees the truth of another.\n\n### Key terms\n1. **Entailment**: A meaning that is necessarily true based on the preceding sentence.\n   1. Sentence: \"This is a book about the history of China\" $\\rightarrow$ Entailment: \"This is a book.\"\n2. **Non-cancellable**: A meaning that cannot be denied without creating a logical contradiction.\n   1. $\\perp$ This is a book about the history of China, but it is not the case that this is a book. (Note: $\\perp$ denotes logical contradiction).\n\n## 2. Cancellable Meanings\nThe study of meanings that can be retracted or denied without creating a logical contradiction.\n\n### Key terms\n1. **Implicature**: A non-entailment that is not necessarily true even if the sentence itself is true.\n   1. Sentence (2b): \"This is a book about the history of China, but it is not the case that this book is long.\"\n2. **Cancellable**: The ability to negate a suggested meaning without resulting in a contradiction.\n   1. Meaning \"This book is long\" can be retracted and clarified as \"a short concise summary.\"\n\n## 3. Contextual Influence\nThe way surrounding circumstances and speaker knowledge determine the meaning of an utterance.\n\n### Key terms\n1. **Context-dependent**: A property where a meaning changes based on the situation or participants.\n   1. Context: Josh likes history $\\rightarrow$ Implicature: \"I think you will like this book\"; Context: Josh dislikes history $\\rightarrow$ Implicature: \"I do not think you will like this book.\"\n2. **Context-independent**: A meaning that remains constant regardless of the environment or speaker.\n   1. Entailment \"This is a book\" remains constant regardless of listener traits or environmental context.\n\n## 4. Conversational Implicature\nThe specific type of implied meaning that stems from the application of dialogue-based norms.\n\n### Key terms\n1. **Conversational rules**: The underlying principles that allow implicatures to arise during interaction.\n\n### Names and studies\n1. **H. P. Grice (1975)** — Authored \"Logic and conversation\" to show that implicatures arise out of specific conversational rules."}</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -621,9 +676,14 @@ function srcName(g){ return SRC[g] || ''; }
    `skipped` usable later as a permanent exclusion list when exam reuse is built — see qid()
    in quizpage.py. v1 states are migrated once, on load. */
 function qk(i){ return D.questions[i].qid; }
+/* `only` and `sat` ARE THE SECTIONED EXAM (08-16), and both are inert unless the page was
+   built with parts on. `only` is the list of subchapters THIS sitting covers — null means he
+   has not chosen yet, which is what puts the picker on screen. `sat` records which
+   subchapters he has finished, and nothing else: a section's score is always recomputed from
+   `answers`, never stored, so there is exactly one place a number can come from. */
 function blank(){ return {v:2, hash:D.hash, i:0, answers:{}, pass2:{}, skipped:{}, starred:{},
                           unsure:{}, hints:{}, phase:1, p2list:null, done:false, at:null,
-                          shuf:{}, history:[]}; }
+                          shuf:{}, history:[], only:null, sat:{}, promoted:{}}; }
 function migrate(s){
   // v1 keyed every map on the array index. The hash matches, so the indices are still valid
   // and this is a straight re-key — done once, then never again.
@@ -667,6 +727,12 @@ function load(){
     if(!s.hints) s.hints = {};
     if(!s.pass2) s.pass2 = {};
     if(!s.phase) s.phase = 1;
+    // Absent on every attempt saved before 08-16, and `only: null` is exactly right for one:
+    // it means "not chosen", so an attempt in progress on a paper that has just gained the
+    // picker resumes over the whole paper, which is what it was.
+    if(s.only === undefined) s.only = null;
+    if(!s.sat) s.sat = {};
+    if(!s.promoted) s.promoted = {};
     // Not carried across a rebuild on purpose: blank() empties it. A stored order describes a
     // set of options that may no longer be the same length — optOrder() throws out any that
     // no longer fit, so a stale one is harmless anyway.
@@ -674,14 +740,89 @@ function load(){
     return s;
   }catch(e){ return blank(); }
 }
+/* THE ATTEMPT MUST NEVER FAIL TO SAVE IN SILENCE (08-16). `save()` swallowed every exception,
+   and the one that actually happens is QuotaExceededError: the research box keeps pasted
+   images in localStorage, and once the origin is full EVERY later write is refused — so his
+   answers stopped being recorded while the page carried on as if they were. His report was
+   *"I feel I did answer some of these questions and yet they show up again"*, which is exactly
+   what a refused write looks like from the outside. It now says so, on screen, and keeps
+   saying so until a write succeeds. */
+let saveBroken = false;
+function saveFailed(on){
+  if(on === saveBroken) return;
+  saveBroken = on;
+  let el = $('#savewarn');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'savewarn';
+    document.body.appendChild(el);
+  }
+  el.textContent = 'This browser is out of room — your answers are NOT being saved. '
+                 + 'Remove a pasted image from the research box to free some up.';
+  el.classList.toggle('hide', !on);
+}
 function save(){
-  S.meta = {title:D.title, subtitle:D.subtitle, book:D.book, total:active(S).length,
-            at:S.at, done:S.done, score:score(S)};
-  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+  // ON A SECTIONED PAPER `meta` DESCRIBES THE PAPER, NOT THE SITTING. It is read in exactly
+  // one place — `load()`, when the questions have been rebuilt and the old answers can no
+  // longer be scored — and what belongs in that history line is "he got 24 of 32 on this
+  // exam", not "he got 14 of 16 on the half of it he happened to sit last."
+  const pp = D.parts ? paperStat() : null;
+  S.meta = {title:D.title, subtitle:D.subtitle, book:D.book,
+            total: pp ? pp.t : active(S).length,
+            at:S.at, done:S.done, score: pp ? pp.n : score(S)};
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); saveFailed(false); }
+  catch(e){ saveFailed(true); }
 }
 /* Skipped questions leave the run entirely — out of the count, out of the denominator,
-   out of the topic breakdown. Anything less makes "8 / 10" a lie about a quiz of nine. */
-function active(s){ return D.questions.map((_,i)=>i).filter(i => !(s.skipped||{})[qk(i)]); }
+   out of the topic breakdown. Anything less makes "8 / 10" a lie about a quiz of nine.
+
+   THE SECTION FILTER RIDES HERE AND NOWHERE ELSE (08-16). `active()` is what the run list,
+   the score, the second pass, the end card and the review list are all built on, so putting
+   the sitting's subchapters into this one function is what makes a half-paper behave exactly
+   like a whole one — one direction, one end card, one second pass — with no branch anywhere
+   downstream. `only: null` (not chosen, or a page built without parts) filters nothing. */
+function active(s){
+  const only = D.parts ? (s.only || null) : null;
+  return D.questions.map((_,i)=>i).filter(i => onPaper(s, i)
+    && (!only || only.indexOf(D.questions[i].sec) >= 0));
+}
+/* ---- THE RESERVES (08-16) ------------------------------------------------------------
+   His ask: *"if 1 question is skipped, another one is replaced in that section about it… you
+   have a quota, so you should also create stockpiles (say 2 extra questions per section that
+   immediately replace a skipped question)."*
+
+   `D.reserve` is how many per section were written beyond the quota. They are the LAST ones
+   of their section in build order, which is not arbitrary: `section_pool()` deals spots down
+   his tag priority, so a section's tail is the bottom of the list it could afford to lose.
+
+   A RESERVE IS NOT A QUESTION YET. It is out of the run, out of the denominator and out of
+   every table until a skip in its own section calls it in — at which point it is an ordinary
+   question and nothing downstream can tell it apart. Promotion is recorded on the qid, so it
+   survives a reload and cannot be handed out twice. Skipping with none left behaves exactly
+   as it always did: the paper is one question shorter. */
+function reserveIds(sec){
+  if(!(D.reserve > 0)) return [];
+  const l = D.questions.map((_,i)=>i).filter(i => D.questions[i].sec === sec);
+  return l.slice(Math.max(0, l.length - D.reserve));
+}
+function isReserve(i){
+  const sec = D.questions[i].sec;
+  return !!sec && reserveIds(sec).indexOf(i) >= 0;
+}
+/* Skipped or an unpromoted reserve — the two ways a question is not part of the paper. One
+   predicate so the run, the score, the picker and the section tables can never disagree. */
+function onPaper(s, i){
+  if((s.skipped||{})[qk(i)]) return false;
+  return !isReserve(i) || !!(s.promoted||{})[qk(i)];
+}
+/* Called the instant a question is skipped. Returns the promoted index, or -1. */
+function promoteReserve(sec){
+  if(!sec) return -1;
+  const next = reserveIds(sec).find(i => !S.promoted[qk(i)] && !S.skipped[qk(i)]);
+  if(next === undefined) return -1;
+  S.promoted[qk(next)] = true;
+  return next;
+}
 function ans(i){ return S.answers[qk(i)]; }
 function ans2(i){ return S.pass2[qk(i)]; }
 function firstRight(i){ return ans(i) === D.questions[i].correct; }
@@ -705,6 +846,59 @@ function runList(){
   return active(S);
 }
 function pick(i){ return S.phase === 2 ? ans2(i) : ans(i); }
+
+/* ---- SUBCHAPTERS AS SITTINGS (08-16) -------------------------------------------------
+   His ask: *"a way to section off exams… such that I'm able to practice only one section or
+   maybe two sections of an exam created because of shortened time"*, and then *"the option to
+   do those other sub chapters that I haven't done at a later date, or just display the score
+   of the subsections that I have got done."*
+
+   A QUESTION BELONGS TO ONE SUBCHAPTER — `q.sec`, which every exam question already carries.
+   A cross-section question carries `q.link` as well, and it is deliberately NOT used here:
+   `q.sec` is the section whose paper the question is on (the pool decided that, and the exam
+   prompt says so in as many words), so it is sat once, with that section, and never offered
+   twice. It still REPORTS under both in the end card's By-subchapter table, which is a
+   different question and was already answered.
+
+   NOTHING IS STORED THAT CAN BE COMPUTED. `S.sat[sec]` is a timestamp saying he finished that
+   section and nothing more; every number on screen comes back out of `S.answers` through
+   `secStat()`. A stored score is a second source of truth, and this page already has one
+   scar from that — see `load()`, where a recomputed score turned a real 8/10 into 2/10. */
+function paperSecs(){
+  const out = [];
+  D.questions.forEach((q,i)=>{
+    if(q.sec && onPaper(S, i) && out.indexOf(q.sec) < 0) out.push(q.sec);
+  });
+  return out.sort((a,b)=>a.localeCompare(b, undefined, {numeric:true}));
+}
+function secQs(sec){
+  return D.questions.map((_,i)=>i)
+    .filter(i => D.questions[i].sec === sec && onPaper(S, i));
+}
+function secStat(sec){
+  const l = secQs(sec);
+  const answered = l.filter(i => ans(i) !== undefined).length;
+  return {sec:sec, t:l.length, answered:answered,
+          n: l.filter(i => finalRight(i)).length,
+          done: !!S.sat[sec], started: answered > 0};
+}
+/* THE PAPER, ACROSS EVERY SITTING — the number that answers "how am I doing on this exam",
+   as opposed to "how did I do this evening". Scored over the sections he has actually sat, so
+   a half-finished paper reads 14/16 with a section outstanding rather than a demoralising
+   14/32 that counts questions he has not been asked yet. `all` is what says the paper is
+   finished; until then `left` is what the picker offers him next. */
+function paperStat(){
+  const secs = paperSecs().map(secStat);
+  const done = secs.filter(s => s.done);
+  const left = secs.filter(s => !s.done);
+  const n = done.reduce((a,s)=>a+s.n, 0), t = done.reduce((a,s)=>a+s.t, 0);
+  return {secs:secs, done:done, left:left, n:n, t:t,
+          whole: secs.reduce((a,s)=>a+s.t, 0),
+          pct: t ? Math.round(n/t*100) : 0, all: secs.length > 0 && left.length === 0};
+}
+/* The picker earns its place only where there is a choice to make: parts on, and more than
+   one subchapter on the paper. A one-section exam goes straight in, as it always did. */
+function sectioned(){ return !!D.parts && paperSecs().length > 1; }
 
 /* ---- THE ON-SCREEN OPTION ORDER ------------------------------------------------------
    A DISPLAY LAYER AND NOTHING MORE. `S.shuf[qid]` is a list of ORIGINAL option indices in
@@ -744,6 +938,13 @@ function reshuffleOpts(i){
 }
 let S = load();
 let lastShown = -1;
+
+/* WHAT TO CALL THIS THING (08-16, his ask: *"you should name them exams"*). A paper that
+   carries subchapter tags or a written half is an exam; anything else is a subchapter quiz.
+   Both signals, because the two halves arrived on different days and a paper with only one of
+   them is still an exam. The word is used for the tab, the review button and the pasted score
+   line, so all three agree without three separate conditions. */
+const NOUN = ((D.frq && D.frq.length) || D.questions.some(q=>q.sec)) ? 'Exam' : 'Quiz';
 
 /* ---- HIS RESEARCH, kept apart from the attempt ---------------------------------------
    Its own localStorage key, NOT a field of S, and that is the whole design. S is one
@@ -863,6 +1064,22 @@ function drawFrq(){
   });
   box.innerHTML = h;
 
+  /* CLICKING THE CARD PUTS THE CARET IN THE BOX. The sticky header covers the top strip of
+     whatever is under it, and the placeholder sits in exactly that strip — so the one place he
+     naturally aims is the one place the click does not land. Anywhere in the card that is not
+     already a control now focuses the answer box, which also makes the whole card a target on
+     a phone. `closest` is what keeps Mark, Copy and any selection inside the rubric working. */
+  box.querySelectorAll('section.frq').forEach(sec => {
+    sec.addEventListener('mousedown', e => {
+      if(e.target.closest('button, textarea, a, .rubric')) return;
+      const ta = sec.querySelector('textarea');
+      if(!ta) return;
+      e.preventDefault();
+      ta.focus();
+      ta.setSelectionRange(ta.value.length, ta.value.length);
+    });
+  });
+
   box.querySelectorAll('textarea').forEach(ta => {
     const fi = +ta.dataset.f;
     const count = () => {
@@ -969,6 +1186,7 @@ function syncTabs(){
   const nfrq = (D.frq || []).length;
   document.querySelector('.tab[data-tab="starred"]').classList.toggle('hide', !nstar);
   document.querySelector('.tab[data-tab="sheet"]').classList.toggle('hide', !D.hasSheet);
+  document.querySelector('.tab[data-tab="quiz"]').textContent = NOUN;
   document.querySelector('.tab[data-tab="frq"]').classList.toggle('hide', !nfrq);
   $('#tabs').classList.toggle('hide', !nstar && !D.hasSheet && !nfrq);
   if(D.tab === 'starred' && !nstar) setTab('quiz');
@@ -1093,6 +1311,10 @@ function draw(){
   showResearch(!(S.reviewing || S.done));
   if(S.reviewing) return review();
   if(S.done) return end();
+  // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
+  // the rest of the sitting, so nothing about answering, going back or the second pass has
+  // to know the picker exists.
+  if(sectioned() && !S.only) return picker();
   const act = runList();
   if(!act.length) return end();
   if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
@@ -1115,6 +1337,11 @@ function buildQ(i, picked, fresh, en){
   let h = '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta"><span class="num">' + (pos+1) + ' / ' + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
+        // 10 reads as the paper having lost his place, which is how he read it.
+        + (recycling && S.phase!==2
+           ? '<span class="dot">·</span><span class="fillnote">filling in ' + gaps().length
+             + ' left blank</span>' : '')
         // THE SECTION AND THE GLYPH, on the exam only — a subchapter quiz carries neither and
         // this line is byte-for-byte what it always was. The section is what it says; the
         // glyph is why this question is on the paper at all, and it is deliberately JUST the
@@ -1123,7 +1350,16 @@ function buildQ(i, picked, fresh, en){
         + (q.sec ? '<span class="dot">·</span><span class="sec">' + esc(q.sec)
                  + (q.link ? '<span class="lk">+' + esc(q.link) + '</span>' : '')
                  + '</span>' : '')
-        + (q.topic ? '<span class="dot">·</span><span>' + esc(q.topic) + '</span>' : '')
+        // THE TOPIC NAME IS HELD BACK UNTIL HE HAS ANSWERED. It was giving the answer away:
+        // `8.1 · Inferior scapular angle` sat over a question asking which part of the scapula
+        // anchors the powerful shoulder muscles, so the tag answered it before the options did.
+        // His own exams name no topic; he reverse-engineers where to look from the question.
+        // The section number stays visible — that is the scope pointer, and it is the whole
+        // subchapter, not the idea. The name comes back the moment the answer is locked in,
+        // because that is when it stops being a hint and starts being the label he files it
+        // under (the end card, the review list and the paste all keep reading it).
+        + (q.topic && answered ? '<span class="dot">·</span><span>' + esc(q.topic)
+                 + '</span>' : '')
         + (q.src ? '<span class="dot">·</span><span class="src" title="' + srcName(q.src)
                  + '">' + esc(q.src) + '</span>' : '')
         + '</p>'
@@ -1155,7 +1391,8 @@ function buildQ(i, picked, fresh, en){
       if(lab && fresh) cls += ' fresh';
       why = q.rationales ? (q.rationales[k]||'') : '';
     }
-    h += '<button class="'+cls+'" data-k="'+k+'"'+(answered?' disabled':'')+'>'
+    h += '<button class="'+cls+(answered?' locked':'')+'" data-k="'+k+'"'
+       + (answered?' aria-disabled="true"':'')+'>'
        + '<span class="line"><span class="k">'+D.letters[pos]+'.</span>'
        + '<span class="t">'+esc(o)+'</span>'
        + '<span class="mark">'+mark+'</span></span>';
@@ -1182,6 +1419,12 @@ function question(fresh){
   $('#quizview').innerHTML = buildQ(i, picked, fresh, isNew ? ' enter' : '');
   $('#quizview').querySelectorAll('.opt').forEach(b=>{
     b.onclick = ()=>{
+      // `aria-disabled` AND NOT `disabled`, SINCE 08-16. A real `disabled` button will not let
+      // its text be selected however `user-select` is set — browsers block selection inside a
+      // disabled control — so the rationale he wanted to copy off an answered question could
+      // not be picked up at all: *"Im trying to copy on v2 exams and its not letting me."*
+      // The lock is now the guard on this line, and the class is what styles it.
+      if(b.classList.contains('locked')) return;
       // The first pass is never overwritten — a second-pass answer goes in its own map.
       if(S.phase === 2) S.pass2[qk(i)] = +b.dataset.k; else S.answers[qk(i)] = +b.dataset.k;
       save(); question(true);
@@ -1513,12 +1756,19 @@ function openMenu(){
   m.querySelector('#skipq').onclick = ()=>{
     const list = runList(), pos = list.indexOf(S.i);
     if(list.length <= 1) return closeMenu();        // never skip the last one standing
-    const wasLast = pos === list.length - 1;
+    const sec = D.questions[S.i].sec;
     S.skipped[qk(S.i)] = true;
     delete S.answers[qk(S.i)];
     delete S.pass2[qk(S.i)];
     delete S.starred[qk(S.i)];                     // a deleted question is not a starred one
     if(S.unsure) delete S.unsure[qk(S.i)];         // nor one that still needs work
+    // A RESERVE TAKES ITS PLACE IMMEDIATELY, in the same section and the same sitting, so the
+    // count he is working against does not move: skip question 6 of 11 and it is still 11.
+    // Promoted BEFORE `wasLast` is decided — a skip on the last question with a reserve in
+    // hand is not the end of the paper, it is one more question, and finishing there would
+    // have handed him an end card with a question still owed.
+    const filled = promoteReserve(sec) >= 0;
+    const wasLast = !filled && pos === list.length - 1;
     closeMenu();
     syncTabs();
     if(wasLast){ finish(); return; }
@@ -1536,6 +1786,11 @@ function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(
 function finish(){
   S.done = true; S.at = new Date().toISOString();
   recycling = false;          // the clean-up pass is over; a second pass starts in order
+  // THE SITTING'S SUBCHAPTERS ARE NOW SAT. Written here rather than on the end card because
+  // the end card is also what he sees on every later visit, and re-rendering it must not keep
+  // re-stamping the time. A second pass reopens the run and lands back here when it ends, so
+  // the stamp is the last time the section was actually finished, which is what it should be.
+  if(D.parts && S.only) S.only.forEach(sec=>{ S.sat[sec] = S.at; });
   save(); end(); window.scrollTo(0,0);
 }
 
@@ -1570,6 +1825,112 @@ function group(act, keyOf, head, label){
        + '<span class="tbar"><i style="width:'+(by[k].n/by[k].t*100)+'%"></i></span></div>';
   });
   return h + '</div>';
+}
+
+/* THE PICKER — the one new screen, and the only place the sectioning is visible before he
+   starts. Shown when parts are on, the paper has more than one subchapter, and this sitting
+   has not been chosen yet. Choosing writes `S.only` and everything after it is the ordinary
+   exam: same order, same second pass, same end card, one direction to the end.
+
+   IT IS ALSO THE SCOREBOARD. His second ask — *"or just display the score of the subsections
+   that I have got done"* — is answered by the same screen rather than a separate one, because
+   it is the screen he lands on when he opens the link again. */
+let pickSel = null;
+
+function picker(){
+  const p = paperStat();
+  if(!pickSel) pickSel = p.left.map(s => s.sec);          // default: what is still outstanding
+  const chosen = p.secs.filter(s => pickSel.indexOf(s.sec) >= 0);
+  const nq = chosen.reduce((a,s)=>a+s.t, 0);
+
+  let h = '<div class="picker"><h3>' + (p.done.length ? 'Pick up where you left off'
+                                                      : 'Which sections are you sitting?')
+        + '</h3>';
+  h += '<p class="psub">' + p.whole + ' questions across ' + p.secs.length
+     + ' subchapters. Sit as many as you have time for — the rest keep, and this link '
+     + 'reopens on this screen.</p>';
+
+  if(p.done.length){
+    h += '<p class="pscore"><b>' + p.n + ' / ' + p.t + '</b> <span>' + p.pct + '% across '
+       + p.done.length + ' of ' + p.secs.length + ' subchapters'
+       + (p.all ? ' — the whole paper' : '') + '</span></p>';
+  }
+
+  h += '<div class="prows">';
+  p.secs.forEach(s=>{
+    const on = pickSel.indexOf(s.sec) >= 0;
+    const note = s.done ? ('Finished · ' + s.n + '/' + s.t)
+               : s.started ? (s.answered + ' of ' + s.t + ' answered')
+               : (s.t + ' question' + (s.t > 1 ? 's' : ''));
+    h += '<button class="prow' + (on ? ' pon' : '') + (s.done ? ' pdone' : '')
+       + '" data-sec="' + esc(s.sec) + '">'
+       + '<span class="pmark">' + (on ? G_OK : '') + '</span>'
+       + '<span class="plabel">' + esc(s.sec)
+       + ((D.secTitles||{})[s.sec] ? ' <em>' + esc(D.secTitles[s.sec]) + '</em>' : '')
+       + '</span>'
+       + '<span class="pnote">' + note + '</span>'
+       + (s.done ? '<span class="pbar"><i style="width:' + (s.t ? s.n/s.t*100 : 0)
+                 + '%"></i></span>' : '') + '</button>';
+  });
+  h += '</div>';
+
+  h += '<div class="pgo">'
+     + '<button class="pill go" id="pstart"' + (nq ? '' : ' disabled') + '>'
+     + (nq ? 'Start · ' + nq + ' question' + (nq > 1 ? 's' : '') : 'Pick a subchapter')
+     + '</button>'
+     + (p.left.length && p.left.length < p.secs.length
+        ? '<button class="link" id="pleft">Everything left</button>' : '')
+     + '<button class="link" id="pall">The whole paper</button>'
+     + '</div>';
+
+  if(p.done.length) h += '<p class="note">Finished subchapters keep their answers. Sitting '
+                       + 'one again replaces that score.</p>';
+  h += '</div>';
+
+  $('#quizview').innerHTML = h;
+  $('#rail').style.width = '0%';
+  $('#band').classList.add('off');
+  showResearch(false);
+  ['#back','#hintbtn','#hinttext','#redo','#next','#review','#retake','#pass2']
+    .forEach(k => $(k).classList.add('hide'));
+  $('#footer').classList.add('hide');
+
+  document.querySelectorAll('.prow').forEach(b => b.onclick = ()=>{
+    const k = b.dataset.sec, at = pickSel.indexOf(k);
+    if(at >= 0) pickSel.splice(at, 1); else pickSel.push(k);
+    picker();
+  });
+  const start = $('#pstart');
+  if(start) start.onclick = ()=> beginSitting(pickSel.slice());
+  const left = $('#pleft');
+  if(left) left.onclick = ()=> beginSitting(p.left.map(s=>s.sec));
+  $('#pall').onclick = ()=> beginSitting(p.secs.map(s=>s.sec));
+  renderScore();
+  centreBlock();
+}
+
+/* ONE DIRECTION FROM HERE. A sitting starts at the top of its own list with a clean phase —
+   the answers from any earlier sitting stay in `S.answers` untouched, they are simply not in
+   `active()` any more, which is what lets him come back to a section a fortnight later
+   without the page having kept a second copy of anything. */
+function beginSitting(secs){
+  if(!secs.length) return;
+  S.only = secs;
+  S.phase = 1; S.p2list = null; S.done = false; S.reviewing = false; S.hintOpen = false;
+  // RE-SITTING A FINISHED SECTION MUST ACTUALLY RE-SIT IT. Without this it would open on the
+  // end card, every question already answered, and the "Start" he just pressed would look
+  // broken. Its old answers go, and `sat` with them, because that section is now in progress.
+  secs.forEach(sec=>{
+    if(S.sat[sec]){
+      secQs(sec).forEach(i=>{ delete S.answers[qk(i)]; delete S.pass2[qk(i)]; });
+      delete S.sat[sec];
+    }
+  });
+  const l = runList();
+  S.i = l.length ? l[0] : 0;
+  pickSel = null;
+  lastShown = -1;
+  save(); draw(); window.scrollTo(0,0);
 }
 
 function end(){
@@ -1621,6 +1982,33 @@ function end(){
     h += '<p class="hist">Earlier attempts: ' + S.history.slice().reverse()
         .map(a=>'<span>'+a.score+'/'+a.total+' on '+when(a.at)+'</span>').join(' · ') + '</p>';
   }
+  /* THE PAPER, UNDER THE SITTING (08-16). The score above is this evening's — one subchapter,
+     or two. This is the exam: every subchapter, what it scored or that it is still waiting,
+     and one total across the ones he has actually sat. Absent on an unsectioned page. */
+  if(sectioned()){
+    const p = paperStat();
+    h += '<div class="topics parts"><h3>This exam</h3>';
+    p.secs.forEach(s=>{
+      const sitting = S.only && S.only.indexOf(s.sec) >= 0;
+      h += '<div class="trow"><span>' + esc(s.sec)
+         + (sitting ? '<em> just sat</em>' : '') + '</span>'
+         + '<span class="n">' + (s.done ? s.n + '/' + s.t : '—') + '</span>'
+         + '<span class="tbar' + (s.done ? '' : ' waiting') + '"><i style="width:'
+         + (s.done && s.t ? s.n/s.t*100 : 0) + '%"></i></span></div>';
+    });
+    h += '<p class="ptotal"><b>' + p.n + ' / ' + p.t + '</b> '
+       + (p.all ? 'the whole paper' :
+          'across ' + p.done.length + ' of ' + p.secs.length + ' subchapters · '
+          + p.left.reduce((a,s)=>a+s.t,0) + ' question'
+          + (p.left.reduce((a,s)=>a+s.t,0) > 1 ? 's' : '') + ' still to sit')
+       + '</p></div>';
+    if(p.left.length) h += '<p class="note"><button class="link" id="more">'
+                         + 'Sit another subchapter</button> — ' + p.left.map(s=>esc(s.sec)).join(', ')
+                         + ' left</p>';
+    else h += '<p class="note"><button class="link" id="more">Choose subchapters</button> — '
+            + 'every one is done; sitting one again replaces its score.</p>';
+  }
+
   const nskip = Object.keys(S.skipped||{}).length;
   if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
               + '<button class="link" id="unskip">put them back</button></p>';
@@ -1631,6 +2019,9 @@ function end(){
   $('#quizview').innerHTML = h;
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  const m = $('#more');
+  if(m) m.onclick = ()=>{ S.only = null; S.done = false; S.reviewing = false;
+                          pickSel = null; save(); draw(); window.scrollTo(0,0); };
   $('#rail').style.width = '100%';
   $('#band').classList.add('off');
   showResearch(false);
@@ -1641,11 +2032,16 @@ function end(){
   $('#redo').classList.add('hide');
   $('#next').classList.add('hide');
   $('#review').classList.remove('hide');
-  $('#review').textContent = 'Review quiz';
+  $('#review').textContent = 'Review ' + NOUN.toLowerCase();
   $('#retake').classList.remove('hide');
   // No wrong answers left to retry → no button at all, which is also what stops the second
   // pass looping into a third: anything answered on pass two leaves pending2() for good.
   $('#pass2').classList.toggle('hide', pending2().length === 0);
+  /* THE WRITTEN HALF IS THE PRIMARY WAY OUT OF AN EXAM'S END CARD (08-16, his ask): *"the
+     main button after the end of a large mcq for exams should be to move on onto frqs."* So
+     the second pass keeps its place but loses the accent — it is still there, it is just no
+     longer what the page is pointing at. A quiz has no written half and is unchanged. */
+  $('#towritten').classList.toggle('hide', !(D.frq && D.frq.length));
   renderScore();
   lastShown = -1;
   centreBlock();
@@ -1741,7 +2137,7 @@ function hintLine(p){
 function scoreMarkdown(){
   if(!S.done) return '';
   const p = scoreParts();
-  return '**Quiz:** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
+  return '**' + NOUN + ':** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
        + (p.red ? ', +' + p.red + ' redeemed' : '') + ', ' + p.wrong + ' wrong'
        + (p.skipped ? ', ' + p.skipped + ' skipped' : '') + ' · ' + when(S.at)
        + '\n**Hints:** ' + hintLine(p);
@@ -1807,6 +2203,7 @@ function step(dir){
 }
 $('#next').onclick = ()=> step(1);
 $('#back').onclick = ()=> step(-1);
+$('#towritten').onclick = ()=> setTab('frq');
 $('#review').onclick = ()=>{ S.reviewing = !S.reviewing; draw(); };
 /* THE SECOND PASS — the preferred way out of the end card, and the one that keeps
    everything. It re-runs only what he got wrong, on a list frozen at the moment he presses
@@ -1823,9 +2220,15 @@ $('#pass2').onclick = ()=>{
    history first so nothing is lost, and the questions he deleted or starred stay that way —
    they are decisions about the quiz, not part of one attempt at it. */
 $('#retake').onclick = ()=>{
-  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length});
+  // ON A SECTIONED PAPER THE HISTORY LINE IS THE PAPER, not the last sitting — the same
+  // reasoning as `save()`. `blank()` returns `only: null` and `sat: {}`, so a retake drops
+  // every sitting at once and lands back on the picker, which is what "retake the exam" means.
+  if(S.done){ const p = D.parts ? paperStat() : null;
+              S.history.push({at:S.at, score: p ? p.n : score(S),
+                              total: p ? p.t : active(S).length}); }
   const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
   S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  pickSel = null;
   lastShown = -1;
   save(); syncTabs(); renderScore(); draw();
 };

@@ -122,8 +122,8 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
  border:1px solid transparent;border-radius:var(--radius);padding:var(--opad);
  color:var(--text);font:inherit;font-size:var(--osize);cursor:pointer;
  transition:background .16s ease,border-color .16s ease,opacity .16s ease}
-.opt:hover:not(:disabled){background:var(--surface-hi)}
-.opt:disabled{cursor:default}
+.opt:hover:not(.locked){background:var(--surface-hi)}
+.opt.locked{cursor:default}
 .line{display:flex;gap:12px;align-items:flex-start;line-height:1.4}
 .line .k{color:var(--muted);min-width:1.25em}
 .line .t{flex:1}
@@ -176,7 +176,7 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
 .q,.qq,.why,.lab,.hinttext,.rline,.tag,.sheet,.topics,.legend{
  user-select:text;-webkit-user-select:text}
 .opt{user-select:none;-webkit-user-select:none}
-.opt:disabled,.opt:disabled *{user-select:text;-webkit-user-select:text;cursor:auto}
+.opt.locked,.opt.locked *{user-select:text;-webkit-user-select:text;cursor:auto}
 .star,.dots,.tab,button.pill{user-select:none;-webkit-user-select:none}
 
 /* ---- HIS RESEARCH, one box per question ----
@@ -294,6 +294,39 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .tbar{grid-column:1/-1;height:3px;background:var(--line);border-radius:999px;
  overflow:hidden}
 .tbar i{display:block;height:100%;background:var(--text)}
+/* A subchapter he has not sat gets a rail with nothing in it rather than a 0% bar, because a
+   bar at zero reads as "scored nothing" and the whole point is that it has not been asked. */
+.tbar.waiting{background:repeating-linear-gradient(90deg,var(--line) 0 3px,transparent 3px 6px)}
+.topics.parts .trow em{font-style:normal;color:var(--muted);font-size:.8rem;margin-left:8px}
+.ptotal{margin:14px 0 0;color:var(--muted);font-size:.88rem}
+.ptotal b{color:var(--text);font-variant-numeric:tabular-nums;font-size:1.05rem;
+ font-weight:600;margin-right:8px}
+
+/* ---- THE SUBCHAPTER PICKER (08-16) ----
+   Deliberately the same furniture as the end card — same heading treatment, same rails, same
+   tabular numbers — because it IS the end card most of the time he sees it: he opens the link
+   and this screen tells him what he has scored and what is left. A separate visual language
+   for "choose" and "review" would make one screen look like two. */
+.picker{padding:2px 0 8px}
+.picker h3{font-size:1.35rem;font-weight:600;letter-spacing:-.01em;margin:0 0 8px}
+.psub{color:var(--muted);font-size:.9rem;margin:0 0 22px;max-width:46ch}
+.pscore{margin:0 0 22px}
+.pscore b{font-size:1.5rem;font-variant-numeric:tabular-nums;font-weight:600}
+.pscore span{color:var(--muted);font-size:.88rem;margin-left:10px}
+.prows{display:flex;flex-direction:column;gap:8px;margin:0 0 24px}
+.prow{display:grid;grid-template-columns:22px auto 1fr;gap:4px 12px;align-items:center;
+ width:100%;text-align:left;font:inherit;cursor:pointer;padding:13px 16px;
+ border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--text)}
+.prow:hover{border-color:var(--muted)}
+.prow.pon{border-color:var(--accent)}
+.pmark{color:var(--accent);font-size:.95rem;line-height:1}
+.plabel{font-variant-numeric:tabular-nums;font-weight:600}
+.plabel em{font-style:normal;font-weight:400;color:var(--muted);margin-left:8px}
+.pnote{color:var(--muted);font-size:.86rem;justify-self:end}
+.pbar{grid-column:2/-1;height:3px;background:var(--line);border-radius:999px;overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--text)}
+.pgo{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)}
 
 /* ---- review list ---- */
 .rev{padding:6px 0 36px}
@@ -389,6 +422,27 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
  color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
  padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.6;outline:none;margin-top:16px}
 .frqin:focus{border-color:var(--accent)}
+/* THE STICKY HEADER WAS EATING THE CLICK (08-16). It is 49px tall with z-index 5, so the top
+   strip of a box scrolled under it is dead to the mouse — and the top strip is exactly where
+   the "Write your answer." placeholder is, so the box reads as broken. His words: *"I cant
+   even click the textbox for this exam."* `scroll-margin-top` keeps the card clear of the
+   header whenever anything scrolls it into view; the click handler on the card is the belt to
+   that braces, since he can also scroll there by hand. */
+.frq{scroll-margin-top:64px}
+
+/* The only thing on this page allowed to shout. It sits over everything because a saved
+   answer is the one promise the page makes. */
+#savewarn{position:fixed;left:12px;right:12px;bottom:12px;z-index:60;padding:12px 16px;
+ border-radius:12px;font-size:.86rem;line-height:1.4;background:#7f1d1d;color:#fff;
+ box-shadow:0 6px 24px rgba(0,0,0,.4)}
+#savewarn.hide{display:none}
+
+/* WHERE FORWARD MEANS "THE NEXT BLANK ONE". Reaching the end of the list with holes in it
+   sends him back to the first one — right, and invisible until 08-16, when he read it as the
+   paper losing his place: *"when I thought I was done I wasnt… questions are ghosting until
+   the end."* The counter says so now, and the rail stops pretending the run is nearly over. */
+.fillnote{display:inline-flex;align-items:center;gap:6px;color:var(--accent);
+ font-size:.7rem;letter-spacing:.07em;text-transform:uppercase}
 .frqin::placeholder{color:var(--muted);opacity:.7}
 .acts.inline{margin-top:12px}
 .rubric{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
@@ -619,12 +673,13 @@ Self-control is finite - one hard task leaves less for the next"></textarea>
     <button class="pill ghost hide" id="retake">Retake</button>
     <span class="spacer"></span>
     <button class="pill hide" id="review">Review quiz</button>
-    <button class="pill primary hide" id="pass2">2nd Pass</button>
+    <button class="pill ghost hide" id="pass2">2nd Pass</button>
+    <button class="pill primary hide" id="towritten">Written half</button>
     <button class="pill primary" id="next">Next</button>
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "psp-6-3", "title": "6.3 Individual and Cultural Differences in Person Perception", "subtitle": "Chapter 6 · Perceiving Others", "book": "PSP", "hash": "79804a1ff2422627", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "Research by Dornbusch and colleagues found that descriptions provided by the same perceiver about different people often overlap more than descriptions of the same person by different perceivers. What does this reveal about person perception?", "options": ["Social situations are the primary determinant of which traits a person displays at any given time.", "Perceiver characteristics and internal schemas weigh more heavily in judgment than the actual traits of the target.", "People are generally accurate at identifying the most salient objective traits in others.", "Most people possess a core set of traits that are universally recognizable regardless of who is observing them."], "rationales": ["While social situations matter, this specific finding highlights the role of the perceiver's internal characteristics over the situation or the target's actual behavior.", "Our prior experiences and the cognitive accessibility of certain traits color how we perceive every person we encounter, leading to consistency in our own judgments.", "The high overlap in a single perceiver's descriptions suggests that personal bias or focus is more influential than objective salient traits.", "The study actually showed the opposite: different observers formed different impressions of the same person based on their own personal focus."], "correct": 1, "hint": "think about whether the description says more about the person being described or the person doing the describing.", "topic": "Person perception", "sec": "", "src": "", "link": "", "qid": "3ab1288d47"}, {"q": "In the study of attributional complexity, how do individuals with a high need for cognition typically differ from those with a low need for cognition?", "options": ["They focus exclusively on their own behaviors rather than the behaviors of others.", "They are more likely to ignore situational factors in favor of stable personality traits.", "They make a higher total number of causal attributions and process social information more thoroughly.", "They make attributions much faster and more spontaneously than those with a low need for cognition."], "rationales": ["Need for cognition refers to a general tendency to think fully about social situations, including the actions of others.", "Thorough processing usually leads to a better understanding of complex situational causes rather than ignoring them.", "A high need for cognition leads to a stronger desire to understand why things happen, resulting in more detailed and frequent causal analysis.", "Slower, more thoughtful processing is a hallmark of high need for cognition; it is the low-need group that tends to be more impulsive."], "correct": 2, "hint": "consider the relationship between the desire for deep thinking and the volume of explanations one generates.", "topic": "Need for cognition", "sec": "", "src": "", "link": "", "qid": "062910f315"}, {"q": "According to the research by Molden, Plaks, and Dweck (2006), how do incremental theorists and entity theorists differ when they are forced to make judgments very quickly?", "options": ["Incremental theorists prioritize situational cues, while entity theorists remain focused on personal traits.", "Incremental theorists stop making any attributions at all to avoid being inaccurate.", "Both groups default to making personal attributions because situational information is too complex to process fast.", "Entity theorists become better at noticing situational causes to compensate for the lack of time."], "rationales": ["Even under time pressure, people's underlying theories about whether personality can change guide which information (situational vs. personal) they encode first.", "Both groups still make attributions; they just differ in the type of information they are able to use effectively under pressure.", "The study found that incremental theorists were actually better at using situational aspects even when rushed.", "Entity theorists struggled to encode situational causes quickly, sticking instead to their belief in stable traits."], "correct": 0, "hint": "reflect on which type of information each group finds most 'natural' or easy to access.", "topic": "Implicit personality theories", "sec": "", "src": "", "link": "", "qid": "253aef1238"}, {"q": "Blackwell and colleagues (2007) tracked math grades of junior high students over two years. What was the primary outcome for students identified as incremental theorists?", "options": ["Their grades remained perfectly stable because they believed their intelligence was fixed.", "There was no measurable difference in grades, only a difference in how they felt about their performance.", "They performed better initially in 7th grade but were eventually surpassed by entity theorists in 8th grade.", "They showed significantly greater improvement in their math scores compared to entity theorists."], "rationales": ["It was the entity theorists who believed intelligence was fixed; incremental theorists believed it could change.", "The study measured actual math grades and found a statistically significant difference in academic improvement.", "The research showed a widening gap where incremental theorists continued to improve more than their peers.", "Believing that intelligence is malleable encourages students to work harder and adapt, leading to actual performance gains over time."], "correct": 3, "hint": "think about the long-term academic consequences of believing that skills can be developed.", "topic": "Implicit personality theories", "sec": "", "src": "", "link": "", "qid": "9add0aef05"}, {"q": "Miller's 1984 study compared how children and adults in India and the United States explained negative actions. What did the results indicate about the development of cultural differences in attribution?", "options": ["Differences were not present in young children but emerged and increased as participants got older.", "Cultural differences were innate and fully present even in the youngest 8-year-old participants.", "Indian participants made more personal attributions than Americans across all age groups.", "American children were more situational in their attributions than American adults."], "rationales": ["The youngest children (8-11) showed no cultural divergence, suggesting that these attributional styles are learned over time through cultural exposure.", "Since the 8-year-olds did not differ, it implies these perceptions are culturally socialized rather than innate.", "Indians made more situational attributions, consistent with the collectivistic nature of their culture.", "The study showed that Americans moved toward more personal (internal) attributions as they aged."], "correct": 0, "hint": "consider whether these perspectives are present from birth or acquired through socialization.", "topic": "Cultural attribution differences", "sec": "", "src": "", "link": "", "qid": "0395c00114"}, {"q": "In the Masuda and Nisbett (2001) study involving images of fish, what specific behavior distinguished the Japanese students from the American students?", "options": ["American students were more likely to describe the emotional state of the fish than the Japanese students.", "Both groups remembered identical amounts of information, but the Japanese students were slower to report it.", "Japanese students remembered more background elements like plants and frogs in addition to the main fish.", "Japanese students focused exclusively on the fastest-moving fish and ignored the background."], "rationales": ["The key finding related to the breadth of the visual field and context, not the emotional labeling of the objects.", "There was a significant difference in what was remembered, with Japanese students recalling more context-dependent information.", "Collectivistic cultures emphasize the relationship between objects and their environment, leading to a more holistic perception of the scene.", "This describes a more individualistic/Western focus on the most salient focal object."], "correct": 2, "hint": "focus on the difference between seeing an object in isolation versus seeing an object as part of a context.", "topic": "Cultural attribution differences", "sec": "", "src": "", "link": "", "qid": "95cf8d1c29"}, {"q": "Morris and colleagues (2000) primed bicultural Hong Kong students with either American or Chinese icons before they judged a story about an overweight boy. What did the American priming condition produce?", "options": ["It resulted in no change in attributional style compared to the control group that saw landscapes.", "It encouraged students to view the boy's traits as capable of changing over time.", "It led students to give less weight to situational factors when explaining the boy's behavior.", "It caused students to blame the boy's environment and friends for his weight problems."], "rationales": ["The study demonstrated that priming with specific cultural icons significantly shifted the students' judgments away from the control baseline.", "American priming encouraged personal attributions, which are usually linked to stable traits rather than malleable ones.", "Priming American culture activates individualistic schemas that emphasize personal responsibility and internal traits over situational causes.", "Blaming the environment is a situational attribution, which was more characteristic of the Chinese priming condition."], "correct": 2, "hint": "consider which cultural mindset emphasizes the power of the individual over the power of the situation.", "topic": "Cultural attribution differences", "sec": "", "src": "", "link": "", "qid": "db29109a5d"}, {"q": "According to the analysis of Olympic athletes by Kim and Markus (1999), how did American winners typically describe their success compared to Chinese winners?", "options": ["Americans focused on their personal determination and focus, while Chinese athletes highlighted their coaches and fans.", "Both groups focused almost entirely on the hard work they put in individually.", "Americans attributed their wins to lucky circumstances, while Chinese athletes focused on their superior genetics.", "American athletes were more likely to credit their opponents for pushing them to win."], "rationales": ["Western athletes tend to make internal attributions for success, while East Asian athletes emphasize the situational support systems that allowed them to succeed.", "While both worked hard, the Chinese athletes notably emphasized the collective situation (spectators, managers) as key factors.", "This is the opposite of the findings; Americans emphasized internal factors (determination) and Chinese emphasized situational ones.", "Crediting opponents is a situational attribution; Americans were found to focus more on their own internal strength."], "correct": 0, "hint": "think about the difference between 'I did it' and 'They helped me do it'.", "topic": "Cultural attribution differences", "sec": "", "src": "", "link": "", "qid": "f98f56b059"}, {"q": "An individual who explains their failures by saying 'I always fail in everything because I am no good' is demonstrating which combination of attributional qualities?", "options": ["Internal, unstable, and global.", "External, stable, and specific.", "External, unstable, and specific.", "Internal, stable, and global."], "rationales": ["Saying 'I always fail' implies a stable (permanent) rather than unstable (temporary) cause.", "The example refers to being 'no good' (internal) and failing in 'everything' (global), contradicting this option.", "This combination is characteristic of a positive attributional style, which helps maintain self-esteem during failure.", "This phrasing covers the person (internal), a permanent state (stable), and a broad application to all life areas (global)."], "correct": 3, "hint": "look for terms that describe the source, the duration, and the scope of the failure.", "topic": "Attributional mental health", "sec": "", "src": "", "link": "", "qid": "1c298dc825"}, {"q": "In the Berglas and Jones (1978) study on self-handicapping, what was the significance of men choosing a performance-inhibiting drug before a difficult test?", "options": ["It provided a convenient external excuse for a failure that they feared was actually due to their own lack of ability.", "It proved that men are more confident and believe they can overcome even major obstacles.", "It showed that men prefer internal attributions for their failures to help them learn.", "It demonstrated that men are naturally more interested in the pharmacological effects of performance drugs."], "rationales": ["By creating a handicap, they could blame the drug if they failed, protecting their self-esteem from the implication of low intelligence.", "If they were confident, they would have likely chosen the performance-enhancing drug to maximize their score; choosing the inhibitor shows fear of failure.", "Self-handicapping is specifically done to create an external attribution for failure, not an internal one.", "The drug choice was a psychological strategy to manage attributions, not an interest in pharmacology itself."], "correct": 0, "hint": "think about why someone would intentionally make a task harder for themselves.", "topic": "Self-handicapping strategies", "sec": "", "src": "", "link": "", "qid": "2f7c58bfef"}, {"q": "What is the primary danger of unrealistic optimism as described by Weinstein and Klein?", "options": ["It leads to immediate depression as soon as a person starts a new task.", "It causes people to set goals that are far too low for their actual abilities.", "It can lead to risky behaviors because the individual believes they are immune to negative outcomes.", "It makes individuals hyper-aware of every situational cause for their failures."], "rationales": ["The depression typically follows as a secondary result when the unrealistic expectations inevitably fail to be met.", "Optimism generally leads to setting high goals; the danger is when those goals are completely unattainable.", "When people are too positive about their ability to avoid harm, they may engage in dangerous activities like driving while intoxicated or unsafe sex.", "Unrealistic optimism often involves ignoring or underestimating negative situational risks."], "correct": 2, "hint": "consider how a lack of realism might affect a person's perception of risk and safety.", "topic": "Attributional mental health", "sec": "", "src": "", "link": "", "qid": "e73aed205a"}, {"q": "How is learned helplessness defined in terms of attributional style according to the research by Seligman and colleagues?", "options": ["A preference for situational attributions that helps an individual adapt quickly to new challenges.", "The act of taking credit for all positive events while blaming others for all negative events.", "The belief that internal traits are the only things that matter for success.", "The tendency to make external, stable, and global attributions for one's behavior, leading to a loss of perceived control."], "rationales": ["Learned helplessness prevents adaptation; it is the incremental theorist style that promotes adaptation to challenges.", "Learned helplessness is associated with a negative outlook where the individual feels powerless, rather than a self-serving bias.", "Learned helplessness involves feeling that one's own internal traits and actions are useless in changing the outcome.", "When people feel they have no control over outcomes regardless of their actions, they stop trying to change their situation."], "correct": 3, "hint": "think about the feeling of being unable to change a bad situation even when an exit is available.", "topic": "Attributional mental health", "sec": "", "src": "", "link": "", "qid": "a1e826c9ba"}], "hasSheet": true, "frq": [], "notebook": "https://notebooklm.google.com/notebook/415ea099-d230-407a-9f00-9d6cae2ced32/artifact/d0d11e22-c8ac-47c0-8c56-06281f47bf92", "root": "../index.html", "tab": "quiz", "sheet": "## 1. Person perception\nThis topic examines how individual perceiver characteristics and schemas lead to diverse interpretations of the same social information.\n\n### Key terms\n1. **Cognitive accessibility** — the ease and speed with which a specific trait or characteristic comes to a perceiver's mind.\n   1. ex. noticing fashion first because the perceiver values style\n\n### Names and studies\n1. **Dornbusch et al. (1965) / Park (1986)** — found descriptions by the same perceiver overlap more than descriptions by different perceivers of the same target.\n\n## 2. Need for cognition\nNeed for cognition describes the variance in how deeply and carefully individuals process social information and causal attributions.\n\n### Key terms\n1. **Need for cognition** — the tendency to think carefully and fully about social situations and information.\n   1. Low need for cognition — characterized by impulsive, impatient, and spontaneous attribution making.\n\n### Names and studies\n1. **Cacioppo & Petty (1982)** — introduced the concept of need for cognition as the tendency to process information thoughtfully.\n2. **Sargent (2004)** — found that people with a lower need for cognition make attributions more quickly and spontaneously.\n3. **Fletcher et al. (1986)** — showed that psychology majors exhibit more curiosity about people than natural science majors.\n\n## 3. Implicit personality theories\nThese theories involve the underlying beliefs individuals hold regarding the stability or malleability of human traits and personality.\n\n### Key terms\n1. **Entity theorists** — individuals who believe that traits are fundamentally stable and incapable of significant change.\n   1. Focus on traits — the primary emphasis and personal attribution type made by entity theorists.\n2. **Incremental theorists** — individuals who believe that personality is dynamic and changes significantly over time.\n   1. Situational attributions — the primary focus and attribution type made by incremental theorists.\n\n### Names and studies\n1. **Molden, Plaks, & Dweck (2006)** — found that under time pressure, entity theorists could only encode personal attributions.\n2. **Blackwell, Trzesniewski, & Dweck (2007)** — found that incremental theorists improved math grades significantly more than entity theorists over two years.\n\n## 4. Cultural attribution differences\nCultural orientations, specifically individualistic versus collectivistic, determine whether a perceiver prioritizes personal or situational factors.\n\n### Key terms\n1. **Individualistic cultures** — societies emphasizing individual independence and personal responsibility for actions.\n   1. ex. United States, Canada, and Australia\n2. **Collectivistic cultures** — societies emphasizing the relationships between individuals and their social environment.\n   1. ex. Japan, China, Korea, and India\n\n### Names and studies\n1. **Miller (1984)** — found American adults made more personal attributions while Indian adults made more situational attributions.\n2. **Masuda & Nisbett (2001)** — showed Japanese students remembered background objects while American students focused on the salient fish.\n3. **Hong, Morris, Chiu, & Benet-Martínez (2000)** — showed bicultural students judged a boy's behavior more personally when primed with American icons.\n4. **Kim & Markus (1999)** — found American athletes emphasized personal strength while Chinese athletes emphasized situational support.\n\n## 5. Attributional mental health\nThe habitual patterns of attributions people make for negative events determine their psychological resilience or vulnerability to depression.\n\n### Key terms\n1. **Attributional style** — the habitual way an individual explains the causes of events along internal/external, stable, and global dimensions.\n   1. Stable vs. Unstable — whether a cause is perceived as relatively permanent or expected to change over time.\n   2. Global vs. Specific — whether a cause is perceived to apply broadly or is unique to specific events.\n2. **Negative attributional style** — explaining negative events through internal, stable, and global qualities of the self.\n3. **Learned helplessness** — the tendency to make external, rather than internal, attributions for one’s own behaviors.\n4. **Positive attributional style** — explaining negative events using external, unstable, and specific qualities.\n5. **Unrealistic optimism** — the tendency to be overly positive about the likelihood of avoiding negative future events.\n\n### Names and studies\n1. **Alloy, Abramson, & Francis (1999)** — showed that college students with negative attributional styles were more likely to experience depression.\n2. **Abramson, Seligman, & Teasdale (1978)** — demonstrated learned helplessness in dogs through exposure to inescapable shocks.\n3. **Taylor & Armor (1996)** — found that most healthy people maintain a reasonable balance between optimism and realism.\n\n## 6. Self-handicapping strategies\nSelf-handicapping involves creating obstacles to success to provide a convenient external excuse for potential failure and protect self-esteem.\n\n### Key terms\n1. **Self-handicapping** — making statements or engaging in behaviors that create external attributions for failure to shield the self.\n   1. Negative consequences — Includes lower life satisfaction, less competence, and increased substance abuse.\n\n### Names and studies\n1. **Berglas & Jones (1978)** — found that men chose performance-inhibiting drugs to provide an external excuse for potential failure.\n2. **Hirt, Deppe, & Gordon (1991)** — found that women may self-handicap by claiming inability due to stress or time constraints.\n3. **Zuckerman & Tsai (2005)** — found that regular self-handicappers report poorer moods and less interest in their jobs."}</script>
+<script id="quiz-data" type="application/json">{"id": "psp-6-3", "title": "6.3 Individual and Cultural Differences in Person Perception", "subtitle": "Chapter 6 · Perceiving Others", "book": "PSP", "hash": "79804a1ff2422627", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "Research by Dornbusch and colleagues found that descriptions provided by the same perceiver about different people often overlap more than descriptions of the same person by different perceivers. What does this reveal about person perception?", "options": ["Social situations are the primary determinant of which traits a person displays at any given time.", "Perceiver characteristics and internal schemas weigh more heavily in judgment than the actual traits of the target.", "People are generally accurate at identifying the most salient objective traits in others.", "Most people possess a core set of traits that are universally recognizable regardless of who is observing them."], "rationales": ["While social situations matter, this specific finding highlights the role of the perceiver's internal characteristics over the situation or the target's actual behavior.", "Our prior experiences and the cognitive accessibility of certain traits color how we perceive every person we encounter, leading to consistency in our own judgments.", "The high overlap in a single perceiver's descriptions suggests that personal bias or focus is more influential than objective salient traits.", "The study actually showed the opposite: different observers formed different impressions of the same person based on their own personal focus."], "correct": 1, "hint": "think about whether the description says more about the person being described or the person doing the describing.", "topic": "Person perception", "sec": "", "src": "", "link": "", "qid": "3ab1288d47"}, {"q": "In the study of attributional complexity, how do individuals with a high need for cognition typically differ from those with a low need for cognition?", "options": ["They focus exclusively on their own behaviors rather than the behaviors of others.", "They are more likely to ignore situational factors in favor of stable personality traits.", "They make a higher total number of causal attributions and process social information more thoroughly.", "They make attributions much faster and more spontaneously than those with a low need for cognition."], "rationales": ["Need for cognition refers to a general tendency to think fully about social situations, including the actions of others.", "Thorough processing usually leads to a better understanding of complex situational causes rather than ignoring them.", "A high need for cognition leads to a stronger desire to understand why things happen, resulting in more detailed and frequent causal analysis.", "Slower, more thoughtful processing is a hallmark of high need for cognition; it is the low-need group that tends to be more impulsive."], "correct": 2, "hint": "consider the relationship between the desire for deep thinking and the volume of explanations one generates.", "topic": "Need for cognition", "sec": "", "src": "", "link": "", "qid": "062910f315"}, {"q": "According to the research by Molden, Plaks, and Dweck (2006), how do incremental theorists and entity theorists differ when they are forced to make judgments very quickly?", "options": ["Incremental theorists prioritize situational cues, while entity theorists remain focused on personal traits.", "Incremental theorists stop making any attributions at all to avoid being inaccurate.", "Both groups default to making personal attributions because situational information is too complex to process fast.", "Entity theorists become better at noticing situational causes to compensate for the lack of time."], "rationales": ["Even under time pressure, people's underlying theories about whether personality can change guide which information (situational vs. personal) they encode first.", "Both groups still make attributions; they just differ in the type of information they are able to use effectively under pressure.", "The study found that incremental theorists were actually better at using situational aspects even when rushed.", "Entity theorists struggled to encode situational causes quickly, sticking instead to their belief in stable traits."], "correct": 0, "hint": "reflect on which type of information each group finds most 'natural' or easy to access.", "topic": "Implicit personality theories", "sec": "", "src": "", "link": "", "qid": "253aef1238"}, {"q": "Blackwell and colleagues (2007) tracked math grades of junior high students over two years. What was the primary outcome for students identified as incremental theorists?", "options": ["Their grades remained perfectly stable because they believed their intelligence was fixed.", "There was no measurable difference in grades, only a difference in how they felt about their performance.", "They performed better initially in 7th grade but were eventually surpassed by entity theorists in 8th grade.", "They showed significantly greater improvement in their math scores compared to entity theorists."], "rationales": ["It was the entity theorists who believed intelligence was fixed; incremental theorists believed it could change.", "The study measured actual math grades and found a statistically significant difference in academic improvement.", "The research showed a widening gap where incremental theorists continued to improve more than their peers.", "Believing that intelligence is malleable encourages students to work harder and adapt, leading to actual performance gains over time."], "correct": 3, "hint": "think about the long-term academic consequences of believing that skills can be developed.", "topic": "Implicit personality theories", "sec": "", "src": "", "link": "", "qid": "9add0aef05"}, {"q": "Miller's 1984 study compared how children and adults in India and the United States explained negative actions. What did the results indicate about the development of cultural differences in attribution?", "options": ["Differences were not present in young children but emerged and increased as participants got older.", "Cultural differences were innate and fully present even in the youngest 8-year-old participants.", "Indian participants made more personal attributions than Americans across all age groups.", "American children were more situational in their attributions than American adults."], "rationales": ["The youngest children (8-11) showed no cultural divergence, suggesting that these attributional styles are learned over time through cultural exposure.", "Since the 8-year-olds did not differ, it implies these perceptions are culturally socialized rather than innate.", "Indians made more situational attributions, consistent with the collectivistic nature of their culture.", "The study showed that Americans moved toward more personal (internal) attributions as they aged."], "correct": 0, "hint": "consider whether these perspectives are present from birth or acquired through socialization.", "topic": "Cultural attribution differences", "sec": "", "src": "", "link": "", "qid": "0395c00114"}, {"q": "In the Masuda and Nisbett (2001) study involving images of fish, what specific behavior distinguished the Japanese students from the American students?", "options": ["American students were more likely to describe the emotional state of the fish than the Japanese students.", "Both groups remembered identical amounts of information, but the Japanese students were slower to report it.", "Japanese students remembered more background elements like plants and frogs in addition to the main fish.", "Japanese students focused exclusively on the fastest-moving fish and ignored the background."], "rationales": ["The key finding related to the breadth of the visual field and context, not the emotional labeling of the objects.", "There was a significant difference in what was remembered, with Japanese students recalling more context-dependent information.", "Collectivistic cultures emphasize the relationship between objects and their environment, leading to a more holistic perception of the scene.", "This describes a more individualistic/Western focus on the most salient focal object."], "correct": 2, "hint": "focus on the difference between seeing an object in isolation versus seeing an object as part of a context.", "topic": "Cultural attribution differences", "sec": "", "src": "", "link": "", "qid": "95cf8d1c29"}, {"q": "Morris and colleagues (2000) primed bicultural Hong Kong students with either American or Chinese icons before they judged a story about an overweight boy. What did the American priming condition produce?", "options": ["It resulted in no change in attributional style compared to the control group that saw landscapes.", "It encouraged students to view the boy's traits as capable of changing over time.", "It led students to give less weight to situational factors when explaining the boy's behavior.", "It caused students to blame the boy's environment and friends for his weight problems."], "rationales": ["The study demonstrated that priming with specific cultural icons significantly shifted the students' judgments away from the control baseline.", "American priming encouraged personal attributions, which are usually linked to stable traits rather than malleable ones.", "Priming American culture activates individualistic schemas that emphasize personal responsibility and internal traits over situational causes.", "Blaming the environment is a situational attribution, which was more characteristic of the Chinese priming condition."], "correct": 2, "hint": "consider which cultural mindset emphasizes the power of the individual over the power of the situation.", "topic": "Cultural attribution differences", "sec": "", "src": "", "link": "", "qid": "db29109a5d"}, {"q": "According to the analysis of Olympic athletes by Kim and Markus (1999), how did American winners typically describe their success compared to Chinese winners?", "options": ["Americans focused on their personal determination and focus, while Chinese athletes highlighted their coaches and fans.", "Both groups focused almost entirely on the hard work they put in individually.", "Americans attributed their wins to lucky circumstances, while Chinese athletes focused on their superior genetics.", "American athletes were more likely to credit their opponents for pushing them to win."], "rationales": ["Western athletes tend to make internal attributions for success, while East Asian athletes emphasize the situational support systems that allowed them to succeed.", "While both worked hard, the Chinese athletes notably emphasized the collective situation (spectators, managers) as key factors.", "This is the opposite of the findings; Americans emphasized internal factors (determination) and Chinese emphasized situational ones.", "Crediting opponents is a situational attribution; Americans were found to focus more on their own internal strength."], "correct": 0, "hint": "think about the difference between 'I did it' and 'They helped me do it'.", "topic": "Cultural attribution differences", "sec": "", "src": "", "link": "", "qid": "f98f56b059"}, {"q": "An individual who explains their failures by saying 'I always fail in everything because I am no good' is demonstrating which combination of attributional qualities?", "options": ["Internal, unstable, and global.", "External, stable, and specific.", "External, unstable, and specific.", "Internal, stable, and global."], "rationales": ["Saying 'I always fail' implies a stable (permanent) rather than unstable (temporary) cause.", "The example refers to being 'no good' (internal) and failing in 'everything' (global), contradicting this option.", "This combination is characteristic of a positive attributional style, which helps maintain self-esteem during failure.", "This phrasing covers the person (internal), a permanent state (stable), and a broad application to all life areas (global)."], "correct": 3, "hint": "look for terms that describe the source, the duration, and the scope of the failure.", "topic": "Attributional mental health", "sec": "", "src": "", "link": "", "qid": "1c298dc825"}, {"q": "In the Berglas and Jones (1978) study on self-handicapping, what was the significance of men choosing a performance-inhibiting drug before a difficult test?", "options": ["It provided a convenient external excuse for a failure that they feared was actually due to their own lack of ability.", "It proved that men are more confident and believe they can overcome even major obstacles.", "It showed that men prefer internal attributions for their failures to help them learn.", "It demonstrated that men are naturally more interested in the pharmacological effects of performance drugs."], "rationales": ["By creating a handicap, they could blame the drug if they failed, protecting their self-esteem from the implication of low intelligence.", "If they were confident, they would have likely chosen the performance-enhancing drug to maximize their score; choosing the inhibitor shows fear of failure.", "Self-handicapping is specifically done to create an external attribution for failure, not an internal one.", "The drug choice was a psychological strategy to manage attributions, not an interest in pharmacology itself."], "correct": 0, "hint": "think about why someone would intentionally make a task harder for themselves.", "topic": "Self-handicapping strategies", "sec": "", "src": "", "link": "", "qid": "2f7c58bfef"}, {"q": "What is the primary danger of unrealistic optimism as described by Weinstein and Klein?", "options": ["It leads to immediate depression as soon as a person starts a new task.", "It causes people to set goals that are far too low for their actual abilities.", "It can lead to risky behaviors because the individual believes they are immune to negative outcomes.", "It makes individuals hyper-aware of every situational cause for their failures."], "rationales": ["The depression typically follows as a secondary result when the unrealistic expectations inevitably fail to be met.", "Optimism generally leads to setting high goals; the danger is when those goals are completely unattainable.", "When people are too positive about their ability to avoid harm, they may engage in dangerous activities like driving while intoxicated or unsafe sex.", "Unrealistic optimism often involves ignoring or underestimating negative situational risks."], "correct": 2, "hint": "consider how a lack of realism might affect a person's perception of risk and safety.", "topic": "Attributional mental health", "sec": "", "src": "", "link": "", "qid": "e73aed205a"}, {"q": "How is learned helplessness defined in terms of attributional style according to the research by Seligman and colleagues?", "options": ["A preference for situational attributions that helps an individual adapt quickly to new challenges.", "The act of taking credit for all positive events while blaming others for all negative events.", "The belief that internal traits are the only things that matter for success.", "The tendency to make external, stable, and global attributions for one's behavior, leading to a loss of perceived control."], "rationales": ["Learned helplessness prevents adaptation; it is the incremental theorist style that promotes adaptation to challenges.", "Learned helplessness is associated with a negative outlook where the individual feels powerless, rather than a self-serving bias.", "Learned helplessness involves feeling that one's own internal traits and actions are useless in changing the outcome.", "When people feel they have no control over outcomes regardless of their actions, they stop trying to change their situation."], "correct": 3, "hint": "think about the feeling of being unable to change a bad situation even when an exit is available.", "topic": "Attributional mental health", "sec": "", "src": "", "link": "", "qid": "a1e826c9ba"}], "hasSheet": true, "parts": false, "secTitles": {}, "reserve": 0, "frq": [], "notebook": "https://notebooklm.google.com/notebook/415ea099-d230-407a-9f00-9d6cae2ced32/artifact/d0d11e22-c8ac-47c0-8c56-06281f47bf92", "root": "../index.html", "tab": "quiz", "sheet": "## 1. Person perception\nThis topic examines how individual perceiver characteristics and schemas lead to diverse interpretations of the same social information.\n\n### Key terms\n1. **Cognitive accessibility** — the ease and speed with which a specific trait or characteristic comes to a perceiver's mind.\n   1. ex. noticing fashion first because the perceiver values style\n\n### Names and studies\n1. **Dornbusch et al. (1965) / Park (1986)** — found descriptions by the same perceiver overlap more than descriptions by different perceivers of the same target.\n\n## 2. Need for cognition\nNeed for cognition describes the variance in how deeply and carefully individuals process social information and causal attributions.\n\n### Key terms\n1. **Need for cognition** — the tendency to think carefully and fully about social situations and information.\n   1. Low need for cognition — characterized by impulsive, impatient, and spontaneous attribution making.\n\n### Names and studies\n1. **Cacioppo & Petty (1982)** — introduced the concept of need for cognition as the tendency to process information thoughtfully.\n2. **Sargent (2004)** — found that people with a lower need for cognition make attributions more quickly and spontaneously.\n3. **Fletcher et al. (1986)** — showed that psychology majors exhibit more curiosity about people than natural science majors.\n\n## 3. Implicit personality theories\nThese theories involve the underlying beliefs individuals hold regarding the stability or malleability of human traits and personality.\n\n### Key terms\n1. **Entity theorists** — individuals who believe that traits are fundamentally stable and incapable of significant change.\n   1. Focus on traits — the primary emphasis and personal attribution type made by entity theorists.\n2. **Incremental theorists** — individuals who believe that personality is dynamic and changes significantly over time.\n   1. Situational attributions — the primary focus and attribution type made by incremental theorists.\n\n### Names and studies\n1. **Molden, Plaks, & Dweck (2006)** — found that under time pressure, entity theorists could only encode personal attributions.\n2. **Blackwell, Trzesniewski, & Dweck (2007)** — found that incremental theorists improved math grades significantly more than entity theorists over two years.\n\n## 4. Cultural attribution differences\nCultural orientations, specifically individualistic versus collectivistic, determine whether a perceiver prioritizes personal or situational factors.\n\n### Key terms\n1. **Individualistic cultures** — societies emphasizing individual independence and personal responsibility for actions.\n   1. ex. United States, Canada, and Australia\n2. **Collectivistic cultures** — societies emphasizing the relationships between individuals and their social environment.\n   1. ex. Japan, China, Korea, and India\n\n### Names and studies\n1. **Miller (1984)** — found American adults made more personal attributions while Indian adults made more situational attributions.\n2. **Masuda & Nisbett (2001)** — showed Japanese students remembered background objects while American students focused on the salient fish.\n3. **Hong, Morris, Chiu, & Benet-Martínez (2000)** — showed bicultural students judged a boy's behavior more personally when primed with American icons.\n4. **Kim & Markus (1999)** — found American athletes emphasized personal strength while Chinese athletes emphasized situational support.\n\n## 5. Attributional mental health\nThe habitual patterns of attributions people make for negative events determine their psychological resilience or vulnerability to depression.\n\n### Key terms\n1. **Attributional style** — the habitual way an individual explains the causes of events along internal/external, stable, and global dimensions.\n   1. Stable vs. Unstable — whether a cause is perceived as relatively permanent or expected to change over time.\n   2. Global vs. Specific — whether a cause is perceived to apply broadly or is unique to specific events.\n2. **Negative attributional style** — explaining negative events through internal, stable, and global qualities of the self.\n3. **Learned helplessness** — the tendency to make external, rather than internal, attributions for one’s own behaviors.\n4. **Positive attributional style** — explaining negative events using external, unstable, and specific qualities.\n5. **Unrealistic optimism** — the tendency to be overly positive about the likelihood of avoiding negative future events.\n\n### Names and studies\n1. **Alloy, Abramson, & Francis (1999)** — showed that college students with negative attributional styles were more likely to experience depression.\n2. **Abramson, Seligman, & Teasdale (1978)** — demonstrated learned helplessness in dogs through exposure to inescapable shocks.\n3. **Taylor & Armor (1996)** — found that most healthy people maintain a reasonable balance between optimism and realism.\n\n## 6. Self-handicapping strategies\nSelf-handicapping involves creating obstacles to success to provide a convenient external excuse for potential failure and protect self-esteem.\n\n### Key terms\n1. **Self-handicapping** — making statements or engaging in behaviors that create external attributions for failure to shield the self.\n   1. Negative consequences — Includes lower life satisfaction, less competence, and increased substance abuse.\n\n### Names and studies\n1. **Berglas & Jones (1978)** — found that men chose performance-inhibiting drugs to provide an external excuse for potential failure.\n2. **Hirt, Deppe, & Gordon (1991)** — found that women may self-handicap by claiming inability due to stress or time constraints.\n3. **Zuckerman & Tsai (2005)** — found that regular self-handicappers report poorer moods and less interest in their jobs."}</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -634,21 +689,29 @@ const G_OK = '✓', G_NO = '✕';
 
 /* WHY A QUESTION IS ON THE EXAM. One glyph, set by the generator in the topic tag, and the
    only thing the page does with it is show it and group by it. The ORDER of this object is
-   his priority order (08-11) and the tables below read it, so re-ordering here re-orders the
-   report: the rewrites he asked for first, then starred, then missed, then flagged, then his
-   own research, then the ones he got right and is being asked again from a harder angle.
+   his priority order and the tables below read it, so re-ordering here re-orders the report.
 
-   ✎ SITS ABOVE ☆ (08-12) because it is the only one he wrote as an instruction rather than a
-   mark. The others say "this mattered to me"; ✎ says "this question was wrong, ask it like
-   this" — so on the report it is the first row he should check, since it is the one place the
-   generator can have done as it was told or not. */
+   RE-RANKED 08-14 TO HIS NEW ORDER: *"Wrong questions tested first · Starred · Questions with
+   research (not fix) · Question mark tags · Fix marks · Correct answers."* It has to be kept
+   in step with `POOL_RUNGS` in reinforce.py, which is what actually assigns the glyphs — that
+   list decides which card gets a spot, this one only names the result. Out of step, the
+   report groups a paper by an order the paper was not built in.
+
+   ✎ USED TO SIT FIRST and no longer does. Until 08-12 it was the one he wrote as an
+   instruction rather than a mark, so it led the report; he has since ranked it fifth, and a
+   ✎ question now takes an ordinary spot like every other rung.
+
+   `+` IS NOT A RUNG. Nothing is tagged `+` — it is what a section gets when its quiz was
+   shorter than the quota, which is ordinary rather than exceptional. It is last because a
+   question with no card behind it is the one he has least history with. */
 const SRC = {
-  '✎': 'You asked for this one to be rewritten',
-  '☆': 'Starred in the subchapter quiz',
   '✕': 'You got this wrong',
-  '?': 'You flagged it — no idea at the time',
+  '☆': 'Starred in the subchapter quiz',
   'R': 'Built from your own research',
-  '$': 'You got it right before — asked a different way'
+  '?': 'You flagged it — no idea at the time',
+  '✎': 'You asked for this one to be rewritten',
+  '$': 'You got it right before — asked a different way',
+  '+': 'New — nothing of yours left to re-ask on this section'
 };
 const SRC_ORDER = Object.keys(SRC);
 function srcName(g){ return SRC[g] || ''; }
@@ -665,9 +728,14 @@ function srcName(g){ return SRC[g] || ''; }
    `skipped` usable later as a permanent exclusion list when exam reuse is built — see qid()
    in quizpage.py. v1 states are migrated once, on load. */
 function qk(i){ return D.questions[i].qid; }
+/* `only` and `sat` ARE THE SECTIONED EXAM (08-16), and both are inert unless the page was
+   built with parts on. `only` is the list of subchapters THIS sitting covers — null means he
+   has not chosen yet, which is what puts the picker on screen. `sat` records which
+   subchapters he has finished, and nothing else: a section's score is always recomputed from
+   `answers`, never stored, so there is exactly one place a number can come from. */
 function blank(){ return {v:2, hash:D.hash, i:0, answers:{}, pass2:{}, skipped:{}, starred:{},
                           unsure:{}, hints:{}, phase:1, p2list:null, done:false, at:null,
-                          shuf:{}, history:[]}; }
+                          shuf:{}, history:[], only:null, sat:{}, promoted:{}}; }
 function migrate(s){
   // v1 keyed every map on the array index. The hash matches, so the indices are still valid
   // and this is a straight re-key — done once, then never again.
@@ -711,6 +779,12 @@ function load(){
     if(!s.hints) s.hints = {};
     if(!s.pass2) s.pass2 = {};
     if(!s.phase) s.phase = 1;
+    // Absent on every attempt saved before 08-16, and `only: null` is exactly right for one:
+    // it means "not chosen", so an attempt in progress on a paper that has just gained the
+    // picker resumes over the whole paper, which is what it was.
+    if(s.only === undefined) s.only = null;
+    if(!s.sat) s.sat = {};
+    if(!s.promoted) s.promoted = {};
     // Not carried across a rebuild on purpose: blank() empties it. A stored order describes a
     // set of options that may no longer be the same length — optOrder() throws out any that
     // no longer fit, so a stale one is harmless anyway.
@@ -718,14 +792,89 @@ function load(){
     return s;
   }catch(e){ return blank(); }
 }
+/* THE ATTEMPT MUST NEVER FAIL TO SAVE IN SILENCE (08-16). `save()` swallowed every exception,
+   and the one that actually happens is QuotaExceededError: the research box keeps pasted
+   images in localStorage, and once the origin is full EVERY later write is refused — so his
+   answers stopped being recorded while the page carried on as if they were. His report was
+   *"I feel I did answer some of these questions and yet they show up again"*, which is exactly
+   what a refused write looks like from the outside. It now says so, on screen, and keeps
+   saying so until a write succeeds. */
+let saveBroken = false;
+function saveFailed(on){
+  if(on === saveBroken) return;
+  saveBroken = on;
+  let el = $('#savewarn');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'savewarn';
+    document.body.appendChild(el);
+  }
+  el.textContent = 'This browser is out of room — your answers are NOT being saved. '
+                 + 'Remove a pasted image from the research box to free some up.';
+  el.classList.toggle('hide', !on);
+}
 function save(){
-  S.meta = {title:D.title, subtitle:D.subtitle, book:D.book, total:active(S).length,
-            at:S.at, done:S.done, score:score(S)};
-  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+  // ON A SECTIONED PAPER `meta` DESCRIBES THE PAPER, NOT THE SITTING. It is read in exactly
+  // one place — `load()`, when the questions have been rebuilt and the old answers can no
+  // longer be scored — and what belongs in that history line is "he got 24 of 32 on this
+  // exam", not "he got 14 of 16 on the half of it he happened to sit last."
+  const pp = D.parts ? paperStat() : null;
+  S.meta = {title:D.title, subtitle:D.subtitle, book:D.book,
+            total: pp ? pp.t : active(S).length,
+            at:S.at, done:S.done, score: pp ? pp.n : score(S)};
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); saveFailed(false); }
+  catch(e){ saveFailed(true); }
 }
 /* Skipped questions leave the run entirely — out of the count, out of the denominator,
-   out of the topic breakdown. Anything less makes "8 / 10" a lie about a quiz of nine. */
-function active(s){ return D.questions.map((_,i)=>i).filter(i => !(s.skipped||{})[qk(i)]); }
+   out of the topic breakdown. Anything less makes "8 / 10" a lie about a quiz of nine.
+
+   THE SECTION FILTER RIDES HERE AND NOWHERE ELSE (08-16). `active()` is what the run list,
+   the score, the second pass, the end card and the review list are all built on, so putting
+   the sitting's subchapters into this one function is what makes a half-paper behave exactly
+   like a whole one — one direction, one end card, one second pass — with no branch anywhere
+   downstream. `only: null` (not chosen, or a page built without parts) filters nothing. */
+function active(s){
+  const only = D.parts ? (s.only || null) : null;
+  return D.questions.map((_,i)=>i).filter(i => onPaper(s, i)
+    && (!only || only.indexOf(D.questions[i].sec) >= 0));
+}
+/* ---- THE RESERVES (08-16) ------------------------------------------------------------
+   His ask: *"if 1 question is skipped, another one is replaced in that section about it… you
+   have a quota, so you should also create stockpiles (say 2 extra questions per section that
+   immediately replace a skipped question)."*
+
+   `D.reserve` is how many per section were written beyond the quota. They are the LAST ones
+   of their section in build order, which is not arbitrary: `section_pool()` deals spots down
+   his tag priority, so a section's tail is the bottom of the list it could afford to lose.
+
+   A RESERVE IS NOT A QUESTION YET. It is out of the run, out of the denominator and out of
+   every table until a skip in its own section calls it in — at which point it is an ordinary
+   question and nothing downstream can tell it apart. Promotion is recorded on the qid, so it
+   survives a reload and cannot be handed out twice. Skipping with none left behaves exactly
+   as it always did: the paper is one question shorter. */
+function reserveIds(sec){
+  if(!(D.reserve > 0)) return [];
+  const l = D.questions.map((_,i)=>i).filter(i => D.questions[i].sec === sec);
+  return l.slice(Math.max(0, l.length - D.reserve));
+}
+function isReserve(i){
+  const sec = D.questions[i].sec;
+  return !!sec && reserveIds(sec).indexOf(i) >= 0;
+}
+/* Skipped or an unpromoted reserve — the two ways a question is not part of the paper. One
+   predicate so the run, the score, the picker and the section tables can never disagree. */
+function onPaper(s, i){
+  if((s.skipped||{})[qk(i)]) return false;
+  return !isReserve(i) || !!(s.promoted||{})[qk(i)];
+}
+/* Called the instant a question is skipped. Returns the promoted index, or -1. */
+function promoteReserve(sec){
+  if(!sec) return -1;
+  const next = reserveIds(sec).find(i => !S.promoted[qk(i)] && !S.skipped[qk(i)]);
+  if(next === undefined) return -1;
+  S.promoted[qk(next)] = true;
+  return next;
+}
 function ans(i){ return S.answers[qk(i)]; }
 function ans2(i){ return S.pass2[qk(i)]; }
 function firstRight(i){ return ans(i) === D.questions[i].correct; }
@@ -749,6 +898,59 @@ function runList(){
   return active(S);
 }
 function pick(i){ return S.phase === 2 ? ans2(i) : ans(i); }
+
+/* ---- SUBCHAPTERS AS SITTINGS (08-16) -------------------------------------------------
+   His ask: *"a way to section off exams… such that I'm able to practice only one section or
+   maybe two sections of an exam created because of shortened time"*, and then *"the option to
+   do those other sub chapters that I haven't done at a later date, or just display the score
+   of the subsections that I have got done."*
+
+   A QUESTION BELONGS TO ONE SUBCHAPTER — `q.sec`, which every exam question already carries.
+   A cross-section question carries `q.link` as well, and it is deliberately NOT used here:
+   `q.sec` is the section whose paper the question is on (the pool decided that, and the exam
+   prompt says so in as many words), so it is sat once, with that section, and never offered
+   twice. It still REPORTS under both in the end card's By-subchapter table, which is a
+   different question and was already answered.
+
+   NOTHING IS STORED THAT CAN BE COMPUTED. `S.sat[sec]` is a timestamp saying he finished that
+   section and nothing more; every number on screen comes back out of `S.answers` through
+   `secStat()`. A stored score is a second source of truth, and this page already has one
+   scar from that — see `load()`, where a recomputed score turned a real 8/10 into 2/10. */
+function paperSecs(){
+  const out = [];
+  D.questions.forEach((q,i)=>{
+    if(q.sec && onPaper(S, i) && out.indexOf(q.sec) < 0) out.push(q.sec);
+  });
+  return out.sort((a,b)=>a.localeCompare(b, undefined, {numeric:true}));
+}
+function secQs(sec){
+  return D.questions.map((_,i)=>i)
+    .filter(i => D.questions[i].sec === sec && onPaper(S, i));
+}
+function secStat(sec){
+  const l = secQs(sec);
+  const answered = l.filter(i => ans(i) !== undefined).length;
+  return {sec:sec, t:l.length, answered:answered,
+          n: l.filter(i => finalRight(i)).length,
+          done: !!S.sat[sec], started: answered > 0};
+}
+/* THE PAPER, ACROSS EVERY SITTING — the number that answers "how am I doing on this exam",
+   as opposed to "how did I do this evening". Scored over the sections he has actually sat, so
+   a half-finished paper reads 14/16 with a section outstanding rather than a demoralising
+   14/32 that counts questions he has not been asked yet. `all` is what says the paper is
+   finished; until then `left` is what the picker offers him next. */
+function paperStat(){
+  const secs = paperSecs().map(secStat);
+  const done = secs.filter(s => s.done);
+  const left = secs.filter(s => !s.done);
+  const n = done.reduce((a,s)=>a+s.n, 0), t = done.reduce((a,s)=>a+s.t, 0);
+  return {secs:secs, done:done, left:left, n:n, t:t,
+          whole: secs.reduce((a,s)=>a+s.t, 0),
+          pct: t ? Math.round(n/t*100) : 0, all: secs.length > 0 && left.length === 0};
+}
+/* The picker earns its place only where there is a choice to make: parts on, and more than
+   one subchapter on the paper. A one-section exam goes straight in, as it always did. */
+function sectioned(){ return !!D.parts && paperSecs().length > 1; }
 
 /* ---- THE ON-SCREEN OPTION ORDER ------------------------------------------------------
    A DISPLAY LAYER AND NOTHING MORE. `S.shuf[qid]` is a list of ORIGINAL option indices in
@@ -788,6 +990,13 @@ function reshuffleOpts(i){
 }
 let S = load();
 let lastShown = -1;
+
+/* WHAT TO CALL THIS THING (08-16, his ask: *"you should name them exams"*). A paper that
+   carries subchapter tags or a written half is an exam; anything else is a subchapter quiz.
+   Both signals, because the two halves arrived on different days and a paper with only one of
+   them is still an exam. The word is used for the tab, the review button and the pasted score
+   line, so all three agree without three separate conditions. */
+const NOUN = ((D.frq && D.frq.length) || D.questions.some(q=>q.sec)) ? 'Exam' : 'Quiz';
 
 /* ---- HIS RESEARCH, kept apart from the attempt ---------------------------------------
    Its own localStorage key, NOT a field of S, and that is the whole design. S is one
@@ -907,6 +1116,22 @@ function drawFrq(){
   });
   box.innerHTML = h;
 
+  /* CLICKING THE CARD PUTS THE CARET IN THE BOX. The sticky header covers the top strip of
+     whatever is under it, and the placeholder sits in exactly that strip — so the one place he
+     naturally aims is the one place the click does not land. Anywhere in the card that is not
+     already a control now focuses the answer box, which also makes the whole card a target on
+     a phone. `closest` is what keeps Mark, Copy and any selection inside the rubric working. */
+  box.querySelectorAll('section.frq').forEach(sec => {
+    sec.addEventListener('mousedown', e => {
+      if(e.target.closest('button, textarea, a, .rubric')) return;
+      const ta = sec.querySelector('textarea');
+      if(!ta) return;
+      e.preventDefault();
+      ta.focus();
+      ta.setSelectionRange(ta.value.length, ta.value.length);
+    });
+  });
+
   box.querySelectorAll('textarea').forEach(ta => {
     const fi = +ta.dataset.f;
     const count = () => {
@@ -1013,6 +1238,7 @@ function syncTabs(){
   const nfrq = (D.frq || []).length;
   document.querySelector('.tab[data-tab="starred"]').classList.toggle('hide', !nstar);
   document.querySelector('.tab[data-tab="sheet"]').classList.toggle('hide', !D.hasSheet);
+  document.querySelector('.tab[data-tab="quiz"]').textContent = NOUN;
   document.querySelector('.tab[data-tab="frq"]').classList.toggle('hide', !nfrq);
   $('#tabs').classList.toggle('hide', !nstar && !D.hasSheet && !nfrq);
   if(D.tab === 'starred' && !nstar) setTab('quiz');
@@ -1137,6 +1363,10 @@ function draw(){
   showResearch(!(S.reviewing || S.done));
   if(S.reviewing) return review();
   if(S.done) return end();
+  // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
+  // the rest of the sitting, so nothing about answering, going back or the second pass has
+  // to know the picker exists.
+  if(sectioned() && !S.only) return picker();
   const act = runList();
   if(!act.length) return end();
   if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
@@ -1159,6 +1389,11 @@ function buildQ(i, picked, fresh, en){
   let h = '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta"><span class="num">' + (pos+1) + ' / ' + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
+        // 10 reads as the paper having lost his place, which is how he read it.
+        + (recycling && S.phase!==2
+           ? '<span class="dot">·</span><span class="fillnote">filling in ' + gaps().length
+             + ' left blank</span>' : '')
         // THE SECTION AND THE GLYPH, on the exam only — a subchapter quiz carries neither and
         // this line is byte-for-byte what it always was. The section is what it says; the
         // glyph is why this question is on the paper at all, and it is deliberately JUST the
@@ -1167,7 +1402,16 @@ function buildQ(i, picked, fresh, en){
         + (q.sec ? '<span class="dot">·</span><span class="sec">' + esc(q.sec)
                  + (q.link ? '<span class="lk">+' + esc(q.link) + '</span>' : '')
                  + '</span>' : '')
-        + (q.topic ? '<span class="dot">·</span><span>' + esc(q.topic) + '</span>' : '')
+        // THE TOPIC NAME IS HELD BACK UNTIL HE HAS ANSWERED. It was giving the answer away:
+        // `8.1 · Inferior scapular angle` sat over a question asking which part of the scapula
+        // anchors the powerful shoulder muscles, so the tag answered it before the options did.
+        // His own exams name no topic; he reverse-engineers where to look from the question.
+        // The section number stays visible — that is the scope pointer, and it is the whole
+        // subchapter, not the idea. The name comes back the moment the answer is locked in,
+        // because that is when it stops being a hint and starts being the label he files it
+        // under (the end card, the review list and the paste all keep reading it).
+        + (q.topic && answered ? '<span class="dot">·</span><span>' + esc(q.topic)
+                 + '</span>' : '')
         + (q.src ? '<span class="dot">·</span><span class="src" title="' + srcName(q.src)
                  + '">' + esc(q.src) + '</span>' : '')
         + '</p>'
@@ -1199,7 +1443,8 @@ function buildQ(i, picked, fresh, en){
       if(lab && fresh) cls += ' fresh';
       why = q.rationales ? (q.rationales[k]||'') : '';
     }
-    h += '<button class="'+cls+'" data-k="'+k+'"'+(answered?' disabled':'')+'>'
+    h += '<button class="'+cls+(answered?' locked':'')+'" data-k="'+k+'"'
+       + (answered?' aria-disabled="true"':'')+'>'
        + '<span class="line"><span class="k">'+D.letters[pos]+'.</span>'
        + '<span class="t">'+esc(o)+'</span>'
        + '<span class="mark">'+mark+'</span></span>';
@@ -1226,6 +1471,12 @@ function question(fresh){
   $('#quizview').innerHTML = buildQ(i, picked, fresh, isNew ? ' enter' : '');
   $('#quizview').querySelectorAll('.opt').forEach(b=>{
     b.onclick = ()=>{
+      // `aria-disabled` AND NOT `disabled`, SINCE 08-16. A real `disabled` button will not let
+      // its text be selected however `user-select` is set — browsers block selection inside a
+      // disabled control — so the rationale he wanted to copy off an answered question could
+      // not be picked up at all: *"Im trying to copy on v2 exams and its not letting me."*
+      // The lock is now the guard on this line, and the class is what styles it.
+      if(b.classList.contains('locked')) return;
       // The first pass is never overwritten — a second-pass answer goes in its own map.
       if(S.phase === 2) S.pass2[qk(i)] = +b.dataset.k; else S.answers[qk(i)] = +b.dataset.k;
       save(); question(true);
@@ -1557,12 +1808,19 @@ function openMenu(){
   m.querySelector('#skipq').onclick = ()=>{
     const list = runList(), pos = list.indexOf(S.i);
     if(list.length <= 1) return closeMenu();        // never skip the last one standing
-    const wasLast = pos === list.length - 1;
+    const sec = D.questions[S.i].sec;
     S.skipped[qk(S.i)] = true;
     delete S.answers[qk(S.i)];
     delete S.pass2[qk(S.i)];
     delete S.starred[qk(S.i)];                     // a deleted question is not a starred one
     if(S.unsure) delete S.unsure[qk(S.i)];         // nor one that still needs work
+    // A RESERVE TAKES ITS PLACE IMMEDIATELY, in the same section and the same sitting, so the
+    // count he is working against does not move: skip question 6 of 11 and it is still 11.
+    // Promoted BEFORE `wasLast` is decided — a skip on the last question with a reserve in
+    // hand is not the end of the paper, it is one more question, and finishing there would
+    // have handed him an end card with a question still owed.
+    const filled = promoteReserve(sec) >= 0;
+    const wasLast = !filled && pos === list.length - 1;
     closeMenu();
     syncTabs();
     if(wasLast){ finish(); return; }
@@ -1580,6 +1838,11 @@ function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(
 function finish(){
   S.done = true; S.at = new Date().toISOString();
   recycling = false;          // the clean-up pass is over; a second pass starts in order
+  // THE SITTING'S SUBCHAPTERS ARE NOW SAT. Written here rather than on the end card because
+  // the end card is also what he sees on every later visit, and re-rendering it must not keep
+  // re-stamping the time. A second pass reopens the run and lands back here when it ends, so
+  // the stamp is the last time the section was actually finished, which is what it should be.
+  if(D.parts && S.only) S.only.forEach(sec=>{ S.sat[sec] = S.at; });
   save(); end(); window.scrollTo(0,0);
 }
 
@@ -1614,6 +1877,112 @@ function group(act, keyOf, head, label){
        + '<span class="tbar"><i style="width:'+(by[k].n/by[k].t*100)+'%"></i></span></div>';
   });
   return h + '</div>';
+}
+
+/* THE PICKER — the one new screen, and the only place the sectioning is visible before he
+   starts. Shown when parts are on, the paper has more than one subchapter, and this sitting
+   has not been chosen yet. Choosing writes `S.only` and everything after it is the ordinary
+   exam: same order, same second pass, same end card, one direction to the end.
+
+   IT IS ALSO THE SCOREBOARD. His second ask — *"or just display the score of the subsections
+   that I have got done"* — is answered by the same screen rather than a separate one, because
+   it is the screen he lands on when he opens the link again. */
+let pickSel = null;
+
+function picker(){
+  const p = paperStat();
+  if(!pickSel) pickSel = p.left.map(s => s.sec);          // default: what is still outstanding
+  const chosen = p.secs.filter(s => pickSel.indexOf(s.sec) >= 0);
+  const nq = chosen.reduce((a,s)=>a+s.t, 0);
+
+  let h = '<div class="picker"><h3>' + (p.done.length ? 'Pick up where you left off'
+                                                      : 'Which sections are you sitting?')
+        + '</h3>';
+  h += '<p class="psub">' + p.whole + ' questions across ' + p.secs.length
+     + ' subchapters. Sit as many as you have time for — the rest keep, and this link '
+     + 'reopens on this screen.</p>';
+
+  if(p.done.length){
+    h += '<p class="pscore"><b>' + p.n + ' / ' + p.t + '</b> <span>' + p.pct + '% across '
+       + p.done.length + ' of ' + p.secs.length + ' subchapters'
+       + (p.all ? ' — the whole paper' : '') + '</span></p>';
+  }
+
+  h += '<div class="prows">';
+  p.secs.forEach(s=>{
+    const on = pickSel.indexOf(s.sec) >= 0;
+    const note = s.done ? ('Finished · ' + s.n + '/' + s.t)
+               : s.started ? (s.answered + ' of ' + s.t + ' answered')
+               : (s.t + ' question' + (s.t > 1 ? 's' : ''));
+    h += '<button class="prow' + (on ? ' pon' : '') + (s.done ? ' pdone' : '')
+       + '" data-sec="' + esc(s.sec) + '">'
+       + '<span class="pmark">' + (on ? G_OK : '') + '</span>'
+       + '<span class="plabel">' + esc(s.sec)
+       + ((D.secTitles||{})[s.sec] ? ' <em>' + esc(D.secTitles[s.sec]) + '</em>' : '')
+       + '</span>'
+       + '<span class="pnote">' + note + '</span>'
+       + (s.done ? '<span class="pbar"><i style="width:' + (s.t ? s.n/s.t*100 : 0)
+                 + '%"></i></span>' : '') + '</button>';
+  });
+  h += '</div>';
+
+  h += '<div class="pgo">'
+     + '<button class="pill go" id="pstart"' + (nq ? '' : ' disabled') + '>'
+     + (nq ? 'Start · ' + nq + ' question' + (nq > 1 ? 's' : '') : 'Pick a subchapter')
+     + '</button>'
+     + (p.left.length && p.left.length < p.secs.length
+        ? '<button class="link" id="pleft">Everything left</button>' : '')
+     + '<button class="link" id="pall">The whole paper</button>'
+     + '</div>';
+
+  if(p.done.length) h += '<p class="note">Finished subchapters keep their answers. Sitting '
+                       + 'one again replaces that score.</p>';
+  h += '</div>';
+
+  $('#quizview').innerHTML = h;
+  $('#rail').style.width = '0%';
+  $('#band').classList.add('off');
+  showResearch(false);
+  ['#back','#hintbtn','#hinttext','#redo','#next','#review','#retake','#pass2']
+    .forEach(k => $(k).classList.add('hide'));
+  $('#footer').classList.add('hide');
+
+  document.querySelectorAll('.prow').forEach(b => b.onclick = ()=>{
+    const k = b.dataset.sec, at = pickSel.indexOf(k);
+    if(at >= 0) pickSel.splice(at, 1); else pickSel.push(k);
+    picker();
+  });
+  const start = $('#pstart');
+  if(start) start.onclick = ()=> beginSitting(pickSel.slice());
+  const left = $('#pleft');
+  if(left) left.onclick = ()=> beginSitting(p.left.map(s=>s.sec));
+  $('#pall').onclick = ()=> beginSitting(p.secs.map(s=>s.sec));
+  renderScore();
+  centreBlock();
+}
+
+/* ONE DIRECTION FROM HERE. A sitting starts at the top of its own list with a clean phase —
+   the answers from any earlier sitting stay in `S.answers` untouched, they are simply not in
+   `active()` any more, which is what lets him come back to a section a fortnight later
+   without the page having kept a second copy of anything. */
+function beginSitting(secs){
+  if(!secs.length) return;
+  S.only = secs;
+  S.phase = 1; S.p2list = null; S.done = false; S.reviewing = false; S.hintOpen = false;
+  // RE-SITTING A FINISHED SECTION MUST ACTUALLY RE-SIT IT. Without this it would open on the
+  // end card, every question already answered, and the "Start" he just pressed would look
+  // broken. Its old answers go, and `sat` with them, because that section is now in progress.
+  secs.forEach(sec=>{
+    if(S.sat[sec]){
+      secQs(sec).forEach(i=>{ delete S.answers[qk(i)]; delete S.pass2[qk(i)]; });
+      delete S.sat[sec];
+    }
+  });
+  const l = runList();
+  S.i = l.length ? l[0] : 0;
+  pickSel = null;
+  lastShown = -1;
+  save(); draw(); window.scrollTo(0,0);
 }
 
 function end(){
@@ -1665,6 +2034,33 @@ function end(){
     h += '<p class="hist">Earlier attempts: ' + S.history.slice().reverse()
         .map(a=>'<span>'+a.score+'/'+a.total+' on '+when(a.at)+'</span>').join(' · ') + '</p>';
   }
+  /* THE PAPER, UNDER THE SITTING (08-16). The score above is this evening's — one subchapter,
+     or two. This is the exam: every subchapter, what it scored or that it is still waiting,
+     and one total across the ones he has actually sat. Absent on an unsectioned page. */
+  if(sectioned()){
+    const p = paperStat();
+    h += '<div class="topics parts"><h3>This exam</h3>';
+    p.secs.forEach(s=>{
+      const sitting = S.only && S.only.indexOf(s.sec) >= 0;
+      h += '<div class="trow"><span>' + esc(s.sec)
+         + (sitting ? '<em> just sat</em>' : '') + '</span>'
+         + '<span class="n">' + (s.done ? s.n + '/' + s.t : '—') + '</span>'
+         + '<span class="tbar' + (s.done ? '' : ' waiting') + '"><i style="width:'
+         + (s.done && s.t ? s.n/s.t*100 : 0) + '%"></i></span></div>';
+    });
+    h += '<p class="ptotal"><b>' + p.n + ' / ' + p.t + '</b> '
+       + (p.all ? 'the whole paper' :
+          'across ' + p.done.length + ' of ' + p.secs.length + ' subchapters · '
+          + p.left.reduce((a,s)=>a+s.t,0) + ' question'
+          + (p.left.reduce((a,s)=>a+s.t,0) > 1 ? 's' : '') + ' still to sit')
+       + '</p></div>';
+    if(p.left.length) h += '<p class="note"><button class="link" id="more">'
+                         + 'Sit another subchapter</button> — ' + p.left.map(s=>esc(s.sec)).join(', ')
+                         + ' left</p>';
+    else h += '<p class="note"><button class="link" id="more">Choose subchapters</button> — '
+            + 'every one is done; sitting one again replaces its score.</p>';
+  }
+
   const nskip = Object.keys(S.skipped||{}).length;
   if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
               + '<button class="link" id="unskip">put them back</button></p>';
@@ -1675,6 +2071,9 @@ function end(){
   $('#quizview').innerHTML = h;
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  const m = $('#more');
+  if(m) m.onclick = ()=>{ S.only = null; S.done = false; S.reviewing = false;
+                          pickSel = null; save(); draw(); window.scrollTo(0,0); };
   $('#rail').style.width = '100%';
   $('#band').classList.add('off');
   showResearch(false);
@@ -1685,11 +2084,16 @@ function end(){
   $('#redo').classList.add('hide');
   $('#next').classList.add('hide');
   $('#review').classList.remove('hide');
-  $('#review').textContent = 'Review quiz';
+  $('#review').textContent = 'Review ' + NOUN.toLowerCase();
   $('#retake').classList.remove('hide');
   // No wrong answers left to retry → no button at all, which is also what stops the second
   // pass looping into a third: anything answered on pass two leaves pending2() for good.
   $('#pass2').classList.toggle('hide', pending2().length === 0);
+  /* THE WRITTEN HALF IS THE PRIMARY WAY OUT OF AN EXAM'S END CARD (08-16, his ask): *"the
+     main button after the end of a large mcq for exams should be to move on onto frqs."* So
+     the second pass keeps its place but loses the accent — it is still there, it is just no
+     longer what the page is pointing at. A quiz has no written half and is unchanged. */
+  $('#towritten').classList.toggle('hide', !(D.frq && D.frq.length));
   renderScore();
   lastShown = -1;
   centreBlock();
@@ -1785,7 +2189,7 @@ function hintLine(p){
 function scoreMarkdown(){
   if(!S.done) return '';
   const p = scoreParts();
-  return '**Quiz:** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
+  return '**' + NOUN + ':** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
        + (p.red ? ', +' + p.red + ' redeemed' : '') + ', ' + p.wrong + ' wrong'
        + (p.skipped ? ', ' + p.skipped + ' skipped' : '') + ' · ' + when(S.at)
        + '\n**Hints:** ' + hintLine(p);
@@ -1851,6 +2255,7 @@ function step(dir){
 }
 $('#next').onclick = ()=> step(1);
 $('#back').onclick = ()=> step(-1);
+$('#towritten').onclick = ()=> setTab('frq');
 $('#review').onclick = ()=>{ S.reviewing = !S.reviewing; draw(); };
 /* THE SECOND PASS — the preferred way out of the end card, and the one that keeps
    everything. It re-runs only what he got wrong, on a list frozen at the moment he presses
@@ -1867,9 +2272,15 @@ $('#pass2').onclick = ()=>{
    history first so nothing is lost, and the questions he deleted or starred stay that way —
    they are decisions about the quiz, not part of one attempt at it. */
 $('#retake').onclick = ()=>{
-  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length});
+  // ON A SECTIONED PAPER THE HISTORY LINE IS THE PAPER, not the last sitting — the same
+  // reasoning as `save()`. `blank()` returns `only: null` and `sat: {}`, so a retake drops
+  // every sitting at once and lands back on the picker, which is what "retake the exam" means.
+  if(S.done){ const p = D.parts ? paperStat() : null;
+              S.history.push({at:S.at, score: p ? p.n : score(S),
+                              total: p ? p.t : active(S).length}); }
   const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
   S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  pickSel = null;
   lastShown = -1;
   save(); syncTabs(); renderScore(); draw();
 };
@@ -2070,11 +2481,34 @@ function researchMarkdown(){
   });
   return out.replace(/\n+$/, '\n');
 }
-/* ITS OWN HEADING, and the heading text is load-bearing. `notion_board.py notes` splits this
-   section out of the row body by name and hands it to the generator as PROMPT, while
-   everything else on the row stays a source. Rename it here and it silently becomes material
-   again — which is the bug this whole split exists to fix. */
+/* TWO HEADINGS WHOSE TEXT IS LOAD-BEARING. `notion_board.py notes` splits both of these out
+   of the row body BY NAME — `split_fixes()`, and `FIX_HEADING` / `SKIP_HEADING` there are
+   these two strings. Everything else on the row stays material. Rename one here and it
+   silently becomes material again, which is the bug this whole split exists to fix. */
 const FIXHEAD = 'Fix these questions';
+const SKIPHEAD = 'Skipped';
+
+/* THE CARDS HE DELETED, and this section exists to keep them OUT of things (08-14, his rule:
+   skipped cards *"are never reformed and never appear"*, on any exam, v2 or v3).
+
+   It is the one place on this page where a skipped question is written down. Everywhere else
+   they are gone by design — out of the run, out of the score, out of the denominator, out of
+   the sheet — because they were taken out of the quiz. But "gone" only ever meant gone from
+   THIS browser: the exam is built from what he pastes into Notion, so a card he deleted here
+   was invisible to it and perfectly likely to come back as an exam question. This is the one
+   line of the paste that stops that, and `remember_skipped()` files it permanently.
+
+   It says so in the heading's own body text because it will be read by a person too, and a
+   bare list of questions under his notes reads exactly like a list of things to be tested. */
+function skipMarkdown(){
+  const list = markedList(S.skipped);
+  if(!list.length) return '';
+  let out = '\n\n## ' + SKIPHEAD + '\n\n'
+          + '_Deleted while taking the quiz. Not material — these are the ideas to stop '
+          + 'asking about._\n';
+  list.forEach(x => { out += '\n### ' + x.n + '. ' + x.q.q + '\n'; });
+  return out.replace(/\n+$/, '\n');
+}
 function fixMarkdown(){
   const list = fixList();
   if(!list.length) return '';
@@ -2102,6 +2536,7 @@ function fullMarkdown(){
        + markedMarkdown(markedList(S.unsure), 'Needs work')
        + researchMarkdown()
        + fixMarkdown()
+       + skipMarkdown()
        + frqMarkdown();
 }
 
@@ -2141,6 +2576,17 @@ function fullHTML(){
          + '<p><strong>Answer:</strong> ' + esc(x.q.options[x.q.correct]) + '</p>'
          + '<p><strong>Change it to:</strong> ' + esc(x.r.f.trim()) + '</p>';
     });
+  }
+  /* The HTML flavour has to carry this too. It goes on the clipboard INSTEAD of the markdown
+     whenever there is a pasted image anywhere on the quiz, so anything missing here is
+     missing from the Notion row on exactly those weeks — and a skipped card that does not
+     reach the row is a card the exam is free to ask about again. */
+  const skips = markedList(S.skipped);
+  if(skips.length){
+    h += '<h2>' + SKIPHEAD + '</h2>'
+       + '<p><em>Deleted while taking the quiz. Not material — these are the ideas to stop '
+       + 'asking about.</em></p>';
+    skips.forEach(x => { h += '<h3>' + x.n + '. ' + esc(x.q.q) + '</h3>'; });
   }
   const fm = frqMarkdown();
   if(fm) h += tinyMd(fm);

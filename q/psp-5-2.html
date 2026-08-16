@@ -122,8 +122,8 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
  border:1px solid transparent;border-radius:var(--radius);padding:var(--opad);
  color:var(--text);font:inherit;font-size:var(--osize);cursor:pointer;
  transition:background .16s ease,border-color .16s ease,opacity .16s ease}
-.opt:hover:not(:disabled){background:var(--surface-hi)}
-.opt:disabled{cursor:default}
+.opt:hover:not(.locked){background:var(--surface-hi)}
+.opt.locked{cursor:default}
 .line{display:flex;gap:12px;align-items:flex-start;line-height:1.4}
 .line .k{color:var(--muted);min-width:1.25em}
 .line .t{flex:1}
@@ -176,7 +176,7 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
 .q,.qq,.why,.lab,.hinttext,.rline,.tag,.sheet,.topics,.legend{
  user-select:text;-webkit-user-select:text}
 .opt{user-select:none;-webkit-user-select:none}
-.opt:disabled,.opt:disabled *{user-select:text;-webkit-user-select:text;cursor:auto}
+.opt.locked,.opt.locked *{user-select:text;-webkit-user-select:text;cursor:auto}
 .star,.dots,.tab,button.pill{user-select:none;-webkit-user-select:none}
 
 /* ---- HIS RESEARCH, one box per question ----
@@ -294,6 +294,39 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .tbar{grid-column:1/-1;height:3px;background:var(--line);border-radius:999px;
  overflow:hidden}
 .tbar i{display:block;height:100%;background:var(--text)}
+/* A subchapter he has not sat gets a rail with nothing in it rather than a 0% bar, because a
+   bar at zero reads as "scored nothing" and the whole point is that it has not been asked. */
+.tbar.waiting{background:repeating-linear-gradient(90deg,var(--line) 0 3px,transparent 3px 6px)}
+.topics.parts .trow em{font-style:normal;color:var(--muted);font-size:.8rem;margin-left:8px}
+.ptotal{margin:14px 0 0;color:var(--muted);font-size:.88rem}
+.ptotal b{color:var(--text);font-variant-numeric:tabular-nums;font-size:1.05rem;
+ font-weight:600;margin-right:8px}
+
+/* ---- THE SUBCHAPTER PICKER (08-16) ----
+   Deliberately the same furniture as the end card — same heading treatment, same rails, same
+   tabular numbers — because it IS the end card most of the time he sees it: he opens the link
+   and this screen tells him what he has scored and what is left. A separate visual language
+   for "choose" and "review" would make one screen look like two. */
+.picker{padding:2px 0 8px}
+.picker h3{font-size:1.35rem;font-weight:600;letter-spacing:-.01em;margin:0 0 8px}
+.psub{color:var(--muted);font-size:.9rem;margin:0 0 22px;max-width:46ch}
+.pscore{margin:0 0 22px}
+.pscore b{font-size:1.5rem;font-variant-numeric:tabular-nums;font-weight:600}
+.pscore span{color:var(--muted);font-size:.88rem;margin-left:10px}
+.prows{display:flex;flex-direction:column;gap:8px;margin:0 0 24px}
+.prow{display:grid;grid-template-columns:22px auto 1fr;gap:4px 12px;align-items:center;
+ width:100%;text-align:left;font:inherit;cursor:pointer;padding:13px 16px;
+ border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--text)}
+.prow:hover{border-color:var(--muted)}
+.prow.pon{border-color:var(--accent)}
+.pmark{color:var(--accent);font-size:.95rem;line-height:1}
+.plabel{font-variant-numeric:tabular-nums;font-weight:600}
+.plabel em{font-style:normal;font-weight:400;color:var(--muted);margin-left:8px}
+.pnote{color:var(--muted);font-size:.86rem;justify-self:end}
+.pbar{grid-column:2/-1;height:3px;background:var(--line);border-radius:999px;overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--text)}
+.pgo{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)}
 
 /* ---- review list ---- */
 .rev{padding:6px 0 36px}
@@ -389,6 +422,27 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
  color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
  padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.6;outline:none;margin-top:16px}
 .frqin:focus{border-color:var(--accent)}
+/* THE STICKY HEADER WAS EATING THE CLICK (08-16). It is 49px tall with z-index 5, so the top
+   strip of a box scrolled under it is dead to the mouse — and the top strip is exactly where
+   the "Write your answer." placeholder is, so the box reads as broken. His words: *"I cant
+   even click the textbox for this exam."* `scroll-margin-top` keeps the card clear of the
+   header whenever anything scrolls it into view; the click handler on the card is the belt to
+   that braces, since he can also scroll there by hand. */
+.frq{scroll-margin-top:64px}
+
+/* The only thing on this page allowed to shout. It sits over everything because a saved
+   answer is the one promise the page makes. */
+#savewarn{position:fixed;left:12px;right:12px;bottom:12px;z-index:60;padding:12px 16px;
+ border-radius:12px;font-size:.86rem;line-height:1.4;background:#7f1d1d;color:#fff;
+ box-shadow:0 6px 24px rgba(0,0,0,.4)}
+#savewarn.hide{display:none}
+
+/* WHERE FORWARD MEANS "THE NEXT BLANK ONE". Reaching the end of the list with holes in it
+   sends him back to the first one — right, and invisible until 08-16, when he read it as the
+   paper losing his place: *"when I thought I was done I wasnt… questions are ghosting until
+   the end."* The counter says so now, and the rail stops pretending the run is nearly over. */
+.fillnote{display:inline-flex;align-items:center;gap:6px;color:var(--accent);
+ font-size:.7rem;letter-spacing:.07em;text-transform:uppercase}
 .frqin::placeholder{color:var(--muted);opacity:.7}
 .acts.inline{margin-top:12px}
 .rubric{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
@@ -671,12 +725,13 @@ Self-control is finite - one hard task leaves less for the next"></textarea>
     <button class="pill ghost hide" id="retake">Retake</button>
     <span class="spacer"></span>
     <button class="pill hide" id="review">Review quiz</button>
-    <button class="pill primary hide" id="pass2">2nd Pass</button>
+    <button class="pill ghost hide" id="pass2">2nd Pass</button>
+    <button class="pill primary hide" id="towritten">Written half</button>
     <button class="pill primary" id="next">Next</button>
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "psp-5-2", "title": "5.2 Changing Attitudes Through Persuasion", "subtitle": "Chapter 5 · Attitudes, Behavior, and Persuasion", "book": "PSP", "hash": "0c9b2945d1c1a38a", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "In the study by MacLachlan and Siegel (1980) regarding speech rate, what was the primary reason that faster speech increased the effectiveness of a persuasive message?", "options": ["It allows the speaker to present twice as many arguments in the same amount of time, increasing message strength.", "It makes the communicator appear more expert while reducing the listener's ability to develop counterarguments.", "It encourages the listener to engage in deep cognitive elaboration to keep up with the information.", "It creates a positive affective response that leads to spontaneous processing of the message's logic."], "rationales": ["The study focused on the speed of the same communication rather than increasing the quantity of different arguments.", "Faster speech enhances perceived expertise and limits the cognitive resources available for the audience to disagree.", "Faster speech actually hinders deep processing and counterarguing rather than encouraging elaboration.", "While it may involve spontaneous processing, the effect is driven by perceived expertise and limited counterarguing, not just general mood."], "correct": 1, "hint": "consider how speed affects both the perception of the speaker and the cognitive capacity of the listener.", "topic": "Speech rate", "sec": "", "src": "", "link": "", "qid": "04bfdcb05b"}, {"q": "According to the findings of Chaiken (1980), how did personal involvement change the way students reacted to a likeable communicator versus an unlikeable one?", "options": ["Unlikeable communicators were more persuasive to highly involved students because they seemed more objective.", "Highly involved students were persuaded by the quality of the argument regardless of the communicator's likeability.", "Students with low involvement were primarily influenced by the logical strength of the arguments presented.", "Likeability was the dominant factor for all students, but highly involved students processed the information faster."], "rationales": ["The study showed that involvement led to a focus on argument quality, not a preference for unlikeable sources.", "When personal stakes are high, individuals focus on message content rather than surface-level cues like likeability.", "Low-involvement students were found to be more influenced by the likeability of the source than the argument quality.", "Likeability only dominated for those who were not personally affected by the topic."], "correct": 1, "hint": "think about which group was 'fooled' by the personality of the speaker and which was not.", "topic": "Processing motivation", "sec": "", "src": "", "link": "", "qid": "cd0ac741da"}, {"q": "Research by Sinclair, Mark, and Clore (1994) suggests that people in a positive mood are more susceptible to persuasion. What does this imply about how mood affects information processing?", "options": ["Happiness triggers thoughtful processing because the individual has more mental energy to devote to the topic.", "Positive moods make people more resistant to persuasion because they are already satisfied with their current beliefs.", "Positive affect acts as a signal that the situation is safe, leading to less careful scrutiny of incoming messages.", "A good mood increases the listener's motivation to find flaws in an argument to maintain their current state."], "rationales": ["While energy might be higher, the 'everything is okay' signal usually leads to spontaneous rather than thoughtful processing.", "The research indicates the opposite; happiness generally makes people more open to persuasion due to less careful processing.", "When people feel good, they assume things are okay and reduce the cognitive effort used to evaluate arguments.", "Positive moods actually decrease the tendency to look for flaws or process information carefully."], "correct": 2, "hint": "consider what a 'good mood' signals to the brain regarding the need for vigilance.", "topic": "Affective states", "sec": "", "src": "", "link": "", "qid": "2dc7fbc8c9"}, {"q": "In the mammogram screening study by Banks and colleagues (1995), a message emphasizing that 'not getting a mammogram can cost you your life' was more effective than one saying 'getting a mammogram can save your life.' What does this finding illustrate?", "options": ["Positive framing is only effective when the communicator is perceived as a highly untrustworthy source.", "The brain responds more strongly to negative affect and potential losses than to positive affect and gains.", "Women are generally more resistant to positive messages than men due to higher levels of psychological reactance.", "Health-related messages are processed spontaneously, meaning the specific wording of the frame is ignored."], "rationales": ["The effectiveness of negative framing in this study was tied to the brain's reactivity to threats, not source trust.", "Negative framing is often more persuasive because people are more motivated to avoid loss than to achieve a gain.", "The study focused on framing effectiveness based on negativity bias, not gender-specific reactance levels.", "The fact that one frame worked better than the other proves that the specific wording was processed and had an impact."], "correct": 1, "hint": "think about whether the brain prioritizes avoiding a threat or seeking a benefit.", "topic": "Message framing", "sec": "", "src": "", "link": "", "qid": "fe28ef0be6"}, {"q": "While fear appeals can be highly persuasive, what condition did research by Passyn and Sujan (2006) identify as necessary to prevent the audience from simply turning away in anxiety?", "options": ["The fearful images must be presented subliminally so that the anxiety does not reach conscious awareness.", "The message must use a humorous communicator to balance out the negative emotions generated by the fear.", "The fear appeal should avoid mentioning self-concern and focus instead on how the behavior affects society.", "The message must provide clear instructions on how to rectify the problem to increase the audience's self-efficacy."], "rationales": ["Fear appeals work by being salient and conscious; subliminal presentation would likely nullify the warning.", "Humor can distract from the message; the key is providing a solution, not just emotional balance.", "Fear appeals are actually more effective when they focus on self-concern and personal harm.", "Fear is only productive if the audience feels they have the ability and the tools to change the outcome."], "correct": 3, "hint": "consider what a person needs to feel in order to take action rather than just feeling scared.", "topic": "Fear appeals", "sec": "", "src": "", "link": "", "qid": "a6ed7abece"}, {"q": "In the classic study by Petty, Cacioppo, and Goldman (1981), students for whom the new exam was NOT personally relevant based their attitudes primarily on which factor?", "options": ["The strength and statistical validity of the arguments provided.", "The number of counterarguments they were able to generate while listening.", "The degree of psychological reactance they felt toward the college administration.", "The perceived expertise of the source of the message."], "rationales": ["Argument strength was the primary factor for the high-relevance group, not the low-relevance group.", "Low-relevance listeners typically do not put in the cognitive effort to generate counterarguments.", "The study found that they relied on source cues (spontaneous processing) rather than emotional reactance.", "When relevance is low, people use spontaneous cues like source expertise rather than evaluating the argument."], "correct": 3, "hint": "think about which group took a 'shortcut' by looking at the speaker's credentials.", "topic": "Relevance cues", "sec": "", "src": "", "link": "", "qid": "dbac21857b"}, {"q": "What does the sleeper effect imply about the long-term impact of a message delivered by an untrustworthy source?", "options": ["People will eventually misattribute the message to an expert source, making it even more persuasive.", "The message will lose all influence as both the content and the source are forgotten at the same rate.", "Attitude change may increase over time as people remember the content but forget the unreliable source.", "The initial resistance to the source makes the attitude against the message even stronger over time."], "rationales": ["While misattribution can happen, the core effect is the forgetting of the source which allows the message to be accepted.", "The sleeper effect specifically describes a situation where the message influence increases over time.", "Over time, the link between the message and the 'discounting cue' (the source) weakens, leaving just the message.", "This describes a 'boomerang' effect or reactance, whereas the sleeper effect describes delayed persuasion."], "correct": 2, "hint": "consider how the passage of time affects the connection between 'what' was said and 'who' said it.", "topic": "Source memory", "sec": "", "src": "", "link": "", "qid": "7eaf3ab596"}, {"q": "How does the technique of inoculation, as proposed by McGuire (1961), help a person resist strong persuasive attempts in the future?", "options": ["By providing them with a strong expert source to rely on when they feel confused by new information.", "By creating a strong emotional response that makes the person fear any new or different information.", "By exposing them to a weak version of the opposing argument so they can practice developing counterarguments.", "By teaching them to use spontaneous processing to ignore any message that contradicts their current beliefs."], "rationales": ["Inoculation is about building internal cognitive defenses, not relying on external experts.", "Inoculation focuses on the cognitive component of attitudes, not the creation of fear.", "Similar to a vaccine, a weak 'dose' of an argument builds cognitive defenses for later, stronger attacks.", "Inoculation actually encourages thoughtful processing to create specific counterarguments."], "correct": 2, "hint": "think about the medical analogy and how it applies to building mental 'immunity'.", "topic": "Resistance techniques", "sec": "", "src": "", "link": "", "qid": "95fda08baa"}, {"q": "If a parent is overly directive and aggressive in telling their child not to smoke, the child may start smoking specifically to assert their independence. Which concept explains this behavior?", "options": ["The sleeper effect", "Psychological reactance", "Forewarning", "Spontaneous message processing"], "rationales": ["The sleeper effect deals with the decay of source memory over time, not an immediate emotional rebellion.", "Reactance occurs when individuals feel their freedom of choice is threatened, prompting them to perform the forbidden act.", "Forewarning is a technique to prevent persuasion by alerting someone, not the emotional rebellion that results from pressure.", "While reactance is an emotional response, it is a specific reaction to a threat to freedom rather than general fast processing."], "correct": 1, "hint": "consider the emotional response that happens when someone feels they are being 'pushed' into a corner.", "topic": "Choice freedom", "sec": "", "src": "", "link": "", "qid": "7f69544fd8"}, {"q": "In the study on subliminal advertising by Karremans and colleagues (2006), what was the critical factor that determined whether the 'Lipton Ice' prime influenced the students' choices?", "options": ["The prime had to be presented for at least one full second to be processed by the subconscious mind.", "The participants had to be currently thirsty for the prime to have any effect on their intention to drink.", "The participants had to be unaware of the popular Dutch brand name before entering the laboratory.", "The effect only occurred if the students were also engaged in thoughtful, central processing of the letter strings."], "rationales": ["The primes were presented for only 1/50th of a second, which is far shorter than one second.", "Subliminal primes are generally only effective if they align with an individual's current motivations or needs.", "The study used a popular brand specifically to see if the prime could trigger a known preference.", "Subliminal priming is by definition outside of conscious, thoughtful processing."], "correct": 1, "hint": "consider the physical state of the participants during the computer trials.", "topic": "Subliminal priming", "sec": "", "src": "", "link": "", "qid": "586495ae90"}, {"q": "Research by Eagly, Wood, and Chaiken (1978) indicates that a communicator is seen as more sincere and persuasive when they present a message that goes against their own self-interest. Why does this happen?", "options": ["It forces the listener to use the sleeper effect to separate the message from the communicator's background.", "It suggests that the communicator's internal beliefs are powerful enough to override external rewards.", "It triggers spontaneous processing because the message is so unexpected and surprising.", "It makes the communicator appear more similar to the audience, which increases liking and trust."], "rationales": ["The sleeper effect involves forgetting the source over time; this effect involves an immediate judgment of the source's motives.", "When someone risks personal gain to speak, we assume they are telling the truth because there is no other reason for them to do it.", "While surprising, it actually leads to a deeper evaluation of the communicator's 'internal state' and sincerity.", "The effect is based on attributions of sincerity and lack of bias, not necessarily on perceived similarity."], "correct": 1, "hint": "think about why someone would say something that might actually hurt them financially or socially.", "topic": "Communicator bias", "sec": "", "src": "", "link": "", "qid": "d09011a273"}, {"q": "Why are Tupperware parties often cited as a successful example of persuasion in social psychology?", "options": ["The environment creates psychological reactance, making guests feel they must buy products to stay in the group.", "The success is driven more by the fact that guests like and trust the 'salesperson' (their friend) than by the product itself.", "They rely on inoculation by telling guests about cheaper products before showing the high-quality Tupperware.", "They use expert communicators who speak very quickly to prevent counterarguments about the product's price."], "rationales": ["Reactance usually leads to rebellion/refusal; the success here is based on positive social cues and liking.", "Trust and liking for a known communicator often lead to acceptance of a message without critical evaluation.", "Inoculation is a resistance technique, not a sales technique used in this context.", "Tupperware parties typically use friends (similar others) rather than technical experts."], "correct": 1, "hint": "consider the relationship between the buyer and the person selling the items.", "topic": "Social liking", "sec": "", "src": "", "link": "", "qid": "7de6072c00"}, {"q": "The 'forewarning' approach to preventing persuasion is most effective under which of the following conditions?", "options": ["When the warning is delivered by an untrustworthy source, triggering the sleeper effect.", "When the upcoming message attacks an attitude that the person cares about deeply.", "When the person has no prior knowledge of the topic and is looking for an expert to follow.", "When the person is encouraged to use spontaneous processing to dismiss the coming argument quickly."], "rationales": ["The effectiveness of forewarning is about preparation time, not the eventual forgetting of the source.", "Forewarning allows people to 'bring up their defenses' and prepare to maintain highly valued beliefs.", "If the person doesn't care or know about the topic, they may just change their mind before the appeal even arrives.", "Forewarning is effective because it gives the person time to develop thoughtful counterarguments."], "correct": 1, "hint": "think about whether the person needs to have a 'stake' in the belief for the warning to work.", "topic": "Strategic forewarning", "sec": "", "src": "", "link": "", "qid": "fbef30c509"}], "hasSheet": true, "frq": [], "notebook": "https://notebooklm.google.com/notebook/1f800a4d-3f2e-42d1-a3e6-41ea2e8916f1/artifact/bc6a5cd6-2d26-4fdd-b600-d3f606fc5035", "root": "../index.html", "tab": "quiz", "sheet": "## Speech rate\nSpeed of delivery impacts perceived authority and reduces the listener's ability to develop cognitive counterarguments.\n\n### Key terms\n1. **Expertise** — the perception that a communicator is knowledgeable based on confident, fast, and straightforward delivery.\n2. **Counterarguments** — cognitive rebuttals that are harder to generate when the listener must process information at high speed.\n\n### Names and studies\n1. **MacLachlan & Siegel (1980)** — sped up TV commercials by deleting very small segments of speech, then showed that faster delivery made communications more persuasive.\n2. **Moore, Hausknecht, & Thamodaran (1986)** — manipulated the speed of audio messages, then showed that faster speech enhanced the perceived expertise of the source.\n\n## Processing motivation\nEffective persuasion depends on whether the recipient is motivated and able to invest cognitive effort in the message.\n\n### Key terms\n1. **Spontaneous processing** — a quick, direct response where persuasion occurs based on obvious or enjoyable cues rather than the message itself.\n   1. **Peripheral/Heuristic processing** — alternative terms for the quick, non-deliberative route of attitude change.\n2. **Thoughtful (Central/Systematic) processing** — a controlled route involving careful cognitive elaboration of the message's meaning and validity.\n\n### Names and studies\n1. **Shelley Chaiken (1980)** — compared students with high versus low involvement in a topic, then showed that low-involvement students were persuaded by likeability rather than argument quality.\n\n## Affective states\nMood and positive emotional associations determine the depth of cognitive processing and the level of message acceptance.\n\n### Key terms\n1. **Associational learning** — the process of linking a product with positive features, such as humor or beauty, within an advertisement.\n2. **Positive affect** — a mood state signaling \"things are OK,\" leading to less careful information processing and higher acceptance of spontaneous appeals.\n\n### Names and studies\n1. **Sinclair, Mark, & Clore (1994)** — examined how mood affects information processing, then showed that the spontaneous approach is most effective when people are happy.\n\n## Message framing\nThe presentation of information as either a potential gain or a potential loss significantly influences its effectiveness.\n\n### Key terms\n1. **Negative framing** — presenting information to suggest that failing to adopt a specific behavior will result in harm to the self.\n\n### Names and studies\n1. **Banks, Salovey, Greener, and Rothman (1995)** — compared different mammogram recruitment messages, then found that emphasizing the risk of not getting a screening was more effective than emphasizing the benefits.\n2. **Ito et al. (1998)** — measured brain responses to different affective stimuli, then showed that the brain responds more strongly to negative affect than to positive affect.\n\n## Fear appeals\nHigh-anxiety messaging can drive behavioral change, provided the recipient feels capable of addressing the highlighted threat.\n\n### Key terms\n1. **Self-efficacy** — the belief that one has the ability to take the necessary actions to rectify the danger highlighted by a fearful message.\n\n### Names and studies\n1. **Witte & Allen (2000)** — conducted a meta-analysis on the use of fear in public health, then showed that fearful messages are generally persuasive for driving behavior change.\n2. **Passyn & Sujan (2006)** — studied the interaction of fear and self-accountability, then showed that fear appeals work best when they provide specific instructions on how to respond.\n\n## Relevance cues\nThe personal importance of a topic determines whether a recipient utilizes the thoughtful or spontaneous route of persuasion.\n\n### Key terms\n1. **High personal relevance** — a state where a topic affects the listener directly, motivating them to engage in thoughtful processing of message content.\n2. **Low personal relevance** — a state where a topic is unimportant, causing the listener to rely on spontaneous cues like source expertise.\n\n### Names and studies\n1. **Petty, Cacioppo, and Goldman (1981)** — manipulated relevance regarding a new exam policy, then showed that highly involved students were influenced by argument strength rather than source expertise.\n\n## Source memory\nAttitudes can change over time as the mental link between a message and its original source begins to decay.\n\n### Key terms\n1. **Sleeper effect** — attitude change occurring when we forget to discount a message from an untrustworthy source as the memory of the source fades.\n\n### Names and studies\n1. **Kumkale & Albarracín (2004)** — reviewed findings on temporal persuasion, then showed that people eventually remember message content more clearly than source credibility.\n2. **National Enquirer anecdote** — a researcher recalled a movie star story from an unreliable tabloid, then showed how content is accepted once the source discounting is forgotten.\n\n## Resistance techniques\nMethods used to strengthen existing attitudes can make individuals more resilient against future attempts at persuasion.\n\n### Key terms\n1. **Inoculation** — building defenses by exposing a person to a weak attack on their attitude to help them develop counterarguments for future appeals.\n\n### Names and studies\n1. **McGuire (1961)** — tested supportive versus refutational defenses, then showed that mild attacks on beliefs helped people resist subsequent, stronger persuasion attempts.\n2. **Compton & Pfau (2005)** — reviewed the application of resistance theory, then showed that practicing counterarguments makes an attitude stronger and more defined.\n\n## Choice freedom\nIndividuals often respond with rebellion when they feel their autonomy or ability to make decisions is being threatened.\n\n### Key terms\n1. **Psychological reactance** — a strong emotional rebellion triggered when a person feels their freedom of choice is being taken away.\n\n### Names and studies\n1. **Erceg-Hurn and Steed (2011)** — investigated the impact of graphic cigarette warnings on smokers, then showed that high-pressure messaging can trigger reactance and reduce warning impact.\n\n## Subliminal priming\nMessaging presented below the threshold of conscious awareness has negligible and highly conditional effects on actual behavior.\n\n### Key terms\n1. **Subliminal advertising** — flashing brand images or messages so quickly that the recipient is unaware they have received a message.\n\n### Names and studies\n1. **Karremans, Stroebe, and Claus (2006)** — primed students with \"Lipton Ice\" messages, then showed the prime only increased brand choice for participants who were currently thirsty.\n2. **Trappey’s (1996)** — conducted a meta-analysis of 23 research studies, then showed that subliminal advertising has a negligible effect on actual consumer choice.\n\n## Communicator bias\nPerceived source self-interest and message sidedness impact how much weight a listener gives to the information presented.\n\n### Key terms\n1. **Discounting** — the tendency to ignore a message when the communicator is perceived to have an external, self-serving motive.\n2. **Message Sidedness** — the extent to which a communicator acknowledges or ignores potential problems and counterarguments.\n   1. **One-sided versus two-sided messages** — the contrast between presenting only one perspective or acknowledging both, where the former can appear unfairly biased.\n\n### Names and studies\n1. **Eagly, Wood, & Chaiken (1978)** — analyzed causal inferences about sources, then showed that communicators arguing in their own self-interest are seen as less trustworthy.\n2. **Wood & Eagly (1981)** — studied messages that go against external causes, then showed that arguing against self-interest makes the communicator's internal belief seem even more powerful.\n\n## Social liking\nInterpersonal attraction and perceived commonality between the source and recipient can bypass the critical evaluation of a message.\n\n### Key terms\n1. **Likable Sources** — communicators that people tend to trust, often leading to message acceptance without critical evaluation.\n   1. **Attractive communicators** — sources who use physical appeal to create positive associations and increase the likelihood of message acceptance.\n   2. **Similar communicators** — sources who share values with the audience, such as teenagers used in ads for teens or elderly people for older adults.\n\n### Names and studies\n1. **Tupperware parties example** — examined social selling within friend groups, then showed that liking the salesperson was more influential than the product's actual nature.\n2. **Priester & Petty (2003)** — researched the impact of celebrity spokespeople, then showed that perceived trustworthiness allows messages to be accepted without critical evaluation.\n\n## Strategic forewarning\nAdvance notice of a persuasive attempt allows individuals to bolster existing beliefs, though it may trigger pre-emptive changes for unimportant topics.\n\n### Key terms\n1. **Forewarning** — informing people they will soon receive a persuasive message, giving them time to practice resistance and develop counter-responses.\n\n### Names and studies\n1. **Wood & Quinn (2003)** — synthesized research on warnings, then showed forewarning defends attitudes we care about but may cause pre-emptive change for topics we do not."}</script>
+<script id="quiz-data" type="application/json">{"id": "psp-5-2", "title": "5.2 Changing Attitudes Through Persuasion", "subtitle": "Chapter 5 · Attitudes, Behavior, and Persuasion", "book": "PSP", "hash": "0c9b2945d1c1a38a", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "In the study by MacLachlan and Siegel (1980) regarding speech rate, what was the primary reason that faster speech increased the effectiveness of a persuasive message?", "options": ["It allows the speaker to present twice as many arguments in the same amount of time, increasing message strength.", "It makes the communicator appear more expert while reducing the listener's ability to develop counterarguments.", "It encourages the listener to engage in deep cognitive elaboration to keep up with the information.", "It creates a positive affective response that leads to spontaneous processing of the message's logic."], "rationales": ["The study focused on the speed of the same communication rather than increasing the quantity of different arguments.", "Faster speech enhances perceived expertise and limits the cognitive resources available for the audience to disagree.", "Faster speech actually hinders deep processing and counterarguing rather than encouraging elaboration.", "While it may involve spontaneous processing, the effect is driven by perceived expertise and limited counterarguing, not just general mood."], "correct": 1, "hint": "consider how speed affects both the perception of the speaker and the cognitive capacity of the listener.", "topic": "Speech rate", "sec": "", "src": "", "link": "", "qid": "04bfdcb05b"}, {"q": "According to the findings of Chaiken (1980), how did personal involvement change the way students reacted to a likeable communicator versus an unlikeable one?", "options": ["Unlikeable communicators were more persuasive to highly involved students because they seemed more objective.", "Highly involved students were persuaded by the quality of the argument regardless of the communicator's likeability.", "Students with low involvement were primarily influenced by the logical strength of the arguments presented.", "Likeability was the dominant factor for all students, but highly involved students processed the information faster."], "rationales": ["The study showed that involvement led to a focus on argument quality, not a preference for unlikeable sources.", "When personal stakes are high, individuals focus on message content rather than surface-level cues like likeability.", "Low-involvement students were found to be more influenced by the likeability of the source than the argument quality.", "Likeability only dominated for those who were not personally affected by the topic."], "correct": 1, "hint": "think about which group was 'fooled' by the personality of the speaker and which was not.", "topic": "Processing motivation", "sec": "", "src": "", "link": "", "qid": "cd0ac741da"}, {"q": "Research by Sinclair, Mark, and Clore (1994) suggests that people in a positive mood are more susceptible to persuasion. What does this imply about how mood affects information processing?", "options": ["Happiness triggers thoughtful processing because the individual has more mental energy to devote to the topic.", "Positive moods make people more resistant to persuasion because they are already satisfied with their current beliefs.", "Positive affect acts as a signal that the situation is safe, leading to less careful scrutiny of incoming messages.", "A good mood increases the listener's motivation to find flaws in an argument to maintain their current state."], "rationales": ["While energy might be higher, the 'everything is okay' signal usually leads to spontaneous rather than thoughtful processing.", "The research indicates the opposite; happiness generally makes people more open to persuasion due to less careful processing.", "When people feel good, they assume things are okay and reduce the cognitive effort used to evaluate arguments.", "Positive moods actually decrease the tendency to look for flaws or process information carefully."], "correct": 2, "hint": "consider what a 'good mood' signals to the brain regarding the need for vigilance.", "topic": "Affective states", "sec": "", "src": "", "link": "", "qid": "2dc7fbc8c9"}, {"q": "In the mammogram screening study by Banks and colleagues (1995), a message emphasizing that 'not getting a mammogram can cost you your life' was more effective than one saying 'getting a mammogram can save your life.' What does this finding illustrate?", "options": ["Positive framing is only effective when the communicator is perceived as a highly untrustworthy source.", "The brain responds more strongly to negative affect and potential losses than to positive affect and gains.", "Women are generally more resistant to positive messages than men due to higher levels of psychological reactance.", "Health-related messages are processed spontaneously, meaning the specific wording of the frame is ignored."], "rationales": ["The effectiveness of negative framing in this study was tied to the brain's reactivity to threats, not source trust.", "Negative framing is often more persuasive because people are more motivated to avoid loss than to achieve a gain.", "The study focused on framing effectiveness based on negativity bias, not gender-specific reactance levels.", "The fact that one frame worked better than the other proves that the specific wording was processed and had an impact."], "correct": 1, "hint": "think about whether the brain prioritizes avoiding a threat or seeking a benefit.", "topic": "Message framing", "sec": "", "src": "", "link": "", "qid": "fe28ef0be6"}, {"q": "While fear appeals can be highly persuasive, what condition did research by Passyn and Sujan (2006) identify as necessary to prevent the audience from simply turning away in anxiety?", "options": ["The fearful images must be presented subliminally so that the anxiety does not reach conscious awareness.", "The message must use a humorous communicator to balance out the negative emotions generated by the fear.", "The fear appeal should avoid mentioning self-concern and focus instead on how the behavior affects society.", "The message must provide clear instructions on how to rectify the problem to increase the audience's self-efficacy."], "rationales": ["Fear appeals work by being salient and conscious; subliminal presentation would likely nullify the warning.", "Humor can distract from the message; the key is providing a solution, not just emotional balance.", "Fear appeals are actually more effective when they focus on self-concern and personal harm.", "Fear is only productive if the audience feels they have the ability and the tools to change the outcome."], "correct": 3, "hint": "consider what a person needs to feel in order to take action rather than just feeling scared.", "topic": "Fear appeals", "sec": "", "src": "", "link": "", "qid": "a6ed7abece"}, {"q": "In the classic study by Petty, Cacioppo, and Goldman (1981), students for whom the new exam was NOT personally relevant based their attitudes primarily on which factor?", "options": ["The strength and statistical validity of the arguments provided.", "The number of counterarguments they were able to generate while listening.", "The degree of psychological reactance they felt toward the college administration.", "The perceived expertise of the source of the message."], "rationales": ["Argument strength was the primary factor for the high-relevance group, not the low-relevance group.", "Low-relevance listeners typically do not put in the cognitive effort to generate counterarguments.", "The study found that they relied on source cues (spontaneous processing) rather than emotional reactance.", "When relevance is low, people use spontaneous cues like source expertise rather than evaluating the argument."], "correct": 3, "hint": "think about which group took a 'shortcut' by looking at the speaker's credentials.", "topic": "Relevance cues", "sec": "", "src": "", "link": "", "qid": "dbac21857b"}, {"q": "What does the sleeper effect imply about the long-term impact of a message delivered by an untrustworthy source?", "options": ["People will eventually misattribute the message to an expert source, making it even more persuasive.", "The message will lose all influence as both the content and the source are forgotten at the same rate.", "Attitude change may increase over time as people remember the content but forget the unreliable source.", "The initial resistance to the source makes the attitude against the message even stronger over time."], "rationales": ["While misattribution can happen, the core effect is the forgetting of the source which allows the message to be accepted.", "The sleeper effect specifically describes a situation where the message influence increases over time.", "Over time, the link between the message and the 'discounting cue' (the source) weakens, leaving just the message.", "This describes a 'boomerang' effect or reactance, whereas the sleeper effect describes delayed persuasion."], "correct": 2, "hint": "consider how the passage of time affects the connection between 'what' was said and 'who' said it.", "topic": "Source memory", "sec": "", "src": "", "link": "", "qid": "7eaf3ab596"}, {"q": "How does the technique of inoculation, as proposed by McGuire (1961), help a person resist strong persuasive attempts in the future?", "options": ["By providing them with a strong expert source to rely on when they feel confused by new information.", "By creating a strong emotional response that makes the person fear any new or different information.", "By exposing them to a weak version of the opposing argument so they can practice developing counterarguments.", "By teaching them to use spontaneous processing to ignore any message that contradicts their current beliefs."], "rationales": ["Inoculation is about building internal cognitive defenses, not relying on external experts.", "Inoculation focuses on the cognitive component of attitudes, not the creation of fear.", "Similar to a vaccine, a weak 'dose' of an argument builds cognitive defenses for later, stronger attacks.", "Inoculation actually encourages thoughtful processing to create specific counterarguments."], "correct": 2, "hint": "think about the medical analogy and how it applies to building mental 'immunity'.", "topic": "Resistance techniques", "sec": "", "src": "", "link": "", "qid": "95fda08baa"}, {"q": "If a parent is overly directive and aggressive in telling their child not to smoke, the child may start smoking specifically to assert their independence. Which concept explains this behavior?", "options": ["The sleeper effect", "Psychological reactance", "Forewarning", "Spontaneous message processing"], "rationales": ["The sleeper effect deals with the decay of source memory over time, not an immediate emotional rebellion.", "Reactance occurs when individuals feel their freedom of choice is threatened, prompting them to perform the forbidden act.", "Forewarning is a technique to prevent persuasion by alerting someone, not the emotional rebellion that results from pressure.", "While reactance is an emotional response, it is a specific reaction to a threat to freedom rather than general fast processing."], "correct": 1, "hint": "consider the emotional response that happens when someone feels they are being 'pushed' into a corner.", "topic": "Choice freedom", "sec": "", "src": "", "link": "", "qid": "7f69544fd8"}, {"q": "In the study on subliminal advertising by Karremans and colleagues (2006), what was the critical factor that determined whether the 'Lipton Ice' prime influenced the students' choices?", "options": ["The prime had to be presented for at least one full second to be processed by the subconscious mind.", "The participants had to be currently thirsty for the prime to have any effect on their intention to drink.", "The participants had to be unaware of the popular Dutch brand name before entering the laboratory.", "The effect only occurred if the students were also engaged in thoughtful, central processing of the letter strings."], "rationales": ["The primes were presented for only 1/50th of a second, which is far shorter than one second.", "Subliminal primes are generally only effective if they align with an individual's current motivations or needs.", "The study used a popular brand specifically to see if the prime could trigger a known preference.", "Subliminal priming is by definition outside of conscious, thoughtful processing."], "correct": 1, "hint": "consider the physical state of the participants during the computer trials.", "topic": "Subliminal priming", "sec": "", "src": "", "link": "", "qid": "586495ae90"}, {"q": "Research by Eagly, Wood, and Chaiken (1978) indicates that a communicator is seen as more sincere and persuasive when they present a message that goes against their own self-interest. Why does this happen?", "options": ["It forces the listener to use the sleeper effect to separate the message from the communicator's background.", "It suggests that the communicator's internal beliefs are powerful enough to override external rewards.", "It triggers spontaneous processing because the message is so unexpected and surprising.", "It makes the communicator appear more similar to the audience, which increases liking and trust."], "rationales": ["The sleeper effect involves forgetting the source over time; this effect involves an immediate judgment of the source's motives.", "When someone risks personal gain to speak, we assume they are telling the truth because there is no other reason for them to do it.", "While surprising, it actually leads to a deeper evaluation of the communicator's 'internal state' and sincerity.", "The effect is based on attributions of sincerity and lack of bias, not necessarily on perceived similarity."], "correct": 1, "hint": "think about why someone would say something that might actually hurt them financially or socially.", "topic": "Communicator bias", "sec": "", "src": "", "link": "", "qid": "d09011a273"}, {"q": "Why are Tupperware parties often cited as a successful example of persuasion in social psychology?", "options": ["The environment creates psychological reactance, making guests feel they must buy products to stay in the group.", "The success is driven more by the fact that guests like and trust the 'salesperson' (their friend) than by the product itself.", "They rely on inoculation by telling guests about cheaper products before showing the high-quality Tupperware.", "They use expert communicators who speak very quickly to prevent counterarguments about the product's price."], "rationales": ["Reactance usually leads to rebellion/refusal; the success here is based on positive social cues and liking.", "Trust and liking for a known communicator often lead to acceptance of a message without critical evaluation.", "Inoculation is a resistance technique, not a sales technique used in this context.", "Tupperware parties typically use friends (similar others) rather than technical experts."], "correct": 1, "hint": "consider the relationship between the buyer and the person selling the items.", "topic": "Social liking", "sec": "", "src": "", "link": "", "qid": "7de6072c00"}, {"q": "The 'forewarning' approach to preventing persuasion is most effective under which of the following conditions?", "options": ["When the warning is delivered by an untrustworthy source, triggering the sleeper effect.", "When the upcoming message attacks an attitude that the person cares about deeply.", "When the person has no prior knowledge of the topic and is looking for an expert to follow.", "When the person is encouraged to use spontaneous processing to dismiss the coming argument quickly."], "rationales": ["The effectiveness of forewarning is about preparation time, not the eventual forgetting of the source.", "Forewarning allows people to 'bring up their defenses' and prepare to maintain highly valued beliefs.", "If the person doesn't care or know about the topic, they may just change their mind before the appeal even arrives.", "Forewarning is effective because it gives the person time to develop thoughtful counterarguments."], "correct": 1, "hint": "think about whether the person needs to have a 'stake' in the belief for the warning to work.", "topic": "Strategic forewarning", "sec": "", "src": "", "link": "", "qid": "fbef30c509"}], "hasSheet": true, "parts": false, "secTitles": {}, "reserve": 0, "frq": [], "notebook": "https://notebooklm.google.com/notebook/1f800a4d-3f2e-42d1-a3e6-41ea2e8916f1/artifact/bc6a5cd6-2d26-4fdd-b600-d3f606fc5035", "root": "../index.html", "tab": "quiz", "sheet": "## Speech rate\nSpeed of delivery impacts perceived authority and reduces the listener's ability to develop cognitive counterarguments.\n\n### Key terms\n1. **Expertise** — the perception that a communicator is knowledgeable based on confident, fast, and straightforward delivery.\n2. **Counterarguments** — cognitive rebuttals that are harder to generate when the listener must process information at high speed.\n\n### Names and studies\n1. **MacLachlan & Siegel (1980)** — sped up TV commercials by deleting very small segments of speech, then showed that faster delivery made communications more persuasive.\n2. **Moore, Hausknecht, & Thamodaran (1986)** — manipulated the speed of audio messages, then showed that faster speech enhanced the perceived expertise of the source.\n\n## Processing motivation\nEffective persuasion depends on whether the recipient is motivated and able to invest cognitive effort in the message.\n\n### Key terms\n1. **Spontaneous processing** — a quick, direct response where persuasion occurs based on obvious or enjoyable cues rather than the message itself.\n   1. **Peripheral/Heuristic processing** — alternative terms for the quick, non-deliberative route of attitude change.\n2. **Thoughtful (Central/Systematic) processing** — a controlled route involving careful cognitive elaboration of the message's meaning and validity.\n\n### Names and studies\n1. **Shelley Chaiken (1980)** — compared students with high versus low involvement in a topic, then showed that low-involvement students were persuaded by likeability rather than argument quality.\n\n## Affective states\nMood and positive emotional associations determine the depth of cognitive processing and the level of message acceptance.\n\n### Key terms\n1. **Associational learning** — the process of linking a product with positive features, such as humor or beauty, within an advertisement.\n2. **Positive affect** — a mood state signaling \"things are OK,\" leading to less careful information processing and higher acceptance of spontaneous appeals.\n\n### Names and studies\n1. **Sinclair, Mark, & Clore (1994)** — examined how mood affects information processing, then showed that the spontaneous approach is most effective when people are happy.\n\n## Message framing\nThe presentation of information as either a potential gain or a potential loss significantly influences its effectiveness.\n\n### Key terms\n1. **Negative framing** — presenting information to suggest that failing to adopt a specific behavior will result in harm to the self.\n\n### Names and studies\n1. **Banks, Salovey, Greener, and Rothman (1995)** — compared different mammogram recruitment messages, then found that emphasizing the risk of not getting a screening was more effective than emphasizing the benefits.\n2. **Ito et al. (1998)** — measured brain responses to different affective stimuli, then showed that the brain responds more strongly to negative affect than to positive affect.\n\n## Fear appeals\nHigh-anxiety messaging can drive behavioral change, provided the recipient feels capable of addressing the highlighted threat.\n\n### Key terms\n1. **Self-efficacy** — the belief that one has the ability to take the necessary actions to rectify the danger highlighted by a fearful message.\n\n### Names and studies\n1. **Witte & Allen (2000)** — conducted a meta-analysis on the use of fear in public health, then showed that fearful messages are generally persuasive for driving behavior change.\n2. **Passyn & Sujan (2006)** — studied the interaction of fear and self-accountability, then showed that fear appeals work best when they provide specific instructions on how to respond.\n\n## Relevance cues\nThe personal importance of a topic determines whether a recipient utilizes the thoughtful or spontaneous route of persuasion.\n\n### Key terms\n1. **High personal relevance** — a state where a topic affects the listener directly, motivating them to engage in thoughtful processing of message content.\n2. **Low personal relevance** — a state where a topic is unimportant, causing the listener to rely on spontaneous cues like source expertise.\n\n### Names and studies\n1. **Petty, Cacioppo, and Goldman (1981)** — manipulated relevance regarding a new exam policy, then showed that highly involved students were influenced by argument strength rather than source expertise.\n\n## Source memory\nAttitudes can change over time as the mental link between a message and its original source begins to decay.\n\n### Key terms\n1. **Sleeper effect** — attitude change occurring when we forget to discount a message from an untrustworthy source as the memory of the source fades.\n\n### Names and studies\n1. **Kumkale & Albarracín (2004)** — reviewed findings on temporal persuasion, then showed that people eventually remember message content more clearly than source credibility.\n2. **National Enquirer anecdote** — a researcher recalled a movie star story from an unreliable tabloid, then showed how content is accepted once the source discounting is forgotten.\n\n## Resistance techniques\nMethods used to strengthen existing attitudes can make individuals more resilient against future attempts at persuasion.\n\n### Key terms\n1. **Inoculation** — building defenses by exposing a person to a weak attack on their attitude to help them develop counterarguments for future appeals.\n\n### Names and studies\n1. **McGuire (1961)** — tested supportive versus refutational defenses, then showed that mild attacks on beliefs helped people resist subsequent, stronger persuasion attempts.\n2. **Compton & Pfau (2005)** — reviewed the application of resistance theory, then showed that practicing counterarguments makes an attitude stronger and more defined.\n\n## Choice freedom\nIndividuals often respond with rebellion when they feel their autonomy or ability to make decisions is being threatened.\n\n### Key terms\n1. **Psychological reactance** — a strong emotional rebellion triggered when a person feels their freedom of choice is being taken away.\n\n### Names and studies\n1. **Erceg-Hurn and Steed (2011)** — investigated the impact of graphic cigarette warnings on smokers, then showed that high-pressure messaging can trigger reactance and reduce warning impact.\n\n## Subliminal priming\nMessaging presented below the threshold of conscious awareness has negligible and highly conditional effects on actual behavior.\n\n### Key terms\n1. **Subliminal advertising** — flashing brand images or messages so quickly that the recipient is unaware they have received a message.\n\n### Names and studies\n1. **Karremans, Stroebe, and Claus (2006)** — primed students with \"Lipton Ice\" messages, then showed the prime only increased brand choice for participants who were currently thirsty.\n2. **Trappey’s (1996)** — conducted a meta-analysis of 23 research studies, then showed that subliminal advertising has a negligible effect on actual consumer choice.\n\n## Communicator bias\nPerceived source self-interest and message sidedness impact how much weight a listener gives to the information presented.\n\n### Key terms\n1. **Discounting** — the tendency to ignore a message when the communicator is perceived to have an external, self-serving motive.\n2. **Message Sidedness** — the extent to which a communicator acknowledges or ignores potential problems and counterarguments.\n   1. **One-sided versus two-sided messages** — the contrast between presenting only one perspective or acknowledging both, where the former can appear unfairly biased.\n\n### Names and studies\n1. **Eagly, Wood, & Chaiken (1978)** — analyzed causal inferences about sources, then showed that communicators arguing in their own self-interest are seen as less trustworthy.\n2. **Wood & Eagly (1981)** — studied messages that go against external causes, then showed that arguing against self-interest makes the communicator's internal belief seem even more powerful.\n\n## Social liking\nInterpersonal attraction and perceived commonality between the source and recipient can bypass the critical evaluation of a message.\n\n### Key terms\n1. **Likable Sources** — communicators that people tend to trust, often leading to message acceptance without critical evaluation.\n   1. **Attractive communicators** — sources who use physical appeal to create positive associations and increase the likelihood of message acceptance.\n   2. **Similar communicators** — sources who share values with the audience, such as teenagers used in ads for teens or elderly people for older adults.\n\n### Names and studies\n1. **Tupperware parties example** — examined social selling within friend groups, then showed that liking the salesperson was more influential than the product's actual nature.\n2. **Priester & Petty (2003)** — researched the impact of celebrity spokespeople, then showed that perceived trustworthiness allows messages to be accepted without critical evaluation.\n\n## Strategic forewarning\nAdvance notice of a persuasive attempt allows individuals to bolster existing beliefs, though it may trigger pre-emptive changes for unimportant topics.\n\n### Key terms\n1. **Forewarning** — informing people they will soon receive a persuasive message, giving them time to practice resistance and develop counter-responses.\n\n### Names and studies\n1. **Wood & Quinn (2003)** — synthesized research on warnings, then showed forewarning defends attitudes we care about but may cause pre-emptive change for topics we do not."}</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -686,21 +741,29 @@ const G_OK = '✓', G_NO = '✕';
 
 /* WHY A QUESTION IS ON THE EXAM. One glyph, set by the generator in the topic tag, and the
    only thing the page does with it is show it and group by it. The ORDER of this object is
-   his priority order (08-11) and the tables below read it, so re-ordering here re-orders the
-   report: the rewrites he asked for first, then starred, then missed, then flagged, then his
-   own research, then the ones he got right and is being asked again from a harder angle.
+   his priority order and the tables below read it, so re-ordering here re-orders the report.
 
-   ✎ SITS ABOVE ☆ (08-12) because it is the only one he wrote as an instruction rather than a
-   mark. The others say "this mattered to me"; ✎ says "this question was wrong, ask it like
-   this" — so on the report it is the first row he should check, since it is the one place the
-   generator can have done as it was told or not. */
+   RE-RANKED 08-14 TO HIS NEW ORDER: *"Wrong questions tested first · Starred · Questions with
+   research (not fix) · Question mark tags · Fix marks · Correct answers."* It has to be kept
+   in step with `POOL_RUNGS` in reinforce.py, which is what actually assigns the glyphs — that
+   list decides which card gets a spot, this one only names the result. Out of step, the
+   report groups a paper by an order the paper was not built in.
+
+   ✎ USED TO SIT FIRST and no longer does. Until 08-12 it was the one he wrote as an
+   instruction rather than a mark, so it led the report; he has since ranked it fifth, and a
+   ✎ question now takes an ordinary spot like every other rung.
+
+   `+` IS NOT A RUNG. Nothing is tagged `+` — it is what a section gets when its quiz was
+   shorter than the quota, which is ordinary rather than exceptional. It is last because a
+   question with no card behind it is the one he has least history with. */
 const SRC = {
-  '✎': 'You asked for this one to be rewritten',
-  '☆': 'Starred in the subchapter quiz',
   '✕': 'You got this wrong',
-  '?': 'You flagged it — no idea at the time',
+  '☆': 'Starred in the subchapter quiz',
   'R': 'Built from your own research',
-  '$': 'You got it right before — asked a different way'
+  '?': 'You flagged it — no idea at the time',
+  '✎': 'You asked for this one to be rewritten',
+  '$': 'You got it right before — asked a different way',
+  '+': 'New — nothing of yours left to re-ask on this section'
 };
 const SRC_ORDER = Object.keys(SRC);
 function srcName(g){ return SRC[g] || ''; }
@@ -717,9 +780,14 @@ function srcName(g){ return SRC[g] || ''; }
    `skipped` usable later as a permanent exclusion list when exam reuse is built — see qid()
    in quizpage.py. v1 states are migrated once, on load. */
 function qk(i){ return D.questions[i].qid; }
+/* `only` and `sat` ARE THE SECTIONED EXAM (08-16), and both are inert unless the page was
+   built with parts on. `only` is the list of subchapters THIS sitting covers — null means he
+   has not chosen yet, which is what puts the picker on screen. `sat` records which
+   subchapters he has finished, and nothing else: a section's score is always recomputed from
+   `answers`, never stored, so there is exactly one place a number can come from. */
 function blank(){ return {v:2, hash:D.hash, i:0, answers:{}, pass2:{}, skipped:{}, starred:{},
                           unsure:{}, hints:{}, phase:1, p2list:null, done:false, at:null,
-                          shuf:{}, history:[]}; }
+                          shuf:{}, history:[], only:null, sat:{}, promoted:{}}; }
 function migrate(s){
   // v1 keyed every map on the array index. The hash matches, so the indices are still valid
   // and this is a straight re-key — done once, then never again.
@@ -763,6 +831,12 @@ function load(){
     if(!s.hints) s.hints = {};
     if(!s.pass2) s.pass2 = {};
     if(!s.phase) s.phase = 1;
+    // Absent on every attempt saved before 08-16, and `only: null` is exactly right for one:
+    // it means "not chosen", so an attempt in progress on a paper that has just gained the
+    // picker resumes over the whole paper, which is what it was.
+    if(s.only === undefined) s.only = null;
+    if(!s.sat) s.sat = {};
+    if(!s.promoted) s.promoted = {};
     // Not carried across a rebuild on purpose: blank() empties it. A stored order describes a
     // set of options that may no longer be the same length — optOrder() throws out any that
     // no longer fit, so a stale one is harmless anyway.
@@ -770,14 +844,89 @@ function load(){
     return s;
   }catch(e){ return blank(); }
 }
+/* THE ATTEMPT MUST NEVER FAIL TO SAVE IN SILENCE (08-16). `save()` swallowed every exception,
+   and the one that actually happens is QuotaExceededError: the research box keeps pasted
+   images in localStorage, and once the origin is full EVERY later write is refused — so his
+   answers stopped being recorded while the page carried on as if they were. His report was
+   *"I feel I did answer some of these questions and yet they show up again"*, which is exactly
+   what a refused write looks like from the outside. It now says so, on screen, and keeps
+   saying so until a write succeeds. */
+let saveBroken = false;
+function saveFailed(on){
+  if(on === saveBroken) return;
+  saveBroken = on;
+  let el = $('#savewarn');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'savewarn';
+    document.body.appendChild(el);
+  }
+  el.textContent = 'This browser is out of room — your answers are NOT being saved. '
+                 + 'Remove a pasted image from the research box to free some up.';
+  el.classList.toggle('hide', !on);
+}
 function save(){
-  S.meta = {title:D.title, subtitle:D.subtitle, book:D.book, total:active(S).length,
-            at:S.at, done:S.done, score:score(S)};
-  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+  // ON A SECTIONED PAPER `meta` DESCRIBES THE PAPER, NOT THE SITTING. It is read in exactly
+  // one place — `load()`, when the questions have been rebuilt and the old answers can no
+  // longer be scored — and what belongs in that history line is "he got 24 of 32 on this
+  // exam", not "he got 14 of 16 on the half of it he happened to sit last."
+  const pp = D.parts ? paperStat() : null;
+  S.meta = {title:D.title, subtitle:D.subtitle, book:D.book,
+            total: pp ? pp.t : active(S).length,
+            at:S.at, done:S.done, score: pp ? pp.n : score(S)};
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); saveFailed(false); }
+  catch(e){ saveFailed(true); }
 }
 /* Skipped questions leave the run entirely — out of the count, out of the denominator,
-   out of the topic breakdown. Anything less makes "8 / 10" a lie about a quiz of nine. */
-function active(s){ return D.questions.map((_,i)=>i).filter(i => !(s.skipped||{})[qk(i)]); }
+   out of the topic breakdown. Anything less makes "8 / 10" a lie about a quiz of nine.
+
+   THE SECTION FILTER RIDES HERE AND NOWHERE ELSE (08-16). `active()` is what the run list,
+   the score, the second pass, the end card and the review list are all built on, so putting
+   the sitting's subchapters into this one function is what makes a half-paper behave exactly
+   like a whole one — one direction, one end card, one second pass — with no branch anywhere
+   downstream. `only: null` (not chosen, or a page built without parts) filters nothing. */
+function active(s){
+  const only = D.parts ? (s.only || null) : null;
+  return D.questions.map((_,i)=>i).filter(i => onPaper(s, i)
+    && (!only || only.indexOf(D.questions[i].sec) >= 0));
+}
+/* ---- THE RESERVES (08-16) ------------------------------------------------------------
+   His ask: *"if 1 question is skipped, another one is replaced in that section about it… you
+   have a quota, so you should also create stockpiles (say 2 extra questions per section that
+   immediately replace a skipped question)."*
+
+   `D.reserve` is how many per section were written beyond the quota. They are the LAST ones
+   of their section in build order, which is not arbitrary: `section_pool()` deals spots down
+   his tag priority, so a section's tail is the bottom of the list it could afford to lose.
+
+   A RESERVE IS NOT A QUESTION YET. It is out of the run, out of the denominator and out of
+   every table until a skip in its own section calls it in — at which point it is an ordinary
+   question and nothing downstream can tell it apart. Promotion is recorded on the qid, so it
+   survives a reload and cannot be handed out twice. Skipping with none left behaves exactly
+   as it always did: the paper is one question shorter. */
+function reserveIds(sec){
+  if(!(D.reserve > 0)) return [];
+  const l = D.questions.map((_,i)=>i).filter(i => D.questions[i].sec === sec);
+  return l.slice(Math.max(0, l.length - D.reserve));
+}
+function isReserve(i){
+  const sec = D.questions[i].sec;
+  return !!sec && reserveIds(sec).indexOf(i) >= 0;
+}
+/* Skipped or an unpromoted reserve — the two ways a question is not part of the paper. One
+   predicate so the run, the score, the picker and the section tables can never disagree. */
+function onPaper(s, i){
+  if((s.skipped||{})[qk(i)]) return false;
+  return !isReserve(i) || !!(s.promoted||{})[qk(i)];
+}
+/* Called the instant a question is skipped. Returns the promoted index, or -1. */
+function promoteReserve(sec){
+  if(!sec) return -1;
+  const next = reserveIds(sec).find(i => !S.promoted[qk(i)] && !S.skipped[qk(i)]);
+  if(next === undefined) return -1;
+  S.promoted[qk(next)] = true;
+  return next;
+}
 function ans(i){ return S.answers[qk(i)]; }
 function ans2(i){ return S.pass2[qk(i)]; }
 function firstRight(i){ return ans(i) === D.questions[i].correct; }
@@ -801,6 +950,59 @@ function runList(){
   return active(S);
 }
 function pick(i){ return S.phase === 2 ? ans2(i) : ans(i); }
+
+/* ---- SUBCHAPTERS AS SITTINGS (08-16) -------------------------------------------------
+   His ask: *"a way to section off exams… such that I'm able to practice only one section or
+   maybe two sections of an exam created because of shortened time"*, and then *"the option to
+   do those other sub chapters that I haven't done at a later date, or just display the score
+   of the subsections that I have got done."*
+
+   A QUESTION BELONGS TO ONE SUBCHAPTER — `q.sec`, which every exam question already carries.
+   A cross-section question carries `q.link` as well, and it is deliberately NOT used here:
+   `q.sec` is the section whose paper the question is on (the pool decided that, and the exam
+   prompt says so in as many words), so it is sat once, with that section, and never offered
+   twice. It still REPORTS under both in the end card's By-subchapter table, which is a
+   different question and was already answered.
+
+   NOTHING IS STORED THAT CAN BE COMPUTED. `S.sat[sec]` is a timestamp saying he finished that
+   section and nothing more; every number on screen comes back out of `S.answers` through
+   `secStat()`. A stored score is a second source of truth, and this page already has one
+   scar from that — see `load()`, where a recomputed score turned a real 8/10 into 2/10. */
+function paperSecs(){
+  const out = [];
+  D.questions.forEach((q,i)=>{
+    if(q.sec && onPaper(S, i) && out.indexOf(q.sec) < 0) out.push(q.sec);
+  });
+  return out.sort((a,b)=>a.localeCompare(b, undefined, {numeric:true}));
+}
+function secQs(sec){
+  return D.questions.map((_,i)=>i)
+    .filter(i => D.questions[i].sec === sec && onPaper(S, i));
+}
+function secStat(sec){
+  const l = secQs(sec);
+  const answered = l.filter(i => ans(i) !== undefined).length;
+  return {sec:sec, t:l.length, answered:answered,
+          n: l.filter(i => finalRight(i)).length,
+          done: !!S.sat[sec], started: answered > 0};
+}
+/* THE PAPER, ACROSS EVERY SITTING — the number that answers "how am I doing on this exam",
+   as opposed to "how did I do this evening". Scored over the sections he has actually sat, so
+   a half-finished paper reads 14/16 with a section outstanding rather than a demoralising
+   14/32 that counts questions he has not been asked yet. `all` is what says the paper is
+   finished; until then `left` is what the picker offers him next. */
+function paperStat(){
+  const secs = paperSecs().map(secStat);
+  const done = secs.filter(s => s.done);
+  const left = secs.filter(s => !s.done);
+  const n = done.reduce((a,s)=>a+s.n, 0), t = done.reduce((a,s)=>a+s.t, 0);
+  return {secs:secs, done:done, left:left, n:n, t:t,
+          whole: secs.reduce((a,s)=>a+s.t, 0),
+          pct: t ? Math.round(n/t*100) : 0, all: secs.length > 0 && left.length === 0};
+}
+/* The picker earns its place only where there is a choice to make: parts on, and more than
+   one subchapter on the paper. A one-section exam goes straight in, as it always did. */
+function sectioned(){ return !!D.parts && paperSecs().length > 1; }
 
 /* ---- THE ON-SCREEN OPTION ORDER ------------------------------------------------------
    A DISPLAY LAYER AND NOTHING MORE. `S.shuf[qid]` is a list of ORIGINAL option indices in
@@ -840,6 +1042,13 @@ function reshuffleOpts(i){
 }
 let S = load();
 let lastShown = -1;
+
+/* WHAT TO CALL THIS THING (08-16, his ask: *"you should name them exams"*). A paper that
+   carries subchapter tags or a written half is an exam; anything else is a subchapter quiz.
+   Both signals, because the two halves arrived on different days and a paper with only one of
+   them is still an exam. The word is used for the tab, the review button and the pasted score
+   line, so all three agree without three separate conditions. */
+const NOUN = ((D.frq && D.frq.length) || D.questions.some(q=>q.sec)) ? 'Exam' : 'Quiz';
 
 /* ---- HIS RESEARCH, kept apart from the attempt ---------------------------------------
    Its own localStorage key, NOT a field of S, and that is the whole design. S is one
@@ -959,6 +1168,22 @@ function drawFrq(){
   });
   box.innerHTML = h;
 
+  /* CLICKING THE CARD PUTS THE CARET IN THE BOX. The sticky header covers the top strip of
+     whatever is under it, and the placeholder sits in exactly that strip — so the one place he
+     naturally aims is the one place the click does not land. Anywhere in the card that is not
+     already a control now focuses the answer box, which also makes the whole card a target on
+     a phone. `closest` is what keeps Mark, Copy and any selection inside the rubric working. */
+  box.querySelectorAll('section.frq').forEach(sec => {
+    sec.addEventListener('mousedown', e => {
+      if(e.target.closest('button, textarea, a, .rubric')) return;
+      const ta = sec.querySelector('textarea');
+      if(!ta) return;
+      e.preventDefault();
+      ta.focus();
+      ta.setSelectionRange(ta.value.length, ta.value.length);
+    });
+  });
+
   box.querySelectorAll('textarea').forEach(ta => {
     const fi = +ta.dataset.f;
     const count = () => {
@@ -1065,6 +1290,7 @@ function syncTabs(){
   const nfrq = (D.frq || []).length;
   document.querySelector('.tab[data-tab="starred"]').classList.toggle('hide', !nstar);
   document.querySelector('.tab[data-tab="sheet"]').classList.toggle('hide', !D.hasSheet);
+  document.querySelector('.tab[data-tab="quiz"]').textContent = NOUN;
   document.querySelector('.tab[data-tab="frq"]').classList.toggle('hide', !nfrq);
   $('#tabs').classList.toggle('hide', !nstar && !D.hasSheet && !nfrq);
   if(D.tab === 'starred' && !nstar) setTab('quiz');
@@ -1189,6 +1415,10 @@ function draw(){
   showResearch(!(S.reviewing || S.done));
   if(S.reviewing) return review();
   if(S.done) return end();
+  // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
+  // the rest of the sitting, so nothing about answering, going back or the second pass has
+  // to know the picker exists.
+  if(sectioned() && !S.only) return picker();
   const act = runList();
   if(!act.length) return end();
   if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
@@ -1211,6 +1441,11 @@ function buildQ(i, picked, fresh, en){
   let h = '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta"><span class="num">' + (pos+1) + ' / ' + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
+        // 10 reads as the paper having lost his place, which is how he read it.
+        + (recycling && S.phase!==2
+           ? '<span class="dot">·</span><span class="fillnote">filling in ' + gaps().length
+             + ' left blank</span>' : '')
         // THE SECTION AND THE GLYPH, on the exam only — a subchapter quiz carries neither and
         // this line is byte-for-byte what it always was. The section is what it says; the
         // glyph is why this question is on the paper at all, and it is deliberately JUST the
@@ -1219,7 +1454,16 @@ function buildQ(i, picked, fresh, en){
         + (q.sec ? '<span class="dot">·</span><span class="sec">' + esc(q.sec)
                  + (q.link ? '<span class="lk">+' + esc(q.link) + '</span>' : '')
                  + '</span>' : '')
-        + (q.topic ? '<span class="dot">·</span><span>' + esc(q.topic) + '</span>' : '')
+        // THE TOPIC NAME IS HELD BACK UNTIL HE HAS ANSWERED. It was giving the answer away:
+        // `8.1 · Inferior scapular angle` sat over a question asking which part of the scapula
+        // anchors the powerful shoulder muscles, so the tag answered it before the options did.
+        // His own exams name no topic; he reverse-engineers where to look from the question.
+        // The section number stays visible — that is the scope pointer, and it is the whole
+        // subchapter, not the idea. The name comes back the moment the answer is locked in,
+        // because that is when it stops being a hint and starts being the label he files it
+        // under (the end card, the review list and the paste all keep reading it).
+        + (q.topic && answered ? '<span class="dot">·</span><span>' + esc(q.topic)
+                 + '</span>' : '')
         + (q.src ? '<span class="dot">·</span><span class="src" title="' + srcName(q.src)
                  + '">' + esc(q.src) + '</span>' : '')
         + '</p>'
@@ -1251,7 +1495,8 @@ function buildQ(i, picked, fresh, en){
       if(lab && fresh) cls += ' fresh';
       why = q.rationales ? (q.rationales[k]||'') : '';
     }
-    h += '<button class="'+cls+'" data-k="'+k+'"'+(answered?' disabled':'')+'>'
+    h += '<button class="'+cls+(answered?' locked':'')+'" data-k="'+k+'"'
+       + (answered?' aria-disabled="true"':'')+'>'
        + '<span class="line"><span class="k">'+D.letters[pos]+'.</span>'
        + '<span class="t">'+esc(o)+'</span>'
        + '<span class="mark">'+mark+'</span></span>';
@@ -1278,6 +1523,12 @@ function question(fresh){
   $('#quizview').innerHTML = buildQ(i, picked, fresh, isNew ? ' enter' : '');
   $('#quizview').querySelectorAll('.opt').forEach(b=>{
     b.onclick = ()=>{
+      // `aria-disabled` AND NOT `disabled`, SINCE 08-16. A real `disabled` button will not let
+      // its text be selected however `user-select` is set — browsers block selection inside a
+      // disabled control — so the rationale he wanted to copy off an answered question could
+      // not be picked up at all: *"Im trying to copy on v2 exams and its not letting me."*
+      // The lock is now the guard on this line, and the class is what styles it.
+      if(b.classList.contains('locked')) return;
       // The first pass is never overwritten — a second-pass answer goes in its own map.
       if(S.phase === 2) S.pass2[qk(i)] = +b.dataset.k; else S.answers[qk(i)] = +b.dataset.k;
       save(); question(true);
@@ -1609,12 +1860,19 @@ function openMenu(){
   m.querySelector('#skipq').onclick = ()=>{
     const list = runList(), pos = list.indexOf(S.i);
     if(list.length <= 1) return closeMenu();        // never skip the last one standing
-    const wasLast = pos === list.length - 1;
+    const sec = D.questions[S.i].sec;
     S.skipped[qk(S.i)] = true;
     delete S.answers[qk(S.i)];
     delete S.pass2[qk(S.i)];
     delete S.starred[qk(S.i)];                     // a deleted question is not a starred one
     if(S.unsure) delete S.unsure[qk(S.i)];         // nor one that still needs work
+    // A RESERVE TAKES ITS PLACE IMMEDIATELY, in the same section and the same sitting, so the
+    // count he is working against does not move: skip question 6 of 11 and it is still 11.
+    // Promoted BEFORE `wasLast` is decided — a skip on the last question with a reserve in
+    // hand is not the end of the paper, it is one more question, and finishing there would
+    // have handed him an end card with a question still owed.
+    const filled = promoteReserve(sec) >= 0;
+    const wasLast = !filled && pos === list.length - 1;
     closeMenu();
     syncTabs();
     if(wasLast){ finish(); return; }
@@ -1632,6 +1890,11 @@ function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(
 function finish(){
   S.done = true; S.at = new Date().toISOString();
   recycling = false;          // the clean-up pass is over; a second pass starts in order
+  // THE SITTING'S SUBCHAPTERS ARE NOW SAT. Written here rather than on the end card because
+  // the end card is also what he sees on every later visit, and re-rendering it must not keep
+  // re-stamping the time. A second pass reopens the run and lands back here when it ends, so
+  // the stamp is the last time the section was actually finished, which is what it should be.
+  if(D.parts && S.only) S.only.forEach(sec=>{ S.sat[sec] = S.at; });
   save(); end(); window.scrollTo(0,0);
 }
 
@@ -1666,6 +1929,112 @@ function group(act, keyOf, head, label){
        + '<span class="tbar"><i style="width:'+(by[k].n/by[k].t*100)+'%"></i></span></div>';
   });
   return h + '</div>';
+}
+
+/* THE PICKER — the one new screen, and the only place the sectioning is visible before he
+   starts. Shown when parts are on, the paper has more than one subchapter, and this sitting
+   has not been chosen yet. Choosing writes `S.only` and everything after it is the ordinary
+   exam: same order, same second pass, same end card, one direction to the end.
+
+   IT IS ALSO THE SCOREBOARD. His second ask — *"or just display the score of the subsections
+   that I have got done"* — is answered by the same screen rather than a separate one, because
+   it is the screen he lands on when he opens the link again. */
+let pickSel = null;
+
+function picker(){
+  const p = paperStat();
+  if(!pickSel) pickSel = p.left.map(s => s.sec);          // default: what is still outstanding
+  const chosen = p.secs.filter(s => pickSel.indexOf(s.sec) >= 0);
+  const nq = chosen.reduce((a,s)=>a+s.t, 0);
+
+  let h = '<div class="picker"><h3>' + (p.done.length ? 'Pick up where you left off'
+                                                      : 'Which sections are you sitting?')
+        + '</h3>';
+  h += '<p class="psub">' + p.whole + ' questions across ' + p.secs.length
+     + ' subchapters. Sit as many as you have time for — the rest keep, and this link '
+     + 'reopens on this screen.</p>';
+
+  if(p.done.length){
+    h += '<p class="pscore"><b>' + p.n + ' / ' + p.t + '</b> <span>' + p.pct + '% across '
+       + p.done.length + ' of ' + p.secs.length + ' subchapters'
+       + (p.all ? ' — the whole paper' : '') + '</span></p>';
+  }
+
+  h += '<div class="prows">';
+  p.secs.forEach(s=>{
+    const on = pickSel.indexOf(s.sec) >= 0;
+    const note = s.done ? ('Finished · ' + s.n + '/' + s.t)
+               : s.started ? (s.answered + ' of ' + s.t + ' answered')
+               : (s.t + ' question' + (s.t > 1 ? 's' : ''));
+    h += '<button class="prow' + (on ? ' pon' : '') + (s.done ? ' pdone' : '')
+       + '" data-sec="' + esc(s.sec) + '">'
+       + '<span class="pmark">' + (on ? G_OK : '') + '</span>'
+       + '<span class="plabel">' + esc(s.sec)
+       + ((D.secTitles||{})[s.sec] ? ' <em>' + esc(D.secTitles[s.sec]) + '</em>' : '')
+       + '</span>'
+       + '<span class="pnote">' + note + '</span>'
+       + (s.done ? '<span class="pbar"><i style="width:' + (s.t ? s.n/s.t*100 : 0)
+                 + '%"></i></span>' : '') + '</button>';
+  });
+  h += '</div>';
+
+  h += '<div class="pgo">'
+     + '<button class="pill go" id="pstart"' + (nq ? '' : ' disabled') + '>'
+     + (nq ? 'Start · ' + nq + ' question' + (nq > 1 ? 's' : '') : 'Pick a subchapter')
+     + '</button>'
+     + (p.left.length && p.left.length < p.secs.length
+        ? '<button class="link" id="pleft">Everything left</button>' : '')
+     + '<button class="link" id="pall">The whole paper</button>'
+     + '</div>';
+
+  if(p.done.length) h += '<p class="note">Finished subchapters keep their answers. Sitting '
+                       + 'one again replaces that score.</p>';
+  h += '</div>';
+
+  $('#quizview').innerHTML = h;
+  $('#rail').style.width = '0%';
+  $('#band').classList.add('off');
+  showResearch(false);
+  ['#back','#hintbtn','#hinttext','#redo','#next','#review','#retake','#pass2']
+    .forEach(k => $(k).classList.add('hide'));
+  $('#footer').classList.add('hide');
+
+  document.querySelectorAll('.prow').forEach(b => b.onclick = ()=>{
+    const k = b.dataset.sec, at = pickSel.indexOf(k);
+    if(at >= 0) pickSel.splice(at, 1); else pickSel.push(k);
+    picker();
+  });
+  const start = $('#pstart');
+  if(start) start.onclick = ()=> beginSitting(pickSel.slice());
+  const left = $('#pleft');
+  if(left) left.onclick = ()=> beginSitting(p.left.map(s=>s.sec));
+  $('#pall').onclick = ()=> beginSitting(p.secs.map(s=>s.sec));
+  renderScore();
+  centreBlock();
+}
+
+/* ONE DIRECTION FROM HERE. A sitting starts at the top of its own list with a clean phase —
+   the answers from any earlier sitting stay in `S.answers` untouched, they are simply not in
+   `active()` any more, which is what lets him come back to a section a fortnight later
+   without the page having kept a second copy of anything. */
+function beginSitting(secs){
+  if(!secs.length) return;
+  S.only = secs;
+  S.phase = 1; S.p2list = null; S.done = false; S.reviewing = false; S.hintOpen = false;
+  // RE-SITTING A FINISHED SECTION MUST ACTUALLY RE-SIT IT. Without this it would open on the
+  // end card, every question already answered, and the "Start" he just pressed would look
+  // broken. Its old answers go, and `sat` with them, because that section is now in progress.
+  secs.forEach(sec=>{
+    if(S.sat[sec]){
+      secQs(sec).forEach(i=>{ delete S.answers[qk(i)]; delete S.pass2[qk(i)]; });
+      delete S.sat[sec];
+    }
+  });
+  const l = runList();
+  S.i = l.length ? l[0] : 0;
+  pickSel = null;
+  lastShown = -1;
+  save(); draw(); window.scrollTo(0,0);
 }
 
 function end(){
@@ -1717,6 +2086,33 @@ function end(){
     h += '<p class="hist">Earlier attempts: ' + S.history.slice().reverse()
         .map(a=>'<span>'+a.score+'/'+a.total+' on '+when(a.at)+'</span>').join(' · ') + '</p>';
   }
+  /* THE PAPER, UNDER THE SITTING (08-16). The score above is this evening's — one subchapter,
+     or two. This is the exam: every subchapter, what it scored or that it is still waiting,
+     and one total across the ones he has actually sat. Absent on an unsectioned page. */
+  if(sectioned()){
+    const p = paperStat();
+    h += '<div class="topics parts"><h3>This exam</h3>';
+    p.secs.forEach(s=>{
+      const sitting = S.only && S.only.indexOf(s.sec) >= 0;
+      h += '<div class="trow"><span>' + esc(s.sec)
+         + (sitting ? '<em> just sat</em>' : '') + '</span>'
+         + '<span class="n">' + (s.done ? s.n + '/' + s.t : '—') + '</span>'
+         + '<span class="tbar' + (s.done ? '' : ' waiting') + '"><i style="width:'
+         + (s.done && s.t ? s.n/s.t*100 : 0) + '%"></i></span></div>';
+    });
+    h += '<p class="ptotal"><b>' + p.n + ' / ' + p.t + '</b> '
+       + (p.all ? 'the whole paper' :
+          'across ' + p.done.length + ' of ' + p.secs.length + ' subchapters · '
+          + p.left.reduce((a,s)=>a+s.t,0) + ' question'
+          + (p.left.reduce((a,s)=>a+s.t,0) > 1 ? 's' : '') + ' still to sit')
+       + '</p></div>';
+    if(p.left.length) h += '<p class="note"><button class="link" id="more">'
+                         + 'Sit another subchapter</button> — ' + p.left.map(s=>esc(s.sec)).join(', ')
+                         + ' left</p>';
+    else h += '<p class="note"><button class="link" id="more">Choose subchapters</button> — '
+            + 'every one is done; sitting one again replaces its score.</p>';
+  }
+
   const nskip = Object.keys(S.skipped||{}).length;
   if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
               + '<button class="link" id="unskip">put them back</button></p>';
@@ -1727,6 +2123,9 @@ function end(){
   $('#quizview').innerHTML = h;
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  const m = $('#more');
+  if(m) m.onclick = ()=>{ S.only = null; S.done = false; S.reviewing = false;
+                          pickSel = null; save(); draw(); window.scrollTo(0,0); };
   $('#rail').style.width = '100%';
   $('#band').classList.add('off');
   showResearch(false);
@@ -1737,11 +2136,16 @@ function end(){
   $('#redo').classList.add('hide');
   $('#next').classList.add('hide');
   $('#review').classList.remove('hide');
-  $('#review').textContent = 'Review quiz';
+  $('#review').textContent = 'Review ' + NOUN.toLowerCase();
   $('#retake').classList.remove('hide');
   // No wrong answers left to retry → no button at all, which is also what stops the second
   // pass looping into a third: anything answered on pass two leaves pending2() for good.
   $('#pass2').classList.toggle('hide', pending2().length === 0);
+  /* THE WRITTEN HALF IS THE PRIMARY WAY OUT OF AN EXAM'S END CARD (08-16, his ask): *"the
+     main button after the end of a large mcq for exams should be to move on onto frqs."* So
+     the second pass keeps its place but loses the accent — it is still there, it is just no
+     longer what the page is pointing at. A quiz has no written half and is unchanged. */
+  $('#towritten').classList.toggle('hide', !(D.frq && D.frq.length));
   renderScore();
   lastShown = -1;
   centreBlock();
@@ -1837,7 +2241,7 @@ function hintLine(p){
 function scoreMarkdown(){
   if(!S.done) return '';
   const p = scoreParts();
-  return '**Quiz:** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
+  return '**' + NOUN + ':** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
        + (p.red ? ', +' + p.red + ' redeemed' : '') + ', ' + p.wrong + ' wrong'
        + (p.skipped ? ', ' + p.skipped + ' skipped' : '') + ' · ' + when(S.at)
        + '\n**Hints:** ' + hintLine(p);
@@ -1903,6 +2307,7 @@ function step(dir){
 }
 $('#next').onclick = ()=> step(1);
 $('#back').onclick = ()=> step(-1);
+$('#towritten').onclick = ()=> setTab('frq');
 $('#review').onclick = ()=>{ S.reviewing = !S.reviewing; draw(); };
 /* THE SECOND PASS — the preferred way out of the end card, and the one that keeps
    everything. It re-runs only what he got wrong, on a list frozen at the moment he presses
@@ -1919,9 +2324,15 @@ $('#pass2').onclick = ()=>{
    history first so nothing is lost, and the questions he deleted or starred stay that way —
    they are decisions about the quiz, not part of one attempt at it. */
 $('#retake').onclick = ()=>{
-  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length});
+  // ON A SECTIONED PAPER THE HISTORY LINE IS THE PAPER, not the last sitting — the same
+  // reasoning as `save()`. `blank()` returns `only: null` and `sat: {}`, so a retake drops
+  // every sitting at once and lands back on the picker, which is what "retake the exam" means.
+  if(S.done){ const p = D.parts ? paperStat() : null;
+              S.history.push({at:S.at, score: p ? p.n : score(S),
+                              total: p ? p.t : active(S).length}); }
   const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
   S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  pickSel = null;
   lastShown = -1;
   save(); syncTabs(); renderScore(); draw();
 };
@@ -2122,11 +2533,34 @@ function researchMarkdown(){
   });
   return out.replace(/\n+$/, '\n');
 }
-/* ITS OWN HEADING, and the heading text is load-bearing. `notion_board.py notes` splits this
-   section out of the row body by name and hands it to the generator as PROMPT, while
-   everything else on the row stays a source. Rename it here and it silently becomes material
-   again — which is the bug this whole split exists to fix. */
+/* TWO HEADINGS WHOSE TEXT IS LOAD-BEARING. `notion_board.py notes` splits both of these out
+   of the row body BY NAME — `split_fixes()`, and `FIX_HEADING` / `SKIP_HEADING` there are
+   these two strings. Everything else on the row stays material. Rename one here and it
+   silently becomes material again, which is the bug this whole split exists to fix. */
 const FIXHEAD = 'Fix these questions';
+const SKIPHEAD = 'Skipped';
+
+/* THE CARDS HE DELETED, and this section exists to keep them OUT of things (08-14, his rule:
+   skipped cards *"are never reformed and never appear"*, on any exam, v2 or v3).
+
+   It is the one place on this page where a skipped question is written down. Everywhere else
+   they are gone by design — out of the run, out of the score, out of the denominator, out of
+   the sheet — because they were taken out of the quiz. But "gone" only ever meant gone from
+   THIS browser: the exam is built from what he pastes into Notion, so a card he deleted here
+   was invisible to it and perfectly likely to come back as an exam question. This is the one
+   line of the paste that stops that, and `remember_skipped()` files it permanently.
+
+   It says so in the heading's own body text because it will be read by a person too, and a
+   bare list of questions under his notes reads exactly like a list of things to be tested. */
+function skipMarkdown(){
+  const list = markedList(S.skipped);
+  if(!list.length) return '';
+  let out = '\n\n## ' + SKIPHEAD + '\n\n'
+          + '_Deleted while taking the quiz. Not material — these are the ideas to stop '
+          + 'asking about._\n';
+  list.forEach(x => { out += '\n### ' + x.n + '. ' + x.q.q + '\n'; });
+  return out.replace(/\n+$/, '\n');
+}
 function fixMarkdown(){
   const list = fixList();
   if(!list.length) return '';
@@ -2154,6 +2588,7 @@ function fullMarkdown(){
        + markedMarkdown(markedList(S.unsure), 'Needs work')
        + researchMarkdown()
        + fixMarkdown()
+       + skipMarkdown()
        + frqMarkdown();
 }
 
@@ -2193,6 +2628,17 @@ function fullHTML(){
          + '<p><strong>Answer:</strong> ' + esc(x.q.options[x.q.correct]) + '</p>'
          + '<p><strong>Change it to:</strong> ' + esc(x.r.f.trim()) + '</p>';
     });
+  }
+  /* The HTML flavour has to carry this too. It goes on the clipboard INSTEAD of the markdown
+     whenever there is a pasted image anywhere on the quiz, so anything missing here is
+     missing from the Notion row on exactly those weeks — and a skipped card that does not
+     reach the row is a card the exam is free to ask about again. */
+  const skips = markedList(S.skipped);
+  if(skips.length){
+    h += '<h2>' + SKIPHEAD + '</h2>'
+       + '<p><em>Deleted while taking the quiz. Not material — these are the ideas to stop '
+       + 'asking about.</em></p>';
+    skips.forEach(x => { h += '<h3>' + x.n + '. ' + esc(x.q.q) + '</h3>'; });
   }
   const fm = frqMarkdown();
   if(fm) h += tinyMd(fm);

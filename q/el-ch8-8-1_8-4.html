@@ -122,8 +122,8 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
  border:1px solid transparent;border-radius:var(--radius);padding:var(--opad);
  color:var(--text);font:inherit;font-size:var(--osize);cursor:pointer;
  transition:background .16s ease,border-color .16s ease,opacity .16s ease}
-.opt:hover:not(:disabled){background:var(--surface-hi)}
-.opt:disabled{cursor:default}
+.opt:hover:not(.locked){background:var(--surface-hi)}
+.opt.locked{cursor:default}
 .line{display:flex;gap:12px;align-items:flex-start;line-height:1.4}
 .line .k{color:var(--muted);min-width:1.25em}
 .line .t{flex:1}
@@ -176,7 +176,7 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
 .q,.qq,.why,.lab,.hinttext,.rline,.tag,.sheet,.topics,.legend{
  user-select:text;-webkit-user-select:text}
 .opt{user-select:none;-webkit-user-select:none}
-.opt:disabled,.opt:disabled *{user-select:text;-webkit-user-select:text;cursor:auto}
+.opt.locked,.opt.locked *{user-select:text;-webkit-user-select:text;cursor:auto}
 .star,.dots,.tab,button.pill{user-select:none;-webkit-user-select:none}
 
 /* ---- HIS RESEARCH, one box per question ----
@@ -294,6 +294,39 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .tbar{grid-column:1/-1;height:3px;background:var(--line);border-radius:999px;
  overflow:hidden}
 .tbar i{display:block;height:100%;background:var(--text)}
+/* A subchapter he has not sat gets a rail with nothing in it rather than a 0% bar, because a
+   bar at zero reads as "scored nothing" and the whole point is that it has not been asked. */
+.tbar.waiting{background:repeating-linear-gradient(90deg,var(--line) 0 3px,transparent 3px 6px)}
+.topics.parts .trow em{font-style:normal;color:var(--muted);font-size:.8rem;margin-left:8px}
+.ptotal{margin:14px 0 0;color:var(--muted);font-size:.88rem}
+.ptotal b{color:var(--text);font-variant-numeric:tabular-nums;font-size:1.05rem;
+ font-weight:600;margin-right:8px}
+
+/* ---- THE SUBCHAPTER PICKER (08-16) ----
+   Deliberately the same furniture as the end card — same heading treatment, same rails, same
+   tabular numbers — because it IS the end card most of the time he sees it: he opens the link
+   and this screen tells him what he has scored and what is left. A separate visual language
+   for "choose" and "review" would make one screen look like two. */
+.picker{padding:2px 0 8px}
+.picker h3{font-size:1.35rem;font-weight:600;letter-spacing:-.01em;margin:0 0 8px}
+.psub{color:var(--muted);font-size:.9rem;margin:0 0 22px;max-width:46ch}
+.pscore{margin:0 0 22px}
+.pscore b{font-size:1.5rem;font-variant-numeric:tabular-nums;font-weight:600}
+.pscore span{color:var(--muted);font-size:.88rem;margin-left:10px}
+.prows{display:flex;flex-direction:column;gap:8px;margin:0 0 24px}
+.prow{display:grid;grid-template-columns:22px auto 1fr;gap:4px 12px;align-items:center;
+ width:100%;text-align:left;font:inherit;cursor:pointer;padding:13px 16px;
+ border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--text)}
+.prow:hover{border-color:var(--muted)}
+.prow.pon{border-color:var(--accent)}
+.pmark{color:var(--accent);font-size:.95rem;line-height:1}
+.plabel{font-variant-numeric:tabular-nums;font-weight:600}
+.plabel em{font-style:normal;font-weight:400;color:var(--muted);margin-left:8px}
+.pnote{color:var(--muted);font-size:.86rem;justify-self:end}
+.pbar{grid-column:2/-1;height:3px;background:var(--line);border-radius:999px;overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--text)}
+.pgo{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)}
 
 /* ---- review list ---- */
 .rev{padding:6px 0 36px}
@@ -389,6 +422,27 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
  color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
  padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.6;outline:none;margin-top:16px}
 .frqin:focus{border-color:var(--accent)}
+/* THE STICKY HEADER WAS EATING THE CLICK (08-16). It is 49px tall with z-index 5, so the top
+   strip of a box scrolled under it is dead to the mouse — and the top strip is exactly where
+   the "Write your answer." placeholder is, so the box reads as broken. His words: *"I cant
+   even click the textbox for this exam."* `scroll-margin-top` keeps the card clear of the
+   header whenever anything scrolls it into view; the click handler on the card is the belt to
+   that braces, since he can also scroll there by hand. */
+.frq{scroll-margin-top:64px}
+
+/* The only thing on this page allowed to shout. It sits over everything because a saved
+   answer is the one promise the page makes. */
+#savewarn{position:fixed;left:12px;right:12px;bottom:12px;z-index:60;padding:12px 16px;
+ border-radius:12px;font-size:.86rem;line-height:1.4;background:#7f1d1d;color:#fff;
+ box-shadow:0 6px 24px rgba(0,0,0,.4)}
+#savewarn.hide{display:none}
+
+/* WHERE FORWARD MEANS "THE NEXT BLANK ONE". Reaching the end of the list with holes in it
+   sends him back to the first one — right, and invisible until 08-16, when he read it as the
+   paper losing his place: *"when I thought I was done I wasnt… questions are ghosting until
+   the end."* The counter says so now, and the rail stops pretending the run is nearly over. */
+.fillnote{display:inline-flex;align-items:center;gap:6px;color:var(--accent);
+ font-size:.7rem;letter-spacing:.07em;text-transform:uppercase}
 .frqin::placeholder{color:var(--muted);opacity:.7}
 .acts.inline{margin-top:12px}
 .rubric{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
@@ -639,12 +693,13 @@ Self-control is finite - one hard task leaves less for the next"></textarea>
     <button class="pill ghost hide" id="retake">Retake</button>
     <span class="spacer"></span>
     <button class="pill hide" id="review">Review quiz</button>
-    <button class="pill primary hide" id="pass2">2nd Pass</button>
+    <button class="pill ghost hide" id="pass2">2nd Pass</button>
+    <button class="pill primary hide" id="towritten">Written half</button>
     <button class="pill primary" id="next">Next</button>
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "el-ch8-8-1_8-4", "title": "Ch8 Exam · 8.1, 8.4", "subtitle": "Pragmatics", "book": "EL", "hash": "e7181bc6248613c6", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "A team lead says, 'We will not be using the outdated servers for the upcoming migration.' Which part of the lead's message is being rejected by the use of 'not' in this sentence?", "options": ["The at-issue meaning", "The speaker's sincerity", "The sense of the words", "The presupposition"], "rationales": ["Sentential negation specifically targets the main, literal claim being made in the sentence.", "While negation changes the truth of the statement, it does not necessarily address whether the speaker is being sincere about their intent.", "The mental definitions and concepts of the words are not altered or removed simply by making the statement negative.", "Information assumed to be true, such as the existence of the servers, remains untouched by negation."], "correct": 0, "hint": "Think about which part of a sentence is the direct target of 'it is not the case that'.", "topic": "At-issue meaning", "sec": "8.1", "src": "✕", "link": "", "qid": "cbfdd3b03a"}, {"q": "In a discussion about the company's new logo, the ____ of the word refers to the specific mental image or definition each employee holds, while the denotation refers to the actual graphic file stored on the server.", "options": ["utterance", "sense", "entailment", "implicature"], "rationales": ["This refers to the act of speaking or the specific instance of the word being used in conversation.", "This term describes the lexical semantics or the concept of a word that exists within a speaker's mind.", "This is a logical requirement of a sentence's truth, not the mental definition of a single word.", "This refers to meanings suggested by context rather than the internal definition or mental concept of a specific word."], "correct": 1, "hint": "One term deals with the 'pointer' to the real world, while the other deals with the internal mental concept.", "topic": "Sense and Denotation", "sec": "8.1", "src": "✕", "link": "", "qid": "22846f9ec8"}, {"q": "You tell a client, 'Our lead designer managed to finish the prototype ahead of schedule.' If you later negate this by saying, 'It is not the case that the designer managed to finish early,' which suggested meaning is likely to survive the negation?", "options": ["The literal definition of 'prototype'.", "The claim that the schedule was met.", "The suggestion that finishing the prototype required effort or was difficult.", "The claim that the prototype is currently finished."], "rationales": ["While the definition remains, it is a constant of language rather than a specific meaning 'surviving' the negation of the event.", "Because the main claim is that it was finished early, negating the sentence directly rejects the idea that it happened ahead of schedule.", "The non-at-issue meaning often persists even when the main claim is negated.", "This is the at-issue meaning, which is the primary target of negation and is therefore cancelled."], "correct": 2, "hint": "Look for the meaning that isn't the primary focus of the 'no' but is still understood to be true.", "topic": "Non-at-issue meaning", "sec": "8.1", "src": "☆", "link": "", "qid": "a24f67f426"}, {"q": "If a colleague is able to reject a specific claim in your email by replying with 'That's false' or 'That is not the case,' which type of meaning have they successfully targeted?", "options": ["Lexical sense", "Truth-conditional meaning", "Non-truth-conditional meaning", "Presupposed meaning"], "rationales": ["The mental definition of a word cannot be 'false' in the way a statement about the world can be.", "This type of meaning, also called at-issue meaning, is the primary content that can be directly denied or validated as true.", "This category includes things like presuppositions that are not the primary target of a 'that is false' rejection.", "This type of meaning is taken for granted and usually survives even when a listener denies the main claim."], "correct": 1, "hint": "Consider which part of a statement is the 'at-issue' claim that is open to direct denial.", "topic": "Truth-conditional meaning", "sec": "8.1", "src": "R", "link": "", "qid": "8f6bccd619"}, {"q": "You write in a report, 'The marketing team stopped using the original campaign strategy.' Which of the following is NOT a presupposition that a reader must accept for this sentence to be valid?", "options": ["A specific marketing team exists.", "The marketing team previously used that strategy.", "The marketing team will never use the original strategy again.", "There was an original campaign strategy."], "rationales": ["The definite article 'the' triggers the assumption that the entity being discussed actually exists.", "The verb 'stopped' logically requires that the action was occurring before the stopping point.", "This is a prediction or implicature about the future, not a necessary pre-existing fact required for the sentence to make sense.", "The use of 'the original campaign strategy' assumes the existence of such a strategy."], "correct": 2, "hint": "A presupposition is something that must be true before the sentence is uttered for it to make sense.", "topic": "Presupposition", "sec": "8.1", "src": "?", "link": "", "qid": "6dab6df845"}, {"q": "An intern says, 'The coffee machine in the breakroom is broken.' Even if you respond by saying 'That's not true,' you still both understand that there is a coffee machine in the breakroom. What type of meaning is the existence of the machine?", "options": ["Non-at-issue meaning", "Truth-conditional meaning", "Conversational implicature", "At-issue meaning"], "rationales": ["This category covers meanings like presuppositions that are not the main point of the discussion and survive negation.", "While related to truth, this term is typically synonymous with at-issue meaning, which is what the negation 'not true' is targeting.", "The existence of the machine is a formal requirement of the sentence structure (presupposition), not a context-dependent suggestion.", "The machine's existence is not the main 'issue' or claim being debated; the machine's status (broken) is the at-issue part."], "correct": 0, "hint": "Identify the category of meaning that remains standing even when the main claim is knocked down.", "topic": "Non-at-issue meaning", "sec": "8.1", "src": "✎", "link": "", "qid": "fdbb3d7e6e"}, {"q": "While the literal words of a sentence provide the at-issue meaning, an ____ is a non-entailment suggested by the speaker based on the specific circumstances of the conversation.", "options": ["denotation", "implicature", "entailment", "presupposition"], "rationales": ["This refers to the literal object or set of objects in the world that a word points to.", "This refers to the suggested, non-literal meaning that can change depending on the context.", "An entailment is a literal, necessary consequence of a sentence, not a suggestion.", "This is a background assumption required for the sentence to be meaningful, rather than a suggested implication."], "correct": 1, "hint": "This term describes a meaning that is 'hinted at' rather than stated or logically required.", "topic": "Implicature", "sec": "8.1", "src": "$", "link": "", "qid": "6e512da43f"}, {"q": "A project manager tells a developer, 'The software is ready for deployment.' Ten minutes later, they realize a bug was found and say, 'I didn't mean that.' What is the manager doing in this situation?", "options": ["Clarifying the sense of 'deployment'", "Correcting a presupposition", "Retracting a discourse commitment", "Updating the denotation of the software"], "rationales": ["The manager is not redefining the word 'deployment' but is instead cancelling the claim that the event is ready to happen.", "A presupposition is a background fact; here, the manager is correcting the main, at-issue claim they just made.", "The speaker is taking back the sincerity of their previous statement and their responsibility for that claim in the conversation.", "The manager is still referring to the same software, so the pointer to the real-world object has not changed."], "correct": 2, "hint": "Focus on what happens when a speaker attempts to take back a literal claim they previously made.", "topic": "Speaker commitment", "sec": "8.1", "src": "$", "link": "", "qid": "fada5f2d5f"}, {"q": "When you use the word 'server' in a tech office, the physical machine you point to is the denotation. If you want to change what a listener concludes without changing the literal object you are pointing at, what are you manipulating?", "options": ["The presupposition", "The truth-conditional meaning", "The lexical sense", "The conversational implicature"], "rationales": ["The background assumption that a server exists is constant; it is the secondary suggestions that are being modified.", "The literal truth of which server is being discussed hasn't changed, only the suggestions surrounding it.", "The mental definition of the word 'server' remains constant even if the suggested context-based meaning changes.", "By changing the context or rules of conversation, you change the suggested meaning (implicature) while the literal pointer (denotation) stays the same."], "correct": 3, "hint": "Consider how context allows you to suggest different things while referring to the exact same physical item.", "topic": "Sense and Denotation", "sec": "8.1", "src": "$", "link": "8.4", "qid": "7e508d1fa1"}, {"q": "Which of the following is NOT a characteristic of at-issue meaning as defined in the text?", "options": ["It is the part of the sentence that 'it is not the case that' targets.", "It consistently survives being placed under sentential negation.", "It represents the main 'topic of discussion' or the literal surface meaning.", "It is also known as truth-conditional meaning in many linguistic contexts."], "rationales": ["The text uses this diagnostic to define what constitutes the at-issue content.", "At-issue meaning is actually the primary target of negation and is cancelled by it, unlike presuppositions.", "The text explicitly defines at-issue meaning as the main topic or literal claim.", "The text notes that outside the book, these two terms are often used interchangeably."], "correct": 1, "hint": "Think about the specific test involving negation used to identify this type of meaning.", "topic": "At-issue meaning", "sec": "8.1", "src": "+", "link": "", "qid": "247134769d"}, {"q": "You tell a coworker, 'The updated report is in your inbox.' In this sentence, the use of the definite determiner 'the' serves as a trigger for which specific type of meaning regarding the report's existence?", "options": ["At-issue meaning", "Speaker sincerity", "Conversational implicature", "Presupposition"], "rationales": ["The existence of the report is a background assumption, not the main claim being asserted (which is the report's location).", "Sincerity refers to the speaker's commitment to the truth, not the linguistic trigger for background assumptions.", "Implicatures are suggested by context, whereas the assumption of existence here is triggered by the word 'the'.", "Definite determiners like 'the' are standard triggers for the assumption that the object mentioned exists."], "correct": 3, "hint": "Identify the type of meaning that is automatically assumed to be true based on specific words like 'the'.", "topic": "Presupposition", "sec": "8.1", "src": "+", "link": "", "qid": "d9c37e26f9"}, {"q": "In the sentence 'Every employee attended the seminar,' the ____ refers to the literal claim that there is no employee who was absent, which represents the primary topic of discussion.", "options": ["at-issue meaning", "compositional implicature", "non-at-issue meaning", "lexical sense"], "rationales": ["This term identifies the main, literal claim that forms the core 'issue' or topic being communicated.", "Implicatures are non-literal suggestions, whereas the attendance of every employee is the literal core of the sentence.", "This would refer to background assumptions or suggestions, rather than the primary literal claim.", "While the words have sense, this term refers to mental definitions rather than the overall claim made by the sentence."], "correct": 0, "hint": "Use the term that describes the 'surface' or 'literal' meaning that is the main point of the sentence.", "topic": "At-issue meaning", "sec": "8.1", "src": "+", "link": "", "qid": "c5f730a00e"}, {"q": "A manager says, 'The CEO forgot that the meeting was moved.' Even if a staff member proves the CEO did not forget, what information is still accepted as true by both parties due to the structure of the sentence?", "options": ["The meeting has already occurred.", "The manager is telling the truth.", "The CEO is responsible for the meeting.", "The meeting was moved."], "rationales": ["The sentence only assumes the meeting was moved, not that it is in the past.", "Whether the manager is lying or mistaken is an issue of sincerity, not an assumed background fact.", "This might be a suggested implicature, but it isn't a hard requirement for the sentence to be linguistically valid.", "This is a presupposition triggered by the verb 'forgot' and remains true regardless of whether the forgetting actually happened."], "correct": 3, "hint": "Look for the 'background' fact that has to be true for the manager's statement to even make sense.", "topic": "Presupposition", "sec": "8.1", "src": "+", "link": "", "qid": "ba9625c82b"}, {"q": "If you observe that a specific part of a sentence's meaning 'survives' even when you add 'It is not the case that' to the start of the sentence, what can you conclude about that piece of meaning?", "options": ["It is non-at-issue meaning.", "It is a logical entailment.", "It is the literal surface meaning.", "It is the truth-conditional content."], "rationales": ["Meanings that are not cancelled by negation, like presuppositions, are classified as non-at-issue.", "Entailments of the original positive sentence are often lost when the sentence is negated.", "The surface meaning is the at-issue meaning, which negation is designed to flip or cancel.", "Truth-conditional (at-issue) content is exactly what negation targets and cancels."], "correct": 0, "hint": "This question asks you to identify the category based on the result of the negation test.", "topic": "Non-at-issue meaning", "sec": "8.1", "src": "+", "link": "", "qid": "1057d36418"}, {"q": "Which of the following is NOT true regarding the distinction between at-issue and non-at-issue meaning?", "options": ["At-issue meaning is what is targeted by sentential negation.", "Presuppositions are considered a form of at-issue meaning because they must be true.", "Implicatures are a type of non-at-issue meaning.", "Non-at-issue meaning can include information suggested by context."], "rationales": ["This is the standard diagnostic used to separate the two types of meaning.", "Presuppositions are actually non-at-issue because they are background assumptions, not the main topic of discussion.", "The text classifies suggested, non-literal meanings as non-at-issue.", "This accurately describes implicatures, which are a subset of non-at-issue meaning."], "correct": 1, "hint": "Look for the option that incorrectly groups a background assumption with the main claim.", "topic": "At-issue vs. non-at-issue", "sec": "8.1", "src": "+", "link": "", "qid": "8fce46c1e2"}, {"q": "If a linguist refers to 'truth-conditional meaning,' they are discussing the same concept that this textbook calls ____.", "options": ["conversational implicature", "at-issue meaning", "lexical sense", "non-at-issue meaning"], "rationales": ["Implicatures are non-truth-conditional because the sentence can be literally true even if the suggestion is false.", "The textbook uses 'at-issue' to refer to the literal surface meaning that determines the truth conditions of a statement.", "Sense is the mental concept, while truth-conditional meaning refers to the conditions under which a whole sentence is true.", "Non-at-issue meaning (like presuppositions) is related to truth but is not the same as truth-conditional content."], "correct": 1, "hint": "Match the technical linguistic term with the textbook's preferred terminology for the main claim.", "topic": "At-issue vs. non-at-issue", "sec": "8.1", "src": "+", "link": "", "qid": "bec5bf05c8"}, {"q": "A colleague tells you, 'I have completed the executive summary.' Which of the following is NOT an entailment or implicature that is logically consistent with this statement?", "options": ["The colleague has not written the rest of the report, but it is not the case that they have completed the summary.", "The colleague has finished the summary, but they have not yet finished the full report.", "The colleague has completed the summary, which is a document.", "The colleague is now ready for the next task."], "rationales": ["This creates a direct logical contradiction with the original statement, making it an impossible entailment.", "This is a perfectly valid cancellation of a possible implicature (that the whole report was done).", "This is a logical entailment that cannot be denied without contradiction.", "This is a plausible implicature that could be true or false depending on the context."], "correct": 0, "hint": "Look for the option that tries to take back the literal truth of the original sentence, which causes a contradiction.", "topic": "Cancellable Meanings", "sec": "8.4", "src": "✕", "link": "", "qid": "2378da0321"}, {"q": "In a performance review, a manager says, 'You are very punctual.' Depending on the context of the employee's work quality, what type of meaning is the manager likely conveying beyond the literal words?", "options": ["Conversational implicature", "At-issue meaning", "Presupposition", "Logical entailment"], "rationales": ["The suggestion (e.g., 'you are good' or 'you are only good at being on time') depends entirely on context.", "The at-issue meaning is just the literal fact that the person arrives on time, not the implied praise or criticism.", "The employee's work quality isn't a background fact required for the word 'punctual' to be meaningful.", "Punctuality does not logically require that one is a good or bad worker; it is merely a suggestion."], "correct": 0, "hint": "This question asks you to identify the meaning that shifts based on whether the context is positive or negative.", "topic": "Contextual Influence", "sec": "8.4", "src": "✕", "link": "", "qid": "fe70cee9d5"}, {"q": "Suggested meanings that arise from the underlying rules people use to interact and understand one another, rather than from literal word definitions, are specifically known as ____ implicatures.", "options": ["logical", "lexical", "conversational", "at-issue"], "rationales": ["Logical meanings are entailments that are necessarily true, not suggestions from social rules.", "Lexical meanings are derived from the definitions of individual words in the mental dictionary.", "This term highlights that these meanings are generated by the process and rules of human conversation.", "At-issue meaning is the literal surface meaning, while implicatures are non-at-issue."], "correct": 2, "hint": "Fill in the word that describes the type of implicature governed by the rules of discourse.", "topic": "Conversational Implicature", "sec": "8.4", "src": "☆", "link": "", "qid": "e9188901f4"}, {"q": "A father tells his daughter, 'You have three cookies in your lunchbox.' She later finds a fourth cookie and says, 'You were wrong.' He replies, 'No, I wasn't; you do have three cookies (plus one more).' Why is the father's original statement not technically a lie?", "options": ["The existence of the cookies is a presupposition that remains true regardless of the count.", "Sentential negation cannot target numerical values in a conversation.", "The daughter misunderstood the literal sense of the word 'three'.", "Having four cookies logically entails having three, and the 'exactly three' part was just a cancellable implicature."], "rationales": ["While cookies exist, the issue here is the specific quantity and the difference between entailment and suggestion.", "Negation can target numbers; however, the father is defending the truth of his statement based on entailment.", "The word 'three' has a stable definition; the confusion is about the suggestion of 'only three'.", "This follows Grice's principle that implicatures can be taken back or clarified without creating a logical contradiction."], "correct": 3, "hint": "Think about how having a higher number of items automatically makes it true that you have a lower number of those same items.", "topic": "Contextual Influence", "sec": "8.4", "src": "R", "link": "", "qid": "493b0c8181"}, {"q": "If a speaker says, 'The project is finished,' and then immediately adds, '...but I still have to proofread it,' what has happened to the listener's initial understanding?", "options": ["A conversational implicature was cancelled.", "A presupposition was rejected.", "The at-issue meaning was negated.", "A logical entailment was contradicted."], "rationales": ["The suggestion that 'finished' meant 'perfect and ready to send' was taken back without contradicting the literal completion of the task.", "There is no background assumption being challenged here, only a context-based suggestion.", "The speaker didn't say it wasn't finished; they just clarified the scope of the completion.", "If 'finished' literally entailed 'proofread', then the second half of the sentence would be a logical impossibility."], "correct": 0, "hint": "Consider what type of meaning can be 'taken back' by adding a clarifying phrase at the end.", "topic": "Cancellable Meanings", "sec": "8.4", "src": "?", "link": "", "qid": "08834e31f0"}, {"q": "Which of the following would NOT be a valid conversational implicature for a manager saying 'This is a report about the Q3 budget,' assuming the manager knows the report is actually very poor quality?", "options": ["The manager thinks the listener might find the report disappointing.", "The manager believes the report is a high-quality document.", "The manager is avoiding giving a direct opinion on the report's quality.", "The manager expects the listener to read the document regardless of its quality."], "rationales": ["This is a plausible implicature when a speaker uses a neutral description to avoid giving a negative review.", "Given the manager's knowledge of the poor quality, suggesting it is high-quality would be a false or misleading implicature.", "By stating only the topic, the manager may be intentionally implying they have nothing good to say.", "This is a possible suggestion arising from the context of a workplace directive."], "correct": 1, "hint": "Remember that an implicature depends on what the speaker knows and what the listener can reasonably conclude.", "topic": "Conversational Implicature", "sec": "8.4", "src": "✎", "link": "", "qid": "bb596abf76"}, {"q": "A writer states, 'The current CEO of the company is an innovator.' Which of the following follow-up statements would create a logical contradiction, rather than just cancelling a suggestion?", "options": ["But they are not particularly creative in their personal life.", "Though they have not actually invented anything new yet.", "However, there is no CEO of the company.", "But they are leaving the company tomorrow."], "rationales": ["This only cancels an implicature about the CEO's general personality, which is not a literal requirement of the sentence.", "One can be an 'innovator' in spirit or process without a patent, so this clarifies the suggestion without a hard clash.", "This contradicts the presupposition and the literal claim, making the original statement impossible to be true.", "This adds new information but does not negate the literal truth that they are the CEO at this moment."], "correct": 2, "hint": "Look for the statement that denies a necessary truth or a background fact of the original claim.", "topic": "Logical Entailment", "sec": "8.4", "src": "$", "link": "", "qid": "b282e95ef3"}, {"q": "Unlike a ____, which is a suggested meaning that can be taken back, an entailment is a literal requirement of a sentence that survives as a 'non-at-issue' fact if the sentence is negated.", "options": ["conversational implicature", "presupposition", "denotative pointer", "at-issue claim"], "rationales": ["This captures the distinction between context-dependent suggestions and the structural requirements of the sentence.", "While presuppositions are non-at-issue, the comparison here is between 'cancellable' suggestions and facts that 'survive' negation.", "Denotation refers to the object itself, not the relationship between suggestions and logical requirements.", "At-issue claims are the main point, not the suggested meanings that are being contrasted with entailments."], "correct": 0, "hint": "Contrast the 'cancellable' nature of context-based meaning with the 'surviving' nature of background facts.", "topic": "Logical Entailment", "sec": "8.4", "src": "$", "link": "8.1", "qid": "3ee8b2362e"}, {"q": "In a situation where a manager knows an employee is hoping for a promotion, the manager says, 'The board is meeting to discuss the budget.' How would the implicature change if the employee knew the board was actually meeting to discuss salaries?", "options": ["The sentence would become a logical entailment of the promotion.", "The literal at-issue meaning of 'budget' would be negated.", "The implicature of 'the board is not discussing you' becomes stronger and harder to cancel.", "The presupposition that a board exists would be cancelled."], "rationales": ["Logical entailment is based on the words themselves, not the social situation or secret knowledge.", "The literal meaning of the word 'budget' doesn't change based on the employee's hopes.", "Contextual knowledge shared between parties drastically shifts what is suggested by omitting certain information.", "Presuppositions are triggered by language (like 'the board') and are not affected by the specific topic of the meeting."], "correct": 2, "hint": "Think about how the 'unspoken' part of a message changes when both people have more information.", "topic": "Contextual Influence", "sec": "8.4", "src": "+", "link": "", "qid": "4dbacecb8a"}, {"q": "If a specific meaning of an utterance disappears when the speaker provides a context where that meaning would be irrelevant, but the sentence remains literally true, what type of meaning was it?", "options": ["Logical entailment", "Conversational implicature", "Truth-conditional meaning", "Presupposition"], "rationales": ["Entailments are context-independent; if the sentence is true, the entailment must be true.", "This is the hallmark of an implicature: it is context-dependent and can be removed without making the sentence false.", "Truth-conditional meaning is the at-issue content, which determines the literal truth of the statement.", "Presuppositions are requirements of the language structure and don't just disappear when the topic shifts."], "correct": 1, "hint": "Consider what we call a meaning that is 'on' in one context but 'off' in another.", "topic": "Contextual Influence", "sec": "8.4", "src": "+", "link": "", "qid": "9212985669"}, {"q": "Which of the following is NOT a characteristic of conversational implicatures?", "options": ["They must be true in every possible world where the sentence is true.", "They can be cancelled by the speaker without creating a contradiction.", "They are context-dependent and can change based on who is speaking.", "They are a form of non-at-issue meaning."], "rationales": ["This describes entailments, not implicatures, which can be false even if the sentence is true.", "This is the standard 'cancellability' test used to identify implicatures.", "This is a core definition of how conversational implicatures function.", "Implicatures are suggested meanings that fall outside the literal 'at-issue' claim."], "correct": 0, "hint": "Look for the option that describes a rigid logical requirement rather than a flexible suggestion.", "topic": "Conversational Implicature", "sec": "8.4", "src": "+", "link": "", "qid": "e34eefe30d"}, {"q": "You say to a friend, 'I have some of the materials for the project.' If you later say, 'In fact, I have all of them,' why is your first statement still considered true?", "options": ["You are retracting your sincerity commitment to the project.", "The word 'all' is a presupposition of the word 'some'.", "The sense of 'some' changes automatically to 'all' in a positive context.", "The word 'some' implies 'not all', but it does not literally entail it."], "rationales": ["You aren't taking back the claim that you have materials; you are actually strengthening it.", "There is no presupposition relationship here; the connection is between a suggestion and a literal count.", "The mental definition (sense) of 'some' remains constant; what changes is the pragmatic suggestion.", "This is a scalar implicature; 'some' literally means 'at least one', and the 'not all' part is just a suggestion."], "correct": 3, "hint": "Think about the difference between 'at least one' and the suggestion of 'not everyone'.", "topic": "Cancellable Meanings", "sec": "8.4", "src": "+", "link": "", "qid": "185971b323"}, {"q": "In conversational pragmatics, an ____ is the literal, necessary consequence of a sentence, while an ____ is an additional meaning suggested by the context.", "options": ["at-issue / non-at-issue", "entailment / implicature", "presupposition / sense", "implicature / entailment"], "rationales": ["While related, these categories are broader and do not specifically target the consequence vs suggestion distinction.", "This correctly pairs the 'necessary' meaning with the 'suggested' meaning.", "Presuppositions are assumptions, and sense is a definition; neither fits the 'necessary consequence' vs 'suggestion' comparison perfectly.", "This reverses the two terms; implicatures are suggested, not necessary."], "correct": 1, "hint": "Fill in the blanks with the terms for 'must be true' and 'might be suggested'.", "topic": "Logical Entailment", "sec": "8.4", "src": "+", "link": "", "qid": "3cde662131"}, {"q": "A recruiter asks, 'Do you know how to use Python?' and a candidate replies, 'I have used it to automate several tasks.' What is the most likely implicature in this professional context?", "options": ["The candidate has never used any other programming language.", "The candidate is proficient enough to use the language for work.", "The automation of tasks is a presupposition of the word 'Python'.", "The recruiter is logically required to hire the candidate."], "rationales": ["This is an unfounded leap that isn't suggested by the literal words or the context.", "In a job interview, providing evidence of use suggests that the answer to 'do you know it' is a confident 'yes'.", "Python's existence is a presupposition; what it can do is a matter of fact or suggestion.", "Pragmatics involves suggestions, not legal or logical requirements for action."], "correct": 1, "hint": "Think about what a person is trying to 'get across' by giving a specific example of their work.", "topic": "Conversational Implicature", "sec": "8.4", "src": "+", "link": "", "qid": "60a00b07fd"}, {"q": "When a speaker says, 'It's cold in here,' and the listener closes the window, which linguistic process has occurred?", "options": ["The speaker corrected a false presupposition.", "The at-issue meaning was cancelled by the listener's action.", "The listener acted on a conversational implicature.", "The listener followed a logical entailment."], "rationales": ["There is no background assumption being challenged here.", "The action doesn't change the literal truth that the room was cold.", "The literal statement about temperature suggested a request for action, which the listener understood.", "The fact that it is cold does not logically necessitate that a window must be closed."], "correct": 2, "hint": "Consider how a literal statement of fact can be used to achieve a result without a direct command.", "topic": "Cancellable Meanings", "sec": "8.4", "src": "+", "link": "", "qid": "7461b375af"}, {"q": "Which of the following scenarios best demonstrates a difference between entailment and implicature?", "options": ["Saying 'I have an apple' and it being false because you actually have a pear, versus saying 'I have an apple' and someone assuming you're hungry.", "Saying 'The CEO is busy' and the CEO actually being in a meeting.", "Saying 'The car is red' versus saying 'The car is not blue'.", "Saying 'I am a doctor' and having a PhD versus having an MD."], "rationales": ["The first is a failure of literal truth (entailment), while the second is a suggestion (implicature) that could be false even if you have the apple.", "This is just an example of a statement being literally true, not a contrast of two types of meaning.", "These are both literal claims about color and don't highlight the suggestion-vs-requirement distinction.", "This is an issue of the 'sense' or definition of a word, not a contrast between entailment and implicature."], "correct": 0, "hint": "Look for the option that contrasts a 'hard requirement' for truth with a 'flexible suggestion'.", "topic": "Conversational Implicature", "sec": "8.4", "src": "+", "link": "", "qid": "f3149d62a2"}], "hasSheet": true, "frq": [{"tag": "Presupposition and Negation", "prompt": "You are in a budget meeting. A manager states: \"The department head forgot to sign the approval for the budget.\"", "ask": "1. Write a sentence that rejects the manager's main claim using the diagnostic: \"It is not the case that...\"", "secs": "", "words": "", "rubric": [{"t": "negat*", "judge": false, "k": ["denial", "nullification", "contradiction"]}, {"t": "surviv*", "judge": false, "k": ["persists", "remains", "continues"]}, {"t": "presuppos*", "judge": false, "k": ["prerequisite", "background", "requirement"]}, {"t": "non-at-issue*", "judge": false, "k": ["secondary", "implicit", "underlying"]}, {"t": "Evaluate the clarity of the explanation regarding the \"the\" trigger. Look for a clear link between the definite determiner and the persistence of the entities despite the sentential denial", "judge": true, "k": []}], "model": "To reject the manager's primary claim, the response is: \"It is not the case that the department head forgot to sign the approval for the budget.\" \n\nIn linguistics, we distinguish between at-issue (or truth-conditional) meaning and non-at-issue meaning. The at-issue meaning is the literal, surface claim—here, the specific event of a signature being forgotten. When we apply sentential negation using \"it is not the case that,\" we only target this at-issue content. However, the sentence contains presuppositions triggered by the definite determiner \"the.\" Specifically, the existence of a \"department head\" and a specific \"approval\" document are presupposed.\n\nThese elements are non-at-issue meanings because they are assumed to be true before the sentence is even uttered. A defining property of a presupposition is that it survives negation. While the rejection nullifies the truth-conditional claim regarding the act of forgetting, it does not affect the backgrounded requirement that the person and the document exist. Therefore, the existence of these entities persists as a factual baseline in the discourse, illustrating that sentential negation cannot target non-at-issue presuppositions."}, {"tag": "Cancellability and Context", "prompt": "A colleague asks you, \"Is the report ready?\" and you respond, \"The report is on your desk.\"", "ask": "1. Write a second sentence to follow your response that \"cancels\" the common suggestion that the report is 100% complete.", "secs": "", "words": "", "rubric": [{"t": "retract*", "judge": false, "k": ["take back", "void", "reverse"]}, {"t": "suggest*", "judge": false, "k": ["hint", "inkling", "intimation"]}, {"t": "necessit*", "judge": false, "k": ["requirement", "obligation", "essential"]}, {"t": "circumstance*", "judge": false, "k": ["surroundings", "background", "milieu"]}, {"t": "explicit*", "judge": false, "k": ["overt", "verbatim", "stated"]}, {"t": "Determine if the cancellation addition sounds natural and maintains a professional tone suitable for a workplace email exchange", "judge": true, "k": []}], "model": "To cancel the suggested meaning, the response would be: \"The report is on your desk, but I still need to finalize the executive summary and the appendices.\"\n\nThis addition is linguistically acceptable because the idea that the report is \"complete\" is a conversational implicature, not an entailment. While entailments are logically necessary and cannot be denied without a contradiction, implicatures are context-dependent and cancellable. In this professional scenario, the colleague infers completion because that is the most relevant interpretation of the report being delivered. \n\nBecause this inferred meaning is non-at-issue and arises from conversational rules rather than the literal sense of the words, I can retract it by adding explicit information. If the status of \"finished\" were an entailment, saying it is \"on the desk but not finished\" would be a logical clash (like saying \"This is a book, but it is not a book\"). However, since the implicature is dependent on the specific circumstances of the query, the speaker can clarify the limits of the literal statement without violating the truth of the report's physical location."}, {"tag": "At-issue vs Implicature", "prompt": "A project lead says, \"The new developer is very fast.\" In this specific workplace context, this carries a non-at-issue implicature that the individual is \"careless.\"", "ask": "1. Rewrite the sentence so that the meaning of being \"careless\" becomes the at-issue (literal) claim.", "secs": "", "words": "", "rubric": [{"t": "proposition*", "judge": false, "k": ["statement", "clause", "claim"]}, {"t": "focus*", "judge": false, "k": ["target", "aim", "center"]}, {"t": "denot*", "judge": false, "k": ["reference", "extension", "indicator"]}, {"t": "Effectiveness of the rewrite in shifting the implied meaning to the primary at-issue proposition", "judge": true, "k": []}, {"t": "Logic of the explanation regarding the negation test. Look for a clear distinction between the wide scope of negation in the original versus the target in the rewrite", "judge": true, "k": []}], "model": "To make the implied meaning at-issue, the statement should be: \"The new hire is negligent.\"\n\nThe \"it is not the case that...\" test is a diagnostic for at-issueness because sentential negation specifically targets the literal, truth-conditional claim. In the original sentence (\"The new developer is very fast\"), applying the test results in: \"It is not the case that the new developer is very fast.\" Here, the negation has a wide scope over the at-issue quality of speed. It successfully nullifies the claim of being \"fast,\" but the non-at-issue implicature of being \"careless\" might still linger or disappear; the negation does not directly target it.\n\nIn the rewrite, the quality of being \"careless\" (or negligent) is no longer a suggestion; it is the direct denotation of the predicate. When the diagnostic is applied—\"It is not the case that the new hire is negligent\"—the negation specifically targets and nullifies the charge of carelessness. By shifting this meaning into the at-issue proposition, it becomes the primary focus of the discussion and the direct object of the sentential negation, unlike the original where it was merely an indirect suggestion."}], "notebook": "https://notebooklm.google.com/notebook/2593f308-1e5d-4d51-ace7-2db8cbc5e8ff/artifact/f3b933df-ee03-49b7-b7f2-3746bceb833b", "root": "../index.html", "tab": "quiz", "sheet": "## 1. At-issue meaning\nSummarize the concept of the literal, surface-level content of an utterance.\n### Key terms\n1. **At-issue meaning** — the main topic of discussion or the literal claim made by a sentence.\n   1. `ex.` \"Mounissa will buy the discounted strawberries\" literally claims an event will occur.\n\n## 2. Sense and Denotation\nSummarize how linguistic meaning is divided between mental representations and real-world references.\n### Key terms\n1. **Sense** — the mental representation or lexical semantics of a word held by a speaker.\n   1. `ex.` Thinking about the botanical definition or visual image of a \"strawberry.\"\n2. **Denotation** — the specific object or set of objects a word points to in the actual world.\n   1. `ex.` \"Ode’imin\" and \"strawberry\" both pointing to the same physical fruit.\n\n## 3. Non-at-issue meaning\nSummarize meanings that exist outside the literal surface claim of a sentence.\n### Key terms\n1. **Non-at-issue meaning** — information conveyed by a sentence that is not part of its literal, surface meaning.\n   1. `types` Includes both presuppositions and implicatures.\n\n## 4. Truth-conditional meaning\nSummarize the relationship between at-issue content and the conditions for a statement's truth.\n### Key terms\n1. **Truth-conditional meaning** — a term used outside the textbook to refer to at-issue meaning.\n2. **Non-truth-conditional meaning** — synonym for non-at-issue meaning, though less precise regarding presuppositions.\n3. **Fact verification** — checking \"truth\" or \"falsity\" against at-issue content targeted by \"no, that is false.\"\n\n## 5. Presupposition\nSummarize the information that must be assumed true for a sentence to be contextually appropriate.\n### Key terms\n1. **Presupposition** — information that is assumed to be true already when a sentence is uttered.\n   1. `trigger` The definite determiner \"the\" triggers a presupposition that survives sentential negation.\n   1. `ex.` \"The department head forgot\" presupposes a specific department head exists.\n\n## 6. Implicature\nSummarize the non-entailed suggestions that arise from the context of an utterance.\n### Key terms\n1. **Implicature** — a non-entailment suggested by a sentence based on the specific context of the conversation.\n   1. `ex.` Saying Mounissa bought 10lbs of strawberries implies she is making jam.\n\n## 7. Speaker commitment\nSummarize how utterances reflect the speaker's sincerity and their stance within a discourse.\n### Key terms\n1. **Speaker commitment** — the sincere obligation or retraction of a claim made during discourse.\n   1. `retraction` Saying \"coffee is as tasty as tea, but I didn't mean it\" to retract a sincerity commitment.\n\n## 8. At-issue vs. non-at-issue\nSummarize the diagnostic methods used to distinguish between these two layers of meaning.\n### Key terms\n1. **Sentential negation** — the \"it is not the case that...\" test used to identify at-issue content.\n   1. `at-issue result` The content falls within the scope of negation and is denied.\n   1. `non-at-issue result` Presuppositions and some implicatures survive the negation.\n### Names and studies\n1. **Christopher Potts (2015)** — examined the relationship between presupposition and implicature in semantic theory.\n2. **Thorsten Sander (2022)** — \"Taxonomizing Non-at-Issue Contents\" developed a taxonomy for content types.\n\n## 9. Cancellable Meanings\nSummarize the ability to retract certain meanings without creating a logical contradiction.\n### Key terms\n1. **Cancellability** — the property where a meaning can be taken back without contradicting the original statement.\n   1. `application` Implicatures are cancellable via addition; entailments are not and lead to contradiction (⊥).\n   1. `ex.` Saying \"The report is on your desk\" then adding \"but it is not finished.\"\n\n## 10. Contextual Influence\nSummarize how the surrounding situation and participant knowledge change the implied meaning.\n### Key terms\n1. **Context-dependency** — the phenomenon where the same sentence carries different implicatures based on circumstances.\n   1. `ex.` Telling a history hater \"This is a history book\" flips the implicature from \"you'll like it\" to \"you'll hate it.\"\n\n## 11. Conversational Implicature\nSummarize meanings that arise specifically from the rules of social interaction.\n### Key terms\n1. **Conversational implicature** — suggested meanings that arise specifically from underlying rules of human interaction.\n### Names and studies\n1. **H. P. Grice (1975)** — proposed implicatures arise from conversational rules in \"Logic and Conversation.\"\n\n## 12. Logical Entailment\nSummarize the necessary truths that follow from a sentence regardless of context.\n### Key terms\n1. **Logical Entailment** — a meaning that is necessarily true if the sentence is true and cannot be canceled.\n   1. `non-cancellability` Explicitly denying an entailment results in a logical contradiction (⊥).\n   1. `ex.` \"This is a book about China, but it is not the case that this is a book\" (⊥)."}</script>
+<script id="quiz-data" type="application/json">{"id": "el-ch8-8-1_8-4", "title": "Ch8 Exam · 8.1, 8.4", "subtitle": "Pragmatics", "book": "EL", "hash": "e7181bc6248613c6", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "A team lead says, 'We will not be using the outdated servers for the upcoming migration.' Which part of the lead's message is being rejected by the use of 'not' in this sentence?", "options": ["The at-issue meaning", "The speaker's sincerity", "The sense of the words", "The presupposition"], "rationales": ["Sentential negation specifically targets the main, literal claim being made in the sentence.", "While negation changes the truth of the statement, it does not necessarily address whether the speaker is being sincere about their intent.", "The mental definitions and concepts of the words are not altered or removed simply by making the statement negative.", "Information assumed to be true, such as the existence of the servers, remains untouched by negation."], "correct": 0, "hint": "Think about which part of a sentence is the direct target of 'it is not the case that'.", "topic": "At-issue meaning", "sec": "8.1", "src": "✕", "link": "", "qid": "cbfdd3b03a"}, {"q": "In a discussion about the company's new logo, the ____ of the word refers to the specific mental image or definition each employee holds, while the denotation refers to the actual graphic file stored on the server.", "options": ["utterance", "sense", "entailment", "implicature"], "rationales": ["This refers to the act of speaking or the specific instance of the word being used in conversation.", "This term describes the lexical semantics or the concept of a word that exists within a speaker's mind.", "This is a logical requirement of a sentence's truth, not the mental definition of a single word.", "This refers to meanings suggested by context rather than the internal definition or mental concept of a specific word."], "correct": 1, "hint": "One term deals with the 'pointer' to the real world, while the other deals with the internal mental concept.", "topic": "Sense and Denotation", "sec": "8.1", "src": "✕", "link": "", "qid": "22846f9ec8"}, {"q": "You tell a client, 'Our lead designer managed to finish the prototype ahead of schedule.' If you later negate this by saying, 'It is not the case that the designer managed to finish early,' which suggested meaning is likely to survive the negation?", "options": ["The literal definition of 'prototype'.", "The claim that the schedule was met.", "The suggestion that finishing the prototype required effort or was difficult.", "The claim that the prototype is currently finished."], "rationales": ["While the definition remains, it is a constant of language rather than a specific meaning 'surviving' the negation of the event.", "Because the main claim is that it was finished early, negating the sentence directly rejects the idea that it happened ahead of schedule.", "The non-at-issue meaning often persists even when the main claim is negated.", "This is the at-issue meaning, which is the primary target of negation and is therefore cancelled."], "correct": 2, "hint": "Look for the meaning that isn't the primary focus of the 'no' but is still understood to be true.", "topic": "Non-at-issue meaning", "sec": "8.1", "src": "☆", "link": "", "qid": "a24f67f426"}, {"q": "If a colleague is able to reject a specific claim in your email by replying with 'That's false' or 'That is not the case,' which type of meaning have they successfully targeted?", "options": ["Lexical sense", "Truth-conditional meaning", "Non-truth-conditional meaning", "Presupposed meaning"], "rationales": ["The mental definition of a word cannot be 'false' in the way a statement about the world can be.", "This type of meaning, also called at-issue meaning, is the primary content that can be directly denied or validated as true.", "This category includes things like presuppositions that are not the primary target of a 'that is false' rejection.", "This type of meaning is taken for granted and usually survives even when a listener denies the main claim."], "correct": 1, "hint": "Consider which part of a statement is the 'at-issue' claim that is open to direct denial.", "topic": "Truth-conditional meaning", "sec": "8.1", "src": "R", "link": "", "qid": "8f6bccd619"}, {"q": "You write in a report, 'The marketing team stopped using the original campaign strategy.' Which of the following is NOT a presupposition that a reader must accept for this sentence to be valid?", "options": ["A specific marketing team exists.", "The marketing team previously used that strategy.", "The marketing team will never use the original strategy again.", "There was an original campaign strategy."], "rationales": ["The definite article 'the' triggers the assumption that the entity being discussed actually exists.", "The verb 'stopped' logically requires that the action was occurring before the stopping point.", "This is a prediction or implicature about the future, not a necessary pre-existing fact required for the sentence to make sense.", "The use of 'the original campaign strategy' assumes the existence of such a strategy."], "correct": 2, "hint": "A presupposition is something that must be true before the sentence is uttered for it to make sense.", "topic": "Presupposition", "sec": "8.1", "src": "?", "link": "", "qid": "6dab6df845"}, {"q": "An intern says, 'The coffee machine in the breakroom is broken.' Even if you respond by saying 'That's not true,' you still both understand that there is a coffee machine in the breakroom. What type of meaning is the existence of the machine?", "options": ["Non-at-issue meaning", "Truth-conditional meaning", "Conversational implicature", "At-issue meaning"], "rationales": ["This category covers meanings like presuppositions that are not the main point of the discussion and survive negation.", "While related to truth, this term is typically synonymous with at-issue meaning, which is what the negation 'not true' is targeting.", "The existence of the machine is a formal requirement of the sentence structure (presupposition), not a context-dependent suggestion.", "The machine's existence is not the main 'issue' or claim being debated; the machine's status (broken) is the at-issue part."], "correct": 0, "hint": "Identify the category of meaning that remains standing even when the main claim is knocked down.", "topic": "Non-at-issue meaning", "sec": "8.1", "src": "✎", "link": "", "qid": "fdbb3d7e6e"}, {"q": "While the literal words of a sentence provide the at-issue meaning, an ____ is a non-entailment suggested by the speaker based on the specific circumstances of the conversation.", "options": ["denotation", "implicature", "entailment", "presupposition"], "rationales": ["This refers to the literal object or set of objects in the world that a word points to.", "This refers to the suggested, non-literal meaning that can change depending on the context.", "An entailment is a literal, necessary consequence of a sentence, not a suggestion.", "This is a background assumption required for the sentence to be meaningful, rather than a suggested implication."], "correct": 1, "hint": "This term describes a meaning that is 'hinted at' rather than stated or logically required.", "topic": "Implicature", "sec": "8.1", "src": "$", "link": "", "qid": "6e512da43f"}, {"q": "A project manager tells a developer, 'The software is ready for deployment.' Ten minutes later, they realize a bug was found and say, 'I didn't mean that.' What is the manager doing in this situation?", "options": ["Clarifying the sense of 'deployment'", "Correcting a presupposition", "Retracting a discourse commitment", "Updating the denotation of the software"], "rationales": ["The manager is not redefining the word 'deployment' but is instead cancelling the claim that the event is ready to happen.", "A presupposition is a background fact; here, the manager is correcting the main, at-issue claim they just made.", "The speaker is taking back the sincerity of their previous statement and their responsibility for that claim in the conversation.", "The manager is still referring to the same software, so the pointer to the real-world object has not changed."], "correct": 2, "hint": "Focus on what happens when a speaker attempts to take back a literal claim they previously made.", "topic": "Speaker commitment", "sec": "8.1", "src": "$", "link": "", "qid": "fada5f2d5f"}, {"q": "When you use the word 'server' in a tech office, the physical machine you point to is the denotation. If you want to change what a listener concludes without changing the literal object you are pointing at, what are you manipulating?", "options": ["The presupposition", "The truth-conditional meaning", "The lexical sense", "The conversational implicature"], "rationales": ["The background assumption that a server exists is constant; it is the secondary suggestions that are being modified.", "The literal truth of which server is being discussed hasn't changed, only the suggestions surrounding it.", "The mental definition of the word 'server' remains constant even if the suggested context-based meaning changes.", "By changing the context or rules of conversation, you change the suggested meaning (implicature) while the literal pointer (denotation) stays the same."], "correct": 3, "hint": "Consider how context allows you to suggest different things while referring to the exact same physical item.", "topic": "Sense and Denotation", "sec": "8.1", "src": "$", "link": "8.4", "qid": "7e508d1fa1"}, {"q": "Which of the following is NOT a characteristic of at-issue meaning as defined in the text?", "options": ["It is the part of the sentence that 'it is not the case that' targets.", "It consistently survives being placed under sentential negation.", "It represents the main 'topic of discussion' or the literal surface meaning.", "It is also known as truth-conditional meaning in many linguistic contexts."], "rationales": ["The text uses this diagnostic to define what constitutes the at-issue content.", "At-issue meaning is actually the primary target of negation and is cancelled by it, unlike presuppositions.", "The text explicitly defines at-issue meaning as the main topic or literal claim.", "The text notes that outside the book, these two terms are often used interchangeably."], "correct": 1, "hint": "Think about the specific test involving negation used to identify this type of meaning.", "topic": "At-issue meaning", "sec": "8.1", "src": "+", "link": "", "qid": "247134769d"}, {"q": "You tell a coworker, 'The updated report is in your inbox.' In this sentence, the use of the definite determiner 'the' serves as a trigger for which specific type of meaning regarding the report's existence?", "options": ["At-issue meaning", "Speaker sincerity", "Conversational implicature", "Presupposition"], "rationales": ["The existence of the report is a background assumption, not the main claim being asserted (which is the report's location).", "Sincerity refers to the speaker's commitment to the truth, not the linguistic trigger for background assumptions.", "Implicatures are suggested by context, whereas the assumption of existence here is triggered by the word 'the'.", "Definite determiners like 'the' are standard triggers for the assumption that the object mentioned exists."], "correct": 3, "hint": "Identify the type of meaning that is automatically assumed to be true based on specific words like 'the'.", "topic": "Presupposition", "sec": "8.1", "src": "+", "link": "", "qid": "d9c37e26f9"}, {"q": "In the sentence 'Every employee attended the seminar,' the ____ refers to the literal claim that there is no employee who was absent, which represents the primary topic of discussion.", "options": ["at-issue meaning", "compositional implicature", "non-at-issue meaning", "lexical sense"], "rationales": ["This term identifies the main, literal claim that forms the core 'issue' or topic being communicated.", "Implicatures are non-literal suggestions, whereas the attendance of every employee is the literal core of the sentence.", "This would refer to background assumptions or suggestions, rather than the primary literal claim.", "While the words have sense, this term refers to mental definitions rather than the overall claim made by the sentence."], "correct": 0, "hint": "Use the term that describes the 'surface' or 'literal' meaning that is the main point of the sentence.", "topic": "At-issue meaning", "sec": "8.1", "src": "+", "link": "", "qid": "c5f730a00e"}, {"q": "A manager says, 'The CEO forgot that the meeting was moved.' Even if a staff member proves the CEO did not forget, what information is still accepted as true by both parties due to the structure of the sentence?", "options": ["The meeting has already occurred.", "The manager is telling the truth.", "The CEO is responsible for the meeting.", "The meeting was moved."], "rationales": ["The sentence only assumes the meeting was moved, not that it is in the past.", "Whether the manager is lying or mistaken is an issue of sincerity, not an assumed background fact.", "This might be a suggested implicature, but it isn't a hard requirement for the sentence to be linguistically valid.", "This is a presupposition triggered by the verb 'forgot' and remains true regardless of whether the forgetting actually happened."], "correct": 3, "hint": "Look for the 'background' fact that has to be true for the manager's statement to even make sense.", "topic": "Presupposition", "sec": "8.1", "src": "+", "link": "", "qid": "ba9625c82b"}, {"q": "If you observe that a specific part of a sentence's meaning 'survives' even when you add 'It is not the case that' to the start of the sentence, what can you conclude about that piece of meaning?", "options": ["It is non-at-issue meaning.", "It is a logical entailment.", "It is the literal surface meaning.", "It is the truth-conditional content."], "rationales": ["Meanings that are not cancelled by negation, like presuppositions, are classified as non-at-issue.", "Entailments of the original positive sentence are often lost when the sentence is negated.", "The surface meaning is the at-issue meaning, which negation is designed to flip or cancel.", "Truth-conditional (at-issue) content is exactly what negation targets and cancels."], "correct": 0, "hint": "This question asks you to identify the category based on the result of the negation test.", "topic": "Non-at-issue meaning", "sec": "8.1", "src": "+", "link": "", "qid": "1057d36418"}, {"q": "Which of the following is NOT true regarding the distinction between at-issue and non-at-issue meaning?", "options": ["At-issue meaning is what is targeted by sentential negation.", "Presuppositions are considered a form of at-issue meaning because they must be true.", "Implicatures are a type of non-at-issue meaning.", "Non-at-issue meaning can include information suggested by context."], "rationales": ["This is the standard diagnostic used to separate the two types of meaning.", "Presuppositions are actually non-at-issue because they are background assumptions, not the main topic of discussion.", "The text classifies suggested, non-literal meanings as non-at-issue.", "This accurately describes implicatures, which are a subset of non-at-issue meaning."], "correct": 1, "hint": "Look for the option that incorrectly groups a background assumption with the main claim.", "topic": "At-issue vs. non-at-issue", "sec": "8.1", "src": "+", "link": "", "qid": "8fce46c1e2"}, {"q": "If a linguist refers to 'truth-conditional meaning,' they are discussing the same concept that this textbook calls ____.", "options": ["conversational implicature", "at-issue meaning", "lexical sense", "non-at-issue meaning"], "rationales": ["Implicatures are non-truth-conditional because the sentence can be literally true even if the suggestion is false.", "The textbook uses 'at-issue' to refer to the literal surface meaning that determines the truth conditions of a statement.", "Sense is the mental concept, while truth-conditional meaning refers to the conditions under which a whole sentence is true.", "Non-at-issue meaning (like presuppositions) is related to truth but is not the same as truth-conditional content."], "correct": 1, "hint": "Match the technical linguistic term with the textbook's preferred terminology for the main claim.", "topic": "At-issue vs. non-at-issue", "sec": "8.1", "src": "+", "link": "", "qid": "bec5bf05c8"}, {"q": "A colleague tells you, 'I have completed the executive summary.' Which of the following is NOT an entailment or implicature that is logically consistent with this statement?", "options": ["The colleague has not written the rest of the report, but it is not the case that they have completed the summary.", "The colleague has finished the summary, but they have not yet finished the full report.", "The colleague has completed the summary, which is a document.", "The colleague is now ready for the next task."], "rationales": ["This creates a direct logical contradiction with the original statement, making it an impossible entailment.", "This is a perfectly valid cancellation of a possible implicature (that the whole report was done).", "This is a logical entailment that cannot be denied without contradiction.", "This is a plausible implicature that could be true or false depending on the context."], "correct": 0, "hint": "Look for the option that tries to take back the literal truth of the original sentence, which causes a contradiction.", "topic": "Cancellable Meanings", "sec": "8.4", "src": "✕", "link": "", "qid": "2378da0321"}, {"q": "In a performance review, a manager says, 'You are very punctual.' Depending on the context of the employee's work quality, what type of meaning is the manager likely conveying beyond the literal words?", "options": ["Conversational implicature", "At-issue meaning", "Presupposition", "Logical entailment"], "rationales": ["The suggestion (e.g., 'you are good' or 'you are only good at being on time') depends entirely on context.", "The at-issue meaning is just the literal fact that the person arrives on time, not the implied praise or criticism.", "The employee's work quality isn't a background fact required for the word 'punctual' to be meaningful.", "Punctuality does not logically require that one is a good or bad worker; it is merely a suggestion."], "correct": 0, "hint": "This question asks you to identify the meaning that shifts based on whether the context is positive or negative.", "topic": "Contextual Influence", "sec": "8.4", "src": "✕", "link": "", "qid": "fe70cee9d5"}, {"q": "Suggested meanings that arise from the underlying rules people use to interact and understand one another, rather than from literal word definitions, are specifically known as ____ implicatures.", "options": ["logical", "lexical", "conversational", "at-issue"], "rationales": ["Logical meanings are entailments that are necessarily true, not suggestions from social rules.", "Lexical meanings are derived from the definitions of individual words in the mental dictionary.", "This term highlights that these meanings are generated by the process and rules of human conversation.", "At-issue meaning is the literal surface meaning, while implicatures are non-at-issue."], "correct": 2, "hint": "Fill in the word that describes the type of implicature governed by the rules of discourse.", "topic": "Conversational Implicature", "sec": "8.4", "src": "☆", "link": "", "qid": "e9188901f4"}, {"q": "A father tells his daughter, 'You have three cookies in your lunchbox.' She later finds a fourth cookie and says, 'You were wrong.' He replies, 'No, I wasn't; you do have three cookies (plus one more).' Why is the father's original statement not technically a lie?", "options": ["The existence of the cookies is a presupposition that remains true regardless of the count.", "Sentential negation cannot target numerical values in a conversation.", "The daughter misunderstood the literal sense of the word 'three'.", "Having four cookies logically entails having three, and the 'exactly three' part was just a cancellable implicature."], "rationales": ["While cookies exist, the issue here is the specific quantity and the difference between entailment and suggestion.", "Negation can target numbers; however, the father is defending the truth of his statement based on entailment.", "The word 'three' has a stable definition; the confusion is about the suggestion of 'only three'.", "This follows Grice's principle that implicatures can be taken back or clarified without creating a logical contradiction."], "correct": 3, "hint": "Think about how having a higher number of items automatically makes it true that you have a lower number of those same items.", "topic": "Contextual Influence", "sec": "8.4", "src": "R", "link": "", "qid": "493b0c8181"}, {"q": "If a speaker says, 'The project is finished,' and then immediately adds, '...but I still have to proofread it,' what has happened to the listener's initial understanding?", "options": ["A conversational implicature was cancelled.", "A presupposition was rejected.", "The at-issue meaning was negated.", "A logical entailment was contradicted."], "rationales": ["The suggestion that 'finished' meant 'perfect and ready to send' was taken back without contradicting the literal completion of the task.", "There is no background assumption being challenged here, only a context-based suggestion.", "The speaker didn't say it wasn't finished; they just clarified the scope of the completion.", "If 'finished' literally entailed 'proofread', then the second half of the sentence would be a logical impossibility."], "correct": 0, "hint": "Consider what type of meaning can be 'taken back' by adding a clarifying phrase at the end.", "topic": "Cancellable Meanings", "sec": "8.4", "src": "?", "link": "", "qid": "08834e31f0"}, {"q": "Which of the following would NOT be a valid conversational implicature for a manager saying 'This is a report about the Q3 budget,' assuming the manager knows the report is actually very poor quality?", "options": ["The manager thinks the listener might find the report disappointing.", "The manager believes the report is a high-quality document.", "The manager is avoiding giving a direct opinion on the report's quality.", "The manager expects the listener to read the document regardless of its quality."], "rationales": ["This is a plausible implicature when a speaker uses a neutral description to avoid giving a negative review.", "Given the manager's knowledge of the poor quality, suggesting it is high-quality would be a false or misleading implicature.", "By stating only the topic, the manager may be intentionally implying they have nothing good to say.", "This is a possible suggestion arising from the context of a workplace directive."], "correct": 1, "hint": "Remember that an implicature depends on what the speaker knows and what the listener can reasonably conclude.", "topic": "Conversational Implicature", "sec": "8.4", "src": "✎", "link": "", "qid": "bb596abf76"}, {"q": "A writer states, 'The current CEO of the company is an innovator.' Which of the following follow-up statements would create a logical contradiction, rather than just cancelling a suggestion?", "options": ["But they are not particularly creative in their personal life.", "Though they have not actually invented anything new yet.", "However, there is no CEO of the company.", "But they are leaving the company tomorrow."], "rationales": ["This only cancels an implicature about the CEO's general personality, which is not a literal requirement of the sentence.", "One can be an 'innovator' in spirit or process without a patent, so this clarifies the suggestion without a hard clash.", "This contradicts the presupposition and the literal claim, making the original statement impossible to be true.", "This adds new information but does not negate the literal truth that they are the CEO at this moment."], "correct": 2, "hint": "Look for the statement that denies a necessary truth or a background fact of the original claim.", "topic": "Logical Entailment", "sec": "8.4", "src": "$", "link": "", "qid": "b282e95ef3"}, {"q": "Unlike a ____, which is a suggested meaning that can be taken back, an entailment is a literal requirement of a sentence that survives as a 'non-at-issue' fact if the sentence is negated.", "options": ["conversational implicature", "presupposition", "denotative pointer", "at-issue claim"], "rationales": ["This captures the distinction between context-dependent suggestions and the structural requirements of the sentence.", "While presuppositions are non-at-issue, the comparison here is between 'cancellable' suggestions and facts that 'survive' negation.", "Denotation refers to the object itself, not the relationship between suggestions and logical requirements.", "At-issue claims are the main point, not the suggested meanings that are being contrasted with entailments."], "correct": 0, "hint": "Contrast the 'cancellable' nature of context-based meaning with the 'surviving' nature of background facts.", "topic": "Logical Entailment", "sec": "8.4", "src": "$", "link": "8.1", "qid": "3ee8b2362e"}, {"q": "In a situation where a manager knows an employee is hoping for a promotion, the manager says, 'The board is meeting to discuss the budget.' How would the implicature change if the employee knew the board was actually meeting to discuss salaries?", "options": ["The sentence would become a logical entailment of the promotion.", "The literal at-issue meaning of 'budget' would be negated.", "The implicature of 'the board is not discussing you' becomes stronger and harder to cancel.", "The presupposition that a board exists would be cancelled."], "rationales": ["Logical entailment is based on the words themselves, not the social situation or secret knowledge.", "The literal meaning of the word 'budget' doesn't change based on the employee's hopes.", "Contextual knowledge shared between parties drastically shifts what is suggested by omitting certain information.", "Presuppositions are triggered by language (like 'the board') and are not affected by the specific topic of the meeting."], "correct": 2, "hint": "Think about how the 'unspoken' part of a message changes when both people have more information.", "topic": "Contextual Influence", "sec": "8.4", "src": "+", "link": "", "qid": "4dbacecb8a"}, {"q": "If a specific meaning of an utterance disappears when the speaker provides a context where that meaning would be irrelevant, but the sentence remains literally true, what type of meaning was it?", "options": ["Logical entailment", "Conversational implicature", "Truth-conditional meaning", "Presupposition"], "rationales": ["Entailments are context-independent; if the sentence is true, the entailment must be true.", "This is the hallmark of an implicature: it is context-dependent and can be removed without making the sentence false.", "Truth-conditional meaning is the at-issue content, which determines the literal truth of the statement.", "Presuppositions are requirements of the language structure and don't just disappear when the topic shifts."], "correct": 1, "hint": "Consider what we call a meaning that is 'on' in one context but 'off' in another.", "topic": "Contextual Influence", "sec": "8.4", "src": "+", "link": "", "qid": "9212985669"}, {"q": "Which of the following is NOT a characteristic of conversational implicatures?", "options": ["They must be true in every possible world where the sentence is true.", "They can be cancelled by the speaker without creating a contradiction.", "They are context-dependent and can change based on who is speaking.", "They are a form of non-at-issue meaning."], "rationales": ["This describes entailments, not implicatures, which can be false even if the sentence is true.", "This is the standard 'cancellability' test used to identify implicatures.", "This is a core definition of how conversational implicatures function.", "Implicatures are suggested meanings that fall outside the literal 'at-issue' claim."], "correct": 0, "hint": "Look for the option that describes a rigid logical requirement rather than a flexible suggestion.", "topic": "Conversational Implicature", "sec": "8.4", "src": "+", "link": "", "qid": "e34eefe30d"}, {"q": "You say to a friend, 'I have some of the materials for the project.' If you later say, 'In fact, I have all of them,' why is your first statement still considered true?", "options": ["You are retracting your sincerity commitment to the project.", "The word 'all' is a presupposition of the word 'some'.", "The sense of 'some' changes automatically to 'all' in a positive context.", "The word 'some' implies 'not all', but it does not literally entail it."], "rationales": ["You aren't taking back the claim that you have materials; you are actually strengthening it.", "There is no presupposition relationship here; the connection is between a suggestion and a literal count.", "The mental definition (sense) of 'some' remains constant; what changes is the pragmatic suggestion.", "This is a scalar implicature; 'some' literally means 'at least one', and the 'not all' part is just a suggestion."], "correct": 3, "hint": "Think about the difference between 'at least one' and the suggestion of 'not everyone'.", "topic": "Cancellable Meanings", "sec": "8.4", "src": "+", "link": "", "qid": "185971b323"}, {"q": "In conversational pragmatics, an ____ is the literal, necessary consequence of a sentence, while an ____ is an additional meaning suggested by the context.", "options": ["at-issue / non-at-issue", "entailment / implicature", "presupposition / sense", "implicature / entailment"], "rationales": ["While related, these categories are broader and do not specifically target the consequence vs suggestion distinction.", "This correctly pairs the 'necessary' meaning with the 'suggested' meaning.", "Presuppositions are assumptions, and sense is a definition; neither fits the 'necessary consequence' vs 'suggestion' comparison perfectly.", "This reverses the two terms; implicatures are suggested, not necessary."], "correct": 1, "hint": "Fill in the blanks with the terms for 'must be true' and 'might be suggested'.", "topic": "Logical Entailment", "sec": "8.4", "src": "+", "link": "", "qid": "3cde662131"}, {"q": "A recruiter asks, 'Do you know how to use Python?' and a candidate replies, 'I have used it to automate several tasks.' What is the most likely implicature in this professional context?", "options": ["The candidate has never used any other programming language.", "The candidate is proficient enough to use the language for work.", "The automation of tasks is a presupposition of the word 'Python'.", "The recruiter is logically required to hire the candidate."], "rationales": ["This is an unfounded leap that isn't suggested by the literal words or the context.", "In a job interview, providing evidence of use suggests that the answer to 'do you know it' is a confident 'yes'.", "Python's existence is a presupposition; what it can do is a matter of fact or suggestion.", "Pragmatics involves suggestions, not legal or logical requirements for action."], "correct": 1, "hint": "Think about what a person is trying to 'get across' by giving a specific example of their work.", "topic": "Conversational Implicature", "sec": "8.4", "src": "+", "link": "", "qid": "60a00b07fd"}, {"q": "When a speaker says, 'It's cold in here,' and the listener closes the window, which linguistic process has occurred?", "options": ["The speaker corrected a false presupposition.", "The at-issue meaning was cancelled by the listener's action.", "The listener acted on a conversational implicature.", "The listener followed a logical entailment."], "rationales": ["There is no background assumption being challenged here.", "The action doesn't change the literal truth that the room was cold.", "The literal statement about temperature suggested a request for action, which the listener understood.", "The fact that it is cold does not logically necessitate that a window must be closed."], "correct": 2, "hint": "Consider how a literal statement of fact can be used to achieve a result without a direct command.", "topic": "Cancellable Meanings", "sec": "8.4", "src": "+", "link": "", "qid": "7461b375af"}, {"q": "Which of the following scenarios best demonstrates a difference between entailment and implicature?", "options": ["Saying 'I have an apple' and it being false because you actually have a pear, versus saying 'I have an apple' and someone assuming you're hungry.", "Saying 'The CEO is busy' and the CEO actually being in a meeting.", "Saying 'The car is red' versus saying 'The car is not blue'.", "Saying 'I am a doctor' and having a PhD versus having an MD."], "rationales": ["The first is a failure of literal truth (entailment), while the second is a suggestion (implicature) that could be false even if you have the apple.", "This is just an example of a statement being literally true, not a contrast of two types of meaning.", "These are both literal claims about color and don't highlight the suggestion-vs-requirement distinction.", "This is an issue of the 'sense' or definition of a word, not a contrast between entailment and implicature."], "correct": 0, "hint": "Look for the option that contrasts a 'hard requirement' for truth with a 'flexible suggestion'.", "topic": "Conversational Implicature", "sec": "8.4", "src": "+", "link": "", "qid": "f3149d62a2"}], "hasSheet": true, "parts": false, "secTitles": {}, "reserve": 0, "frq": [{"tag": "Presupposition and Negation", "prompt": "You are in a budget meeting. A manager states: \"The department head forgot to sign the approval for the budget.\"", "ask": "1. Write a sentence that rejects the manager's main claim using the diagnostic: \"It is not the case that...\"", "secs": "", "words": "", "rubric": [{"t": "negat*", "judge": false, "k": ["denial", "nullification", "contradiction"]}, {"t": "surviv*", "judge": false, "k": ["persists", "remains", "continues"]}, {"t": "presuppos*", "judge": false, "k": ["prerequisite", "background", "requirement"]}, {"t": "non-at-issue*", "judge": false, "k": ["secondary", "implicit", "underlying"]}, {"t": "Evaluate the clarity of the explanation regarding the \"the\" trigger. Look for a clear link between the definite determiner and the persistence of the entities despite the sentential denial", "judge": true, "k": []}], "model": "To reject the manager's primary claim, the response is: \"It is not the case that the department head forgot to sign the approval for the budget.\" \n\nIn linguistics, we distinguish between at-issue (or truth-conditional) meaning and non-at-issue meaning. The at-issue meaning is the literal, surface claim—here, the specific event of a signature being forgotten. When we apply sentential negation using \"it is not the case that,\" we only target this at-issue content. However, the sentence contains presuppositions triggered by the definite determiner \"the.\" Specifically, the existence of a \"department head\" and a specific \"approval\" document are presupposed.\n\nThese elements are non-at-issue meanings because they are assumed to be true before the sentence is even uttered. A defining property of a presupposition is that it survives negation. While the rejection nullifies the truth-conditional claim regarding the act of forgetting, it does not affect the backgrounded requirement that the person and the document exist. Therefore, the existence of these entities persists as a factual baseline in the discourse, illustrating that sentential negation cannot target non-at-issue presuppositions."}, {"tag": "Cancellability and Context", "prompt": "A colleague asks you, \"Is the report ready?\" and you respond, \"The report is on your desk.\"", "ask": "1. Write a second sentence to follow your response that \"cancels\" the common suggestion that the report is 100% complete.", "secs": "", "words": "", "rubric": [{"t": "retract*", "judge": false, "k": ["take back", "void", "reverse"]}, {"t": "suggest*", "judge": false, "k": ["hint", "inkling", "intimation"]}, {"t": "necessit*", "judge": false, "k": ["requirement", "obligation", "essential"]}, {"t": "circumstance*", "judge": false, "k": ["surroundings", "background", "milieu"]}, {"t": "explicit*", "judge": false, "k": ["overt", "verbatim", "stated"]}, {"t": "Determine if the cancellation addition sounds natural and maintains a professional tone suitable for a workplace email exchange", "judge": true, "k": []}], "model": "To cancel the suggested meaning, the response would be: \"The report is on your desk, but I still need to finalize the executive summary and the appendices.\"\n\nThis addition is linguistically acceptable because the idea that the report is \"complete\" is a conversational implicature, not an entailment. While entailments are logically necessary and cannot be denied without a contradiction, implicatures are context-dependent and cancellable. In this professional scenario, the colleague infers completion because that is the most relevant interpretation of the report being delivered. \n\nBecause this inferred meaning is non-at-issue and arises from conversational rules rather than the literal sense of the words, I can retract it by adding explicit information. If the status of \"finished\" were an entailment, saying it is \"on the desk but not finished\" would be a logical clash (like saying \"This is a book, but it is not a book\"). However, since the implicature is dependent on the specific circumstances of the query, the speaker can clarify the limits of the literal statement without violating the truth of the report's physical location."}, {"tag": "At-issue vs Implicature", "prompt": "A project lead says, \"The new developer is very fast.\" In this specific workplace context, this carries a non-at-issue implicature that the individual is \"careless.\"", "ask": "1. Rewrite the sentence so that the meaning of being \"careless\" becomes the at-issue (literal) claim.", "secs": "", "words": "", "rubric": [{"t": "proposition*", "judge": false, "k": ["statement", "clause", "claim"]}, {"t": "focus*", "judge": false, "k": ["target", "aim", "center"]}, {"t": "denot*", "judge": false, "k": ["reference", "extension", "indicator"]}, {"t": "Effectiveness of the rewrite in shifting the implied meaning to the primary at-issue proposition", "judge": true, "k": []}, {"t": "Logic of the explanation regarding the negation test. Look for a clear distinction between the wide scope of negation in the original versus the target in the rewrite", "judge": true, "k": []}], "model": "To make the implied meaning at-issue, the statement should be: \"The new hire is negligent.\"\n\nThe \"it is not the case that...\" test is a diagnostic for at-issueness because sentential negation specifically targets the literal, truth-conditional claim. In the original sentence (\"The new developer is very fast\"), applying the test results in: \"It is not the case that the new developer is very fast.\" Here, the negation has a wide scope over the at-issue quality of speed. It successfully nullifies the claim of being \"fast,\" but the non-at-issue implicature of being \"careless\" might still linger or disappear; the negation does not directly target it.\n\nIn the rewrite, the quality of being \"careless\" (or negligent) is no longer a suggestion; it is the direct denotation of the predicate. When the diagnostic is applied—\"It is not the case that the new hire is negligent\"—the negation specifically targets and nullifies the charge of carelessness. By shifting this meaning into the at-issue proposition, it becomes the primary focus of the discussion and the direct object of the sentential negation, unlike the original where it was merely an indirect suggestion."}], "notebook": "https://notebooklm.google.com/notebook/2593f308-1e5d-4d51-ace7-2db8cbc5e8ff/artifact/f3b933df-ee03-49b7-b7f2-3746bceb833b", "root": "../index.html", "tab": "quiz", "sheet": "## 1. At-issue meaning\nSummarize the concept of the literal, surface-level content of an utterance.\n### Key terms\n1. **At-issue meaning** — the main topic of discussion or the literal claim made by a sentence.\n   1. `ex.` \"Mounissa will buy the discounted strawberries\" literally claims an event will occur.\n\n## 2. Sense and Denotation\nSummarize how linguistic meaning is divided between mental representations and real-world references.\n### Key terms\n1. **Sense** — the mental representation or lexical semantics of a word held by a speaker.\n   1. `ex.` Thinking about the botanical definition or visual image of a \"strawberry.\"\n2. **Denotation** — the specific object or set of objects a word points to in the actual world.\n   1. `ex.` \"Ode’imin\" and \"strawberry\" both pointing to the same physical fruit.\n\n## 3. Non-at-issue meaning\nSummarize meanings that exist outside the literal surface claim of a sentence.\n### Key terms\n1. **Non-at-issue meaning** — information conveyed by a sentence that is not part of its literal, surface meaning.\n   1. `types` Includes both presuppositions and implicatures.\n\n## 4. Truth-conditional meaning\nSummarize the relationship between at-issue content and the conditions for a statement's truth.\n### Key terms\n1. **Truth-conditional meaning** — a term used outside the textbook to refer to at-issue meaning.\n2. **Non-truth-conditional meaning** — synonym for non-at-issue meaning, though less precise regarding presuppositions.\n3. **Fact verification** — checking \"truth\" or \"falsity\" against at-issue content targeted by \"no, that is false.\"\n\n## 5. Presupposition\nSummarize the information that must be assumed true for a sentence to be contextually appropriate.\n### Key terms\n1. **Presupposition** — information that is assumed to be true already when a sentence is uttered.\n   1. `trigger` The definite determiner \"the\" triggers a presupposition that survives sentential negation.\n   1. `ex.` \"The department head forgot\" presupposes a specific department head exists.\n\n## 6. Implicature\nSummarize the non-entailed suggestions that arise from the context of an utterance.\n### Key terms\n1. **Implicature** — a non-entailment suggested by a sentence based on the specific context of the conversation.\n   1. `ex.` Saying Mounissa bought 10lbs of strawberries implies she is making jam.\n\n## 7. Speaker commitment\nSummarize how utterances reflect the speaker's sincerity and their stance within a discourse.\n### Key terms\n1. **Speaker commitment** — the sincere obligation or retraction of a claim made during discourse.\n   1. `retraction` Saying \"coffee is as tasty as tea, but I didn't mean it\" to retract a sincerity commitment.\n\n## 8. At-issue vs. non-at-issue\nSummarize the diagnostic methods used to distinguish between these two layers of meaning.\n### Key terms\n1. **Sentential negation** — the \"it is not the case that...\" test used to identify at-issue content.\n   1. `at-issue result` The content falls within the scope of negation and is denied.\n   1. `non-at-issue result` Presuppositions and some implicatures survive the negation.\n### Names and studies\n1. **Christopher Potts (2015)** — examined the relationship between presupposition and implicature in semantic theory.\n2. **Thorsten Sander (2022)** — \"Taxonomizing Non-at-Issue Contents\" developed a taxonomy for content types.\n\n## 9. Cancellable Meanings\nSummarize the ability to retract certain meanings without creating a logical contradiction.\n### Key terms\n1. **Cancellability** — the property where a meaning can be taken back without contradicting the original statement.\n   1. `application` Implicatures are cancellable via addition; entailments are not and lead to contradiction (⊥).\n   1. `ex.` Saying \"The report is on your desk\" then adding \"but it is not finished.\"\n\n## 10. Contextual Influence\nSummarize how the surrounding situation and participant knowledge change the implied meaning.\n### Key terms\n1. **Context-dependency** — the phenomenon where the same sentence carries different implicatures based on circumstances.\n   1. `ex.` Telling a history hater \"This is a history book\" flips the implicature from \"you'll like it\" to \"you'll hate it.\"\n\n## 11. Conversational Implicature\nSummarize meanings that arise specifically from the rules of social interaction.\n### Key terms\n1. **Conversational implicature** — suggested meanings that arise specifically from underlying rules of human interaction.\n### Names and studies\n1. **H. P. Grice (1975)** — proposed implicatures arise from conversational rules in \"Logic and Conversation.\"\n\n## 12. Logical Entailment\nSummarize the necessary truths that follow from a sentence regardless of context.\n### Key terms\n1. **Logical Entailment** — a meaning that is necessarily true if the sentence is true and cannot be canceled.\n   1. `non-cancellability` Explicitly denying an entailment results in a logical contradiction (⊥).\n   1. `ex.` \"This is a book about China, but it is not the case that this is a book\" (⊥)."}</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -693,9 +748,14 @@ function srcName(g){ return SRC[g] || ''; }
    `skipped` usable later as a permanent exclusion list when exam reuse is built — see qid()
    in quizpage.py. v1 states are migrated once, on load. */
 function qk(i){ return D.questions[i].qid; }
+/* `only` and `sat` ARE THE SECTIONED EXAM (08-16), and both are inert unless the page was
+   built with parts on. `only` is the list of subchapters THIS sitting covers — null means he
+   has not chosen yet, which is what puts the picker on screen. `sat` records which
+   subchapters he has finished, and nothing else: a section's score is always recomputed from
+   `answers`, never stored, so there is exactly one place a number can come from. */
 function blank(){ return {v:2, hash:D.hash, i:0, answers:{}, pass2:{}, skipped:{}, starred:{},
                           unsure:{}, hints:{}, phase:1, p2list:null, done:false, at:null,
-                          shuf:{}, history:[]}; }
+                          shuf:{}, history:[], only:null, sat:{}, promoted:{}}; }
 function migrate(s){
   // v1 keyed every map on the array index. The hash matches, so the indices are still valid
   // and this is a straight re-key — done once, then never again.
@@ -739,6 +799,12 @@ function load(){
     if(!s.hints) s.hints = {};
     if(!s.pass2) s.pass2 = {};
     if(!s.phase) s.phase = 1;
+    // Absent on every attempt saved before 08-16, and `only: null` is exactly right for one:
+    // it means "not chosen", so an attempt in progress on a paper that has just gained the
+    // picker resumes over the whole paper, which is what it was.
+    if(s.only === undefined) s.only = null;
+    if(!s.sat) s.sat = {};
+    if(!s.promoted) s.promoted = {};
     // Not carried across a rebuild on purpose: blank() empties it. A stored order describes a
     // set of options that may no longer be the same length — optOrder() throws out any that
     // no longer fit, so a stale one is harmless anyway.
@@ -746,14 +812,89 @@ function load(){
     return s;
   }catch(e){ return blank(); }
 }
+/* THE ATTEMPT MUST NEVER FAIL TO SAVE IN SILENCE (08-16). `save()` swallowed every exception,
+   and the one that actually happens is QuotaExceededError: the research box keeps pasted
+   images in localStorage, and once the origin is full EVERY later write is refused — so his
+   answers stopped being recorded while the page carried on as if they were. His report was
+   *"I feel I did answer some of these questions and yet they show up again"*, which is exactly
+   what a refused write looks like from the outside. It now says so, on screen, and keeps
+   saying so until a write succeeds. */
+let saveBroken = false;
+function saveFailed(on){
+  if(on === saveBroken) return;
+  saveBroken = on;
+  let el = $('#savewarn');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'savewarn';
+    document.body.appendChild(el);
+  }
+  el.textContent = 'This browser is out of room — your answers are NOT being saved. '
+                 + 'Remove a pasted image from the research box to free some up.';
+  el.classList.toggle('hide', !on);
+}
 function save(){
-  S.meta = {title:D.title, subtitle:D.subtitle, book:D.book, total:active(S).length,
-            at:S.at, done:S.done, score:score(S)};
-  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+  // ON A SECTIONED PAPER `meta` DESCRIBES THE PAPER, NOT THE SITTING. It is read in exactly
+  // one place — `load()`, when the questions have been rebuilt and the old answers can no
+  // longer be scored — and what belongs in that history line is "he got 24 of 32 on this
+  // exam", not "he got 14 of 16 on the half of it he happened to sit last."
+  const pp = D.parts ? paperStat() : null;
+  S.meta = {title:D.title, subtitle:D.subtitle, book:D.book,
+            total: pp ? pp.t : active(S).length,
+            at:S.at, done:S.done, score: pp ? pp.n : score(S)};
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); saveFailed(false); }
+  catch(e){ saveFailed(true); }
 }
 /* Skipped questions leave the run entirely — out of the count, out of the denominator,
-   out of the topic breakdown. Anything less makes "8 / 10" a lie about a quiz of nine. */
-function active(s){ return D.questions.map((_,i)=>i).filter(i => !(s.skipped||{})[qk(i)]); }
+   out of the topic breakdown. Anything less makes "8 / 10" a lie about a quiz of nine.
+
+   THE SECTION FILTER RIDES HERE AND NOWHERE ELSE (08-16). `active()` is what the run list,
+   the score, the second pass, the end card and the review list are all built on, so putting
+   the sitting's subchapters into this one function is what makes a half-paper behave exactly
+   like a whole one — one direction, one end card, one second pass — with no branch anywhere
+   downstream. `only: null` (not chosen, or a page built without parts) filters nothing. */
+function active(s){
+  const only = D.parts ? (s.only || null) : null;
+  return D.questions.map((_,i)=>i).filter(i => onPaper(s, i)
+    && (!only || only.indexOf(D.questions[i].sec) >= 0));
+}
+/* ---- THE RESERVES (08-16) ------------------------------------------------------------
+   His ask: *"if 1 question is skipped, another one is replaced in that section about it… you
+   have a quota, so you should also create stockpiles (say 2 extra questions per section that
+   immediately replace a skipped question)."*
+
+   `D.reserve` is how many per section were written beyond the quota. They are the LAST ones
+   of their section in build order, which is not arbitrary: `section_pool()` deals spots down
+   his tag priority, so a section's tail is the bottom of the list it could afford to lose.
+
+   A RESERVE IS NOT A QUESTION YET. It is out of the run, out of the denominator and out of
+   every table until a skip in its own section calls it in — at which point it is an ordinary
+   question and nothing downstream can tell it apart. Promotion is recorded on the qid, so it
+   survives a reload and cannot be handed out twice. Skipping with none left behaves exactly
+   as it always did: the paper is one question shorter. */
+function reserveIds(sec){
+  if(!(D.reserve > 0)) return [];
+  const l = D.questions.map((_,i)=>i).filter(i => D.questions[i].sec === sec);
+  return l.slice(Math.max(0, l.length - D.reserve));
+}
+function isReserve(i){
+  const sec = D.questions[i].sec;
+  return !!sec && reserveIds(sec).indexOf(i) >= 0;
+}
+/* Skipped or an unpromoted reserve — the two ways a question is not part of the paper. One
+   predicate so the run, the score, the picker and the section tables can never disagree. */
+function onPaper(s, i){
+  if((s.skipped||{})[qk(i)]) return false;
+  return !isReserve(i) || !!(s.promoted||{})[qk(i)];
+}
+/* Called the instant a question is skipped. Returns the promoted index, or -1. */
+function promoteReserve(sec){
+  if(!sec) return -1;
+  const next = reserveIds(sec).find(i => !S.promoted[qk(i)] && !S.skipped[qk(i)]);
+  if(next === undefined) return -1;
+  S.promoted[qk(next)] = true;
+  return next;
+}
 function ans(i){ return S.answers[qk(i)]; }
 function ans2(i){ return S.pass2[qk(i)]; }
 function firstRight(i){ return ans(i) === D.questions[i].correct; }
@@ -777,6 +918,59 @@ function runList(){
   return active(S);
 }
 function pick(i){ return S.phase === 2 ? ans2(i) : ans(i); }
+
+/* ---- SUBCHAPTERS AS SITTINGS (08-16) -------------------------------------------------
+   His ask: *"a way to section off exams… such that I'm able to practice only one section or
+   maybe two sections of an exam created because of shortened time"*, and then *"the option to
+   do those other sub chapters that I haven't done at a later date, or just display the score
+   of the subsections that I have got done."*
+
+   A QUESTION BELONGS TO ONE SUBCHAPTER — `q.sec`, which every exam question already carries.
+   A cross-section question carries `q.link` as well, and it is deliberately NOT used here:
+   `q.sec` is the section whose paper the question is on (the pool decided that, and the exam
+   prompt says so in as many words), so it is sat once, with that section, and never offered
+   twice. It still REPORTS under both in the end card's By-subchapter table, which is a
+   different question and was already answered.
+
+   NOTHING IS STORED THAT CAN BE COMPUTED. `S.sat[sec]` is a timestamp saying he finished that
+   section and nothing more; every number on screen comes back out of `S.answers` through
+   `secStat()`. A stored score is a second source of truth, and this page already has one
+   scar from that — see `load()`, where a recomputed score turned a real 8/10 into 2/10. */
+function paperSecs(){
+  const out = [];
+  D.questions.forEach((q,i)=>{
+    if(q.sec && onPaper(S, i) && out.indexOf(q.sec) < 0) out.push(q.sec);
+  });
+  return out.sort((a,b)=>a.localeCompare(b, undefined, {numeric:true}));
+}
+function secQs(sec){
+  return D.questions.map((_,i)=>i)
+    .filter(i => D.questions[i].sec === sec && onPaper(S, i));
+}
+function secStat(sec){
+  const l = secQs(sec);
+  const answered = l.filter(i => ans(i) !== undefined).length;
+  return {sec:sec, t:l.length, answered:answered,
+          n: l.filter(i => finalRight(i)).length,
+          done: !!S.sat[sec], started: answered > 0};
+}
+/* THE PAPER, ACROSS EVERY SITTING — the number that answers "how am I doing on this exam",
+   as opposed to "how did I do this evening". Scored over the sections he has actually sat, so
+   a half-finished paper reads 14/16 with a section outstanding rather than a demoralising
+   14/32 that counts questions he has not been asked yet. `all` is what says the paper is
+   finished; until then `left` is what the picker offers him next. */
+function paperStat(){
+  const secs = paperSecs().map(secStat);
+  const done = secs.filter(s => s.done);
+  const left = secs.filter(s => !s.done);
+  const n = done.reduce((a,s)=>a+s.n, 0), t = done.reduce((a,s)=>a+s.t, 0);
+  return {secs:secs, done:done, left:left, n:n, t:t,
+          whole: secs.reduce((a,s)=>a+s.t, 0),
+          pct: t ? Math.round(n/t*100) : 0, all: secs.length > 0 && left.length === 0};
+}
+/* The picker earns its place only where there is a choice to make: parts on, and more than
+   one subchapter on the paper. A one-section exam goes straight in, as it always did. */
+function sectioned(){ return !!D.parts && paperSecs().length > 1; }
 
 /* ---- THE ON-SCREEN OPTION ORDER ------------------------------------------------------
    A DISPLAY LAYER AND NOTHING MORE. `S.shuf[qid]` is a list of ORIGINAL option indices in
@@ -816,6 +1010,13 @@ function reshuffleOpts(i){
 }
 let S = load();
 let lastShown = -1;
+
+/* WHAT TO CALL THIS THING (08-16, his ask: *"you should name them exams"*). A paper that
+   carries subchapter tags or a written half is an exam; anything else is a subchapter quiz.
+   Both signals, because the two halves arrived on different days and a paper with only one of
+   them is still an exam. The word is used for the tab, the review button and the pasted score
+   line, so all three agree without three separate conditions. */
+const NOUN = ((D.frq && D.frq.length) || D.questions.some(q=>q.sec)) ? 'Exam' : 'Quiz';
 
 /* ---- HIS RESEARCH, kept apart from the attempt ---------------------------------------
    Its own localStorage key, NOT a field of S, and that is the whole design. S is one
@@ -935,6 +1136,22 @@ function drawFrq(){
   });
   box.innerHTML = h;
 
+  /* CLICKING THE CARD PUTS THE CARET IN THE BOX. The sticky header covers the top strip of
+     whatever is under it, and the placeholder sits in exactly that strip — so the one place he
+     naturally aims is the one place the click does not land. Anywhere in the card that is not
+     already a control now focuses the answer box, which also makes the whole card a target on
+     a phone. `closest` is what keeps Mark, Copy and any selection inside the rubric working. */
+  box.querySelectorAll('section.frq').forEach(sec => {
+    sec.addEventListener('mousedown', e => {
+      if(e.target.closest('button, textarea, a, .rubric')) return;
+      const ta = sec.querySelector('textarea');
+      if(!ta) return;
+      e.preventDefault();
+      ta.focus();
+      ta.setSelectionRange(ta.value.length, ta.value.length);
+    });
+  });
+
   box.querySelectorAll('textarea').forEach(ta => {
     const fi = +ta.dataset.f;
     const count = () => {
@@ -1041,6 +1258,7 @@ function syncTabs(){
   const nfrq = (D.frq || []).length;
   document.querySelector('.tab[data-tab="starred"]').classList.toggle('hide', !nstar);
   document.querySelector('.tab[data-tab="sheet"]').classList.toggle('hide', !D.hasSheet);
+  document.querySelector('.tab[data-tab="quiz"]').textContent = NOUN;
   document.querySelector('.tab[data-tab="frq"]').classList.toggle('hide', !nfrq);
   $('#tabs').classList.toggle('hide', !nstar && !D.hasSheet && !nfrq);
   if(D.tab === 'starred' && !nstar) setTab('quiz');
@@ -1165,6 +1383,10 @@ function draw(){
   showResearch(!(S.reviewing || S.done));
   if(S.reviewing) return review();
   if(S.done) return end();
+  // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
+  // the rest of the sitting, so nothing about answering, going back or the second pass has
+  // to know the picker exists.
+  if(sectioned() && !S.only) return picker();
   const act = runList();
   if(!act.length) return end();
   if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
@@ -1187,6 +1409,11 @@ function buildQ(i, picked, fresh, en){
   let h = '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta"><span class="num">' + (pos+1) + ' / ' + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
+        // 10 reads as the paper having lost his place, which is how he read it.
+        + (recycling && S.phase!==2
+           ? '<span class="dot">·</span><span class="fillnote">filling in ' + gaps().length
+             + ' left blank</span>' : '')
         // THE SECTION AND THE GLYPH, on the exam only — a subchapter quiz carries neither and
         // this line is byte-for-byte what it always was. The section is what it says; the
         // glyph is why this question is on the paper at all, and it is deliberately JUST the
@@ -1195,7 +1422,16 @@ function buildQ(i, picked, fresh, en){
         + (q.sec ? '<span class="dot">·</span><span class="sec">' + esc(q.sec)
                  + (q.link ? '<span class="lk">+' + esc(q.link) + '</span>' : '')
                  + '</span>' : '')
-        + (q.topic ? '<span class="dot">·</span><span>' + esc(q.topic) + '</span>' : '')
+        // THE TOPIC NAME IS HELD BACK UNTIL HE HAS ANSWERED. It was giving the answer away:
+        // `8.1 · Inferior scapular angle` sat over a question asking which part of the scapula
+        // anchors the powerful shoulder muscles, so the tag answered it before the options did.
+        // His own exams name no topic; he reverse-engineers where to look from the question.
+        // The section number stays visible — that is the scope pointer, and it is the whole
+        // subchapter, not the idea. The name comes back the moment the answer is locked in,
+        // because that is when it stops being a hint and starts being the label he files it
+        // under (the end card, the review list and the paste all keep reading it).
+        + (q.topic && answered ? '<span class="dot">·</span><span>' + esc(q.topic)
+                 + '</span>' : '')
         + (q.src ? '<span class="dot">·</span><span class="src" title="' + srcName(q.src)
                  + '">' + esc(q.src) + '</span>' : '')
         + '</p>'
@@ -1227,7 +1463,8 @@ function buildQ(i, picked, fresh, en){
       if(lab && fresh) cls += ' fresh';
       why = q.rationales ? (q.rationales[k]||'') : '';
     }
-    h += '<button class="'+cls+'" data-k="'+k+'"'+(answered?' disabled':'')+'>'
+    h += '<button class="'+cls+(answered?' locked':'')+'" data-k="'+k+'"'
+       + (answered?' aria-disabled="true"':'')+'>'
        + '<span class="line"><span class="k">'+D.letters[pos]+'.</span>'
        + '<span class="t">'+esc(o)+'</span>'
        + '<span class="mark">'+mark+'</span></span>';
@@ -1254,6 +1491,12 @@ function question(fresh){
   $('#quizview').innerHTML = buildQ(i, picked, fresh, isNew ? ' enter' : '');
   $('#quizview').querySelectorAll('.opt').forEach(b=>{
     b.onclick = ()=>{
+      // `aria-disabled` AND NOT `disabled`, SINCE 08-16. A real `disabled` button will not let
+      // its text be selected however `user-select` is set — browsers block selection inside a
+      // disabled control — so the rationale he wanted to copy off an answered question could
+      // not be picked up at all: *"Im trying to copy on v2 exams and its not letting me."*
+      // The lock is now the guard on this line, and the class is what styles it.
+      if(b.classList.contains('locked')) return;
       // The first pass is never overwritten — a second-pass answer goes in its own map.
       if(S.phase === 2) S.pass2[qk(i)] = +b.dataset.k; else S.answers[qk(i)] = +b.dataset.k;
       save(); question(true);
@@ -1585,12 +1828,19 @@ function openMenu(){
   m.querySelector('#skipq').onclick = ()=>{
     const list = runList(), pos = list.indexOf(S.i);
     if(list.length <= 1) return closeMenu();        // never skip the last one standing
-    const wasLast = pos === list.length - 1;
+    const sec = D.questions[S.i].sec;
     S.skipped[qk(S.i)] = true;
     delete S.answers[qk(S.i)];
     delete S.pass2[qk(S.i)];
     delete S.starred[qk(S.i)];                     // a deleted question is not a starred one
     if(S.unsure) delete S.unsure[qk(S.i)];         // nor one that still needs work
+    // A RESERVE TAKES ITS PLACE IMMEDIATELY, in the same section and the same sitting, so the
+    // count he is working against does not move: skip question 6 of 11 and it is still 11.
+    // Promoted BEFORE `wasLast` is decided — a skip on the last question with a reserve in
+    // hand is not the end of the paper, it is one more question, and finishing there would
+    // have handed him an end card with a question still owed.
+    const filled = promoteReserve(sec) >= 0;
+    const wasLast = !filled && pos === list.length - 1;
     closeMenu();
     syncTabs();
     if(wasLast){ finish(); return; }
@@ -1608,6 +1858,11 @@ function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(
 function finish(){
   S.done = true; S.at = new Date().toISOString();
   recycling = false;          // the clean-up pass is over; a second pass starts in order
+  // THE SITTING'S SUBCHAPTERS ARE NOW SAT. Written here rather than on the end card because
+  // the end card is also what he sees on every later visit, and re-rendering it must not keep
+  // re-stamping the time. A second pass reopens the run and lands back here when it ends, so
+  // the stamp is the last time the section was actually finished, which is what it should be.
+  if(D.parts && S.only) S.only.forEach(sec=>{ S.sat[sec] = S.at; });
   save(); end(); window.scrollTo(0,0);
 }
 
@@ -1642,6 +1897,112 @@ function group(act, keyOf, head, label){
        + '<span class="tbar"><i style="width:'+(by[k].n/by[k].t*100)+'%"></i></span></div>';
   });
   return h + '</div>';
+}
+
+/* THE PICKER — the one new screen, and the only place the sectioning is visible before he
+   starts. Shown when parts are on, the paper has more than one subchapter, and this sitting
+   has not been chosen yet. Choosing writes `S.only` and everything after it is the ordinary
+   exam: same order, same second pass, same end card, one direction to the end.
+
+   IT IS ALSO THE SCOREBOARD. His second ask — *"or just display the score of the subsections
+   that I have got done"* — is answered by the same screen rather than a separate one, because
+   it is the screen he lands on when he opens the link again. */
+let pickSel = null;
+
+function picker(){
+  const p = paperStat();
+  if(!pickSel) pickSel = p.left.map(s => s.sec);          // default: what is still outstanding
+  const chosen = p.secs.filter(s => pickSel.indexOf(s.sec) >= 0);
+  const nq = chosen.reduce((a,s)=>a+s.t, 0);
+
+  let h = '<div class="picker"><h3>' + (p.done.length ? 'Pick up where you left off'
+                                                      : 'Which sections are you sitting?')
+        + '</h3>';
+  h += '<p class="psub">' + p.whole + ' questions across ' + p.secs.length
+     + ' subchapters. Sit as many as you have time for — the rest keep, and this link '
+     + 'reopens on this screen.</p>';
+
+  if(p.done.length){
+    h += '<p class="pscore"><b>' + p.n + ' / ' + p.t + '</b> <span>' + p.pct + '% across '
+       + p.done.length + ' of ' + p.secs.length + ' subchapters'
+       + (p.all ? ' — the whole paper' : '') + '</span></p>';
+  }
+
+  h += '<div class="prows">';
+  p.secs.forEach(s=>{
+    const on = pickSel.indexOf(s.sec) >= 0;
+    const note = s.done ? ('Finished · ' + s.n + '/' + s.t)
+               : s.started ? (s.answered + ' of ' + s.t + ' answered')
+               : (s.t + ' question' + (s.t > 1 ? 's' : ''));
+    h += '<button class="prow' + (on ? ' pon' : '') + (s.done ? ' pdone' : '')
+       + '" data-sec="' + esc(s.sec) + '">'
+       + '<span class="pmark">' + (on ? G_OK : '') + '</span>'
+       + '<span class="plabel">' + esc(s.sec)
+       + ((D.secTitles||{})[s.sec] ? ' <em>' + esc(D.secTitles[s.sec]) + '</em>' : '')
+       + '</span>'
+       + '<span class="pnote">' + note + '</span>'
+       + (s.done ? '<span class="pbar"><i style="width:' + (s.t ? s.n/s.t*100 : 0)
+                 + '%"></i></span>' : '') + '</button>';
+  });
+  h += '</div>';
+
+  h += '<div class="pgo">'
+     + '<button class="pill go" id="pstart"' + (nq ? '' : ' disabled') + '>'
+     + (nq ? 'Start · ' + nq + ' question' + (nq > 1 ? 's' : '') : 'Pick a subchapter')
+     + '</button>'
+     + (p.left.length && p.left.length < p.secs.length
+        ? '<button class="link" id="pleft">Everything left</button>' : '')
+     + '<button class="link" id="pall">The whole paper</button>'
+     + '</div>';
+
+  if(p.done.length) h += '<p class="note">Finished subchapters keep their answers. Sitting '
+                       + 'one again replaces that score.</p>';
+  h += '</div>';
+
+  $('#quizview').innerHTML = h;
+  $('#rail').style.width = '0%';
+  $('#band').classList.add('off');
+  showResearch(false);
+  ['#back','#hintbtn','#hinttext','#redo','#next','#review','#retake','#pass2']
+    .forEach(k => $(k).classList.add('hide'));
+  $('#footer').classList.add('hide');
+
+  document.querySelectorAll('.prow').forEach(b => b.onclick = ()=>{
+    const k = b.dataset.sec, at = pickSel.indexOf(k);
+    if(at >= 0) pickSel.splice(at, 1); else pickSel.push(k);
+    picker();
+  });
+  const start = $('#pstart');
+  if(start) start.onclick = ()=> beginSitting(pickSel.slice());
+  const left = $('#pleft');
+  if(left) left.onclick = ()=> beginSitting(p.left.map(s=>s.sec));
+  $('#pall').onclick = ()=> beginSitting(p.secs.map(s=>s.sec));
+  renderScore();
+  centreBlock();
+}
+
+/* ONE DIRECTION FROM HERE. A sitting starts at the top of its own list with a clean phase —
+   the answers from any earlier sitting stay in `S.answers` untouched, they are simply not in
+   `active()` any more, which is what lets him come back to a section a fortnight later
+   without the page having kept a second copy of anything. */
+function beginSitting(secs){
+  if(!secs.length) return;
+  S.only = secs;
+  S.phase = 1; S.p2list = null; S.done = false; S.reviewing = false; S.hintOpen = false;
+  // RE-SITTING A FINISHED SECTION MUST ACTUALLY RE-SIT IT. Without this it would open on the
+  // end card, every question already answered, and the "Start" he just pressed would look
+  // broken. Its old answers go, and `sat` with them, because that section is now in progress.
+  secs.forEach(sec=>{
+    if(S.sat[sec]){
+      secQs(sec).forEach(i=>{ delete S.answers[qk(i)]; delete S.pass2[qk(i)]; });
+      delete S.sat[sec];
+    }
+  });
+  const l = runList();
+  S.i = l.length ? l[0] : 0;
+  pickSel = null;
+  lastShown = -1;
+  save(); draw(); window.scrollTo(0,0);
 }
 
 function end(){
@@ -1693,6 +2054,33 @@ function end(){
     h += '<p class="hist">Earlier attempts: ' + S.history.slice().reverse()
         .map(a=>'<span>'+a.score+'/'+a.total+' on '+when(a.at)+'</span>').join(' · ') + '</p>';
   }
+  /* THE PAPER, UNDER THE SITTING (08-16). The score above is this evening's — one subchapter,
+     or two. This is the exam: every subchapter, what it scored or that it is still waiting,
+     and one total across the ones he has actually sat. Absent on an unsectioned page. */
+  if(sectioned()){
+    const p = paperStat();
+    h += '<div class="topics parts"><h3>This exam</h3>';
+    p.secs.forEach(s=>{
+      const sitting = S.only && S.only.indexOf(s.sec) >= 0;
+      h += '<div class="trow"><span>' + esc(s.sec)
+         + (sitting ? '<em> just sat</em>' : '') + '</span>'
+         + '<span class="n">' + (s.done ? s.n + '/' + s.t : '—') + '</span>'
+         + '<span class="tbar' + (s.done ? '' : ' waiting') + '"><i style="width:'
+         + (s.done && s.t ? s.n/s.t*100 : 0) + '%"></i></span></div>';
+    });
+    h += '<p class="ptotal"><b>' + p.n + ' / ' + p.t + '</b> '
+       + (p.all ? 'the whole paper' :
+          'across ' + p.done.length + ' of ' + p.secs.length + ' subchapters · '
+          + p.left.reduce((a,s)=>a+s.t,0) + ' question'
+          + (p.left.reduce((a,s)=>a+s.t,0) > 1 ? 's' : '') + ' still to sit')
+       + '</p></div>';
+    if(p.left.length) h += '<p class="note"><button class="link" id="more">'
+                         + 'Sit another subchapter</button> — ' + p.left.map(s=>esc(s.sec)).join(', ')
+                         + ' left</p>';
+    else h += '<p class="note"><button class="link" id="more">Choose subchapters</button> — '
+            + 'every one is done; sitting one again replaces its score.</p>';
+  }
+
   const nskip = Object.keys(S.skipped||{}).length;
   if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
               + '<button class="link" id="unskip">put them back</button></p>';
@@ -1703,6 +2091,9 @@ function end(){
   $('#quizview').innerHTML = h;
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  const m = $('#more');
+  if(m) m.onclick = ()=>{ S.only = null; S.done = false; S.reviewing = false;
+                          pickSel = null; save(); draw(); window.scrollTo(0,0); };
   $('#rail').style.width = '100%';
   $('#band').classList.add('off');
   showResearch(false);
@@ -1713,11 +2104,16 @@ function end(){
   $('#redo').classList.add('hide');
   $('#next').classList.add('hide');
   $('#review').classList.remove('hide');
-  $('#review').textContent = 'Review quiz';
+  $('#review').textContent = 'Review ' + NOUN.toLowerCase();
   $('#retake').classList.remove('hide');
   // No wrong answers left to retry → no button at all, which is also what stops the second
   // pass looping into a third: anything answered on pass two leaves pending2() for good.
   $('#pass2').classList.toggle('hide', pending2().length === 0);
+  /* THE WRITTEN HALF IS THE PRIMARY WAY OUT OF AN EXAM'S END CARD (08-16, his ask): *"the
+     main button after the end of a large mcq for exams should be to move on onto frqs."* So
+     the second pass keeps its place but loses the accent — it is still there, it is just no
+     longer what the page is pointing at. A quiz has no written half and is unchanged. */
+  $('#towritten').classList.toggle('hide', !(D.frq && D.frq.length));
   renderScore();
   lastShown = -1;
   centreBlock();
@@ -1813,7 +2209,7 @@ function hintLine(p){
 function scoreMarkdown(){
   if(!S.done) return '';
   const p = scoreParts();
-  return '**Quiz:** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
+  return '**' + NOUN + ':** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
        + (p.red ? ', +' + p.red + ' redeemed' : '') + ', ' + p.wrong + ' wrong'
        + (p.skipped ? ', ' + p.skipped + ' skipped' : '') + ' · ' + when(S.at)
        + '\n**Hints:** ' + hintLine(p);
@@ -1879,6 +2275,7 @@ function step(dir){
 }
 $('#next').onclick = ()=> step(1);
 $('#back').onclick = ()=> step(-1);
+$('#towritten').onclick = ()=> setTab('frq');
 $('#review').onclick = ()=>{ S.reviewing = !S.reviewing; draw(); };
 /* THE SECOND PASS — the preferred way out of the end card, and the one that keeps
    everything. It re-runs only what he got wrong, on a list frozen at the moment he presses
@@ -1895,9 +2292,15 @@ $('#pass2').onclick = ()=>{
    history first so nothing is lost, and the questions he deleted or starred stay that way —
    they are decisions about the quiz, not part of one attempt at it. */
 $('#retake').onclick = ()=>{
-  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length});
+  // ON A SECTIONED PAPER THE HISTORY LINE IS THE PAPER, not the last sitting — the same
+  // reasoning as `save()`. `blank()` returns `only: null` and `sat: {}`, so a retake drops
+  // every sitting at once and lands back on the picker, which is what "retake the exam" means.
+  if(S.done){ const p = D.parts ? paperStat() : null;
+              S.history.push({at:S.at, score: p ? p.n : score(S),
+                              total: p ? p.t : active(S).length}); }
   const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
   S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  pickSel = null;
   lastShown = -1;
   save(); syncTabs(); renderScore(); draw();
 };

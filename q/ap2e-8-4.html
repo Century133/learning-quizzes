@@ -122,8 +122,8 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
  border:1px solid transparent;border-radius:var(--radius);padding:var(--opad);
  color:var(--text);font:inherit;font-size:var(--osize);cursor:pointer;
  transition:background .16s ease,border-color .16s ease,opacity .16s ease}
-.opt:hover:not(:disabled){background:var(--surface-hi)}
-.opt:disabled{cursor:default}
+.opt:hover:not(.locked){background:var(--surface-hi)}
+.opt.locked{cursor:default}
 .line{display:flex;gap:12px;align-items:flex-start;line-height:1.4}
 .line .k{color:var(--muted);min-width:1.25em}
 .line .t{flex:1}
@@ -176,7 +176,7 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
 .q,.qq,.why,.lab,.hinttext,.rline,.tag,.sheet,.topics,.legend{
  user-select:text;-webkit-user-select:text}
 .opt{user-select:none;-webkit-user-select:none}
-.opt:disabled,.opt:disabled *{user-select:text;-webkit-user-select:text;cursor:auto}
+.opt.locked,.opt.locked *{user-select:text;-webkit-user-select:text;cursor:auto}
 .star,.dots,.tab,button.pill{user-select:none;-webkit-user-select:none}
 
 /* ---- HIS RESEARCH, one box per question ----
@@ -294,6 +294,39 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .tbar{grid-column:1/-1;height:3px;background:var(--line);border-radius:999px;
  overflow:hidden}
 .tbar i{display:block;height:100%;background:var(--text)}
+/* A subchapter he has not sat gets a rail with nothing in it rather than a 0% bar, because a
+   bar at zero reads as "scored nothing" and the whole point is that it has not been asked. */
+.tbar.waiting{background:repeating-linear-gradient(90deg,var(--line) 0 3px,transparent 3px 6px)}
+.topics.parts .trow em{font-style:normal;color:var(--muted);font-size:.8rem;margin-left:8px}
+.ptotal{margin:14px 0 0;color:var(--muted);font-size:.88rem}
+.ptotal b{color:var(--text);font-variant-numeric:tabular-nums;font-size:1.05rem;
+ font-weight:600;margin-right:8px}
+
+/* ---- THE SUBCHAPTER PICKER (08-16) ----
+   Deliberately the same furniture as the end card — same heading treatment, same rails, same
+   tabular numbers — because it IS the end card most of the time he sees it: he opens the link
+   and this screen tells him what he has scored and what is left. A separate visual language
+   for "choose" and "review" would make one screen look like two. */
+.picker{padding:2px 0 8px}
+.picker h3{font-size:1.35rem;font-weight:600;letter-spacing:-.01em;margin:0 0 8px}
+.psub{color:var(--muted);font-size:.9rem;margin:0 0 22px;max-width:46ch}
+.pscore{margin:0 0 22px}
+.pscore b{font-size:1.5rem;font-variant-numeric:tabular-nums;font-weight:600}
+.pscore span{color:var(--muted);font-size:.88rem;margin-left:10px}
+.prows{display:flex;flex-direction:column;gap:8px;margin:0 0 24px}
+.prow{display:grid;grid-template-columns:22px auto 1fr;gap:4px 12px;align-items:center;
+ width:100%;text-align:left;font:inherit;cursor:pointer;padding:13px 16px;
+ border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--text)}
+.prow:hover{border-color:var(--muted)}
+.prow.pon{border-color:var(--accent)}
+.pmark{color:var(--accent);font-size:.95rem;line-height:1}
+.plabel{font-variant-numeric:tabular-nums;font-weight:600}
+.plabel em{font-style:normal;font-weight:400;color:var(--muted);margin-left:8px}
+.pnote{color:var(--muted);font-size:.86rem;justify-self:end}
+.pbar{grid-column:2/-1;height:3px;background:var(--line);border-radius:999px;overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--text)}
+.pgo{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)}
 
 /* ---- review list ---- */
 .rev{padding:6px 0 36px}
@@ -389,6 +422,27 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
  color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
  padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.6;outline:none;margin-top:16px}
 .frqin:focus{border-color:var(--accent)}
+/* THE STICKY HEADER WAS EATING THE CLICK (08-16). It is 49px tall with z-index 5, so the top
+   strip of a box scrolled under it is dead to the mouse — and the top strip is exactly where
+   the "Write your answer." placeholder is, so the box reads as broken. His words: *"I cant
+   even click the textbox for this exam."* `scroll-margin-top` keeps the card clear of the
+   header whenever anything scrolls it into view; the click handler on the card is the belt to
+   that braces, since he can also scroll there by hand. */
+.frq{scroll-margin-top:64px}
+
+/* The only thing on this page allowed to shout. It sits over everything because a saved
+   answer is the one promise the page makes. */
+#savewarn{position:fixed;left:12px;right:12px;bottom:12px;z-index:60;padding:12px 16px;
+ border-radius:12px;font-size:.86rem;line-height:1.4;background:#7f1d1d;color:#fff;
+ box-shadow:0 6px 24px rgba(0,0,0,.4)}
+#savewarn.hide{display:none}
+
+/* WHERE FORWARD MEANS "THE NEXT BLANK ONE". Reaching the end of the list with holes in it
+   sends him back to the first one — right, and invisible until 08-16, when he read it as the
+   paper losing his place: *"when I thought I was done I wasnt… questions are ghosting until
+   the end."* The counter says so now, and the rail stops pretending the run is nearly over. */
+.fillnote{display:inline-flex;align-items:center;gap:6px;color:var(--accent);
+ font-size:.7rem;letter-spacing:.07em;text-transform:uppercase}
 .frqin::placeholder{color:var(--muted);opacity:.7}
 .acts.inline{margin-top:12px}
 .rubric{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
@@ -657,12 +711,13 @@ Self-control is finite - one hard task leaves less for the next"></textarea>
     <button class="pill ghost hide" id="retake">Retake</button>
     <span class="spacer"></span>
     <button class="pill hide" id="review">Review quiz</button>
-    <button class="pill primary hide" id="pass2">2nd Pass</button>
+    <button class="pill ghost hide" id="pass2">2nd Pass</button>
+    <button class="pill primary hide" id="towritten">Written half</button>
     <button class="pill primary" id="next">Next</button>
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "ap2e-8-4", "title": "8.4 Bones of the Lower Limb", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "hash": "6f28db191c06f25a", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "What is the primary physiological importance of the small indentation, known as the fovea capitis, located on the head of the femur?", "options": ["It allows the femur to articulate directly with the sacrum.", "It provides the main structural stability for the hip joint.", "It acts as a primary lever for the powerful gluteal muscles.", "It serves as the attachment point for an artery that supplies the femoral head."], "rationales": ["The head of the femur articulates with the acetabulum of the hip bone, not the sacrum.", "The source notes that the ligament attaching here is weak and provides little support for the hip joint.", "Leverage for hip muscles is provided by the trochanters, not the medial indentation of the head.", "The ligament of the head of the femur spans this area and carries an important artery to the bone."], "correct": 3, "hint": "focus on what the weak ligament at the proximal end actually carries.", "topic": "Femoral blood supply", "sec": "", "src": "", "link": "", "qid": "a6d1676d4d"}, {"q": "Why does the greater trochanter project so far laterally and superiorly from the neck of the femur?", "options": ["To prevent the hip joint from dislocating in a medial direction.", "To house the bone marrow responsible for leg muscle metabolism.", "To provide a smooth surface for the patella to glide during movement.", "To increase the mechanical leverage for muscles acting across the hip joint."], "rationales": ["Stability is primarily maintained by the deep socket of the acetabulum and ligaments, not the trochanter's shape.", "Bone marrow is found within the shaft and spongy bone, while the trochanter is a site for muscle attachment.", "The patella glides on the patellar surface at the distal end of the femur, not the proximal end.", "The outward projection allows muscles to pull from a better angle, increasing their power."], "correct": 3, "hint": "consider how a longer moment arm affects the force of a muscle pull.", "topic": "Muscle leverage", "sec": "", "src": "", "link": "", "qid": "7be4842144"}, {"q": "What is the functional purpose of the linea aspera located on the posterior shaft of the femur?", "options": ["It serves as the exit point for the main femoral artery into the lower leg.", "It reinforces the bone against the anterior bowing caused by body weight.", "It acts as a hinge point for the flexion of the knee joint.", "It provides a roughened ridge for the long, thin attachments of multiple hip and thigh muscles."], "rationales": ["The linea aspera is a bony ridge for muscle anchoring, not a vascular passageway.", "While the shaft has a slight anterior curve, the linea aspera's primary documented role is for muscle attachment.", "The knee hinge is formed by the condyles at the distal end, while the linea aspera is on the mid-shaft.", "The linea aspera is the primary site on the posterior femur where various muscles secure themselves along the bone's length."], "correct": 3, "hint": "think about the role of roughened ridges on a long bone's shaft.", "topic": "Femoral muscle attachment", "sec": "", "src": "", "link": "", "qid": "70c31f04ab"}, {"q": "How does the patella contribute to the mechanical efficiency of the quadriceps femoris muscle?", "options": ["It decreases the friction between the tibia and the fibula during running.", "It allows the quadriceps to pull the leg medially rather than superiorly.", "It shortens the length of the quadriceps tendon to allow for faster firing.", "It lifts the tendon away from the knee joint, increasing the leverage of the muscle."], "rationales": ["The patella does not articulate with the tibia or fibula; it articulates with the femur.", "The patella primarily assists in knee extension (superior pull), while lateral pull is an unwanted side effect of the Q-angle.", "The patella is embedded in the tendon; it doesn't significantly shorten it but rather changes its path.", "By moving the tendon further from the joint's axis, the patella allows the quadriceps to generate more torque."], "correct": 3, "hint": "consider how changing the angle or distance of a tendon's pull affects power.", "topic": "Patellar function", "sec": "", "src": "", "link": "", "qid": "80569f5d88"}, {"q": "In the context of patellofemoral syndrome, how does the lateral lip of the femoral patellar surface function to prevent injury?", "options": ["It compensates for the natural lateral pull on the patella to maintain proper tracking.", "It provides an attachment point for the medial collateral ligament.", "It prevents the patella from articulating with the tibia during squatting.", "It increases the Q-angle to allow for a wider range of hip motion."], "rationales": ["The large lateral lip acts as a physical barrier to keep the patella from being pulled too far out of its groove.", "Ligaments attach to the epicondyles, whereas the lip is part of the articulating surface for the kneecap.", "The patella normally does not articulate with the tibia at all; the lip is on the femur.", "A larger Q-angle actually increases the risk of the syndrome; the lip helps counteract this effect."], "correct": 0, "hint": "think about how the shape of the femur's groove counteracts the muscle's pull.", "topic": "Patellar tracking", "sec": "", "src": "", "link": "", "qid": "ef6b7874e7"}, {"q": "Why are females statistically more vulnerable to developing Runner's Knee (patellofemoral syndrome) than males?", "options": ["The quadriceps muscle in females only attaches to the fibula.", "A wider pelvis leads to a larger Q-angle, which increases the lateral pull on the patella.", "They lack a medial malleolus, which reduces ankle stability.", "Their patella is generally smaller and cannot articulate with the femur."], "rationales": ["The quadriceps tendon attaches to the tibia via the patellar ligament in all humans.", "The diagonal orientation of the femur is more pronounced in females, pulling the kneecap laterally during extension.", "Both males and females possess a medial malleolus; this is not a gender difference.", "The patella is present and functional in both genders; size is proportional and not the primary cause of syndrome."], "correct": 1, "hint": "connect the width of the hips to the angle of the thigh bone.", "topic": "Pelvic width influence", "sec": "", "src": "", "link": "", "qid": "97b11ee5e6"}, {"q": "Which bone of the leg is responsible for the vast majority of weight-bearing and is the second longest bone in the body?", "options": ["Fibula", "Calcaneus", "Femur", "Tibia"], "rationales": ["The fibula is a slender, lateral bone that does not bear weight.", "The calcaneus is a bone of the foot, not the leg, though it does receive weight from the leg bones.", "While the femur is the longest bone, it is the bone of the thigh, not the leg region.", "The tibia is the large, medial bone of the leg that carries the body's weight to the foot."], "correct": 3, "hint": "distinguish between the two bones of the region below the knee.", "topic": "Weight bearing", "sec": "", "src": "", "link": "", "qid": "a4ec85492f"}, {"q": "What is the functional significance of the tibial tuberosity located on the anterior side of the proximal tibia?", "options": ["It serves as the final attachment site for the quadriceps muscle tendon.", "It provides an articulation point for the lateral malleolus of the fibula.", "It houses the nerve that triggers the 'knee-jerk' reflex.", "It acts as a pivot point for the rotation of the ankle joint."], "rationales": ["The patellar ligament connects the patella to this elevation, allowing the quadriceps to extend the knee.", "The fibula articulates with the fibular notch at the distal end and the lateral condyle at the proximal end, not the tuberosity.", "While the reflex is triggered by tapping the ligament here, the tuberosity is a bony attachment point, not a nerve housing.", "Rotation and movement of the ankle occur at the distal end of the tibia and fibula with the talus."], "correct": 0, "hint": "identify where the force of the anterior thigh muscles is finally delivered.", "topic": "Tibial landmarks", "sec": "", "src": "", "link": "", "qid": "244205fb84"}, {"q": "What role does the interosseous membrane play in the anatomy of the leg?", "options": ["It provides a smooth lubricating surface for the ankle joint.", "It acts as the primary weight-bearing structure between the knee and ankle.", "It allows the fibula to rotate freely around the tibia during walking.", "It serves as a sheet of connective tissue that unites the tibia and fibula bones."], "rationales": ["The ankle joint is lubricated by synovial fluid within a joint capsule, not by the interosseous membrane.", "Weight is primarily borne by the shaft of the tibia, not the membrane between the bones.", "The membrane is composed of dense connective tissue that unites and stabilizes the bones rather than allowing free rotation.", "The interosseous membrane spans the gap between the two bones, providing stability and surface area for muscle attachment."], "correct": 3, "hint": "consider how the two bones of the leg are held together along their shafts.", "topic": "Leg bone union", "sec": "", "src": "", "link": "", "qid": "31056eef87"}, {"q": "Which statement best describes the functional relationship between the fibula and the weight of the body?", "options": ["The fibula bears weight only when the knee is in a flexed position.", "The fibula carries approximately half of the body weight to the lateral side of the foot.", "The fibula does not bear weight and serves primarily for muscle attachments.", "The fibula transfers weight from the femur to the talus bone."], "rationales": ["The tibia remains the weight-bearing bone regardless of knee flexion or extension.", "The source explicitly states that the fibula does not bear weight.", "Because it is not needed for weight-bearing, the fibula is slender and mostly surrounded by muscles.", "The fibula articulates with the tibia at the top and the talus at the bottom, but the tibia transfers the weight."], "correct": 2, "hint": "look for why a bone might be very slender compared to its partner.", "topic": "Fibular function", "sec": "", "src": "", "link": "", "qid": "e2788fbd54"}, {"q": "The ankle joint is formed by the articulation of the talus with which specific bony structures?", "options": ["The heads of the five metatarsal bones.", "The medial and lateral condyles of the femur.", "The calcaneus and the cuboid bones.", "The medial malleolus, the distal end of the tibia, and the lateral malleolus."], "rationales": ["The metatarsal heads form the ball of the foot at the anterior end, far from the ankle.", "The femoral condyles form the knee joint, not the ankle joint.", "While these are foot bones, the ankle joint specifically involves the leg bones meeting the foot.", "These three areas create a socket-like fit for the upper surface of the talus bone."], "correct": 3, "hint": "identify the specific 'bumps' on the inner and outer ankle.", "topic": "Ankle joint articulation", "sec": "", "src": "", "link": "", "qid": "d9aef38e21"}, {"q": "How is body weight traditionally transferred through the bones of the foot when a person is standing?", "options": ["From the navicular to the three cuneiform bones and then the heel.", "From the tibia to the talus and then to the calcaneus.", "From the patella directly to the metatarsals.", "From the fibula to the cuboid and then to the phalanges."], "rationales": ["The heel (calcaneus) is posterior to the navicular and cuneiforms in the weight-bearing sequence.", "The talus sits atop the calcaneus (heel bone), which then rests on the ground.", "The patella does not articulate with the foot bones and does not transfer body weight.", "The fibula is not weight-bearing; weight travels through the tibia."], "correct": 1, "hint": "trace the path of force from the leg down to the heel.", "topic": "Weight distribution", "sec": "", "src": "", "link": "", "qid": "9938915355"}, {"q": "What is the function of the sustentaculum tali found on the medial side of the calcaneus?", "options": ["It serves as the main pivot for the big toe (hallux).", "It acts as a bony shelf that supports the medial side of the talus bone.", "It provides a groove for the passage of the Achilles tendon.", "It forms the primary articulation with the cuboid bone."], "rationales": ["The hallux moves at the metatarsophalangeal joint, far anterior to the calcaneus.", "Its name literally translates to 'support for the talus,' highlighting its role in foot stability.", "The calcaneal tuberosity is the main attachment for the Achilles tendon, not the sustentaculum tali.", "The cuboid articulates with the anterior end of the calcaneus, not the medial sustentaculum tali."], "correct": 1, "hint": "focus on the meaning of the Latin name for this bony extension.", "topic": "Tarsal support", "sec": "", "src": "", "link": "", "qid": "d9103eaab3"}, {"q": "Which group of bones is primarily responsible for creating the transverse (medial-lateral) curvature of the foot?", "options": ["The head and neck of the femur.", "The phalanges of the five toes.", "The three cuneiform bones and the cuboid bone.", "The proximal and distal tibiofibular joints."], "rationales": ["These structures are part of the hip joint and have no role in foot curvature.", "The phalanges form the toes and do not significantly contribute to the arch of the mid-foot.", "The cuneiforms are wedge-shaped (broad superiorly, narrow inferiorly), which naturally forms the arch.", "These joints are in the leg and ankle region, not the mid-foot where the transverse arch is located."], "correct": 2, "hint": "look for bones described as 'wedge-shaped' in the mid-foot region.", "topic": "Foot curvature", "sec": "", "src": "", "link": "", "qid": "d6c7c1a120"}, {"q": "What anatomical structures form the 'ball' of the foot that rests on the ground at the anterior end of the sole?", "options": ["The bases of the five metatarsal bones.", "The intermediate and distal phalanges.", "The distal ends (heads) of the metatarsal bones.", "The sustenaculum tali of the calcaneus."], "rationales": ["The bases are the proximal ends that articulate with the tarsal bones, closer to the ankle.", "These bones form the tips and middle segments of the toes, which are anterior to the ball of the foot.", "The expanded heads of the metatarsals support weight at the front of the foot before the toes begin.", "This structure is in the heel/posterior region of the foot."], "correct": 2, "hint": "differentiate between the 'base' and the 'head' of the mid-foot bones.", "topic": "Metatarsal structure", "sec": "", "src": "", "link": "", "qid": "891bd4f9dd"}, {"q": "How does the bone count of the hallux (big toe) differ from that of the second through fifth toes?", "options": ["The hallux has only two phalanges (proximal and distal) while the others have three.", "The hallux lacks a metatarsophalangeal joint.", "The hallux has three phalanges while the others only have two.", "The hallux is formed by a single sesamoid bone rather than phalanges."], "rationales": ["The big toe lacks a middle phalanx, a pattern mirrored in the thumb of the hand.", "The hallux has a prominent metatarsophalangeal joint, which is the site where bunions typically form.", "This is the reverse of the actual anatomy; the hallux is the one with fewer bones.", "While sesamoids may be nearby, the hallux itself consists of two phalanx bones."], "correct": 0, "hint": "consider which segment is missing in the largest toe compared to the smaller ones.", "topic": "Phalanx count", "sec": "", "src": "", "link": "", "qid": "9608c430d6"}], "hasSheet": true, "frq": [], "notebook": "https://notebooklm.google.com/notebook/cf57202f-1a73-4c88-9b58-abfcd3f6cae1/artifact/a4b22671-e20d-4e55-96fb-f4b4db117bb4", "root": "../index.html", "tab": "quiz", "sheet": "## Femoral blood supply\nThe proximal femur receives vital vascularization through a dedicated artery traveling within a supporting ligamentous structure.\n\n### Key terms\n1. **Fovea capitis** - A minor depression on the medial side of the femoral head that serves as a ligamentous attachment site.\n2. **Ligament of the head of the femur** - A weak intracapsular band spanning the femur and acetabulum that houses a nutrient vessel.\n   2.1 **Artery to the head of the femur** - The specific vascular structure carried by the ligament to supply the proximal end of the bone.\n\n## Muscle leverage\nBony projections of the femur and the sesamoid kneecap serve as mechanical levers to increase the torque generated by leg muscles.\n\n### Key terms\n1. **Greater trochanter** - A large lateral projection that provides a mechanical lever for muscles acting across the hip joint.\n2. **Patella** - A bone that increases the leverage of the quadriceps femoris by lifting the tendon away from the knee joint axis.\n\n## Femoral muscle attachment\nThe femur contains several specialized ridges and tuberosities that provide extensive surface area for the anchoring of hip and thigh muscles.\n\n### Key terms\n1. **Greater trochanter** - The large, upward projection above the base of the femoral neck where multiple hip muscles attach.\n2. **Lesser trochanter** - A small bony prominence on the medial aspect of the femur for the attachment of a single, powerful muscle.\n3. **Gluteal tuberosity** - A roughened area on the posterior proximal shaft extending inferiorly from the greater trochanter for muscle anchoring.\n4. **Linea aspera** - A prominent roughened ridge passing distally along the posterior side of the middle third of the femoral shaft.\n   4.1 **Muscle attachments** - The long, thin anchoring sites for multiple muscles of the hip and thigh regions along the ridge.\n5. **Epicondyles** - Medial and lateral irregular areas on the outer sides of the condyles that provide attachment for muscles and ligaments.\n\n## Patellar function\nThe patella is a specialized bone that protects the quadriceps tendon and optimizes the mechanical efficiency of the knee extensor mechanism.\n\n### Key terms\n1. **Patella** - The largest sesamoid bone in the body, found within the quadriceps tendon to prevent friction against the distal femur.\n2. **Sesamoid bone** - A bone incorporated into a muscle tendon where it crosses a joint to protect the tendon from wear and tear.\n3. **Quadriceps femoris muscle** - The large anterior thigh muscle whose tendon incorporates the patella and inserts onto the tibial tuberosity.\n\n## Patellar tracking\nProper patellar movement within the femoral groove is maintained by the structural morphology of the femur and balanced muscular pull.\n\n### Key terms\n1. **Patellar surface** - A wide groove on the anterior distal femur formed by the union of the medial and lateral condyles.\n2. **Abnormal tracking** - A clinical condition where the patella deviates laterally from its proper path on the femoral patellar surface.\n3. **Lateral lip** - A large expansion on the lateral side of the femoral patellar surface that prevents the patella from shifting laterally.\n\n## Pelvic width influence\nThe anatomical width of the pelvis dictates the femoral angle, which directly influences the lateral vector forces acting on the patella.\n\n### Key terms\n1. **Q-angle** - A measurement of the lateral deviation of the femur from the vertical line of the tibia, normally 10–15 degrees.\n2. **Wider pelvis** - A female skeletal characteristic that results in a larger Q-angle and increased lateral pull on the patella.\n\n## Weight bearing\nThe structural integrity of the lower limb is supported by two primary long bones that transmit the weight of the axial skeleton.\n\n### Key terms\n1. **Femur** - The longest and strongest bone of the body, which bears weight and constitutes one-quarter of a person's total height.\n2. **Tibia** - The medial bone of the leg and the second longest bone of the body, serving as the primary weight-bearer of the leg.\n\n## Tibial landmarks\nThe tibia features expanded condyles for knee articulation and several ridges and processes for ligamentous and tendinous attachments.\n\n### Key terms\n1. **Medial condyle** - The medial expansion of the proximal tibia that articulates with the medial condyle of the femur.\n2. **Lateral condyle** - The lateral expansion of the proximal tibia that articulates with the lateral condyle of the femur.\n3. **Intercondylar eminence** - An elevated, irregular area between the tibial condyles that serves as an attachment for knee ligaments.\n   3.1 **Supporting ligaments** - The two intracapsular knee ligaments that anchor to this elevated region of the proximal tibia.\n4. **Tibial tuberosity** - An anterior elevation on the proximal tibia that serves as the final insertion point for the patellar tendon.\n5. **Anterior border** - The subcutaneous anterior apex of the triangular tibial shaft extending inferiorly from the tibial tuberosity.\n6. **Medial malleolus** - A large medial expansion of the distal tibia that forms the palpable bony bump of the medial ankle.\n\n## Leg bone union\nThe tibia and fibula are held in close proximity by a fibrous syndesmosis and a strong sheet of connective tissue.\n\n### Key terms\n1. **Interosseous border** - A ridge running down the lateral tibial shaft and medial fibular shaft for connective tissue attachment.\n2. **Interosseous membrane of the leg** - A sheet of dense connective tissue that spans the distance between and unites the tibia and fibula.\n3. **Distal tibiofibular joint** - The articulation point between the distal end of the fibula and the fibular notch of the tibia.\n\n## Fibular function\nThe fibula functions as a non-weight-bearing lateral support that provides surface area for muscle attachment and stabilizes the ankle.\n\n### Key terms\n1. **Fibula** - The slender lateral bone of the leg that serves primarily for muscle attachments and does not transmit body weight.\n2. **Lateral malleolus** - The distal end of the fibula that forms the lateral bony bump of the ankle and articulates with the talus.\n\n## Ankle joint articulation\nThe ankle joint is a hinge articulation formed by the union of the talus bone with the distal configurations of the tibia and fibula.\n\n### Key terms\n1. **Talus** - The most superior tarsal bone, featuring a square-shaped upper surface that articulates with the leg bones.\n2. **Medial malleolus** - The distal tibial process that articulates with the superomedial surface of the talus bone.\n3. **Lateral malleolus** - The distal fibular process that articulates with the lateral side of the talus bone.\n4. **Distal end of the tibia** - The superior articulating surface of the ankle joint that meets the top of the talus.\n\n## Weight distribution\nThe body's mass is transferred in a linear sequence from the leg through the tarsal bones to the ground.\n\n### Key terms\n1. **Tibia to talus** - The initial transfer of body weight from the main weight-bearing leg bone to the superior tarsal bone.\n2. **Talus to calcaneus** - The subsequent transfer of weight from the talus to the heel bone which rests on the ground.\n\n## Tarsal support\nThe posterior foot is stabilized by specific tarsal bones that form the heel and provide a shelf for the ankle joint.\n\n### Key terms\n1. **Calcaneus** - The largest bone of the foot, situated inferiorly to the talus to form the heel of the foot.\n2. **Sustentaculum tali** - A prominent bony extension on the medial calcaneus that supports the medial aspect of the talus bone.\n3. **Navicular** - A tarsal bone that articulates with the anterior talus and the three cuneiform bones.\n4. **Cuboid** - A tarsal bone articulating with the anterior calcaneus that features a groove for a muscle tendon.\n\n## Foot curvature\nThe transverse arch of the foot is formed by the wedge-like geometry of the cuneiform bones and their distal articulations.\n\n### Key terms\n1. **Cuneiform bones** - A group of three wedge-shaped bones known as the medial, intermediate, and lateral cuneiforms.\n2. **Wedge-shape** - The structural configuration of cuneiforms with broad superior and narrow inferior surfaces to create curvature.\n\n## Metatarsal structure\nThe mid-foot is composed of five elongated bones that connect the tarsal region to the phalanges of the toes.\n\n### Key terms\n1. **Metatarsal bones** - Five elongated bones numbered 1–5 starting from the medial side of the mid-foot.\n2. **Base** - The proximal end of a metatarsal bone that articulates with the cuboid or cuneiform bones.\n3. **Head** - The expanded distal end of a metatarsal bone that forms the ball of the foot and articulates with a phalanx.\n4. **Metatarsophalangeal joint** - The articulation point between the head of a metatarsal and the proximal phalanx of a toe.\n\n## Phalanx count\nThe toes contain fourteen phalanges arranged in segments, with the first digit presenting a different anatomical count than the others.\n\n### Key terms\n1. **Phalanges** - The fourteen small bones found within the toes, numbered 1–5 starting from the medial side.\n2. **Hallux** - The first digit or big toe, which is shorter and thicker than the other digits of the foot.\n   2.1 **Phalanx bones** - The two specific bones, proximal and distal, that comprise the skeletal structure of the big toe.\n3. **Proximal, middle, and distal phalanges** - The three individual bones found in each of the toes numbered two through five."}</script>
+<script id="quiz-data" type="application/json">{"id": "ap2e-8-4", "title": "8.4 Bones of the Lower Limb", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "hash": "6f28db191c06f25a", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "What is the primary physiological importance of the small indentation, known as the fovea capitis, located on the head of the femur?", "options": ["It allows the femur to articulate directly with the sacrum.", "It provides the main structural stability for the hip joint.", "It acts as a primary lever for the powerful gluteal muscles.", "It serves as the attachment point for an artery that supplies the femoral head."], "rationales": ["The head of the femur articulates with the acetabulum of the hip bone, not the sacrum.", "The source notes that the ligament attaching here is weak and provides little support for the hip joint.", "Leverage for hip muscles is provided by the trochanters, not the medial indentation of the head.", "The ligament of the head of the femur spans this area and carries an important artery to the bone."], "correct": 3, "hint": "focus on what the weak ligament at the proximal end actually carries.", "topic": "Femoral blood supply", "sec": "", "src": "", "link": "", "qid": "a6d1676d4d"}, {"q": "Why does the greater trochanter project so far laterally and superiorly from the neck of the femur?", "options": ["To prevent the hip joint from dislocating in a medial direction.", "To house the bone marrow responsible for leg muscle metabolism.", "To provide a smooth surface for the patella to glide during movement.", "To increase the mechanical leverage for muscles acting across the hip joint."], "rationales": ["Stability is primarily maintained by the deep socket of the acetabulum and ligaments, not the trochanter's shape.", "Bone marrow is found within the shaft and spongy bone, while the trochanter is a site for muscle attachment.", "The patella glides on the patellar surface at the distal end of the femur, not the proximal end.", "The outward projection allows muscles to pull from a better angle, increasing their power."], "correct": 3, "hint": "consider how a longer moment arm affects the force of a muscle pull.", "topic": "Muscle leverage", "sec": "", "src": "", "link": "", "qid": "7be4842144"}, {"q": "What is the functional purpose of the linea aspera located on the posterior shaft of the femur?", "options": ["It serves as the exit point for the main femoral artery into the lower leg.", "It reinforces the bone against the anterior bowing caused by body weight.", "It acts as a hinge point for the flexion of the knee joint.", "It provides a roughened ridge for the long, thin attachments of multiple hip and thigh muscles."], "rationales": ["The linea aspera is a bony ridge for muscle anchoring, not a vascular passageway.", "While the shaft has a slight anterior curve, the linea aspera's primary documented role is for muscle attachment.", "The knee hinge is formed by the condyles at the distal end, while the linea aspera is on the mid-shaft.", "The linea aspera is the primary site on the posterior femur where various muscles secure themselves along the bone's length."], "correct": 3, "hint": "think about the role of roughened ridges on a long bone's shaft.", "topic": "Femoral muscle attachment", "sec": "", "src": "", "link": "", "qid": "70c31f04ab"}, {"q": "How does the patella contribute to the mechanical efficiency of the quadriceps femoris muscle?", "options": ["It decreases the friction between the tibia and the fibula during running.", "It allows the quadriceps to pull the leg medially rather than superiorly.", "It shortens the length of the quadriceps tendon to allow for faster firing.", "It lifts the tendon away from the knee joint, increasing the leverage of the muscle."], "rationales": ["The patella does not articulate with the tibia or fibula; it articulates with the femur.", "The patella primarily assists in knee extension (superior pull), while lateral pull is an unwanted side effect of the Q-angle.", "The patella is embedded in the tendon; it doesn't significantly shorten it but rather changes its path.", "By moving the tendon further from the joint's axis, the patella allows the quadriceps to generate more torque."], "correct": 3, "hint": "consider how changing the angle or distance of a tendon's pull affects power.", "topic": "Patellar function", "sec": "", "src": "", "link": "", "qid": "80569f5d88"}, {"q": "In the context of patellofemoral syndrome, how does the lateral lip of the femoral patellar surface function to prevent injury?", "options": ["It compensates for the natural lateral pull on the patella to maintain proper tracking.", "It provides an attachment point for the medial collateral ligament.", "It prevents the patella from articulating with the tibia during squatting.", "It increases the Q-angle to allow for a wider range of hip motion."], "rationales": ["The large lateral lip acts as a physical barrier to keep the patella from being pulled too far out of its groove.", "Ligaments attach to the epicondyles, whereas the lip is part of the articulating surface for the kneecap.", "The patella normally does not articulate with the tibia at all; the lip is on the femur.", "A larger Q-angle actually increases the risk of the syndrome; the lip helps counteract this effect."], "correct": 0, "hint": "think about how the shape of the femur's groove counteracts the muscle's pull.", "topic": "Patellar tracking", "sec": "", "src": "", "link": "", "qid": "ef6b7874e7"}, {"q": "Why are females statistically more vulnerable to developing Runner's Knee (patellofemoral syndrome) than males?", "options": ["The quadriceps muscle in females only attaches to the fibula.", "A wider pelvis leads to a larger Q-angle, which increases the lateral pull on the patella.", "They lack a medial malleolus, which reduces ankle stability.", "Their patella is generally smaller and cannot articulate with the femur."], "rationales": ["The quadriceps tendon attaches to the tibia via the patellar ligament in all humans.", "The diagonal orientation of the femur is more pronounced in females, pulling the kneecap laterally during extension.", "Both males and females possess a medial malleolus; this is not a gender difference.", "The patella is present and functional in both genders; size is proportional and not the primary cause of syndrome."], "correct": 1, "hint": "connect the width of the hips to the angle of the thigh bone.", "topic": "Pelvic width influence", "sec": "", "src": "", "link": "", "qid": "97b11ee5e6"}, {"q": "Which bone of the leg is responsible for the vast majority of weight-bearing and is the second longest bone in the body?", "options": ["Fibula", "Calcaneus", "Femur", "Tibia"], "rationales": ["The fibula is a slender, lateral bone that does not bear weight.", "The calcaneus is a bone of the foot, not the leg, though it does receive weight from the leg bones.", "While the femur is the longest bone, it is the bone of the thigh, not the leg region.", "The tibia is the large, medial bone of the leg that carries the body's weight to the foot."], "correct": 3, "hint": "distinguish between the two bones of the region below the knee.", "topic": "Weight bearing", "sec": "", "src": "", "link": "", "qid": "a4ec85492f"}, {"q": "What is the functional significance of the tibial tuberosity located on the anterior side of the proximal tibia?", "options": ["It serves as the final attachment site for the quadriceps muscle tendon.", "It provides an articulation point for the lateral malleolus of the fibula.", "It houses the nerve that triggers the 'knee-jerk' reflex.", "It acts as a pivot point for the rotation of the ankle joint."], "rationales": ["The patellar ligament connects the patella to this elevation, allowing the quadriceps to extend the knee.", "The fibula articulates with the fibular notch at the distal end and the lateral condyle at the proximal end, not the tuberosity.", "While the reflex is triggered by tapping the ligament here, the tuberosity is a bony attachment point, not a nerve housing.", "Rotation and movement of the ankle occur at the distal end of the tibia and fibula with the talus."], "correct": 0, "hint": "identify where the force of the anterior thigh muscles is finally delivered.", "topic": "Tibial landmarks", "sec": "", "src": "", "link": "", "qid": "244205fb84"}, {"q": "What role does the interosseous membrane play in the anatomy of the leg?", "options": ["It provides a smooth lubricating surface for the ankle joint.", "It acts as the primary weight-bearing structure between the knee and ankle.", "It allows the fibula to rotate freely around the tibia during walking.", "It serves as a sheet of connective tissue that unites the tibia and fibula bones."], "rationales": ["The ankle joint is lubricated by synovial fluid within a joint capsule, not by the interosseous membrane.", "Weight is primarily borne by the shaft of the tibia, not the membrane between the bones.", "The membrane is composed of dense connective tissue that unites and stabilizes the bones rather than allowing free rotation.", "The interosseous membrane spans the gap between the two bones, providing stability and surface area for muscle attachment."], "correct": 3, "hint": "consider how the two bones of the leg are held together along their shafts.", "topic": "Leg bone union", "sec": "", "src": "", "link": "", "qid": "31056eef87"}, {"q": "Which statement best describes the functional relationship between the fibula and the weight of the body?", "options": ["The fibula bears weight only when the knee is in a flexed position.", "The fibula carries approximately half of the body weight to the lateral side of the foot.", "The fibula does not bear weight and serves primarily for muscle attachments.", "The fibula transfers weight from the femur to the talus bone."], "rationales": ["The tibia remains the weight-bearing bone regardless of knee flexion or extension.", "The source explicitly states that the fibula does not bear weight.", "Because it is not needed for weight-bearing, the fibula is slender and mostly surrounded by muscles.", "The fibula articulates with the tibia at the top and the talus at the bottom, but the tibia transfers the weight."], "correct": 2, "hint": "look for why a bone might be very slender compared to its partner.", "topic": "Fibular function", "sec": "", "src": "", "link": "", "qid": "e2788fbd54"}, {"q": "The ankle joint is formed by the articulation of the talus with which specific bony structures?", "options": ["The heads of the five metatarsal bones.", "The medial and lateral condyles of the femur.", "The calcaneus and the cuboid bones.", "The medial malleolus, the distal end of the tibia, and the lateral malleolus."], "rationales": ["The metatarsal heads form the ball of the foot at the anterior end, far from the ankle.", "The femoral condyles form the knee joint, not the ankle joint.", "While these are foot bones, the ankle joint specifically involves the leg bones meeting the foot.", "These three areas create a socket-like fit for the upper surface of the talus bone."], "correct": 3, "hint": "identify the specific 'bumps' on the inner and outer ankle.", "topic": "Ankle joint articulation", "sec": "", "src": "", "link": "", "qid": "d9aef38e21"}, {"q": "How is body weight traditionally transferred through the bones of the foot when a person is standing?", "options": ["From the navicular to the three cuneiform bones and then the heel.", "From the tibia to the talus and then to the calcaneus.", "From the patella directly to the metatarsals.", "From the fibula to the cuboid and then to the phalanges."], "rationales": ["The heel (calcaneus) is posterior to the navicular and cuneiforms in the weight-bearing sequence.", "The talus sits atop the calcaneus (heel bone), which then rests on the ground.", "The patella does not articulate with the foot bones and does not transfer body weight.", "The fibula is not weight-bearing; weight travels through the tibia."], "correct": 1, "hint": "trace the path of force from the leg down to the heel.", "topic": "Weight distribution", "sec": "", "src": "", "link": "", "qid": "9938915355"}, {"q": "What is the function of the sustentaculum tali found on the medial side of the calcaneus?", "options": ["It serves as the main pivot for the big toe (hallux).", "It acts as a bony shelf that supports the medial side of the talus bone.", "It provides a groove for the passage of the Achilles tendon.", "It forms the primary articulation with the cuboid bone."], "rationales": ["The hallux moves at the metatarsophalangeal joint, far anterior to the calcaneus.", "Its name literally translates to 'support for the talus,' highlighting its role in foot stability.", "The calcaneal tuberosity is the main attachment for the Achilles tendon, not the sustentaculum tali.", "The cuboid articulates with the anterior end of the calcaneus, not the medial sustentaculum tali."], "correct": 1, "hint": "focus on the meaning of the Latin name for this bony extension.", "topic": "Tarsal support", "sec": "", "src": "", "link": "", "qid": "d9103eaab3"}, {"q": "Which group of bones is primarily responsible for creating the transverse (medial-lateral) curvature of the foot?", "options": ["The head and neck of the femur.", "The phalanges of the five toes.", "The three cuneiform bones and the cuboid bone.", "The proximal and distal tibiofibular joints."], "rationales": ["These structures are part of the hip joint and have no role in foot curvature.", "The phalanges form the toes and do not significantly contribute to the arch of the mid-foot.", "The cuneiforms are wedge-shaped (broad superiorly, narrow inferiorly), which naturally forms the arch.", "These joints are in the leg and ankle region, not the mid-foot where the transverse arch is located."], "correct": 2, "hint": "look for bones described as 'wedge-shaped' in the mid-foot region.", "topic": "Foot curvature", "sec": "", "src": "", "link": "", "qid": "d6c7c1a120"}, {"q": "What anatomical structures form the 'ball' of the foot that rests on the ground at the anterior end of the sole?", "options": ["The bases of the five metatarsal bones.", "The intermediate and distal phalanges.", "The distal ends (heads) of the metatarsal bones.", "The sustenaculum tali of the calcaneus."], "rationales": ["The bases are the proximal ends that articulate with the tarsal bones, closer to the ankle.", "These bones form the tips and middle segments of the toes, which are anterior to the ball of the foot.", "The expanded heads of the metatarsals support weight at the front of the foot before the toes begin.", "This structure is in the heel/posterior region of the foot."], "correct": 2, "hint": "differentiate between the 'base' and the 'head' of the mid-foot bones.", "topic": "Metatarsal structure", "sec": "", "src": "", "link": "", "qid": "891bd4f9dd"}, {"q": "How does the bone count of the hallux (big toe) differ from that of the second through fifth toes?", "options": ["The hallux has only two phalanges (proximal and distal) while the others have three.", "The hallux lacks a metatarsophalangeal joint.", "The hallux has three phalanges while the others only have two.", "The hallux is formed by a single sesamoid bone rather than phalanges."], "rationales": ["The big toe lacks a middle phalanx, a pattern mirrored in the thumb of the hand.", "The hallux has a prominent metatarsophalangeal joint, which is the site where bunions typically form.", "This is the reverse of the actual anatomy; the hallux is the one with fewer bones.", "While sesamoids may be nearby, the hallux itself consists of two phalanx bones."], "correct": 0, "hint": "consider which segment is missing in the largest toe compared to the smaller ones.", "topic": "Phalanx count", "sec": "", "src": "", "link": "", "qid": "9608c430d6"}], "hasSheet": true, "parts": false, "secTitles": {}, "reserve": 0, "frq": [], "notebook": "https://notebooklm.google.com/notebook/cf57202f-1a73-4c88-9b58-abfcd3f6cae1/artifact/a4b22671-e20d-4e55-96fb-f4b4db117bb4", "root": "../index.html", "tab": "quiz", "sheet": "## Femoral blood supply\nThe proximal femur receives vital vascularization through a dedicated artery traveling within a supporting ligamentous structure.\n\n### Key terms\n1. **Fovea capitis** - A minor depression on the medial side of the femoral head that serves as a ligamentous attachment site.\n2. **Ligament of the head of the femur** - A weak intracapsular band spanning the femur and acetabulum that houses a nutrient vessel.\n   2.1 **Artery to the head of the femur** - The specific vascular structure carried by the ligament to supply the proximal end of the bone.\n\n## Muscle leverage\nBony projections of the femur and the sesamoid kneecap serve as mechanical levers to increase the torque generated by leg muscles.\n\n### Key terms\n1. **Greater trochanter** - A large lateral projection that provides a mechanical lever for muscles acting across the hip joint.\n2. **Patella** - A bone that increases the leverage of the quadriceps femoris by lifting the tendon away from the knee joint axis.\n\n## Femoral muscle attachment\nThe femur contains several specialized ridges and tuberosities that provide extensive surface area for the anchoring of hip and thigh muscles.\n\n### Key terms\n1. **Greater trochanter** - The large, upward projection above the base of the femoral neck where multiple hip muscles attach.\n2. **Lesser trochanter** - A small bony prominence on the medial aspect of the femur for the attachment of a single, powerful muscle.\n3. **Gluteal tuberosity** - A roughened area on the posterior proximal shaft extending inferiorly from the greater trochanter for muscle anchoring.\n4. **Linea aspera** - A prominent roughened ridge passing distally along the posterior side of the middle third of the femoral shaft.\n   4.1 **Muscle attachments** - The long, thin anchoring sites for multiple muscles of the hip and thigh regions along the ridge.\n5. **Epicondyles** - Medial and lateral irregular areas on the outer sides of the condyles that provide attachment for muscles and ligaments.\n\n## Patellar function\nThe patella is a specialized bone that protects the quadriceps tendon and optimizes the mechanical efficiency of the knee extensor mechanism.\n\n### Key terms\n1. **Patella** - The largest sesamoid bone in the body, found within the quadriceps tendon to prevent friction against the distal femur.\n2. **Sesamoid bone** - A bone incorporated into a muscle tendon where it crosses a joint to protect the tendon from wear and tear.\n3. **Quadriceps femoris muscle** - The large anterior thigh muscle whose tendon incorporates the patella and inserts onto the tibial tuberosity.\n\n## Patellar tracking\nProper patellar movement within the femoral groove is maintained by the structural morphology of the femur and balanced muscular pull.\n\n### Key terms\n1. **Patellar surface** - A wide groove on the anterior distal femur formed by the union of the medial and lateral condyles.\n2. **Abnormal tracking** - A clinical condition where the patella deviates laterally from its proper path on the femoral patellar surface.\n3. **Lateral lip** - A large expansion on the lateral side of the femoral patellar surface that prevents the patella from shifting laterally.\n\n## Pelvic width influence\nThe anatomical width of the pelvis dictates the femoral angle, which directly influences the lateral vector forces acting on the patella.\n\n### Key terms\n1. **Q-angle** - A measurement of the lateral deviation of the femur from the vertical line of the tibia, normally 10–15 degrees.\n2. **Wider pelvis** - A female skeletal characteristic that results in a larger Q-angle and increased lateral pull on the patella.\n\n## Weight bearing\nThe structural integrity of the lower limb is supported by two primary long bones that transmit the weight of the axial skeleton.\n\n### Key terms\n1. **Femur** - The longest and strongest bone of the body, which bears weight and constitutes one-quarter of a person's total height.\n2. **Tibia** - The medial bone of the leg and the second longest bone of the body, serving as the primary weight-bearer of the leg.\n\n## Tibial landmarks\nThe tibia features expanded condyles for knee articulation and several ridges and processes for ligamentous and tendinous attachments.\n\n### Key terms\n1. **Medial condyle** - The medial expansion of the proximal tibia that articulates with the medial condyle of the femur.\n2. **Lateral condyle** - The lateral expansion of the proximal tibia that articulates with the lateral condyle of the femur.\n3. **Intercondylar eminence** - An elevated, irregular area between the tibial condyles that serves as an attachment for knee ligaments.\n   3.1 **Supporting ligaments** - The two intracapsular knee ligaments that anchor to this elevated region of the proximal tibia.\n4. **Tibial tuberosity** - An anterior elevation on the proximal tibia that serves as the final insertion point for the patellar tendon.\n5. **Anterior border** - The subcutaneous anterior apex of the triangular tibial shaft extending inferiorly from the tibial tuberosity.\n6. **Medial malleolus** - A large medial expansion of the distal tibia that forms the palpable bony bump of the medial ankle.\n\n## Leg bone union\nThe tibia and fibula are held in close proximity by a fibrous syndesmosis and a strong sheet of connective tissue.\n\n### Key terms\n1. **Interosseous border** - A ridge running down the lateral tibial shaft and medial fibular shaft for connective tissue attachment.\n2. **Interosseous membrane of the leg** - A sheet of dense connective tissue that spans the distance between and unites the tibia and fibula.\n3. **Distal tibiofibular joint** - The articulation point between the distal end of the fibula and the fibular notch of the tibia.\n\n## Fibular function\nThe fibula functions as a non-weight-bearing lateral support that provides surface area for muscle attachment and stabilizes the ankle.\n\n### Key terms\n1. **Fibula** - The slender lateral bone of the leg that serves primarily for muscle attachments and does not transmit body weight.\n2. **Lateral malleolus** - The distal end of the fibula that forms the lateral bony bump of the ankle and articulates with the talus.\n\n## Ankle joint articulation\nThe ankle joint is a hinge articulation formed by the union of the talus bone with the distal configurations of the tibia and fibula.\n\n### Key terms\n1. **Talus** - The most superior tarsal bone, featuring a square-shaped upper surface that articulates with the leg bones.\n2. **Medial malleolus** - The distal tibial process that articulates with the superomedial surface of the talus bone.\n3. **Lateral malleolus** - The distal fibular process that articulates with the lateral side of the talus bone.\n4. **Distal end of the tibia** - The superior articulating surface of the ankle joint that meets the top of the talus.\n\n## Weight distribution\nThe body's mass is transferred in a linear sequence from the leg through the tarsal bones to the ground.\n\n### Key terms\n1. **Tibia to talus** - The initial transfer of body weight from the main weight-bearing leg bone to the superior tarsal bone.\n2. **Talus to calcaneus** - The subsequent transfer of weight from the talus to the heel bone which rests on the ground.\n\n## Tarsal support\nThe posterior foot is stabilized by specific tarsal bones that form the heel and provide a shelf for the ankle joint.\n\n### Key terms\n1. **Calcaneus** - The largest bone of the foot, situated inferiorly to the talus to form the heel of the foot.\n2. **Sustentaculum tali** - A prominent bony extension on the medial calcaneus that supports the medial aspect of the talus bone.\n3. **Navicular** - A tarsal bone that articulates with the anterior talus and the three cuneiform bones.\n4. **Cuboid** - A tarsal bone articulating with the anterior calcaneus that features a groove for a muscle tendon.\n\n## Foot curvature\nThe transverse arch of the foot is formed by the wedge-like geometry of the cuneiform bones and their distal articulations.\n\n### Key terms\n1. **Cuneiform bones** - A group of three wedge-shaped bones known as the medial, intermediate, and lateral cuneiforms.\n2. **Wedge-shape** - The structural configuration of cuneiforms with broad superior and narrow inferior surfaces to create curvature.\n\n## Metatarsal structure\nThe mid-foot is composed of five elongated bones that connect the tarsal region to the phalanges of the toes.\n\n### Key terms\n1. **Metatarsal bones** - Five elongated bones numbered 1–5 starting from the medial side of the mid-foot.\n2. **Base** - The proximal end of a metatarsal bone that articulates with the cuboid or cuneiform bones.\n3. **Head** - The expanded distal end of a metatarsal bone that forms the ball of the foot and articulates with a phalanx.\n4. **Metatarsophalangeal joint** - The articulation point between the head of a metatarsal and the proximal phalanx of a toe.\n\n## Phalanx count\nThe toes contain fourteen phalanges arranged in segments, with the first digit presenting a different anatomical count than the others.\n\n### Key terms\n1. **Phalanges** - The fourteen small bones found within the toes, numbered 1–5 starting from the medial side.\n2. **Hallux** - The first digit or big toe, which is shorter and thicker than the other digits of the foot.\n   2.1 **Phalanx bones** - The two specific bones, proximal and distal, that comprise the skeletal structure of the big toe.\n3. **Proximal, middle, and distal phalanges** - The three individual bones found in each of the toes numbered two through five."}</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -672,21 +727,29 @@ const G_OK = '✓', G_NO = '✕';
 
 /* WHY A QUESTION IS ON THE EXAM. One glyph, set by the generator in the topic tag, and the
    only thing the page does with it is show it and group by it. The ORDER of this object is
-   his priority order (08-11) and the tables below read it, so re-ordering here re-orders the
-   report: the rewrites he asked for first, then starred, then missed, then flagged, then his
-   own research, then the ones he got right and is being asked again from a harder angle.
+   his priority order and the tables below read it, so re-ordering here re-orders the report.
 
-   ✎ SITS ABOVE ☆ (08-12) because it is the only one he wrote as an instruction rather than a
-   mark. The others say "this mattered to me"; ✎ says "this question was wrong, ask it like
-   this" — so on the report it is the first row he should check, since it is the one place the
-   generator can have done as it was told or not. */
+   RE-RANKED 08-14 TO HIS NEW ORDER: *"Wrong questions tested first · Starred · Questions with
+   research (not fix) · Question mark tags · Fix marks · Correct answers."* It has to be kept
+   in step with `POOL_RUNGS` in reinforce.py, which is what actually assigns the glyphs — that
+   list decides which card gets a spot, this one only names the result. Out of step, the
+   report groups a paper by an order the paper was not built in.
+
+   ✎ USED TO SIT FIRST and no longer does. Until 08-12 it was the one he wrote as an
+   instruction rather than a mark, so it led the report; he has since ranked it fifth, and a
+   ✎ question now takes an ordinary spot like every other rung.
+
+   `+` IS NOT A RUNG. Nothing is tagged `+` — it is what a section gets when its quiz was
+   shorter than the quota, which is ordinary rather than exceptional. It is last because a
+   question with no card behind it is the one he has least history with. */
 const SRC = {
-  '✎': 'You asked for this one to be rewritten',
-  '☆': 'Starred in the subchapter quiz',
   '✕': 'You got this wrong',
-  '?': 'You flagged it — no idea at the time',
+  '☆': 'Starred in the subchapter quiz',
   'R': 'Built from your own research',
-  '$': 'You got it right before — asked a different way'
+  '?': 'You flagged it — no idea at the time',
+  '✎': 'You asked for this one to be rewritten',
+  '$': 'You got it right before — asked a different way',
+  '+': 'New — nothing of yours left to re-ask on this section'
 };
 const SRC_ORDER = Object.keys(SRC);
 function srcName(g){ return SRC[g] || ''; }
@@ -703,9 +766,14 @@ function srcName(g){ return SRC[g] || ''; }
    `skipped` usable later as a permanent exclusion list when exam reuse is built — see qid()
    in quizpage.py. v1 states are migrated once, on load. */
 function qk(i){ return D.questions[i].qid; }
+/* `only` and `sat` ARE THE SECTIONED EXAM (08-16), and both are inert unless the page was
+   built with parts on. `only` is the list of subchapters THIS sitting covers — null means he
+   has not chosen yet, which is what puts the picker on screen. `sat` records which
+   subchapters he has finished, and nothing else: a section's score is always recomputed from
+   `answers`, never stored, so there is exactly one place a number can come from. */
 function blank(){ return {v:2, hash:D.hash, i:0, answers:{}, pass2:{}, skipped:{}, starred:{},
                           unsure:{}, hints:{}, phase:1, p2list:null, done:false, at:null,
-                          shuf:{}, history:[]}; }
+                          shuf:{}, history:[], only:null, sat:{}, promoted:{}}; }
 function migrate(s){
   // v1 keyed every map on the array index. The hash matches, so the indices are still valid
   // and this is a straight re-key — done once, then never again.
@@ -749,6 +817,12 @@ function load(){
     if(!s.hints) s.hints = {};
     if(!s.pass2) s.pass2 = {};
     if(!s.phase) s.phase = 1;
+    // Absent on every attempt saved before 08-16, and `only: null` is exactly right for one:
+    // it means "not chosen", so an attempt in progress on a paper that has just gained the
+    // picker resumes over the whole paper, which is what it was.
+    if(s.only === undefined) s.only = null;
+    if(!s.sat) s.sat = {};
+    if(!s.promoted) s.promoted = {};
     // Not carried across a rebuild on purpose: blank() empties it. A stored order describes a
     // set of options that may no longer be the same length — optOrder() throws out any that
     // no longer fit, so a stale one is harmless anyway.
@@ -756,14 +830,89 @@ function load(){
     return s;
   }catch(e){ return blank(); }
 }
+/* THE ATTEMPT MUST NEVER FAIL TO SAVE IN SILENCE (08-16). `save()` swallowed every exception,
+   and the one that actually happens is QuotaExceededError: the research box keeps pasted
+   images in localStorage, and once the origin is full EVERY later write is refused — so his
+   answers stopped being recorded while the page carried on as if they were. His report was
+   *"I feel I did answer some of these questions and yet they show up again"*, which is exactly
+   what a refused write looks like from the outside. It now says so, on screen, and keeps
+   saying so until a write succeeds. */
+let saveBroken = false;
+function saveFailed(on){
+  if(on === saveBroken) return;
+  saveBroken = on;
+  let el = $('#savewarn');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'savewarn';
+    document.body.appendChild(el);
+  }
+  el.textContent = 'This browser is out of room — your answers are NOT being saved. '
+                 + 'Remove a pasted image from the research box to free some up.';
+  el.classList.toggle('hide', !on);
+}
 function save(){
-  S.meta = {title:D.title, subtitle:D.subtitle, book:D.book, total:active(S).length,
-            at:S.at, done:S.done, score:score(S)};
-  try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){}
+  // ON A SECTIONED PAPER `meta` DESCRIBES THE PAPER, NOT THE SITTING. It is read in exactly
+  // one place — `load()`, when the questions have been rebuilt and the old answers can no
+  // longer be scored — and what belongs in that history line is "he got 24 of 32 on this
+  // exam", not "he got 14 of 16 on the half of it he happened to sit last."
+  const pp = D.parts ? paperStat() : null;
+  S.meta = {title:D.title, subtitle:D.subtitle, book:D.book,
+            total: pp ? pp.t : active(S).length,
+            at:S.at, done:S.done, score: pp ? pp.n : score(S)};
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); saveFailed(false); }
+  catch(e){ saveFailed(true); }
 }
 /* Skipped questions leave the run entirely — out of the count, out of the denominator,
-   out of the topic breakdown. Anything less makes "8 / 10" a lie about a quiz of nine. */
-function active(s){ return D.questions.map((_,i)=>i).filter(i => !(s.skipped||{})[qk(i)]); }
+   out of the topic breakdown. Anything less makes "8 / 10" a lie about a quiz of nine.
+
+   THE SECTION FILTER RIDES HERE AND NOWHERE ELSE (08-16). `active()` is what the run list,
+   the score, the second pass, the end card and the review list are all built on, so putting
+   the sitting's subchapters into this one function is what makes a half-paper behave exactly
+   like a whole one — one direction, one end card, one second pass — with no branch anywhere
+   downstream. `only: null` (not chosen, or a page built without parts) filters nothing. */
+function active(s){
+  const only = D.parts ? (s.only || null) : null;
+  return D.questions.map((_,i)=>i).filter(i => onPaper(s, i)
+    && (!only || only.indexOf(D.questions[i].sec) >= 0));
+}
+/* ---- THE RESERVES (08-16) ------------------------------------------------------------
+   His ask: *"if 1 question is skipped, another one is replaced in that section about it… you
+   have a quota, so you should also create stockpiles (say 2 extra questions per section that
+   immediately replace a skipped question)."*
+
+   `D.reserve` is how many per section were written beyond the quota. They are the LAST ones
+   of their section in build order, which is not arbitrary: `section_pool()` deals spots down
+   his tag priority, so a section's tail is the bottom of the list it could afford to lose.
+
+   A RESERVE IS NOT A QUESTION YET. It is out of the run, out of the denominator and out of
+   every table until a skip in its own section calls it in — at which point it is an ordinary
+   question and nothing downstream can tell it apart. Promotion is recorded on the qid, so it
+   survives a reload and cannot be handed out twice. Skipping with none left behaves exactly
+   as it always did: the paper is one question shorter. */
+function reserveIds(sec){
+  if(!(D.reserve > 0)) return [];
+  const l = D.questions.map((_,i)=>i).filter(i => D.questions[i].sec === sec);
+  return l.slice(Math.max(0, l.length - D.reserve));
+}
+function isReserve(i){
+  const sec = D.questions[i].sec;
+  return !!sec && reserveIds(sec).indexOf(i) >= 0;
+}
+/* Skipped or an unpromoted reserve — the two ways a question is not part of the paper. One
+   predicate so the run, the score, the picker and the section tables can never disagree. */
+function onPaper(s, i){
+  if((s.skipped||{})[qk(i)]) return false;
+  return !isReserve(i) || !!(s.promoted||{})[qk(i)];
+}
+/* Called the instant a question is skipped. Returns the promoted index, or -1. */
+function promoteReserve(sec){
+  if(!sec) return -1;
+  const next = reserveIds(sec).find(i => !S.promoted[qk(i)] && !S.skipped[qk(i)]);
+  if(next === undefined) return -1;
+  S.promoted[qk(next)] = true;
+  return next;
+}
 function ans(i){ return S.answers[qk(i)]; }
 function ans2(i){ return S.pass2[qk(i)]; }
 function firstRight(i){ return ans(i) === D.questions[i].correct; }
@@ -787,6 +936,59 @@ function runList(){
   return active(S);
 }
 function pick(i){ return S.phase === 2 ? ans2(i) : ans(i); }
+
+/* ---- SUBCHAPTERS AS SITTINGS (08-16) -------------------------------------------------
+   His ask: *"a way to section off exams… such that I'm able to practice only one section or
+   maybe two sections of an exam created because of shortened time"*, and then *"the option to
+   do those other sub chapters that I haven't done at a later date, or just display the score
+   of the subsections that I have got done."*
+
+   A QUESTION BELONGS TO ONE SUBCHAPTER — `q.sec`, which every exam question already carries.
+   A cross-section question carries `q.link` as well, and it is deliberately NOT used here:
+   `q.sec` is the section whose paper the question is on (the pool decided that, and the exam
+   prompt says so in as many words), so it is sat once, with that section, and never offered
+   twice. It still REPORTS under both in the end card's By-subchapter table, which is a
+   different question and was already answered.
+
+   NOTHING IS STORED THAT CAN BE COMPUTED. `S.sat[sec]` is a timestamp saying he finished that
+   section and nothing more; every number on screen comes back out of `S.answers` through
+   `secStat()`. A stored score is a second source of truth, and this page already has one
+   scar from that — see `load()`, where a recomputed score turned a real 8/10 into 2/10. */
+function paperSecs(){
+  const out = [];
+  D.questions.forEach((q,i)=>{
+    if(q.sec && onPaper(S, i) && out.indexOf(q.sec) < 0) out.push(q.sec);
+  });
+  return out.sort((a,b)=>a.localeCompare(b, undefined, {numeric:true}));
+}
+function secQs(sec){
+  return D.questions.map((_,i)=>i)
+    .filter(i => D.questions[i].sec === sec && onPaper(S, i));
+}
+function secStat(sec){
+  const l = secQs(sec);
+  const answered = l.filter(i => ans(i) !== undefined).length;
+  return {sec:sec, t:l.length, answered:answered,
+          n: l.filter(i => finalRight(i)).length,
+          done: !!S.sat[sec], started: answered > 0};
+}
+/* THE PAPER, ACROSS EVERY SITTING — the number that answers "how am I doing on this exam",
+   as opposed to "how did I do this evening". Scored over the sections he has actually sat, so
+   a half-finished paper reads 14/16 with a section outstanding rather than a demoralising
+   14/32 that counts questions he has not been asked yet. `all` is what says the paper is
+   finished; until then `left` is what the picker offers him next. */
+function paperStat(){
+  const secs = paperSecs().map(secStat);
+  const done = secs.filter(s => s.done);
+  const left = secs.filter(s => !s.done);
+  const n = done.reduce((a,s)=>a+s.n, 0), t = done.reduce((a,s)=>a+s.t, 0);
+  return {secs:secs, done:done, left:left, n:n, t:t,
+          whole: secs.reduce((a,s)=>a+s.t, 0),
+          pct: t ? Math.round(n/t*100) : 0, all: secs.length > 0 && left.length === 0};
+}
+/* The picker earns its place only where there is a choice to make: parts on, and more than
+   one subchapter on the paper. A one-section exam goes straight in, as it always did. */
+function sectioned(){ return !!D.parts && paperSecs().length > 1; }
 
 /* ---- THE ON-SCREEN OPTION ORDER ------------------------------------------------------
    A DISPLAY LAYER AND NOTHING MORE. `S.shuf[qid]` is a list of ORIGINAL option indices in
@@ -826,6 +1028,13 @@ function reshuffleOpts(i){
 }
 let S = load();
 let lastShown = -1;
+
+/* WHAT TO CALL THIS THING (08-16, his ask: *"you should name them exams"*). A paper that
+   carries subchapter tags or a written half is an exam; anything else is a subchapter quiz.
+   Both signals, because the two halves arrived on different days and a paper with only one of
+   them is still an exam. The word is used for the tab, the review button and the pasted score
+   line, so all three agree without three separate conditions. */
+const NOUN = ((D.frq && D.frq.length) || D.questions.some(q=>q.sec)) ? 'Exam' : 'Quiz';
 
 /* ---- HIS RESEARCH, kept apart from the attempt ---------------------------------------
    Its own localStorage key, NOT a field of S, and that is the whole design. S is one
@@ -945,6 +1154,22 @@ function drawFrq(){
   });
   box.innerHTML = h;
 
+  /* CLICKING THE CARD PUTS THE CARET IN THE BOX. The sticky header covers the top strip of
+     whatever is under it, and the placeholder sits in exactly that strip — so the one place he
+     naturally aims is the one place the click does not land. Anywhere in the card that is not
+     already a control now focuses the answer box, which also makes the whole card a target on
+     a phone. `closest` is what keeps Mark, Copy and any selection inside the rubric working. */
+  box.querySelectorAll('section.frq').forEach(sec => {
+    sec.addEventListener('mousedown', e => {
+      if(e.target.closest('button, textarea, a, .rubric')) return;
+      const ta = sec.querySelector('textarea');
+      if(!ta) return;
+      e.preventDefault();
+      ta.focus();
+      ta.setSelectionRange(ta.value.length, ta.value.length);
+    });
+  });
+
   box.querySelectorAll('textarea').forEach(ta => {
     const fi = +ta.dataset.f;
     const count = () => {
@@ -1051,6 +1276,7 @@ function syncTabs(){
   const nfrq = (D.frq || []).length;
   document.querySelector('.tab[data-tab="starred"]').classList.toggle('hide', !nstar);
   document.querySelector('.tab[data-tab="sheet"]').classList.toggle('hide', !D.hasSheet);
+  document.querySelector('.tab[data-tab="quiz"]').textContent = NOUN;
   document.querySelector('.tab[data-tab="frq"]').classList.toggle('hide', !nfrq);
   $('#tabs').classList.toggle('hide', !nstar && !D.hasSheet && !nfrq);
   if(D.tab === 'starred' && !nstar) setTab('quiz');
@@ -1175,6 +1401,10 @@ function draw(){
   showResearch(!(S.reviewing || S.done));
   if(S.reviewing) return review();
   if(S.done) return end();
+  // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
+  // the rest of the sitting, so nothing about answering, going back or the second pass has
+  // to know the picker exists.
+  if(sectioned() && !S.only) return picker();
   const act = runList();
   if(!act.length) return end();
   if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
@@ -1197,6 +1427,11 @@ function buildQ(i, picked, fresh, en){
   let h = '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta"><span class="num">' + (pos+1) + ' / ' + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
+        // 10 reads as the paper having lost his place, which is how he read it.
+        + (recycling && S.phase!==2
+           ? '<span class="dot">·</span><span class="fillnote">filling in ' + gaps().length
+             + ' left blank</span>' : '')
         // THE SECTION AND THE GLYPH, on the exam only — a subchapter quiz carries neither and
         // this line is byte-for-byte what it always was. The section is what it says; the
         // glyph is why this question is on the paper at all, and it is deliberately JUST the
@@ -1205,7 +1440,16 @@ function buildQ(i, picked, fresh, en){
         + (q.sec ? '<span class="dot">·</span><span class="sec">' + esc(q.sec)
                  + (q.link ? '<span class="lk">+' + esc(q.link) + '</span>' : '')
                  + '</span>' : '')
-        + (q.topic ? '<span class="dot">·</span><span>' + esc(q.topic) + '</span>' : '')
+        // THE TOPIC NAME IS HELD BACK UNTIL HE HAS ANSWERED. It was giving the answer away:
+        // `8.1 · Inferior scapular angle` sat over a question asking which part of the scapula
+        // anchors the powerful shoulder muscles, so the tag answered it before the options did.
+        // His own exams name no topic; he reverse-engineers where to look from the question.
+        // The section number stays visible — that is the scope pointer, and it is the whole
+        // subchapter, not the idea. The name comes back the moment the answer is locked in,
+        // because that is when it stops being a hint and starts being the label he files it
+        // under (the end card, the review list and the paste all keep reading it).
+        + (q.topic && answered ? '<span class="dot">·</span><span>' + esc(q.topic)
+                 + '</span>' : '')
         + (q.src ? '<span class="dot">·</span><span class="src" title="' + srcName(q.src)
                  + '">' + esc(q.src) + '</span>' : '')
         + '</p>'
@@ -1237,7 +1481,8 @@ function buildQ(i, picked, fresh, en){
       if(lab && fresh) cls += ' fresh';
       why = q.rationales ? (q.rationales[k]||'') : '';
     }
-    h += '<button class="'+cls+'" data-k="'+k+'"'+(answered?' disabled':'')+'>'
+    h += '<button class="'+cls+(answered?' locked':'')+'" data-k="'+k+'"'
+       + (answered?' aria-disabled="true"':'')+'>'
        + '<span class="line"><span class="k">'+D.letters[pos]+'.</span>'
        + '<span class="t">'+esc(o)+'</span>'
        + '<span class="mark">'+mark+'</span></span>';
@@ -1264,6 +1509,12 @@ function question(fresh){
   $('#quizview').innerHTML = buildQ(i, picked, fresh, isNew ? ' enter' : '');
   $('#quizview').querySelectorAll('.opt').forEach(b=>{
     b.onclick = ()=>{
+      // `aria-disabled` AND NOT `disabled`, SINCE 08-16. A real `disabled` button will not let
+      // its text be selected however `user-select` is set — browsers block selection inside a
+      // disabled control — so the rationale he wanted to copy off an answered question could
+      // not be picked up at all: *"Im trying to copy on v2 exams and its not letting me."*
+      // The lock is now the guard on this line, and the class is what styles it.
+      if(b.classList.contains('locked')) return;
       // The first pass is never overwritten — a second-pass answer goes in its own map.
       if(S.phase === 2) S.pass2[qk(i)] = +b.dataset.k; else S.answers[qk(i)] = +b.dataset.k;
       save(); question(true);
@@ -1595,12 +1846,19 @@ function openMenu(){
   m.querySelector('#skipq').onclick = ()=>{
     const list = runList(), pos = list.indexOf(S.i);
     if(list.length <= 1) return closeMenu();        // never skip the last one standing
-    const wasLast = pos === list.length - 1;
+    const sec = D.questions[S.i].sec;
     S.skipped[qk(S.i)] = true;
     delete S.answers[qk(S.i)];
     delete S.pass2[qk(S.i)];
     delete S.starred[qk(S.i)];                     // a deleted question is not a starred one
     if(S.unsure) delete S.unsure[qk(S.i)];         // nor one that still needs work
+    // A RESERVE TAKES ITS PLACE IMMEDIATELY, in the same section and the same sitting, so the
+    // count he is working against does not move: skip question 6 of 11 and it is still 11.
+    // Promoted BEFORE `wasLast` is decided — a skip on the last question with a reserve in
+    // hand is not the end of the paper, it is one more question, and finishing there would
+    // have handed him an end card with a question still owed.
+    const filled = promoteReserve(sec) >= 0;
+    const wasLast = !filled && pos === list.length - 1;
     closeMenu();
     syncTabs();
     if(wasLast){ finish(); return; }
@@ -1618,6 +1876,11 @@ function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(
 function finish(){
   S.done = true; S.at = new Date().toISOString();
   recycling = false;          // the clean-up pass is over; a second pass starts in order
+  // THE SITTING'S SUBCHAPTERS ARE NOW SAT. Written here rather than on the end card because
+  // the end card is also what he sees on every later visit, and re-rendering it must not keep
+  // re-stamping the time. A second pass reopens the run and lands back here when it ends, so
+  // the stamp is the last time the section was actually finished, which is what it should be.
+  if(D.parts && S.only) S.only.forEach(sec=>{ S.sat[sec] = S.at; });
   save(); end(); window.scrollTo(0,0);
 }
 
@@ -1652,6 +1915,112 @@ function group(act, keyOf, head, label){
        + '<span class="tbar"><i style="width:'+(by[k].n/by[k].t*100)+'%"></i></span></div>';
   });
   return h + '</div>';
+}
+
+/* THE PICKER — the one new screen, and the only place the sectioning is visible before he
+   starts. Shown when parts are on, the paper has more than one subchapter, and this sitting
+   has not been chosen yet. Choosing writes `S.only` and everything after it is the ordinary
+   exam: same order, same second pass, same end card, one direction to the end.
+
+   IT IS ALSO THE SCOREBOARD. His second ask — *"or just display the score of the subsections
+   that I have got done"* — is answered by the same screen rather than a separate one, because
+   it is the screen he lands on when he opens the link again. */
+let pickSel = null;
+
+function picker(){
+  const p = paperStat();
+  if(!pickSel) pickSel = p.left.map(s => s.sec);          // default: what is still outstanding
+  const chosen = p.secs.filter(s => pickSel.indexOf(s.sec) >= 0);
+  const nq = chosen.reduce((a,s)=>a+s.t, 0);
+
+  let h = '<div class="picker"><h3>' + (p.done.length ? 'Pick up where you left off'
+                                                      : 'Which sections are you sitting?')
+        + '</h3>';
+  h += '<p class="psub">' + p.whole + ' questions across ' + p.secs.length
+     + ' subchapters. Sit as many as you have time for — the rest keep, and this link '
+     + 'reopens on this screen.</p>';
+
+  if(p.done.length){
+    h += '<p class="pscore"><b>' + p.n + ' / ' + p.t + '</b> <span>' + p.pct + '% across '
+       + p.done.length + ' of ' + p.secs.length + ' subchapters'
+       + (p.all ? ' — the whole paper' : '') + '</span></p>';
+  }
+
+  h += '<div class="prows">';
+  p.secs.forEach(s=>{
+    const on = pickSel.indexOf(s.sec) >= 0;
+    const note = s.done ? ('Finished · ' + s.n + '/' + s.t)
+               : s.started ? (s.answered + ' of ' + s.t + ' answered')
+               : (s.t + ' question' + (s.t > 1 ? 's' : ''));
+    h += '<button class="prow' + (on ? ' pon' : '') + (s.done ? ' pdone' : '')
+       + '" data-sec="' + esc(s.sec) + '">'
+       + '<span class="pmark">' + (on ? G_OK : '') + '</span>'
+       + '<span class="plabel">' + esc(s.sec)
+       + ((D.secTitles||{})[s.sec] ? ' <em>' + esc(D.secTitles[s.sec]) + '</em>' : '')
+       + '</span>'
+       + '<span class="pnote">' + note + '</span>'
+       + (s.done ? '<span class="pbar"><i style="width:' + (s.t ? s.n/s.t*100 : 0)
+                 + '%"></i></span>' : '') + '</button>';
+  });
+  h += '</div>';
+
+  h += '<div class="pgo">'
+     + '<button class="pill go" id="pstart"' + (nq ? '' : ' disabled') + '>'
+     + (nq ? 'Start · ' + nq + ' question' + (nq > 1 ? 's' : '') : 'Pick a subchapter')
+     + '</button>'
+     + (p.left.length && p.left.length < p.secs.length
+        ? '<button class="link" id="pleft">Everything left</button>' : '')
+     + '<button class="link" id="pall">The whole paper</button>'
+     + '</div>';
+
+  if(p.done.length) h += '<p class="note">Finished subchapters keep their answers. Sitting '
+                       + 'one again replaces that score.</p>';
+  h += '</div>';
+
+  $('#quizview').innerHTML = h;
+  $('#rail').style.width = '0%';
+  $('#band').classList.add('off');
+  showResearch(false);
+  ['#back','#hintbtn','#hinttext','#redo','#next','#review','#retake','#pass2']
+    .forEach(k => $(k).classList.add('hide'));
+  $('#footer').classList.add('hide');
+
+  document.querySelectorAll('.prow').forEach(b => b.onclick = ()=>{
+    const k = b.dataset.sec, at = pickSel.indexOf(k);
+    if(at >= 0) pickSel.splice(at, 1); else pickSel.push(k);
+    picker();
+  });
+  const start = $('#pstart');
+  if(start) start.onclick = ()=> beginSitting(pickSel.slice());
+  const left = $('#pleft');
+  if(left) left.onclick = ()=> beginSitting(p.left.map(s=>s.sec));
+  $('#pall').onclick = ()=> beginSitting(p.secs.map(s=>s.sec));
+  renderScore();
+  centreBlock();
+}
+
+/* ONE DIRECTION FROM HERE. A sitting starts at the top of its own list with a clean phase —
+   the answers from any earlier sitting stay in `S.answers` untouched, they are simply not in
+   `active()` any more, which is what lets him come back to a section a fortnight later
+   without the page having kept a second copy of anything. */
+function beginSitting(secs){
+  if(!secs.length) return;
+  S.only = secs;
+  S.phase = 1; S.p2list = null; S.done = false; S.reviewing = false; S.hintOpen = false;
+  // RE-SITTING A FINISHED SECTION MUST ACTUALLY RE-SIT IT. Without this it would open on the
+  // end card, every question already answered, and the "Start" he just pressed would look
+  // broken. Its old answers go, and `sat` with them, because that section is now in progress.
+  secs.forEach(sec=>{
+    if(S.sat[sec]){
+      secQs(sec).forEach(i=>{ delete S.answers[qk(i)]; delete S.pass2[qk(i)]; });
+      delete S.sat[sec];
+    }
+  });
+  const l = runList();
+  S.i = l.length ? l[0] : 0;
+  pickSel = null;
+  lastShown = -1;
+  save(); draw(); window.scrollTo(0,0);
 }
 
 function end(){
@@ -1703,6 +2072,33 @@ function end(){
     h += '<p class="hist">Earlier attempts: ' + S.history.slice().reverse()
         .map(a=>'<span>'+a.score+'/'+a.total+' on '+when(a.at)+'</span>').join(' · ') + '</p>';
   }
+  /* THE PAPER, UNDER THE SITTING (08-16). The score above is this evening's — one subchapter,
+     or two. This is the exam: every subchapter, what it scored or that it is still waiting,
+     and one total across the ones he has actually sat. Absent on an unsectioned page. */
+  if(sectioned()){
+    const p = paperStat();
+    h += '<div class="topics parts"><h3>This exam</h3>';
+    p.secs.forEach(s=>{
+      const sitting = S.only && S.only.indexOf(s.sec) >= 0;
+      h += '<div class="trow"><span>' + esc(s.sec)
+         + (sitting ? '<em> just sat</em>' : '') + '</span>'
+         + '<span class="n">' + (s.done ? s.n + '/' + s.t : '—') + '</span>'
+         + '<span class="tbar' + (s.done ? '' : ' waiting') + '"><i style="width:'
+         + (s.done && s.t ? s.n/s.t*100 : 0) + '%"></i></span></div>';
+    });
+    h += '<p class="ptotal"><b>' + p.n + ' / ' + p.t + '</b> '
+       + (p.all ? 'the whole paper' :
+          'across ' + p.done.length + ' of ' + p.secs.length + ' subchapters · '
+          + p.left.reduce((a,s)=>a+s.t,0) + ' question'
+          + (p.left.reduce((a,s)=>a+s.t,0) > 1 ? 's' : '') + ' still to sit')
+       + '</p></div>';
+    if(p.left.length) h += '<p class="note"><button class="link" id="more">'
+                         + 'Sit another subchapter</button> — ' + p.left.map(s=>esc(s.sec)).join(', ')
+                         + ' left</p>';
+    else h += '<p class="note"><button class="link" id="more">Choose subchapters</button> — '
+            + 'every one is done; sitting one again replaces its score.</p>';
+  }
+
   const nskip = Object.keys(S.skipped||{}).length;
   if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
               + '<button class="link" id="unskip">put them back</button></p>';
@@ -1713,6 +2109,9 @@ function end(){
   $('#quizview').innerHTML = h;
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  const m = $('#more');
+  if(m) m.onclick = ()=>{ S.only = null; S.done = false; S.reviewing = false;
+                          pickSel = null; save(); draw(); window.scrollTo(0,0); };
   $('#rail').style.width = '100%';
   $('#band').classList.add('off');
   showResearch(false);
@@ -1723,11 +2122,16 @@ function end(){
   $('#redo').classList.add('hide');
   $('#next').classList.add('hide');
   $('#review').classList.remove('hide');
-  $('#review').textContent = 'Review quiz';
+  $('#review').textContent = 'Review ' + NOUN.toLowerCase();
   $('#retake').classList.remove('hide');
   // No wrong answers left to retry → no button at all, which is also what stops the second
   // pass looping into a third: anything answered on pass two leaves pending2() for good.
   $('#pass2').classList.toggle('hide', pending2().length === 0);
+  /* THE WRITTEN HALF IS THE PRIMARY WAY OUT OF AN EXAM'S END CARD (08-16, his ask): *"the
+     main button after the end of a large mcq for exams should be to move on onto frqs."* So
+     the second pass keeps its place but loses the accent — it is still there, it is just no
+     longer what the page is pointing at. A quiz has no written half and is unchanged. */
+  $('#towritten').classList.toggle('hide', !(D.frq && D.frq.length));
   renderScore();
   lastShown = -1;
   centreBlock();
@@ -1823,7 +2227,7 @@ function hintLine(p){
 function scoreMarkdown(){
   if(!S.done) return '';
   const p = scoreParts();
-  return '**Quiz:** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
+  return '**' + NOUN + ':** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
        + (p.red ? ', +' + p.red + ' redeemed' : '') + ', ' + p.wrong + ' wrong'
        + (p.skipped ? ', ' + p.skipped + ' skipped' : '') + ' · ' + when(S.at)
        + '\n**Hints:** ' + hintLine(p);
@@ -1889,6 +2293,7 @@ function step(dir){
 }
 $('#next').onclick = ()=> step(1);
 $('#back').onclick = ()=> step(-1);
+$('#towritten').onclick = ()=> setTab('frq');
 $('#review').onclick = ()=>{ S.reviewing = !S.reviewing; draw(); };
 /* THE SECOND PASS — the preferred way out of the end card, and the one that keeps
    everything. It re-runs only what he got wrong, on a list frozen at the moment he presses
@@ -1905,9 +2310,15 @@ $('#pass2').onclick = ()=>{
    history first so nothing is lost, and the questions he deleted or starred stay that way —
    they are decisions about the quiz, not part of one attempt at it. */
 $('#retake').onclick = ()=>{
-  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length});
+  // ON A SECTIONED PAPER THE HISTORY LINE IS THE PAPER, not the last sitting — the same
+  // reasoning as `save()`. `blank()` returns `only: null` and `sat: {}`, so a retake drops
+  // every sitting at once and lands back on the picker, which is what "retake the exam" means.
+  if(S.done){ const p = D.parts ? paperStat() : null;
+              S.history.push({at:S.at, score: p ? p.n : score(S),
+                              total: p ? p.t : active(S).length}); }
   const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
   S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  pickSel = null;
   lastShown = -1;
   save(); syncTabs(); renderScore(); draw();
 };
@@ -2108,11 +2519,34 @@ function researchMarkdown(){
   });
   return out.replace(/\n+$/, '\n');
 }
-/* ITS OWN HEADING, and the heading text is load-bearing. `notion_board.py notes` splits this
-   section out of the row body by name and hands it to the generator as PROMPT, while
-   everything else on the row stays a source. Rename it here and it silently becomes material
-   again — which is the bug this whole split exists to fix. */
+/* TWO HEADINGS WHOSE TEXT IS LOAD-BEARING. `notion_board.py notes` splits both of these out
+   of the row body BY NAME — `split_fixes()`, and `FIX_HEADING` / `SKIP_HEADING` there are
+   these two strings. Everything else on the row stays material. Rename one here and it
+   silently becomes material again, which is the bug this whole split exists to fix. */
 const FIXHEAD = 'Fix these questions';
+const SKIPHEAD = 'Skipped';
+
+/* THE CARDS HE DELETED, and this section exists to keep them OUT of things (08-14, his rule:
+   skipped cards *"are never reformed and never appear"*, on any exam, v2 or v3).
+
+   It is the one place on this page where a skipped question is written down. Everywhere else
+   they are gone by design — out of the run, out of the score, out of the denominator, out of
+   the sheet — because they were taken out of the quiz. But "gone" only ever meant gone from
+   THIS browser: the exam is built from what he pastes into Notion, so a card he deleted here
+   was invisible to it and perfectly likely to come back as an exam question. This is the one
+   line of the paste that stops that, and `remember_skipped()` files it permanently.
+
+   It says so in the heading's own body text because it will be read by a person too, and a
+   bare list of questions under his notes reads exactly like a list of things to be tested. */
+function skipMarkdown(){
+  const list = markedList(S.skipped);
+  if(!list.length) return '';
+  let out = '\n\n## ' + SKIPHEAD + '\n\n'
+          + '_Deleted while taking the quiz. Not material — these are the ideas to stop '
+          + 'asking about._\n';
+  list.forEach(x => { out += '\n### ' + x.n + '. ' + x.q.q + '\n'; });
+  return out.replace(/\n+$/, '\n');
+}
 function fixMarkdown(){
   const list = fixList();
   if(!list.length) return '';
@@ -2140,6 +2574,7 @@ function fullMarkdown(){
        + markedMarkdown(markedList(S.unsure), 'Needs work')
        + researchMarkdown()
        + fixMarkdown()
+       + skipMarkdown()
        + frqMarkdown();
 }
 
@@ -2179,6 +2614,17 @@ function fullHTML(){
          + '<p><strong>Answer:</strong> ' + esc(x.q.options[x.q.correct]) + '</p>'
          + '<p><strong>Change it to:</strong> ' + esc(x.r.f.trim()) + '</p>';
     });
+  }
+  /* The HTML flavour has to carry this too. It goes on the clipboard INSTEAD of the markdown
+     whenever there is a pasted image anywhere on the quiz, so anything missing here is
+     missing from the Notion row on exactly those weeks — and a skipped card that does not
+     reach the row is a card the exam is free to ask about again. */
+  const skips = markedList(S.skipped);
+  if(skips.length){
+    h += '<h2>' + SKIPHEAD + '</h2>'
+       + '<p><em>Deleted while taking the quiz. Not material — these are the ideas to stop '
+       + 'asking about.</em></p>';
+    skips.forEach(x => { h += '<h3>' + x.n + '. ' + esc(x.q.q) + '</h3>'; });
   }
   const fm = frqMarkdown();
   if(fm) h += tinyMd(fm);
