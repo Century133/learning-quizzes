@@ -1543,6 +1543,7 @@ function question(fresh){
   $('#review').classList.add('hide');
   $('#retake').classList.add('hide');
   $('#pass2').classList.add('hide');
+  $('#towritten').classList.add('hide');
   $('#back').disabled = pos === 0;
   /* NEXT IS NEVER DISABLED (08-12). It used to be locked until he answered, which made a
      gap impossible and the recycle below unreachable. He asked for the opposite: Enter
@@ -1981,7 +1982,7 @@ function picker(){
   $('#rail').style.width = '0%';
   $('#band').classList.add('off');
   showResearch(false);
-  ['#back','#hintbtn','#hinttext','#redo','#next','#review','#retake','#pass2']
+  ['#back','#hintbtn','#hinttext','#redo','#next','#review','#retake','#pass2','#towritten']
     .forEach(k => $(k).classList.add('hide'));
   $('#footer').classList.add('hide');
 
@@ -2173,6 +2174,7 @@ function review(){
   $('#redo').classList.add('hide');
   $('#next').classList.add('hide');
   $('#pass2').classList.add('hide');
+  $('#towritten').classList.add('hide');
   $('#review').classList.remove('hide');
   $('#review').textContent = 'Summary';
   $('#retake').classList.remove('hide');
