@@ -1,0 +1,3064 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#131314">
+<title>10.5 Types of Muscle Fibers</title>
+<style>
+:root{--bg:#131314;--surface:#1e1f20;--surface-hi:#26282a;--text:#e3e3e3;
+--muted:#9aa0a6;--line:#3c4043;--accent:#8ab4f8;--right:#81c995;--wrong:#f28b82;
+--radius:14px;--maxw:660px;--qsize:1.25rem;--qweight:600;
+--osize:0.95rem;--opad:12px 16px;--ogap:7px;--qgap:18px;
+--barh:46px;--band:#191a1b;--bandr:20px;--bandpad:20px;
+--font:-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--font);
+ font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;
+ min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+a{color:var(--accent)}
+/* Longhands, NOT `padding:0 22px`. `main` and `footer` also carry .wrap, and a class beats
+   an element selector — the shorthand here was silently zeroing their vertical padding. */
+.wrap{width:100%;max-width:var(--maxw);margin:0 auto;
+ padding-left:22px;padding-right:22px}
+
+/* ---- top bar: title, tabs, progress. Nothing else lives up here. ---- */
+header{position:sticky;top:0;z-index:5;background:var(--bg);
+ border-bottom:1px solid var(--line)}
+/* THE BAR IS WIDER THAN THE COLUMN, and that is what makes a centred title possible at all.
+   The reading column is 660px and the tab strip is ~300 of it once an exam shows Starred and
+   Written — so inside the column there is no width at which a real title can be centred with
+   the tabs still on the row. Letting only the bar run to 1080 pushes the tabs out to the
+   window and leaves the middle free. THE CENTRE IS UNCHANGED by this: the bar, the rail, the
+   band and the card are all centred on the same axis, so the title still lines up with the
+   question under it — only the tabs moved outward. */
+.bar{display:flex;align-items:center;gap:14px;height:var(--barh);position:relative;
+ max-width:min(1080px, 100%)}
+/* DEAD-CENTRE WHENEVER IT FITS (08-12, his ask), and centred in the space beside the tabs
+   when it does not. The fallback is not caution: the column is 660px, the tabs eat ~235 of
+   it, and dead-centre needs an empty gutter the same width on the left — which leaves about
+   120px for the title, and "3.6 How to Feel Better: Coping With Negative Emotions" is 360.
+   Truncating every long title to centre it would be a worse page than an off-centre one.
+   `fitTitle()` measures both and adds .mid only when the real title clears the real tabs. */
+.title{font-size:.9rem;font-weight:500;white-space:nowrap;overflow:hidden;
+ text-overflow:ellipsis;flex:1;text-align:center}
+/* Out of the flex row and centred on the bar's padding box — the same box the rail spans,
+   so the title lines up with the progress track under it and with the band below that. */
+.bar.mid .title{position:absolute;left:0;right:0;margin:0 auto;width:max-content;
+ max-width:100%;flex:none}
+.bar.mid .tabs{margin-left:auto}
+.tabs{display:flex;gap:2px}
+.tab{background:none;border:0;color:var(--muted);font:inherit;font-size:.82rem;
+ padding:5px 12px;border-radius:999px;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--surface-hi);color:var(--text)}
+/* END CAPS, because a grey line on a grey page has no visible extent — "hard to see the
+   defined start and end". Two short uprights mark where the quiz begins and ends, so the
+   blue fill is read against a track with edges rather than against the whole window. They
+   are luminance, not colour, so they survive grayscale like the rest of the page. */
+.rail{height:2px;background:var(--line);position:relative}
+.rail::before,.rail::after{content:"";position:absolute;top:-3px;width:2px;height:8px;
+ background:var(--muted);border-radius:1px}
+.rail::before{left:0}
+.rail::after{right:0}
+.rail>i{display:block;height:100%;background:var(--accent);width:0;
+ transition:width .25s ease}
+
+/* TOP-ANCHORED, NOT CENTRED, and that is a fix rather than a preference. With
+   justify-content:center the question drifted upward the moment an answer opened a
+   rationale, because the block got taller and the centring recomputed — "the question
+   shifts… it should stay stationary". Anchored to the top it cannot move: only the cards
+   below the one he clicked ever change position. */
+main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;padding:16px 0 6px}
+
+/* ---- THE BAND ----
+   Flat black under the question made it hard to read; the notebook's lighter middle band is
+   what he wanted instead. So the question and EVERY option sit inside one surface.
+
+   IT CLOSES AT THE BOTTOM AND HUGS THE CONTENT. The first version ran off the bottom of the
+   screen — "kind of weirdly big at the bottom", and he was right: with the block centred, an
+   open band left a lot of empty surface under the last option. It is a card now, sized to
+   what is in it.
+
+   THREE TONES, and the order matters: page (--bg) → band (--band) → option card (--surface).
+   Set --band lighter than --surface and the cards vanish into it. */
+.band{background:var(--band);border:1px solid var(--line);border-radius:var(--bandr);
+ padding:var(--bandpad)}
+/* Off for the end card, the review list and the sheet — a long scrolling list does not want
+   to be in a box. */
+.band.off{background:none;border:0;padding:0}
+/* A short window pays for the band's padding out of the space the options need, so it gives
+   most of it back below 780px. Measured: at 800px all 14 questions of PSP 3.6 still fit
+   answered-wrong with no scrolling. */
+@media (max-height:780px){
+  .band{padding:12px 16px}
+}
+
+/* ---- the question ---- */
+.qhead{display:flex;align-items:flex-start;gap:10px;margin:0 0 var(--qgap)}
+.qhead .qcol{flex:1;min-width:0}
+.meta{display:flex;align-items:center;gap:8px;margin:0 0 7px;font-size:.7rem;
+ color:var(--muted);letter-spacing:.07em;text-transform:uppercase}
+.meta .num{font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.meta .dot{opacity:.55}
+.topic{margin:0 0 6px;font-size:.7rem;color:var(--muted);letter-spacing:.07em;
+ text-transform:uppercase}
+.q{font-size:var(--qsize);line-height:1.35;font-weight:var(--qweight);margin:0;
+ letter-spacing:-.005em}
+.link{background:none;border:0;padding:0;color:var(--muted);font:inherit;
+ font-size:.85rem;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.link:hover{color:var(--text)}
+/* The hint lives in the FOOTER, as Gemini's does. Opening it there grows the sticky bar
+   upward and leaves the question and every option exactly where they were; under the
+   question it would have shoved all four cards down. */
+.hinttext{margin:0 0 12px;color:var(--muted);font-size:.88rem;line-height:1.5;
+ border-left:2px solid var(--line);padding-left:12px}
+
+/* ---- options ---- */
+.opts{display:flex;flex-direction:column;gap:var(--ogap)}
+.opt{display:block;width:100%;text-align:left;background:var(--surface);
+ border:1px solid transparent;border-radius:var(--radius);padding:var(--opad);
+ color:var(--text);font:inherit;font-size:var(--osize);cursor:pointer;
+ transition:background .16s ease,border-color .16s ease,opacity .16s ease}
+.opt:hover:not(.locked){background:var(--surface-hi)}
+.opt.locked{cursor:default}
+.line{display:flex;gap:12px;align-items:flex-start;line-height:1.4}
+.line .k{color:var(--muted);min-width:1.25em}
+.line .t{flex:1}
+.line .mark{font-size:1.05rem;line-height:1.45;min-width:1.05em;text-align:right;opacity:0}
+
+/* GRAYSCALE-SAFE STATES — three signals, never colour alone: the ✓/✕ glyph, the WORD in
+   .lab, and luminance (bright solid border vs dimmed dashed). Turn the display to
+   grayscale and every state still reads. */
+.opt.is-right{background:var(--surface-hi);border-color:var(--right);
+ box-shadow:inset 0 0 0 1px var(--right)}
+.opt.is-right .mark{opacity:1;color:var(--right)}
+.opt.is-wrong{background:transparent;border-style:dashed;border-color:var(--wrong);
+ opacity:.8}
+.opt.is-wrong .mark{opacity:1;color:var(--wrong)}
+.opt.is-muted{opacity:.42}
+
+/* THE FEEDBACK LIVES INSIDE THE CARD, as Gemini's does — that is what he asked for, and it
+   is also why nothing has to scroll: the explanation appears where he is already looking.
+   The 0fr→1fr grid trick animates an unknown height with no JS measuring. If a browser
+   refuses to animate it, the row still ends at 1fr, so the text is visible either way. */
+.rat{display:grid;grid-template-rows:1fr;opacity:1}
+.rat>.ratin{overflow:hidden;min-height:0}
+.opt.fresh .rat{animation:reveal .3s ease}
+@keyframes reveal{from{grid-template-rows:0fr;opacity:0}to{grid-template-rows:1fr;opacity:1}}
+.lab{display:flex;align-items:center;gap:8px;font-size:.86rem;font-weight:600;
+ margin:9px 0 0;padding-left:calc(1.25em + 12px)}
+.opt.is-right .lab{color:var(--right)}
+.opt.is-wrong .lab{color:var(--wrong)}
+.why{margin:4px 0 0;padding-left:calc(1.25em + 12px);color:var(--muted);
+ font-size:.86rem;line-height:1.4}
+
+.opt.enter,.qhead.enter{animation:fadein .24s ease both}
+@keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+
+/* ---- SELECTABLE TEXT, and it is timed rather than global ----
+   He searches the web while he works, so the wording has to leave the page. Two different
+   problems, one each side of the answer:
+
+   THE QUESTION was never selectable because the browser's own stylesheet turns selection
+   off inside a <button>, and the whole question head sits in one. `user-select:text` on the
+   text itself puts it back; it costs nothing, because nothing up there is a click target
+   except the ☆ and the ⋮, which are excluded below.
+
+   THE OPTIONS STAY LOCKED UNTIL HE HAS ANSWERED, and that is deliberate, not an oversight.
+   An option IS the button — drag across one to select it and the mouseup answers the
+   question with whatever he happened to start the drag on. So selection is enabled on
+   `:disabled`, which is exactly the set of options that can no longer be clicked: every
+   option, the moment the answer is in. On a second pass the pending question re-enables and
+   locks again, which is right — it is live again. */
+.q,.qq,.why,.lab,.hinttext,.rline,.tag,.sheet,.topics,.legend{
+ user-select:text;-webkit-user-select:text}
+.opt{user-select:none;-webkit-user-select:none}
+.opt.locked,.opt.locked *{user-select:text;-webkit-user-select:text;cursor:auto}
+.star,.dots,.tab,button.pill{user-select:none;-webkit-user-select:none}
+
+/* ---- HIS RESEARCH, one box per question ----
+   Under the options, inside the band, and OUTSIDE #quizview — so answering re-renders the
+   question without touching what he is halfway through typing, the same reason the hint
+   lives in the footer.
+
+   THE TOGGLE ROW IS ALWAYS VISIBLE AND THE BODY IS WHAT COLLAPSES. That is what keeps the
+   centring honest: the block's minimum height is a constant the measurement can include,
+   whether the box is open or shut. Opening it only ever grows the page downward, which is
+   the one direction this page allows. */
+.research{margin:16px 0 0;padding-top:14px;border-top:1px solid var(--line)}
+.rtoggle{display:inline-flex;align-items:center;gap:7px;background:none;border:0;padding:0;
+ color:var(--muted);font:inherit;font-size:.82rem;cursor:pointer;text-decoration:underline;
+ text-underline-offset:3px;user-select:none;-webkit-user-select:none}
+.rtoggle:hover{color:var(--text)}
+.rtoggle.has{color:var(--text)}
+.rbody{margin:12px 0 0}
+/* ONE BOX, THREE PANES, AND ONLY ONE ON SCREEN (08-16, his ask). They used to sit side by
+   side at half width each, which was already tight for a pasted paragraph — a third one
+   would have made each a third of 660px. His words: *"just one textbox … but when I press r
+   it opens it for research, when I click off the box and on the main page and press f, it
+   opens another textbox in the similar area."* So the pane is chosen by a key or a chip and
+   the box is FULL WIDTH whichever one is showing.
+   All three textareas stay in the DOM and only the hidden ones are display:none — every
+   flush reads all three `.value`s at once, so switching panes cannot lose a keystroke. */
+.rtabs{display:flex;gap:5px;margin:0 0 9px;flex-wrap:wrap}
+.rtab{background:none;border:1px solid transparent;color:var(--muted);font:inherit;
+ font-size:.74rem;letter-spacing:.04em;text-transform:uppercase;padding:5px 10px;
+ border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;
+ user-select:none;-webkit-user-select:none}
+.rtab:hover{color:var(--text);background:var(--surface)}
+.rtab[aria-selected="true"]{color:var(--text);border-color:var(--line);
+ background:var(--surface-hi)}
+.rtab kbd{font:inherit;font-size:.68rem;text-transform:none;letter-spacing:0;line-height:1;
+ padding:2px 5px;border:1px solid var(--line);border-radius:5px;background:var(--surface)}
+/* A pane with something in it says so without being opened. A DOT, not a colour change, so
+   it reads in grayscale like every other state on this page. */
+.rtab i{width:5px;height:5px;border-radius:999px;background:var(--text);opacity:0}
+.rtab.has i{opacity:1}
+.rpane{width:100%;min-height:132px;resize:vertical;background:var(--surface);
+ color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
+ padding:11px 13px;font:inherit;font-size:.9rem;line-height:1.55;outline:none}
+.rpane.hide{display:none}
+.rpane:focus{border-color:var(--accent)}
+.rpane::placeholder{color:var(--muted);opacity:.7}
+.rshots{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 0}
+.shot{position:relative;display:block;line-height:0}
+.shot img{max-height:88px;max-width:150px;border-radius:9px;border:1px solid var(--line)}
+.shot .x{position:absolute;top:-6px;right:-6px;width:20px;height:20px;line-height:18px;
+ text-align:center;border-radius:999px;border:1px solid var(--line);background:var(--surface-hi);
+ color:var(--text);font:inherit;font-size:.8rem;cursor:pointer;padding:0}
+.rsay{color:var(--muted);font-size:.76rem;margin:9px 0 0;min-height:1em}
+.rsay.warn{color:var(--wrong)}
+
+/* A reflection printed under its question on the Starred tab. Indented off a rule so it
+   reads as HIS writing rather than as another line of the question's record. */
+.rtxt.refl{border-left:2px solid var(--line);padding:2px 0 2px 13px;margin:12px 0 0}
+.rtxt.refl ul,.rtxt.refl ol{margin:0 0 0 18px;padding:0}
+.rtxt.refl li,.rtxt.refl p{color:var(--muted);font-size:.9rem;margin:0 0 4px}
+kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid var(--line);
+ border-radius:5px;background:var(--surface)}
+
+/* the same material, read back on the study sheet */
+.ritem{border-top:1px solid var(--line);padding:16px 0 4px}
+.ritem:first-of-type{border-top:0;padding-top:6px}
+.rq{font-size:.95rem;font-weight:600;margin:0 0 8px}
+.rans{font-size:.88rem;color:var(--muted);margin:0 0 8px}
+.rtxt p{margin:0 0 9px;color:var(--muted)}
+.rimg{display:block;max-width:100%;border-radius:10px;border:1px solid var(--line);
+ margin:0 0 10px}
+
+/* ---- starring ----
+   A visible toggle rather than a menu item: it is used on questions he got RIGHT as often as
+   wrong, so it has to be one press. Outline vs filled is a shape difference, so it reads in
+   grayscale without needing colour. */
+.star{background:none;border:0;color:var(--muted);font-size:1.05rem;line-height:1;
+ padding:4px 6px;border-radius:999px;cursor:pointer;flex:0 0 auto}
+.star:hover{background:var(--surface);color:var(--text)}
+.star.on{color:var(--text)}
+
+/* ---- ? "no idea, needs work" ----
+   Beside the star and read the same way. GRAYSCALE-SAFE like everything else on this page:
+   on/off is a RING appearing, not a colour changing, so it reads with the colour off and at
+   a glance in a screenshot. */
+.qmark{background:none;border:1px solid transparent;color:var(--muted);font:inherit;
+ font-size:.9rem;font-weight:600;line-height:1;width:26px;height:26px;padding:0;
+ border-radius:999px;cursor:pointer;flex:0 0 auto;user-select:none;-webkit-user-select:none}
+.qmark:hover{background:var(--surface);color:var(--text)}
+.qmark.on{color:var(--text);border-color:var(--accent);background:var(--surface-hi)}
+
+/* ---- the ⋮ menu ---- */
+.more{position:relative;flex:0 0 auto}
+.dots{background:none;border:0;color:var(--muted);font-size:1.15rem;line-height:1;
+ padding:4px 8px;border-radius:999px;cursor:pointer}
+.dots:hover{background:var(--surface);color:var(--text)}
+.menu{position:absolute;right:0;top:32px;background:var(--surface-hi);
+ border:1px solid var(--line);border-radius:10px;padding:5px;min-width:170px;z-index:6;
+ box-shadow:0 8px 24px rgba(0,0,0,.5)}
+.menu button{display:block;width:100%;text-align:left;background:none;border:0;
+ color:var(--text);font:inherit;font-size:.88rem;padding:8px 10px;border-radius:7px;
+ cursor:pointer;white-space:nowrap}
+.menu button:hover{background:var(--surface)}
+
+/* ---- bottom bar ---- */
+footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg) 30%);
+ padding:8px 0 10px}
+.acts{display:flex;gap:10px;align-items:center}
+.spacer{flex:1}
+button.pill{font:inherit;font-size:.9rem;border-radius:999px;padding:9px 22px;
+ cursor:pointer;border:1px solid var(--line);background:none;color:var(--text)}
+button.pill:disabled{opacity:.32;cursor:default}
+button.pill.primary{background:var(--accent);color:#0b0b0c;border-color:var(--accent);
+ font-weight:500}
+button.pill.ghost{border-color:transparent;color:var(--muted)}
+
+/* ---- end card ---- */
+.score{font-size:3.1rem;font-weight:400;letter-spacing:-.03em;margin:0}
+.score small{font-size:.95rem;color:var(--muted);font-weight:400;letter-spacing:0}
+.sub{color:var(--muted);margin:5px 0 26px;font-size:.92rem}
+.chart{display:flex;height:11px;border-radius:999px;overflow:hidden;
+ background:var(--line);margin:0 0 9px}
+.chart i{display:block;height:100%}
+.chart i.r{background:var(--right)}
+/* hatched as well as coloured, so the split reads with the colour off */
+.chart i.w{background:var(--wrong);
+ background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,
+ rgba(0,0,0,.45) 3px,rgba(0,0,0,.45) 6px)}
+.legend{display:flex;gap:16px;color:var(--muted);font-size:.84rem;margin:0 0 30px}
+.legend b{color:var(--text);font-weight:500}
+.topics{margin:0 0 30px}
+.topics h3,.rev h3{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;
+ color:var(--muted);font-weight:500;margin:0 0 12px}
+.trow{display:grid;grid-template-columns:1fr auto;gap:5px 14px;align-items:center;
+ padding:8px 0;border-top:1px solid var(--line)}
+.trow .n{font-variant-numeric:tabular-nums;color:var(--muted);font-size:.88rem}
+.tbar{grid-column:1/-1;height:3px;background:var(--line);border-radius:999px;
+ overflow:hidden}
+.tbar i{display:block;height:100%;background:var(--text)}
+/* A subchapter he has not sat gets a rail with nothing in it rather than a 0% bar, because a
+   bar at zero reads as "scored nothing" and the whole point is that it has not been asked. */
+.tbar.waiting{background:repeating-linear-gradient(90deg,var(--line) 0 3px,transparent 3px 6px)}
+.topics.parts .trow em{font-style:normal;color:var(--muted);font-size:.8rem;margin-left:8px}
+.ptotal{margin:14px 0 0;color:var(--muted);font-size:.88rem}
+.ptotal b{color:var(--text);font-variant-numeric:tabular-nums;font-size:1.05rem;
+ font-weight:600;margin-right:8px}
+
+/* ---- THE SUBCHAPTER PICKER (08-16) ----
+   Deliberately the same furniture as the end card — same heading treatment, same rails, same
+   tabular numbers — because it IS the end card most of the time he sees it: he opens the link
+   and this screen tells him what he has scored and what is left. A separate visual language
+   for "choose" and "review" would make one screen look like two. */
+.picker{padding:2px 0 8px}
+.picker h3{font-size:1.35rem;font-weight:600;letter-spacing:-.01em;margin:0 0 8px}
+.psub{color:var(--muted);font-size:.9rem;margin:0 0 22px;max-width:46ch}
+.pscore{margin:0 0 22px}
+.pscore b{font-size:1.5rem;font-variant-numeric:tabular-nums;font-weight:600}
+.pscore span{color:var(--muted);font-size:.88rem;margin-left:10px}
+.prows{display:flex;flex-direction:column;gap:8px;margin:0 0 24px}
+.prow{display:grid;grid-template-columns:22px auto 1fr;gap:4px 12px;align-items:center;
+ width:100%;text-align:left;font:inherit;cursor:pointer;padding:13px 16px;
+ border-radius:14px;border:1px solid var(--line);background:var(--surface);color:var(--text)}
+.prow:hover{border-color:var(--muted)}
+.prow.pon{border-color:var(--accent)}
+.pmark{color:var(--accent);font-size:.95rem;line-height:1}
+.plabel{font-variant-numeric:tabular-nums;font-weight:600}
+.plabel em{font-style:normal;font-weight:400;color:var(--muted);margin-left:8px}
+.pnote{color:var(--muted);font-size:.86rem;justify-self:end}
+.pbar{grid-column:2/-1;height:3px;background:var(--line);border-radius:999px;overflow:hidden}
+.pbar i{display:block;height:100%;background:var(--text)}
+.pgo{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)}
+
+/* ---- review list ---- */
+.rev{padding:6px 0 36px}
+.item{border-top:1px solid var(--line);padding:20px 0}
+.item .qq{font-size:1rem;margin:0 0 12px}
+/* The Starred tab's own header note and count, which the study sheet styles under `.own`. */
+.rev > .say{color:var(--muted);font-size:.85rem;margin:0 0 4px;max-width:62ch}
+.rev h3 .say{text-transform:none;letter-spacing:0;font-size:.72rem;color:var(--muted)}
+.rline{display:flex;gap:10px;align-items:flex-start;padding:3px 0;font-size:.92rem}
+.rline .g{min-width:1.2em}
+.rline.mine{color:var(--muted)}
+.tag{display:inline-block;font-size:.7rem;letter-spacing:.06em;text-transform:uppercase;
+ color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:2px 9px;
+ margin:0 0 9px}
+
+/* ---- study sheet ----
+   THREE DISTINCT LEVELS, because two of them used to look the same: he could not tell the
+   topic from the "Key terms" heading under it. Topic = large, over a rule. Key terms /
+   Names and studies = a small uppercase label, the same treatment the quiz gives its topic
+   tag. Entries = a numbered list with the term in bold, which is the shape of his own
+   Notion notes, so his shorthand sits beside this instead of clashing with it. */
+.sheet{padding:2px 0 56px;font-size:.95rem}
+.sheet h2{font-size:1.3rem;font-weight:600;margin:34px 0 10px;letter-spacing:-.01em}
+.sheet h3{font-size:1.15rem;font-weight:600;margin:34px 0 4px;letter-spacing:-.01em;
+ padding-top:18px;border-top:1px solid var(--line)}
+/* first-of-type, not first-child: .sheettools is the first child, so first-child never
+   matched and the opening topic carried a stray rule above it */
+.sheet h3:first-of-type{margin-top:0;padding-top:0;border-top:0}
+.sheet h4,.sheet h5{font-size:.7rem;font-weight:600;margin:18px 0 8px;color:var(--muted);
+ letter-spacing:.09em;text-transform:uppercase}
+.sheet p{margin:0 0 10px;color:var(--muted)}
+.sheet h3+p{color:var(--text);margin-bottom:4px}
+.sheet ul,.sheet ol{margin:0 0 4px;padding-left:24px}
+.sheet ol{list-style:decimal}
+.sheet ol ol{list-style:lower-alpha;margin:4px 0 6px}
+.sheet ul ul,.sheet ol ul{margin:4px 0 6px}
+.sheet li{margin:0 0 6px;padding-left:2px}
+.sheet li::marker{color:var(--muted)}
+.sheet li>strong:first-child{color:var(--text)}
+.sheet strong{font-weight:600}
+.sheet hr{border:0;border-top:1px solid var(--line);margin:26px 0}
+.sheet code{background:var(--surface);padding:1px 6px;border-radius:6px;font-size:.9em}
+.sheettools{display:flex;justify-content:flex-end;gap:18px;padding:10px 0 4px}
+.copied{color:var(--right)}
+
+/* ---- the score, on the sheet ----
+   It sits at the top of the sheet and Copy takes it, so the paste that lands in the Notion
+   row carries what he scored beside what the section says — which is what tells him later
+   whether this one needs testing again. */
+.scorecard{border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;
+ margin:16px 0 6px;display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+.scorecard b{font-size:1.35rem;font-weight:500;font-variant-numeric:tabular-nums}
+.scorecard span{color:var(--muted);font-size:.88rem}
+/* Its own row under the score, never beside it — the projected number is a second reading
+   of the same quiz and putting it inline would read as more of the first one. */
+.scorecard .proj{flex-basis:100%;padding-top:2px;border-top:1px solid var(--line);
+ margin-top:4px;font-size:.84rem}
+
+/* ---- his own additions ---- */
+/* SCOPED TO .sheet, because `.mine` is also the review list's "you chose this" modifier
+   (`.rline.mine`) and this block sits later in the file — unscoped, it was handing every
+   wrong-answer line in the review list a 34px gap and a rule above it. */
+.own{margin:34px 0 0;padding-top:18px;border-top:1px solid var(--line)}
+.own h3{margin:0 0 4px;padding:0;border:0}
+.own .say{color:var(--muted);font-size:.85rem;margin:0 0 12px}
+.own .item:first-of-type{border-top:0;padding-top:6px}
+#mynotes{width:100%;min-height:180px;resize:vertical;background:var(--surface);
+ color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
+ padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.6;outline:none}
+#mynotes:focus{border-color:var(--accent)}
+#mynotes::placeholder{color:var(--muted);opacity:.7}
+.saved{color:var(--muted);font-size:.78rem;margin:8px 0 0;height:1em}
+#minepreview{margin:14px 0 0}
+
+/* ---- the exam's two extra tags, and the written half ----
+   The section and the glyph ride the existing .meta line rather than becoming chips of their
+   own: they belong with the counter and the topic, which is already the line that says what
+   you are looking at. Colour is not used to tell the five glyphs apart — each one IS a
+   distinct character, so the page stays readable in grayscale without a legend. */
+.meta .sec{color:var(--text)}
+/* The second section on a cross-section question. Smaller and dimmer than the first, because
+   the first is where the question is filed and this one says what it also reaches into. */
+.meta .lk{color:var(--muted);font-size:.9em;margin-left:1px}
+.meta .src{font-size:.85rem;line-height:1;text-transform:none;letter-spacing:0;cursor:help}
+
+.frqs{padding:2px 0 56px}
+.frqs > .say{color:var(--muted);font-size:.88rem;margin:0 0 26px;max-width:60ch}
+.frq{margin:0 0 42px;padding:0 0 34px;border-bottom:1px solid var(--line)}
+.frq:last-child{border-bottom:0;padding-bottom:0}
+.frq .q{font-size:1.08rem;line-height:1.45;font-weight:600;margin:0 0 6px}
+.frq .say{color:var(--muted);font-size:.84rem;margin:6px 0 0}
+.stim{margin:0 0 14px;padding:11px 16px;background:var(--surface);
+ border-left:2px solid var(--accent);border-radius:0 var(--radius) var(--radius) 0;
+ font-size:.95rem;line-height:1.55;color:var(--text)}
+.frqin{width:100%;min-height:190px;resize:vertical;background:var(--surface);
+ color:var(--text);border:1px solid var(--line);border-radius:var(--radius);
+ padding:14px 16px;font:inherit;font-size:.95rem;line-height:1.6;outline:none;margin-top:16px}
+.frqin:focus{border-color:var(--accent)}
+/* THE STICKY HEADER WAS EATING THE CLICK (08-16). It is 49px tall with z-index 5, so the top
+   strip of a box scrolled under it is dead to the mouse — and the top strip is exactly where
+   the "Write your answer." placeholder is, so the box reads as broken. His words: *"I cant
+   even click the textbox for this exam."* `scroll-margin-top` keeps the card clear of the
+   header whenever anything scrolls it into view; the click handler on the card is the belt to
+   that braces, since he can also scroll there by hand. */
+.frq{scroll-margin-top:64px}
+
+/* The only thing on this page allowed to shout. It sits over everything because a saved
+   answer is the one promise the page makes. */
+#savewarn{position:fixed;left:12px;right:12px;bottom:12px;z-index:60;padding:12px 16px;
+ border-radius:12px;font-size:.86rem;line-height:1.4;background:#7f1d1d;color:#fff;
+ box-shadow:0 6px 24px rgba(0,0,0,.4)}
+#savewarn.hide{display:none}
+
+/* WHERE FORWARD MEANS "THE NEXT BLANK ONE". Reaching the end of the list with holes in it
+   sends him back to the first one — right, and invisible until 08-16, when he read it as the
+   paper losing his place: *"when I thought I was done I wasnt… questions are ghosting until
+   the end."* The counter says so now, and the rail stops pretending the run is nearly over. */
+.fillnote{display:inline-flex;align-items:center;gap:6px;color:var(--accent);
+ font-size:.7rem;letter-spacing:.07em;text-transform:uppercase}
+.frqin::placeholder{color:var(--muted);opacity:.7}
+.acts.inline{margin-top:12px}
+.rubric{margin-top:22px;padding-top:16px;border-top:1px solid var(--line)}
+.rubric h3{margin:0 0 10px;padding:0;border:0;font-size:.7rem;letter-spacing:.09em;
+ text-transform:uppercase;color:var(--muted)}
+.rrow{display:flex;gap:12px;align-items:flex-start;padding:9px 10px;margin:0 -10px;
+ border-radius:10px;cursor:pointer}
+.rrow:hover{background:var(--surface)}
+.rmark{flex:0 0 auto;width:22px;height:22px;border-radius:6px;border:1px solid var(--line);
+ display:grid;place-items:center;font-size:.78rem;background:var(--surface);
+ color:var(--muted);margin-top:2px}
+.rrow.hit .rmark{border-color:var(--right);color:var(--right)}
+.rbody{flex:1;min-width:0}
+.rlab{font-size:.93rem;line-height:1.45;color:var(--muted)}
+.rrow.hit .rlab{color:var(--text)}
+.rnote{display:block;font-size:.78rem;color:var(--muted);opacity:.85;margin-top:2px}
+.judge{font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);
+ border:1px solid var(--accent);border-radius:999px;padding:1px 7px;margin-left:7px;
+ white-space:nowrap;vertical-align:1px}
+.rfoot{display:flex;align-items:baseline;gap:14px;margin-top:16px;padding-top:14px;
+ border-top:1px solid var(--line)}
+.rscore{font-size:1.35rem;font-weight:600;font-variant-numeric:tabular-nums}
+.rscore small{color:var(--muted);font-size:.75em;font-weight:400}
+.rverdict{font-size:.7rem;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+.spacer{flex:1}
+.model{margin-top:14px;background:var(--surface);border-radius:var(--radius);
+ padding:14px 16px;font-size:.9rem;line-height:1.65;color:var(--muted)}
+.model strong{color:var(--text)}
+
+.empty{color:var(--muted);padding:8px 0 30px}
+.hist{color:var(--muted);font-size:.84rem;margin:22px 0 0}
+.hist span{white-space:nowrap}
+.note{color:var(--muted);font-size:.84rem;margin:16px 0 0}
+.hide{display:none !important}
+
+@media (max-width:640px){
+  .wrap{padding:0 16px}
+  .q{font-size:1.22rem}
+  main{padding:22px 0 14px}
+  .score{font-size:2.5rem}
+  .bar{gap:8px}
+  .tab{padding:5px 10px}
+  button.pill{padding:11px 18px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none !important;animation:none !important}
+}
+
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap bar">
+    <span class="title">10.5 Types of Muscle Fibers</span>
+    <span class="tabs" id="tabs"><button class="tab" data-tab="quiz" aria-selected="true">Quiz</button><button class="tab hide" data-tab="starred" aria-selected="false">Starred</button><button class="tab hide" data-tab="frq" aria-selected="false">Written</button><button class="tab" data-tab="sheet" aria-selected="false">Study sheet</button></span>
+  </div>
+  <!-- In the same .wrap as the title and the tabs: the progress track used to run the full
+       width of the window under a centred column, which is the one thing up here that was
+       not lined up with everything else. -->
+  <div class="wrap"><div class="rail"><i id="rail"></i></div></div>
+</header>
+
+<main class="wrap">
+  <div class="band" id="band">
+    <div id="quizview"></div>
+    <!-- Outside #quizview on purpose: answering re-renders the question, and it must not
+         throw away what he is halfway through pasting. -->
+    <div class="research hide" id="research">
+      <button class="rtoggle" id="rtoggle">+ Add research or a fix</button>
+      <!-- ONE box, THREE panes, one on screen at a time — chosen by r / f / t or by the
+           chips. The split is the whole point: Research is material the exam will test him
+           on, Fix is an instruction the exam will obey, Reflection is neither and never
+           reaches the exam at all. Esc shuts the box; so does moving to the next question.
+           `* ` then a space makes a bullet in any of them; Shift+Enter continues it. -->
+      <div class="rbody hide" id="rbody">
+        <div class="rtabs" id="rtabs">
+          <button class="rtab" data-pane="research" aria-selected="true">Research <kbd>r</kbd><i></i></button>
+          <button class="rtab" data-pane="fix" aria-selected="false">Fix this question <kbd>f</kbd><i></i></button>
+          <button class="rtab" data-pane="refl" aria-selected="false">Reflection <kbd>t</kbd><i></i></button>
+        </div>
+        <textarea class="rpane" id="rtext" spellcheck="false" placeholder="Paste what you found — an explanation, a definition, a diagram. Images paste straight in."></textarea>
+        <textarea class="rpane hide" id="rfix" spellcheck="true" placeholder="What was wrong with the question. &quot;Never says which joint.&quot; &quot;Two options are both right.&quot; &quot;Ask what it causes, not what it is.&quot; Enter saves it and moves on."></textarea>
+        <textarea class="rpane hide" id="rrefl" spellcheck="true" placeholder="Your own thinking on this concept, and where it could apply. Never becomes an exam question.
+* comes back to the Ben Franklin effect
+* could use this on the induction week"></textarea>
+        <div class="rshots hide" id="rshots"></div>
+        <p class="rsay" id="rsay"></p>
+      </div>
+    </div>
+  </div>
+  <div id="starredview" class="rev hide"></div>
+  <div id="frqview" class="frqs hide"></div>
+  <div id="sheetview" class="sheet hide">
+    <div class="scorecard hide" id="scorecard"></div>
+    <div class="sheettools">
+      <button class="link" id="previewnotes">Preview</button>
+      <button class="link" id="copysheet">Copy</button>
+    </div>
+    <div id="sheetmd"><h3>Fiber Speed</h3>
+<p>The rate of cross-bridge cycling is determined by how quickly the enzyme myosin ATPase hydrolyzes ATP to pull thin filaments.</p>
+<h4>Key terms</h4>
+<ol>
+<li>Fast fibers: Fibers that hydrolyze ATP approximately twice as quickly as slow fibers for faster cross-bridge cycling.</li>
+<li>Slow fibers: Fibers that contract relatively slowly due to a lower rate of ATP hydrolysis by myosin ATPase.</li>
+</ol>
+<h3>Myoglobin</h3>
+<p>Myoglobin is a specialized molecule that stores oxygen within muscle fibers and contributes to their pigmentation.</p>
+<h4>Key terms</h4>
+<ol>
+<li>Myoglobin: An O2-carrying molecule located within the fibers that is similar to hemoglobin in red blood cells.</li>
+<ol>
+<li>It gives slow oxidative fibers a red color due to the presence of stored oxygen.</li>
+</ol>
+</ol>
+<h3>Slow oxidative</h3>
+<p>SO fibers rely on aerobic respiration to support long-duration activities that require endurance rather than high tension.</p>
+<h4>Key terms</h4>
+<ol>
+<li>Slow oxidative (SO) fibers: Small-diameter fibers that contract slowly and use aerobic respiration without producing large tension.</li>
+<ol>
+<li>Functional examples include posture maintenance, producing isometric contractions, and stabilizing bones.</li>
+</ol>
+</ol>
+<h3>Fast glycolytic</h3>
+<p>FG fibers are built for high-power, short-duration activities by utilizing rapid anaerobic energy production.</p>
+<h4>Key terms</h4>
+<ol>
+<li>Fast glycolytic (FG) fibers: Large-diameter white fibers that use anaerobic glycolysis to produce fast, high-tension contractions.</li>
+<ol>
+<li>Functional examples include sprinting and producing rapid, forceful contractions for powerful movements.</li>
+</ol>
+</ol>
+<h3>Fast oxidative</h3>
+<p>FO fibers utilize aerobic pathways to provide a balance of speed and tension for intermediate activity levels.</p>
+<h4>Key terms</h4>
+<ol>
+<li>Fast oxidative (FO) fibers: Fibers using aerobic respiration for fast contractions that fatigue more quickly than SO fibers.</li>
+<ol>
+<li>Walking is a primary functional example as it requires more energy than postural control.</li>
+</ol>
+</ol>
+<h3>Glycolytic metabolism</h3>
+<p>Glycolytic metabolism allows for rapid ATP generation without oxygen, though it results in lower efficiency and faster fatigue.</p>
+<h4>Key terms</h4>
+<ol>
+<li>Anaerobic glycolysis: A metabolic pathway that creates ATP from glucose in the absence of oxygen.</li>
+<li>Glycolytic fibers: Fibers that fatigue quickly because they produce less ATP per metabolic cycle than oxidative fibers.</li>
+</ol>
+<h3>Muscle Vascularity</h3>
+<p>Extensive capillary networks ensure that oxygen-dependent fibers receive a steady supply of nutrients from the circulatory system.</p>
+<h4>Key terms</h4>
+<ol>
+<li>Blood capillaries: Microscopic vessels that supply O2 from red blood cells to support aerobic metabolism in SO fibers.</li>
+</ol>
+<h3>Intermediate fibers</h3>
+<p>FO fibers are classified as intermediate because their performance characteristics fall between the oxidative and glycolytic extremes.</p>
+<h4>Key terms</h4>
+<ol>
+<li>Intermediate fibers: Fast oxidative fibers that produce more tension than SO fibers but are more fatigue-resistant than FG.</li>
+</ol>
+<h3>Structure to Function</h3>
+<p>The physiological capabilities of a muscle are determined by the physical dimensions and organelle density of its fibers.</p>
+<h4>Key terms</h4>
+<ol>
+<li>Oxidative fibers: Fibers containing many mitochondria that use aerobic pathways to maintain high resistance to fatigue.</li>
+<li>Muscle composition: The specific proportion of the three fiber types within a muscle as determined by its primary function.</li>
+</ol>
+<h3>Glycogen</h3>
+<p>Stored glycogen provides the necessary fuel for fibers that must generate high tension through anaerobic pathways.</p>
+<h4>Key terms</h4>
+<ol>
+<li>Glycogen: A stored sugar used in glycolysis to generate ATP quickly for high-intensity muscle activity.</li>
+<ol>
+<li>FG fibers are the specific fiber type characterized by high amounts of stored glycogen.</li>
+</ol>
+</ol></div>
+    <div class="own">
+      <h3>My notes</h3>
+      <p class="say">What the sheet missed. Write it however you write — one thing a line,
+      <code>Term: what it is</code>, indent to nest. Copy takes this with the sheet, formatted,
+      ready to paste into the Notion row. That row is what the week's exam is built from.</p>
+      <textarea id="mynotes" spellcheck="true" placeholder="Rebound effect: suppressed thought comes back stronger once you stop trying
+   ex. telling yourself not to check the score
+Self-control is finite - one hard task leaves less for the next"></textarea>
+      <p class="saved" id="savedmsg"></p>
+      <div id="minepreview" class="hide"></div>
+    </div>
+    <!-- Last on the sheet, and last in the Copy, so the paste reads sheet → his notes →
+         what he went and found, grouped under the question that sent him looking. -->
+    <div class="own hide" id="starredsheet"></div>
+    <div class="own hide" id="unsuresheet"></div>
+    <div class="own hide" id="researchview"></div>
+    <div class="own hide" id="fixview"></div>
+  </div>
+</main>
+
+<footer id="footer" class="wrap hide">
+  <p class="hinttext hide" id="hinttext"></p>
+  <div class="acts">
+    <button class="pill ghost" id="back">Back</button>
+    <button class="pill ghost hide" id="hintbtn">Hint</button>
+    <!-- The mis-click undo. Same slot as Hint, which has just left it, and it clears the
+         answer to THIS question and nothing else — the research and fix boxes stay. -->
+    <button class="pill ghost hide" id="redo">Redo</button>
+    <!-- Retake CLEARS, so it sits off to the side on its own, away from the two that keep
+         his progress. 2nd Pass is the primary one and takes the position Next held. -->
+    <button class="pill ghost hide" id="retake">Retake</button>
+    <span class="spacer"></span>
+    <button class="pill hide" id="review">Review quiz</button>
+    <button class="pill ghost hide" id="pass2">2nd Pass</button>
+    <button class="pill primary hide" id="towritten">Written half</button>
+    <button class="pill primary" id="next">Next</button>
+  </div>
+</footer>
+
+<script id="quiz-data" type="application/json">{"id": "ap2e-10-5", "title": "10.5 Types of Muscle Fibers", "subtitle": "Chapter 10 · Muscle Tissue", "book": "A&P 2e", "hash": "a9647ce1a37c5c73", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "A researcher is comparing the biochemical activity of two different skeletal muscle fibers. One fiber is found to hydrolyze ATP approximately twice as fast as the other during cross-bridge cycling. Compared to the slower fiber, what is the speed of the thin filament movement and the resulting ATPase activity in this specific fiber?", "options": ["Fast filament movement and low ATPase activity", "Slow filament movement and low ATPase activity", "Fast filament movement and high ATPase activity", "Slow filament movement and high ATPase activity"], "rationales": ["A faster movement of thin filaments requires a higher rate of ATP hydrolysis, meaning ATPase activity must be high, not low.", "While low ATPase activity does lead to slow movement, this option describes the baseline slow fiber rather than the fast fiber identified by the researcher.", "Fast fibers hydrolyze ATP twice as quickly as slow fibers, which directly increases the rate at which thin filaments are pulled toward the center of the sarcomere.", "High ATPase activity results in more rapid cross-bridge cycling, which produces faster, not slower, filament movement."], "correct": 2, "hint": "Consider the direct relationship between the enzyme rate of ATP breakdown and the physical speed of the sarcomere contraction.", "topic": "Fiber Speed", "sec": "", "src": "", "link": "", "qid": "9755f6fcec"}, {"q": "An endurance athlete is training for a marathon, a task requiring muscle activity that can be sustained for hours without fatigue. Their leg muscles rely on fibers that store oxygen locally to maintain aerobic metabolism. Compared to fibers used for a short sprint, what is the visual appearance of these fibers and which molecule stores their internal oxygen?", "options": ["White color and myoglobin", "Red color and myoglobin", "White color and hemoglobin", "Red color and hemoglobin"], "rationales": ["The presence of myoglobin causes a red appearance; a white color indicates a lack of significant myoglobin storage.", "Slow oxidative fibers appear red due to the presence of myoglobin, an oxygen-carrying molecule stored within the fibers themselves.", "White fibers lack significant oxygen-storage molecules, and hemoglobin is located in red blood cells rather than being stored inside the muscle fiber.", "While hemoglobin carries oxygen in the blood, myoglobin is the specific molecule found within the muscle fibers that provides their red pigment."], "correct": 1, "hint": "Think about the specific pigment-carrying molecule that allows a muscle cell to keep an internal reserve of oxygen.", "topic": "Myoglobin", "sec": "", "src": "", "link": "", "qid": "14e3e26cc1"}, {"q": "A person stands perfectly still to maintain their posture while waiting in a long line. This action requires the back muscles to produce continuous, low-intensity contractions. Compared to the fibers used for an explosive jump, what are the characteristic features of the fibers primarily used for this postural control?", "options": ["Slow contraction speed and low mitochondria density", "Fast contraction speed and high mitochondria density", "Fast contraction speed and low mitochondria density", "Slow contraction speed and high mitochondria density"], "rationales": ["Low mitochondria density would prevent a fiber from sustaining the long-term aerobic ATP production required for continuous postural support.", "High mitochondria counts are associated with oxidative fibers, which contract slowly rather than having the rapid speed associated with power movements.", "Fibers with fast speed and low mitochondria are designed for short bursts of power, making them unsuitable for sustained postural maintenance.", "Slow oxidative fibers have high numbers of mitochondria to support the aerobic respiration needed for long-duration, low-energy tasks like maintaining posture."], "correct": 3, "hint": "Focus on the organelle density required to fuel muscle activity that must last for long periods without fatiguing.", "topic": "Slow oxidative", "sec": "", "src": "", "link": "", "qid": "ee051f4eb3"}, {"q": "A powerlifter performs a single, maximum-effort squat that takes only five seconds to complete. The muscles used must generate extremely high tension very quickly using anaerobic pathways. Compared to muscles used for posture, what is the physical diameter and primary ATP source of these powerful fibers?", "options": ["Large diameter and anaerobic glycolysis", "Small diameter and aerobic respiration", "Small diameter and anaerobic glycolysis", "Large diameter and aerobic respiration"], "rationales": ["Fast glycolytic fibers have a large diameter to produce high tension and utilize anaerobic glycolysis to generate ATP rapidly.", "This combination describes slow oxidative fibers, which are used for endurance and posture rather than explosive power.", "Small diameter fibers do not produce the high levels of tension required for a maximal lift, regardless of the ATP source.", "While the diameter is large for high tension, aerobic respiration is too slow to provide the immediate energy required for such explosive movements."], "correct": 0, "hint": "Identify the relationship between the physical size of a muscle fiber and the metabolic method that provides immediate but short-lived energy.", "topic": "Fast glycolytic", "sec": "", "src": "", "link": "", "qid": "0da2e8b457"}, {"q": "A person transitions from standing still to walking briskly across a park. This transition requires the use of 'intermediate' fibers that produce more tension than postural muscles but are more fatigue-resistant than sprinting muscles. Compared to the slow oxidative fibers, how do these intermediate fibers produce ATP and what is their relative tension?", "options": ["Anaerobic glycolysis and higher tension", "Aerobic respiration and lower tension", "Aerobic respiration and higher tension", "Anaerobic glycolysis and lower tension"], "rationales": ["While they can switch to anaerobic pathways, fast oxidative fibers primarily use aerobic respiration to maintain their fatigue resistance.", "Intermediate fibers are characterized by their ability to produce more tension than the slow oxidative fibers used for simple posture.", "Fast oxidative fibers are intermediate; they produce ATP aerobically like slow fibers but generate higher tension and contract faster.", "Using anaerobic glycolysis as a primary source while producing lower tension would make a fiber inefficient for both endurance and power."], "correct": 2, "hint": "Consider the balance between sustainable oxygen use and the increased force needed for active movement like walking.", "topic": "Fast oxidative", "sec": "", "src": "", "link": "", "qid": "506984ddef"}, {"q": "A lab technician examines a muscle sample and identifies fibers that contain very high amounts of glycogen but very few mitochondria. These fibers are designed to produce ATP quickly for short bursts of intense activity. Compared to oxidative fibers, what is the fatigue rate and the color of these glycolytic fibers?", "options": ["Slower fatigue and red color", "Slower fatigue and white color", "Quicker fatigue and red color", "Quicker fatigue and white color"], "rationales": ["Slower fatigue and red color are hallmarks of oxidative fibers, which rely on mitochondria rather than high glycogen stores.", "White fibers lack the extensive aerobic machinery required for slow fatigue; they are built for speed and power instead.", "Fibers that fatigue quickly and rely on glycolysis typically lack the myoglobin that provides a red color.", "Glycolytic fibers fatigue quickly because anaerobic metabolism is less efficient, and they appear white due to a lack of myoglobin and mitochondria."], "correct": 3, "hint": "Evaluate how the depletion of energy stores and the lack of oxygen-carrying proteins affect both performance and appearance.", "topic": "Glycolytic metabolism", "sec": "", "src": "", "link": "", "qid": "d311028475"}, {"q": "A biologist is studying how muscle fibers receive their energy supply during long-term activity. They observe that one type of fiber is extensively supplied with blood capillaries to ensure a steady delivery of O2. Compared to white fibers, what is the primary metabolic cycle and the relative ATP production per cycle for these blood-rich fibers?", "options": ["Aerobic respiration and higher ATP production", "Anaerobic glycolysis and higher ATP production", "Aerobic respiration and lower ATP production", "Anaerobic glycolysis and lower ATP production"], "rationales": ["Aerobic pathways require a steady blood supply for oxygen and produce significantly more ATP per metabolic cycle than anaerobic pathways.", "Anaerobic glycolysis does not require a rich capillary supply for oxygen and is less efficient, producing less ATP per cycle.", "The primary advantage of aerobic respiration is that it produces more ATP per cycle, making the fiber more resistant to fatigue.", "While anaerobic glycolysis does produce less ATP, it is not the pathway supported by an extensive network of blood capillaries."], "correct": 0, "hint": "Identify the metabolic process that depends on the constant delivery of oxygen from the bloodstream to remain efficient.", "topic": "Muscle Vascularity", "sec": "", "src": "", "link": "", "qid": "6d9ff49f9a"}, {"q": "A specific muscle fiber is known to produce high amounts of tension but is also capable of being used for extended movements like walking because it does not fatigue quickly. It contains high amounts of mitochondria but lacks significant myoglobin. Compared to slow oxidative fibers, what is its contraction speed and color?", "options": ["Slow contraction and lighter color", "Fast contraction and lighter color", "Fast contraction and red color", "Slow contraction and red color"], "rationales": ["A slow contraction speed would categorize the fiber as an SO fiber, which typically has a darker red color rather than a lighter one.", "Fast oxidative fibers contract quickly and have a lighter color than SO fibers because they do not possess as much myoglobin.", "While they are fast, these intermediate fibers lack the heavy myoglobin saturation that gives SO fibers their deep red color.", "This describes the standard slow oxidative fiber, which produces less tension and is used for posture rather than walking."], "correct": 1, "hint": "Distinguish the characteristics of FO fibers that make them different from both the slowest and the fastest fiber types.", "topic": "Intermediate fibers", "sec": "", "src": "", "link": "", "qid": "eb7a546b78"}, {"q": "A researcher is studying the mechanical limitations of muscle fibers in the human body. They note that the predominant fiber type in a specific muscle is determined by that muscle's primary function. Compared to a muscle used for rapid, forceful movements, what is the expected fiber diameter and mitochondria count in a muscle used for constant bone stabilization?", "options": ["Small diameter and high mitochondria count", "Small diameter and low mitochondria count", "Large diameter and low mitochondria count", "Large diameter and high mitochondria count"], "rationales": ["Stabilizing muscles rely on slow oxidative fibers, which have small diameters for low tension and high mitochondria for endurance.", "Fibers with low mitochondria count lack the endurance required for the constant, ongoing task of bone stabilization.", "This combination is found in fast glycolytic fibers, which are used for explosive movements rather than the steady task of stabilization.", "Large diameter fibers are typically glycolytic and designed for power; they do not usually possess the high mitochondria count found in stabilizing fibers."], "correct": 0, "hint": "Connect the physical requirements of continuous joint support to the structural organelles found within the muscle cells.", "topic": "Structure to Function", "sec": "", "src": "", "link": "", "qid": "99ec184482"}, {"q": "A sprinter experiences severe muscle fatigue immediately after finishing a 100-meter dash. This fatigue occurs because their primary fibers utilized anaerobic glycolysis, which produces ATP quickly but in limited quantities. Compared to oxidative fibers, what is the primary fuel storage found in these fibers and how many mitochondria do they contain?", "options": ["High glycogen and low mitochondria", "High glycogen and high mitochondria", "Low glycogen and low mitochondria", "Low glycogen and high mitochondria"], "rationales": ["Fast glycolytic fibers store high amounts of glycogen to fuel anaerobic glycolysis and contain few mitochondria because they do not rely on aerobic metabolism.", "Fibers that rely on high glycogen for rapid tension usually do not have the space or metabolic need for a high number of mitochondria.", "Without high glycogen, a fast glycolytic fiber would have no fuel source to generate the rapid, high-tension contractions required for sprinting.", "This profile describes an oxidative fiber, which is built for long-term endurance rather than the explosive energy needed for a sprint."], "correct": 0, "hint": "Consider which energy storage molecule is prioritized when a muscle must function without using oxygen in its metabolic pathway.", "topic": "Glycogen", "sec": "", "src": "", "link": "", "qid": "51d7e1e701"}], "hasSheet": true, "parts": false, "secTitles": {}, "reserve": 0, "frq": [], "notebook": "https://notebooklm.google.com/notebook/34f6d156-8b69-4746-81dd-42298ab2e3fc/artifact/7b7aae83-46b9-42e7-89c1-ff5abfcd08ff", "root": "../index.html", "tab": "quiz", "sheet": "## Fiber Speed\nThe rate of cross-bridge cycling is determined by how quickly the enzyme myosin ATPase hydrolyzes ATP to pull thin filaments.\n### Key terms\n1. Fast fibers: Fibers that hydrolyze ATP approximately twice as quickly as slow fibers for faster cross-bridge cycling.\n2. Slow fibers: Fibers that contract relatively slowly due to a lower rate of ATP hydrolysis by myosin ATPase.\n\n## Myoglobin\nMyoglobin is a specialized molecule that stores oxygen within muscle fibers and contributes to their pigmentation.\n### Key terms\n1. Myoglobin: An O2-carrying molecule located within the fibers that is similar to hemoglobin in red blood cells.\n   1. It gives slow oxidative fibers a red color due to the presence of stored oxygen.\n\n## Slow oxidative\nSO fibers rely on aerobic respiration to support long-duration activities that require endurance rather than high tension.\n### Key terms\n1. Slow oxidative (SO) fibers: Small-diameter fibers that contract slowly and use aerobic respiration without producing large tension.\n   1. Functional examples include posture maintenance, producing isometric contractions, and stabilizing bones.\n\n## Fast glycolytic\nFG fibers are built for high-power, short-duration activities by utilizing rapid anaerobic energy production.\n### Key terms\n1. Fast glycolytic (FG) fibers: Large-diameter white fibers that use anaerobic glycolysis to produce fast, high-tension contractions.\n   1. Functional examples include sprinting and producing rapid, forceful contractions for powerful movements.\n\n## Fast oxidative\nFO fibers utilize aerobic pathways to provide a balance of speed and tension for intermediate activity levels.\n### Key terms\n1. Fast oxidative (FO) fibers: Fibers using aerobic respiration for fast contractions that fatigue more quickly than SO fibers.\n   1. Walking is a primary functional example as it requires more energy than postural control.\n\n## Glycolytic metabolism\nGlycolytic metabolism allows for rapid ATP generation without oxygen, though it results in lower efficiency and faster fatigue.\n### Key terms\n1. Anaerobic glycolysis: A metabolic pathway that creates ATP from glucose in the absence of oxygen.\n2. Glycolytic fibers: Fibers that fatigue quickly because they produce less ATP per metabolic cycle than oxidative fibers.\n\n## Muscle Vascularity\nExtensive capillary networks ensure that oxygen-dependent fibers receive a steady supply of nutrients from the circulatory system.\n### Key terms\n1. Blood capillaries: Microscopic vessels that supply O2 from red blood cells to support aerobic metabolism in SO fibers.\n\n## Intermediate fibers\nFO fibers are classified as intermediate because their performance characteristics fall between the oxidative and glycolytic extremes.\n### Key terms\n1. Intermediate fibers: Fast oxidative fibers that produce more tension than SO fibers but are more fatigue-resistant than FG.\n\n## Structure to Function\nThe physiological capabilities of a muscle are determined by the physical dimensions and organelle density of its fibers.\n### Key terms\n1. Oxidative fibers: Fibers containing many mitochondria that use aerobic pathways to maintain high resistance to fatigue.\n2. Muscle composition: The specific proportion of the three fiber types within a muscle as determined by its primary function.\n\n## Glycogen\nStored glycogen provides the necessary fuel for fibers that must generate high tension through anaerobic pathways.\n### Key terms\n1. Glycogen: A stored sugar used in glycolysis to generate ATP quickly for high-intensity muscle activity.\n   1. FG fibers are the specific fiber type characterized by high amounts of stored glycogen."}</script>
+<script>
+const D = JSON.parse(document.getElementById('quiz-data').textContent);
+const KEY = 'lq:' + D.id;
+const $ = s => document.querySelector(s);
+const esc = t => { const d=document.createElement('div'); d.textContent = t==null?'':t; return d.innerHTML; };
+const G_OK = '✓', G_NO = '✕';
+
+/* WHY A QUESTION IS ON THE EXAM. One glyph, set by the generator in the topic tag, and the
+   only thing the page does with it is show it and group by it. The ORDER of this object is
+   his priority order and the tables below read it, so re-ordering here re-orders the report.
+
+   RE-RANKED 08-14 TO HIS NEW ORDER: *"Wrong questions tested first · Starred · Questions with
+   research (not fix) · Question mark tags · Fix marks · Correct answers."* It has to be kept
+   in step with `POOL_RUNGS` in reinforce.py, which is what actually assigns the glyphs — that
+   list decides which card gets a spot, this one only names the result. Out of step, the
+   report groups a paper by an order the paper was not built in.
+
+   ✎ USED TO SIT FIRST and no longer does. Until 08-12 it was the one he wrote as an
+   instruction rather than a mark, so it led the report; he has since ranked it fifth, and a
+   ✎ question now takes an ordinary spot like every other rung.
+
+   `+` IS NOT A RUNG. Nothing is tagged `+` — it is what a section gets when its quiz was
+   shorter than the quota, which is ordinary rather than exceptional. It is last because a
+   question with no card behind it is the one he has least history with. */
+const SRC = {
+  '✕': 'You got this wrong',
+  '☆': 'Starred in the subchapter quiz',
+  'R': 'Built from your own research',
+  '?': 'You flagged it — no idea at the time',
+  '✎': 'You asked for this one to be rewritten',
+  '$': 'You got it right before — asked a different way',
+  '+': 'New — nothing of yours left to re-ask on this section'
+};
+const SRC_ORDER = Object.keys(SRC);
+function srcName(g){ return SRC[g] || ''; }
+
+/* ---- saved state -------------------------------------------------------------
+   Everything lives in localStorage under the page id. `hash` fingerprints the question
+   set: a Redo regenerates the quiz, and when that happens the old answers describe
+   questions that no longer exist, so the attempt is retired into history rather than
+   shown against the new ones.
+
+   KEYED ON q.qid, NOT ON THE ARRAY INDEX (v2). Skipping and starring have to outlive a
+   rebuild: a question he deleted must stay deleted, and a question he starred must still be
+   starred, even after the quiz is regenerated and the order changes. That is also what makes
+   `skipped` usable later as a permanent exclusion list when exam reuse is built — see qid()
+   in quizpage.py. v1 states are migrated once, on load. */
+function qk(i){ return D.questions[i].qid; }
+/* `only` and `sat` ARE THE SECTIONED EXAM (08-16), and both are inert unless the page was
+   built with parts on. `only` is the list of subchapters THIS sitting covers — null means he
+   has not chosen yet, which is what puts the picker on screen. `sat` records which
+   subchapters he has finished, and nothing else: a section's score is always recomputed from
+   `answers`, never stored, so there is exactly one place a number can come from. */
+function blank(){ return {v:2, hash:D.hash, i:0, answers:{}, pass2:{}, skipped:{}, starred:{},
+                          unsure:{}, hints:{}, phase:1, p2list:null, done:false, at:null,
+                          shuf:{}, history:[], only:null, sat:{}, promoted:{}}; }
+function migrate(s){
+  // v1 keyed every map on the array index. The hash matches, so the indices are still valid
+  // and this is a straight re-key — done once, then never again.
+  const re = m => { const o = {}; Object.keys(m||{}).forEach(k=>{
+    const i = +k; if(D.questions[i]) o[qk(i)] = m[k]; }); return o; };
+  s.answers = re(s.answers); s.skipped = re(s.skipped);
+  s.pass2 = {}; s.starred = {}; s.unsure = {}; s.hints = {}; s.phase = 1; s.p2list = null;
+  s.shuf = {};
+  s.v = 2;
+  return s;
+}
+function load(){
+  try{
+    const s = JSON.parse(localStorage.getItem(KEY) || 'null');
+    if(!s) return blank();
+    if(s.hash !== D.hash){
+      const b = blank();
+      b.history = (s.history||[]).slice();
+      // TAKE THE SCORE AS IT WAS RECORDED, never recompute it. These answers were given to
+      // questions that no longer exist, so scoring them against the new set is meaningless —
+      // it turned a real 8/10 into 2/10 in testing. `meta` is written on every save for
+      // exactly this moment.
+      if(s.done) b.history.push({
+        at: s.at,
+        score: (s.meta && typeof s.meta.score === 'number') ? s.meta.score : 0,
+        total: (s.meta && s.meta.total) || Object.keys(s.answers||{}).length,
+        stale: true});
+      b.rebuilt = true;
+      // A REBUILD DOES NOT RESURRECT A DELETED QUESTION. Answers are retired because they
+      // describe questions that may be gone; skipped and starred are decisions ABOUT
+      // questions, so they carry over on qid and simply miss anything no longer present.
+      if(s.v === 2){ b.skipped = s.skipped || {}; b.starred = s.starred || {};
+                     b.unsure = s.unsure || {}; }
+      return b;
+    }
+    if(!s.history) s.history = [];
+    if(s.v !== 2) return migrate(s);
+    if(!s.skipped) s.skipped = {};
+    if(!s.starred) s.starred = {};
+    if(!s.unsure) s.unsure = {};
+    if(!s.hints) s.hints = {};
+    if(!s.pass2) s.pass2 = {};
+    if(!s.phase) s.phase = 1;
+    // Absent on every attempt saved before 08-16, and `only: null` is exactly right for one:
+    // it means "not chosen", so an attempt in progress on a paper that has just gained the
+    // picker resumes over the whole paper, which is what it was.
+    if(s.only === undefined) s.only = null;
+    if(!s.sat) s.sat = {};
+    if(!s.promoted) s.promoted = {};
+    // Not carried across a rebuild on purpose: blank() empties it. A stored order describes a
+    // set of options that may no longer be the same length — optOrder() throws out any that
+    // no longer fit, so a stale one is harmless anyway.
+    if(!s.shuf) s.shuf = {};
+    return s;
+  }catch(e){ return blank(); }
+}
+/* THE ATTEMPT MUST NEVER FAIL TO SAVE IN SILENCE (08-16). `save()` swallowed every exception,
+   and the one that actually happens is QuotaExceededError: the research box keeps pasted
+   images in localStorage, and once the origin is full EVERY later write is refused — so his
+   answers stopped being recorded while the page carried on as if they were. His report was
+   *"I feel I did answer some of these questions and yet they show up again"*, which is exactly
+   what a refused write looks like from the outside. It now says so, on screen, and keeps
+   saying so until a write succeeds. */
+let saveBroken = false;
+function saveFailed(on){
+  if(on === saveBroken) return;
+  saveBroken = on;
+  let el = $('#savewarn');
+  if(!el){
+    el = document.createElement('div');
+    el.id = 'savewarn';
+    document.body.appendChild(el);
+  }
+  el.textContent = 'This browser is out of room — your answers are NOT being saved. '
+                 + 'Remove a pasted image from the research box to free some up.';
+  el.classList.toggle('hide', !on);
+}
+function save(){
+  // ON A SECTIONED PAPER `meta` DESCRIBES THE PAPER, NOT THE SITTING. It is read in exactly
+  // one place — `load()`, when the questions have been rebuilt and the old answers can no
+  // longer be scored — and what belongs in that history line is "he got 24 of 32 on this
+  // exam", not "he got 14 of 16 on the half of it he happened to sit last."
+  const pp = D.parts ? paperStat() : null;
+  S.meta = {title:D.title, subtitle:D.subtitle, book:D.book,
+            total: pp ? pp.t : active(S).length,
+            at:S.at, done:S.done, score: pp ? pp.n : score(S)};
+  try{ localStorage.setItem(KEY, JSON.stringify(S)); saveFailed(false); }
+  catch(e){ saveFailed(true); }
+}
+/* Skipped questions leave the run entirely — out of the count, out of the denominator,
+   out of the topic breakdown. Anything less makes "8 / 10" a lie about a quiz of nine.
+
+   THE SECTION FILTER RIDES HERE AND NOWHERE ELSE (08-16). `active()` is what the run list,
+   the score, the second pass, the end card and the review list are all built on, so putting
+   the sitting's subchapters into this one function is what makes a half-paper behave exactly
+   like a whole one — one direction, one end card, one second pass — with no branch anywhere
+   downstream. `only: null` (not chosen, or a page built without parts) filters nothing. */
+function active(s){
+  const only = D.parts ? (s.only || null) : null;
+  return D.questions.map((_,i)=>i).filter(i => onPaper(s, i)
+    && (!only || only.indexOf(D.questions[i].sec) >= 0));
+}
+/* ---- THE RESERVES (08-16) ------------------------------------------------------------
+   His ask: *"if 1 question is skipped, another one is replaced in that section about it… you
+   have a quota, so you should also create stockpiles (say 2 extra questions per section that
+   immediately replace a skipped question)."*
+
+   `D.reserve` is how many per section were written beyond the quota. They are the LAST ones
+   of their section in build order, which is not arbitrary: `section_pool()` deals spots down
+   his tag priority, so a section's tail is the bottom of the list it could afford to lose.
+
+   A RESERVE IS NOT A QUESTION YET. It is out of the run, out of the denominator and out of
+   every table until a skip in its own section calls it in — at which point it is an ordinary
+   question and nothing downstream can tell it apart. Promotion is recorded on the qid, so it
+   survives a reload and cannot be handed out twice. Skipping with none left behaves exactly
+   as it always did: the paper is one question shorter. */
+function reserveIds(sec){
+  if(!(D.reserve > 0)) return [];
+  const l = D.questions.map((_,i)=>i).filter(i => D.questions[i].sec === sec);
+  return l.slice(Math.max(0, l.length - D.reserve));
+}
+function isReserve(i){
+  const sec = D.questions[i].sec;
+  return !!sec && reserveIds(sec).indexOf(i) >= 0;
+}
+/* Skipped or an unpromoted reserve — the two ways a question is not part of the paper. One
+   predicate so the run, the score, the picker and the section tables can never disagree. */
+function onPaper(s, i){
+  if((s.skipped||{})[qk(i)]) return false;
+  return !isReserve(i) || !!(s.promoted||{})[qk(i)];
+}
+/* Called the instant a question is skipped. Returns the promoted index, or -1. */
+function promoteReserve(sec){
+  if(!sec) return -1;
+  const next = reserveIds(sec).find(i => !S.promoted[qk(i)] && !S.skipped[qk(i)]);
+  if(next === undefined) return -1;
+  S.promoted[qk(next)] = true;
+  return next;
+}
+function ans(i){ return S.answers[qk(i)]; }
+function ans2(i){ return S.pass2[qk(i)]; }
+function firstRight(i){ return ans(i) === D.questions[i].correct; }
+/* THE SECOND PASS REDEEMS. Wrong first, right second → the question counts as right; wrong
+   both times stays wrong, and there is no third pass. The first answer is never overwritten,
+   which is what lets the end card say "10 right, +2 redeemed" instead of quietly rewriting a
+   10 into a 12. */
+function finalRight(i){ return firstRight(i) || ans2(i) === D.questions[i].correct; }
+function score(s){ return active(s).reduce((n,i)=> n + (finalRight(i) ? 1 : 0), 0); }
+function redeemed(){ return active(S).filter(i => !firstRight(i) && ans2(i) === D.questions[i].correct); }
+/* What a second pass would still have to cover: wrong on the first pass and not yet
+   re-answered. Empty → no button, which is the "if there are no mistakes there is no second
+   pass" rule and also what ends the round rather than looping it. */
+function pending2(){
+  return active(S).filter(i => ans(i) !== undefined && !firstRight(i) && ans2(i) === undefined);
+}
+/* The questions THIS pass runs over. Frozen into p2list when the second pass starts, so
+   answering one correctly cannot shrink the list under his feet mid-run. */
+function runList(){
+  if(S.phase === 2 && S.p2list) return S.p2list.filter(i => !S.skipped[qk(i)]);
+  return active(S);
+}
+function pick(i){ return S.phase === 2 ? ans2(i) : ans(i); }
+
+/* ---- SUBCHAPTERS AS SITTINGS (08-16) -------------------------------------------------
+   His ask: *"a way to section off exams… such that I'm able to practice only one section or
+   maybe two sections of an exam created because of shortened time"*, and then *"the option to
+   do those other sub chapters that I haven't done at a later date, or just display the score
+   of the subsections that I have got done."*
+
+   A QUESTION BELONGS TO ONE SUBCHAPTER — `q.sec`, which every exam question already carries.
+   A cross-section question carries `q.link` as well, and it is deliberately NOT used here:
+   `q.sec` is the section whose paper the question is on (the pool decided that, and the exam
+   prompt says so in as many words), so it is sat once, with that section, and never offered
+   twice. It still REPORTS under both in the end card's By-subchapter table, which is a
+   different question and was already answered.
+
+   NOTHING IS STORED THAT CAN BE COMPUTED. `S.sat[sec]` is a timestamp saying he finished that
+   section and nothing more; every number on screen comes back out of `S.answers` through
+   `secStat()`. A stored score is a second source of truth, and this page already has one
+   scar from that — see `load()`, where a recomputed score turned a real 8/10 into 2/10. */
+function paperSecs(){
+  const out = [];
+  D.questions.forEach((q,i)=>{
+    if(q.sec && onPaper(S, i) && out.indexOf(q.sec) < 0) out.push(q.sec);
+  });
+  return out.sort((a,b)=>a.localeCompare(b, undefined, {numeric:true}));
+}
+function secQs(sec){
+  return D.questions.map((_,i)=>i)
+    .filter(i => D.questions[i].sec === sec && onPaper(S, i));
+}
+function secStat(sec){
+  const l = secQs(sec);
+  const answered = l.filter(i => ans(i) !== undefined).length;
+  return {sec:sec, t:l.length, answered:answered,
+          n: l.filter(i => finalRight(i)).length,
+          done: !!S.sat[sec], started: answered > 0};
+}
+/* THE PAPER, ACROSS EVERY SITTING — the number that answers "how am I doing on this exam",
+   as opposed to "how did I do this evening". Scored over the sections he has actually sat, so
+   a half-finished paper reads 14/16 with a section outstanding rather than a demoralising
+   14/32 that counts questions he has not been asked yet. `all` is what says the paper is
+   finished; until then `left` is what the picker offers him next. */
+function paperStat(){
+  const secs = paperSecs().map(secStat);
+  const done = secs.filter(s => s.done);
+  const left = secs.filter(s => !s.done);
+  const n = done.reduce((a,s)=>a+s.n, 0), t = done.reduce((a,s)=>a+s.t, 0);
+  return {secs:secs, done:done, left:left, n:n, t:t,
+          whole: secs.reduce((a,s)=>a+s.t, 0),
+          pct: t ? Math.round(n/t*100) : 0, all: secs.length > 0 && left.length === 0};
+}
+/* The picker earns its place only where there is a choice to make: parts on, and more than
+   one subchapter on the paper. A one-section exam goes straight in, as it always did. */
+function sectioned(){ return !!D.parts && paperSecs().length > 1; }
+
+/* ---- THE ON-SCREEN OPTION ORDER ------------------------------------------------------
+   A DISPLAY LAYER AND NOTHING MORE. `S.shuf[qid]` is a list of ORIGINAL option indices in
+   the order they are drawn; every button still carries its original index in `data-k`, so
+   `S.answers`, `q.correct`, the review list, the study sheet and the exam export all keep
+   reading exactly what they read before and none of them ever learn this exists. Reordering
+   the array itself would silently re-point his saved answers at different options — the same
+   trap the build-time shuffle avoids by being deterministic (see shuffle_options()).
+
+   NO ENTRY MEANS THE ORDER THE PAGE WAS BUILT WITH, which is already shuffled once, per
+   page id, in Python. This one is only ever written by Redo. */
+function optOrder(i){
+  const n = D.questions[i].options.length;
+  const o = (S.shuf||{})[qk(i)];
+  // Length is the guard: anything stored against a different option count is discarded
+  // rather than half-applied, which would drop or double an option on screen.
+  if(!Array.isArray(o) || o.length !== n) return D.questions[i].options.map((_,k)=>k);
+  return o;
+}
+/* Fisher–Yates, and it REFUSES TO LAND ON THE ORDER IT ALREADY HAD — with four options a
+   plain shuffle repeats itself about one time in twenty-four, and a Redo that changes
+   nothing on screen is the one outcome he pressed the button to avoid. */
+function reshuffleOpts(i){
+  const cur = optOrder(i), n = cur.length;
+  if(n < 2) return;
+  let next;
+  for(let t = 0; t < 12; t++){
+    next = cur.slice();
+    for(let a = n-1; a > 0; a--){
+      const b = Math.floor(Math.random() * (a+1));
+      [next[a], next[b]] = [next[b], next[a]];
+    }
+    if(next.some((v,k)=> v !== cur[k])) break;
+  }
+  if(!S.shuf) S.shuf = {};
+  S.shuf[qk(i)] = next;
+}
+let S = load();
+let lastShown = -1;
+
+/* WHAT TO CALL THIS THING (08-16, his ask: *"you should name them exams"*). A paper that
+   carries subchapter tags or a written half is an exam; anything else is a subchapter quiz.
+   Both signals, because the two halves arrived on different days and a paper with only one of
+   them is still an exam. The word is used for the tab, the review button and the pasted score
+   line, so all three agree without three separate conditions. */
+const NOUN = ((D.frq && D.frq.length) || D.questions.some(q=>q.sec)) ? 'Exam' : 'Quiz';
+
+/* ---- HIS RESEARCH, kept apart from the attempt ---------------------------------------
+   Its own localStorage key, NOT a field of S, and that is the whole design. S is one
+   attempt: Retake clears it, a rebuilt quiz retires it. What he went and found while
+   answering is neither — it is material, and it has to survive both. Keyed on q.qid like
+   `starred` and `skipped`, so it also survives a Redo that reorders the questions.
+
+   `{ qid: {t: "his text", i: ["data:image/...", ...], f: "how to fix the question"} }` — an
+   entry with none of the three is deleted rather than stored empty, which is what makes
+   `rhas()` a simple truth test.
+
+   `f` IS THE SECOND BOX AND IT IS A DIFFERENT KIND OF THING (08-12). `t` is material — what
+   he went and found, which the generator tests him on. `f` is an INSTRUCTION about the
+   question itself: the stem omitted a detail, the options were ambiguous, the idea should be
+   asked from the other end. They ride together here because they are written in the same
+   moment, and they are split everywhere downstream because one is content and the other is
+   direction. An old entry has no `f` and reads as ''.
+
+   `x` IS THE THIRD AND IT IS THE ONE THAT NEVER COMES BACK AS A QUESTION (08-16). His words:
+   *"as I test myself on concepts I return to them with more knowledge and part of me wants
+   to write on it"*, and *"reflections should take on that outside content and should function
+   like potential applications in the future."* So the three are: what he FOUND (`t`, material
+   → tested), what the QUESTION should have been (`f`, direction → obeyed), and what HE
+   THINKS and where it could apply (`x`, neither → carved out of the row body by
+   `split_fixes` and read by nothing). An old entry has no `x` and reads as ''. */
+const RKEY = KEY + ':research';
+function loadResearch(){
+  try{ const r = JSON.parse(localStorage.getItem(RKEY) || '{}');
+       return (r && typeof r === 'object') ? r : {}; }
+  catch(e){ return {}; }
+}
+let R = loadResearch();
+function rget(id){
+  const r = R[id];
+  return {t: (r && r.t) || '', i: (r && r.i) || [], f: (r && r.f) || '', x: (r && r.x) || ''};
+}
+function rput(id, t, imgs, fix, refl){
+  fix = fix || ''; refl = refl || '';
+  if(!t.trim() && !imgs.length && !fix.trim() && !refl.trim()) delete R[id];
+  else R[id] = {t: t, i: imgs, f: fix, x: refl};
+  try{ localStorage.setItem(RKEY, JSON.stringify(R)); return true; }
+  catch(e){ return false; }                       // quota — the caller puts it back
+}
+
+/* ---- the written half ------------------------------------------------------------------
+   Three long-form questions on their own tab, generated with the exam by NotebookLM and
+   marked ON THIS PAGE with no network, no key and no credit. His constraint: *"its
+   subjective and hard to do but it needs to be no code, I dont mind comparing them manually
+   if need be but it wold be best if automated somehow."*
+
+   HOW THE MARKING IS HONEST. Each point carries a list of ways of saying it, written by the
+   generator alongside the question. A point whose wording is found is ticked; a point that
+   cannot be settled by wording at all is marked JUDGEMENT and left for him. The page never
+   guesses at the second kind — a marker that quietly awarded them would flatter every
+   answer, which is worse than one that asks.
+
+   ITS OWN STORAGE KEY, like the research box and for the same reason: S is one attempt and a
+   Retake clears it. What he wrote is material, and it outlives the attempt. */
+const FKEY = KEY + ':frq';
+let F = (function(){ try{ return JSON.parse(localStorage.getItem(FKEY) || '{}') || {}; }
+                     catch(e){ return {}; } })();
+function fput(){ try{ localStorage.setItem(FKEY, JSON.stringify(F)); }catch(e){} }
+function fget(i){ const f = F[i] || {}; return {t: f.t || '', m: f.m || {}, done: !!f.done}; }
+
+/* WORD BOUNDARIES, NOT SUBSTRINGS, and this is the difference between marking and
+   flattering: a bare substring search awards "recovers the verb" for the word `implement`
+   sitting inside `implementation`, which is the exact thing the answer was asked to undo.
+   A key ending in `*` keeps its open end on purpose, for stems like `pluralis*`. */
+function keyRe(k){
+  const open = /\*$/.test(k), base = open ? k.slice(0,-1) : k;
+  const lit = base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const head = /^[a-z0-9]/i.test(base) ? '\\b' : '';
+  const tail = (!open && /[a-z0-9]$/i.test(base)) ? '\\b' : '';
+  return new RegExp(head + lit + tail, 'i');
+}
+function findHit(text, keys){
+  const t = ' ' + String(text||'').toLowerCase().replace(/[’']/g, "'").replace(/\s+/g,' ') + ' ';
+  for(let i=0;i<(keys||[]).length;i++){ if(keyRe(keys[i]).test(t)) return keys[i]; }
+  return null;
+}
+function frqHit(fi, ri){
+  const f = D.frq[fi], r = f.rubric[ri], st = fget(fi);
+  if(st.m[ri] !== undefined) return {on: !!st.m[ri], why: 'set'};
+  if(r.judge) return {on: false, why: 'judge'};
+  const found = findHit(st.t, r.k);
+  return {on: !!found, why: found ? found.replace(/\*$/,'') : ''};
+}
+function frqScore(fi){
+  const f = D.frq[fi];
+  let n = 0;
+  f.rubric.forEach((_r, ri) => { if(frqHit(fi, ri).on) n++; });
+  return {n: n, t: f.rubric.length};
+}
+function flushFrq(){
+  document.querySelectorAll('#frqview textarea').forEach(ta => {
+    const i = +ta.dataset.f;
+    F[i] = F[i] || {}; F[i].t = ta.value;
+  });
+  fput();
+}
+function drawFrq(){
+  const box = $('#frqview');
+  if(!box || !(D.frq||[]).length) return;
+  let h = '<p class="say">Three written answers, from the same sources as the paper. Write '
+        + 'one, then mark it: every point that can be settled by what you wrote is checked '
+        + 'for you, and the ones that need judgement are handed back. Click any row to '
+        + 'overrule it.</p>';
+  D.frq.forEach((f, fi) => {
+    const st = fget(fi);
+    h += '<section class="frq"><p class="meta"><span class="num">' + (fi+1) + ' / '
+       + D.frq.length + '</span>'
+       + (f.tag ? '<span class="dot">·</span><span>' + esc(f.tag) + '</span>' : '')
+       + (f.secs ? '<span class="dot">·</span><span class="sec">' + esc(f.secs) + '</span>' : '')
+       + '</p>';
+    if(f.prompt) h += '<blockquote class="stim">' + esc(f.prompt) + '</blockquote>';
+    h += '<h1 class="q">' + esc(f.ask) + '</h1>';
+    if(f.words) h += '<p class="say">About ' + esc(f.words) + ' words.</p>';
+    h += '<textarea class="frqin" data-f="' + fi + '" spellcheck="true" '
+       + 'placeholder="Write your answer.">' + esc(st.t) + '</textarea>'
+       + '<p class="saved" data-wc="' + fi + '"></p>'
+       + '<div class="acts inline"><button class="pill primary" data-mark="' + fi
+       + '">Mark my answer</button>'
+       + '<button class="pill ghost" data-fcopy="' + fi + '">Copy</button></div>'
+       + '<div class="rubric hide" data-rub="' + fi + '"></div></section>';
+  });
+  box.innerHTML = h;
+
+  /* CLICKING THE CARD PUTS THE CARET IN THE BOX. The sticky header covers the top strip of
+     whatever is under it, and the placeholder sits in exactly that strip — so the one place he
+     naturally aims is the one place the click does not land. Anywhere in the card that is not
+     already a control now focuses the answer box, which also makes the whole card a target on
+     a phone. `closest` is what keeps Mark, Copy and any selection inside the rubric working. */
+  box.querySelectorAll('section.frq').forEach(sec => {
+    sec.addEventListener('mousedown', e => {
+      if(e.target.closest('button, textarea, a, .rubric')) return;
+      const ta = sec.querySelector('textarea');
+      if(!ta) return;
+      e.preventDefault();
+      ta.focus();
+      ta.setSelectionRange(ta.value.length, ta.value.length);
+    });
+  });
+
+  box.querySelectorAll('textarea').forEach(ta => {
+    const fi = +ta.dataset.f;
+    const count = () => {
+      const n = ta.value.trim() ? ta.value.trim().split(/\s+/).length : 0;
+      const el = box.querySelector('[data-wc="' + fi + '"]');
+      if(el) el.textContent = n + (n === 1 ? ' word' : ' words');
+    };
+    ta.addEventListener('input', () => {
+      F[fi] = F[fi] || {}; F[fi].t = ta.value; fput(); count();
+      if(fget(fi).done) markFrq(fi);
+    });
+    count();
+  });
+  box.querySelectorAll('[data-mark]').forEach(b => {
+    b.onclick = () => { const fi = +b.dataset.mark; F[fi] = F[fi] || {};
+                        F[fi].done = true; fput(); markFrq(fi); };
+  });
+  box.querySelectorAll('[data-fcopy]').forEach(b => {
+    b.onclick = () => copyText(oneFrqMarkdown(+b.dataset.fcopy), b, 'Copy');
+  });
+  D.frq.forEach((_f, fi) => { if(fget(fi).done) markFrq(fi); });
+}
+function markFrq(fi){
+  const f = D.frq[fi], st = fget(fi), box = $('#frqview [data-rub="' + fi + '"]');
+  if(!box) return;
+  box.classList.remove('hide');
+  if(!st.t.trim()){
+    box.innerHTML = '<p class="say">Nothing to mark yet — write an answer first.</p>';
+    return;
+  }
+  let h = '<h3>Marking</h3>';
+  f.rubric.forEach((r, ri) => {
+    const hit = frqHit(fi, ri);
+    let note;
+    if(hit.why === 'set') note = 'Set by you.';
+    else if(hit.why === 'judge') note = 'Nothing here can be settled by wording — read it and decide.';
+    else if(hit.on) note = 'Found “' + esc(hit.why) + '”.';
+    else note = 'Not found. If you said it another way, click to award it.';
+    h += '<div class="rrow ' + (hit.on ? 'hit' : 'miss') + '" data-ri="' + ri + '">'
+       + '<span class="rmark">' + (hit.on ? G_OK : '–') + '</span>'
+       + '<span class="rbody"><span class="rlab">' + esc(r.t)
+       + (r.judge ? '<span class="judge">your call</span>' : '') + '</span>'
+       + '<span class="rnote">' + note + '</span></span></div>';
+  });
+  const s = frqScore(fi);
+  const word = s.n >= s.t - 1 ? 'Strong' : s.n >= s.t - 2 ? 'Solid'
+             : s.n >= 2 ? 'Thin' : 'Missed the question';
+  h += '<div class="rfoot"><span class="rscore">' + s.n + ' <small>/ ' + s.t + '</small></span>'
+     + '<span class="rverdict">' + word + '</span><span class="spacer"></span>'
+     + (f.model ? '<button class="link" data-model="' + fi + '">Model answer</button>' : '')
+     + '</div>';
+  if(f.model) h += '<div class="model hide" data-mv="' + fi + '">' + tinyMd(f.model) + '</div>';
+  box.innerHTML = h;
+
+  box.querySelectorAll('.rrow').forEach(row => {
+    row.onclick = () => {
+      const ri = +row.dataset.ri;
+      F[fi] = F[fi] || {}; F[fi].m = F[fi].m || {};
+      F[fi].m[ri] = !row.classList.contains('hit');
+      fput(); markFrq(fi);
+    };
+  });
+  const mb = box.querySelector('[data-model]');
+  if(mb) mb.onclick = () => {
+    const mv = box.querySelector('[data-mv="' + fi + '"]');
+    mv.classList.toggle('hide');
+    mb.textContent = mv.classList.contains('hide') ? 'Model answer' : 'Hide model answer';
+  };
+}
+function oneFrqMarkdown(fi){
+  const f = D.frq[fi], st = fget(fi), s = frqScore(fi);
+  let out = '### Written ' + (fi+1) + (f.tag ? ' — ' + f.tag : '')
+          + (f.secs ? ' (' + f.secs + ')' : '') + '\n\n';
+  if(f.prompt) out += '> ' + f.prompt + '\n\n';
+  out += '**' + f.ask + '**\n\n' + (st.t.trim() || '_(not answered)_') + '\n\n'
+       + '**Marked ' + s.n + '/' + s.t + '**\n\n';
+  f.rubric.forEach((r, ri) => {
+    out += '- [' + (frqHit(fi, ri).on ? 'x' : ' ') + '] ' + r.t
+         + (r.judge ? ' _(judgement)_' : '') + '\n';
+  });
+  return out;
+}
+/* Only answered ones ride the Copy. An untouched written half would otherwise put three
+   empty questions and eighteen unticked boxes onto the Notion row every week. */
+function frqMarkdown(){
+  const done = (D.frq || []).map((_f, i) => i).filter(i => fget(i).t.trim());
+  if(!done.length) return '';
+  return '\n\n## Written\n\n' + done.map(oneFrqMarkdown).join('\n');
+}
+function copyText(text, btn, back){
+  navigator.clipboard.writeText(text).then(()=>{
+    const old = btn.textContent;
+    btn.textContent = 'Copied';
+    setTimeout(()=>{ btn.textContent = back || old; }, 1400);
+  });
+}
+
+/* ---- rendering ---------------------------------------------------------------- */
+/* The Starred tab only exists while something is starred, and the Study sheet tab only when
+   the quiz shipped with one — a linguistics quiz built before topic tags has none. If that
+   leaves one tab, the whole group goes: a lone "Quiz" button is chrome that says nothing. */
+function syncTabs(){
+  // A REFLECTION OPENS THE TAB TOO, since 08-16 — it is the only place one is ever read back,
+  // so a reflection on a question he never starred must not be invisible. `topList()` is the
+  // same function the tab renders from, so what the strip says and what the tab holds cannot
+  // disagree.
+  const nstar = topList().length;
+  const nfrq = (D.frq || []).length;
+  document.querySelector('.tab[data-tab="starred"]').classList.toggle('hide', !nstar);
+  document.querySelector('.tab[data-tab="sheet"]').classList.toggle('hide', !D.hasSheet);
+  document.querySelector('.tab[data-tab="quiz"]').textContent = NOUN;
+  document.querySelector('.tab[data-tab="frq"]').classList.toggle('hide', !nfrq);
+  $('#tabs').classList.toggle('hide', !nstar && !D.hasSheet && !nfrq);
+  if(D.tab === 'starred' && !nstar) setTab('quiz');
+  fitTitle();          // starring one question adds a tab, which moves what the title clears
+}
+
+/* THE TITLE GOES DEAD-CENTRE ONLY IF IT CAN DO IT WHOLE. Measured, not guessed: the title's
+   own width against the bar minus a gutter the width of the tabs on each side. It is
+   re-measured whenever the tabs change and whenever the window does, because both change
+   the answer. See .bar.mid in the CSS for why the fallback exists. */
+function fitTitle(){
+  const bar = document.querySelector('.bar'), t = document.querySelector('.title'),
+        tabs = $('#tabs');
+  if(!bar || !t) return;
+  /* MEASURED CENTRED, THEN PUT BACK IF IT DOES NOT FIT. It has to be done in that order:
+     in the flex layout the title is `flex:1`, so it is as wide as the space beside the tabs
+     whatever the words are, and both scrollWidth and offsetWidth report that width rather
+     than the title's own. .mid makes it `width:max-content`, which is the only state in
+     which it can be asked how wide it actually is. Both classList calls happen inside one
+     frame, so nothing is painted half-way. */
+  bar.classList.add('mid');
+  const side = (tabs && !tabs.classList.contains('hide')) ? tabs.offsetWidth : 0;
+  if(t.getBoundingClientRect().width > bar.clientWidth - 2 * (side + 14))
+    bar.classList.remove('mid');
+}
+function setTab(name){
+  if(D.tab === 'quiz' && name !== 'quiz') flushResearch();
+  if(D.tab === 'frq' && name !== 'frq') flushFrq();
+  D.tab = name;
+  document.querySelectorAll('.tab').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===name));
+  $('#band').classList.toggle('hide', name!=='quiz');
+  $('#starredview').classList.toggle('hide', name!=='starred');
+  $('#sheetview').classList.toggle('hide', name!=='sheet');
+  $('#frqview').classList.toggle('hide', name!=='frq');
+  $('#footer').classList.toggle('hide', name!=='quiz');
+  if(name==='quiz'){
+    draw();
+    // Restore the frozen offset rather than recomputing it: answer, read the sheet, come
+    // back — the question must be exactly where he left it.
+    if(quizPad !== null) $('main').style.paddingTop = quizPad;
+  } else {
+    if(name==='starred') drawStarred();
+    if(name==='sheet'){ renderScore(); renderSheetExtras(); }
+    if(name==='frq') drawFrq();
+    $('main').style.paddingTop = BASE_PAD + 'px';
+    window.scrollTo(0,0);
+  }
+}
+
+/* CENTRE THE BLOCK, BUT COMPUTE THE OFFSET ONLY WHEN THE QUESTION CHANGES.
+   `justify-content:center` was the original approach and it is what made the question jump:
+   opening a rationale made the block taller and the centring recomputed underneath him.
+   Measuring once per question and freezing the padding gives both — centred on arrival,
+   immovable afterwards, because answering only ever grows the page downward. */
+const BASE_PAD = 16;
+let quizPad = null;
+
+/* CENTRE ON THE ANSWERED HEIGHT, NOT THE HEIGHT ON SCREEN.
+   Centring on what is visible was wrong in a way that only showed up after answering: the
+   block grows by two rationales, so the top gap stayed large while the last option slid
+   under the footer. Coming back to the same question then looked right, because by then it
+   WAS the answered height being measured — the two states he photographed, from one bug.
+   `reserve` is the height with feedback open, measured off-screen before anything renders. */
+/* CENTRE THE QUESTION HE IS LOOKING AT; ONLY MOVE UP IF THE ANSWER WOULD NOT FIT.
+   Two rules that used to fight, now resolved with a `min` instead of a choice between them:
+
+     centred = the block as it is on screen, centred        ← what he reads
+     fit     = the lowest start that still leaves room for the ANSWERED block
+
+   `min` of the two. On a tall window the answered block still fits inside the centred
+   position, so nothing clamps and the question sits in the middle of the page — *"so i dont
+   have to look at the top too much but just straight at the center"* (08-11). On a short
+   one, `fit` wins and the block rides up exactly as far as it must, which is the 08-10
+   behaviour and no further.
+
+   Either way the padding is computed ONCE per question and frozen, so answering still moves
+   nothing: only the cards below the one he clicked ever change position.
+
+   THE RESEARCH ROW IS DELIBERATELY OUT OF BOTH MEASUREMENTS (08-11). Counting it would
+   centre the whole band and lift the question by half the row — he tried that and preferred
+   it without: *"if research is opened I can scroll down to add it in."* */
+function centreBlock(i){
+  const m = $('main');
+  m.style.paddingTop = BASE_PAD + 'px';
+  const avail = innerHeight - $('header').offsetHeight - $('footer').offsetHeight;
+  // The band's own padding is part of the block, or the box lands low by exactly one padding.
+  const bp = parseFloat(getComputedStyle($('#band')).paddingTop) || 0;
+  const live = $('#quizview').getBoundingClientRect().height + bp * 2;
+  const answered = (i === undefined ? live : answeredHeight(i) + bp * 2);
+  const centred = Math.round((avail - live) / 2);
+  const fit = Math.round(avail - answered);
+  quizPad = Math.max(BASE_PAD, Math.min(centred, fit)) + 'px';
+  m.style.paddingTop = quizPad;
+}
+
+/* The tallest this question can get: a WRONG pick, which opens two rationales rather than
+   one. Rendered into a hidden probe of the same width and thrown away. */
+function answeredHeight(i){
+  const q = D.questions[i];
+  const probe = document.createElement('div');
+  probe.style.cssText = 'position:absolute;left:-99999px;top:0;visibility:hidden';
+  probe.style.width = $('#quizview').getBoundingClientRect().width + 'px';
+  probe.innerHTML = buildQ(i, (q.correct + 1) % q.options.length, false);
+  $('main').appendChild(probe);
+  const h = probe.getBoundingClientRect().height;
+  probe.remove();
+  return h;
+}
+
+/* NEVER BACKWARDS. The old fallback here was `S.i = act[0]`, so skipping a question sent him
+   to question 1 — the whole way back to the start of the quiz. The nearest question AFTER
+   the one that just left is the only sensible landing place. */
+function nextFrom(list, i){
+  const nx = list.find(j => j > i);
+  return nx === undefined ? list[list.length-1] : nx;
+}
+function draw(){
+  if(D.tab!=='quiz') return;
+  $('#band').classList.toggle('off', !!(S.reviewing || S.done));
+  // The box belongs to a question on screen. The end card and the review list have none, so
+  // it goes away there rather than floating under a score.
+  showResearch(!(S.reviewing || S.done));
+  if(S.reviewing) return review();
+  if(S.done) return end();
+  // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
+  // the rest of the sitting, so nothing about answering, going back or the second pass has
+  // to know the picker exists.
+  if(sectioned() && !S.only) return picker();
+  const act = runList();
+  if(!act.length) return end();
+  if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
+  question();
+}
+
+/* Pure markup, no DOM writes and no state changes — so the same builder can render the
+   question and be measured off-screen for the centring reserve. */
+function buildQ(i, picked, fresh, en){
+  const q = D.questions[i];
+  const answered = picked !== undefined;
+  const act = runList(), pos = act.indexOf(i);
+  const starred = !!S.starred[q.qid];
+  const unsure = !!(S.unsure||{})[q.qid];
+  en = en || '';
+
+  // The counter sits top-left above the question, the way the notebook does it, rather than
+  // up in the bar — it belongs with the thing it counts. On a second pass it counts the
+  // second pass, so four wrong answers read as "1 / 4" and not as a broken 16.
+  let h = '<div class="qhead' + en + '"><div class="qcol">'
+        + '<p class="meta"><span class="num">' + (pos+1) + ' / ' + act.length + '</span>'
+        + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
+        // 10 reads as the paper having lost his place, which is how he read it.
+        + (recycling && S.phase!==2
+           ? '<span class="dot">·</span><span class="fillnote">filling in ' + gaps().length
+             + ' left blank</span>' : '')
+        // THE SECTION AND THE GLYPH, on the exam only — a subchapter quiz carries neither and
+        // this line is byte-for-byte what it always was. The section is what it says; the
+        // glyph is why this question is on the paper at all, and it is deliberately JUST the
+        // glyph. His instruction: "the blurb needs to be shortened to just the symbol : in
+        // that its either has them as a tag or it doesnt."
+        + (q.sec ? '<span class="dot">·</span><span class="sec">' + esc(q.sec)
+                 + (q.link ? '<span class="lk">+' + esc(q.link) + '</span>' : '')
+                 + '</span>' : '')
+        // THE TOPIC NAME IS HELD BACK UNTIL HE HAS ANSWERED. It was giving the answer away:
+        // `8.1 · Inferior scapular angle` sat over a question asking which part of the scapula
+        // anchors the powerful shoulder muscles, so the tag answered it before the options did.
+        // His own exams name no topic; he reverse-engineers where to look from the question.
+        // The section number stays visible — that is the scope pointer, and it is the whole
+        // subchapter, not the idea. The name comes back the moment the answer is locked in,
+        // because that is when it stops being a hint and starts being the label he files it
+        // under (the end card, the review list and the paste all keep reading it).
+        + (q.topic && answered ? '<span class="dot">·</span><span>' + esc(q.topic)
+                 + '</span>' : '')
+        + (q.src ? '<span class="dot">·</span><span class="src" title="' + srcName(q.src)
+                 + '">' + esc(q.src) + '</span>' : '')
+        + '</p>'
+        + '<h1 class="q">' + esc(q.q) + '</h1></div>'
+        // ? BEFORE ☆, because it is the one pressed while the question is still unanswered:
+        // "no idea" is a thing he knows before he picks, and starring is usually after.
+        // The key is in the tooltip because there is nowhere else on the page that says it,
+        // and a legend down the footer would be four words of chrome on every question.
+        + '<button class="qmark' + (unsure?' on':'') + '" id="qmark" '
+        + 'title="No idea — needs work  ( / )" aria-label="No idea, needs work">?</button>'
+        + '<button class="star' + (starred?' on':'') + '" id="star" title="Star  ( s )" '
+        + 'aria-label="Star">'
+        + (starred?'★':'☆') + '</button>'
+        + '<div class="more"><button class="dots" id="dots" aria-label="More">⋮</button></div>'
+        + '</div>';
+
+  h += '<div class="opts">';
+  // `pos` is where it sits on screen and `k` is which option it is. The LETTER follows the
+  // position — A is whatever is drawn first, always — because the letter is how he says
+  // "that one" with the keyboard. `data-k` follows the option, because that is what gets
+  // stored, scored and exported.
+  optOrder(i).forEach((k,pos)=>{
+    const o = q.options[k];
+    let cls = 'opt' + en, mark = '', lab = '', why = '';
+    if(answered){
+      if(k === q.correct){ cls += ' is-right'; mark = G_OK; lab = 'Right answer'; }
+      else if(k === picked){ cls += ' is-wrong'; mark = G_NO; lab = 'Not quite'; }
+      else cls += ' is-muted';
+      if(lab && fresh) cls += ' fresh';
+      why = q.rationales ? (q.rationales[k]||'') : '';
+    }
+    h += '<button class="'+cls+(answered?' locked':'')+'" data-k="'+k+'"'
+       + (answered?' aria-disabled="true"':'')+'>'
+       + '<span class="line"><span class="k">'+D.letters[pos]+'.</span>'
+       + '<span class="t">'+esc(o)+'</span>'
+       + '<span class="mark">'+mark+'</span></span>';
+    if(lab){
+      h += '<span class="rat"><span class="ratin">'
+         + '<span class="lab"><span class="g">'+mark+'</span>'+lab+'</span>'
+         + (why ? '<span class="why" style="display:block">'+esc(why)+'</span>' : '')
+         + '</span></span>';
+    }
+    h += '</button>';
+  });
+  return h + '</div>';
+}
+
+function question(fresh){
+  const i = S.i, q = D.questions[i], picked = pick(i);
+  const answered = picked !== undefined;
+  const act = runList();
+  const pos = act.indexOf(i);
+  const isNew = i !== lastShown;
+  lastShown = i;
+
+  $('#rail').style.width = ((pos + (answered?1:0)) / act.length * 100) + '%';
+  $('#quizview').innerHTML = buildQ(i, picked, fresh, isNew ? ' enter' : '');
+  $('#quizview').querySelectorAll('.opt').forEach(b=>{
+    b.onclick = ()=>{
+      // `aria-disabled` AND NOT `disabled`, SINCE 08-16. A real `disabled` button will not let
+      // its text be selected however `user-select` is set — browsers block selection inside a
+      // disabled control — so the rationale he wanted to copy off an answered question could
+      // not be picked up at all: *"Im trying to copy on v2 exams and its not letting me."*
+      // The lock is now the guard on this line, and the class is what styles it.
+      if(b.classList.contains('locked')) return;
+      // The first pass is never overwritten — a second-pass answer goes in its own map.
+      if(S.phase === 2) S.pass2[qk(i)] = +b.dataset.k; else S.answers[qk(i)] = +b.dataset.k;
+      save(); question(true);
+    };
+  });
+  $('#star').onclick = ()=> toggleStar(i);
+  $('#qmark').onclick = ()=> toggleUnsure(i);
+  $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
+
+  // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
+  // touches it — and nothing above the options ever changes height.
+  const hb = $('#hintbtn'), ht = $('#hinttext');
+  hb.classList.toggle('hide', !q.hint || answered);
+  ht.classList.toggle('hide', !(S.hintOpen && q.hint && !answered));
+  ht.textContent = q.hint || '';
+  hb.onclick = toggleHint;
+
+  // Redo takes the Hint slot the moment the hint leaves it: before the answer the footer
+  // offers help, after it the footer offers a way back. Never both, never an empty gap.
+  const rd = $('#redo');
+  rd.classList.toggle('hide', !answered);
+  rd.onclick = redoQuestion;
+
+  $('#back').classList.remove('hide');
+  $('#next').classList.remove('hide');
+  $('#review').classList.add('hide');
+  $('#retake').classList.add('hide');
+  $('#pass2').classList.add('hide');
+  $('#towritten').classList.add('hide');
+  $('#back').disabled = pos === 0;
+  /* NEXT IS NEVER DISABLED (08-12). It used to be locked until he answered, which made a
+     gap impossible and the recycle below unreachable. He asked for the opposite: Enter
+     always moves on, and the button has to mean the same thing as the key or there are two
+     answers to "what does forward do". It only says Finish when there is nothing left
+     unanswered — with a gap anywhere it says Next, because that is what it does. */
+  $('#next').disabled = false;
+  $('#next').textContent = (pos === act.length-1 && !gaps().length) ? 'Finish' : 'Next';
+  $('#footer').classList.remove('hide');
+  mountResearch(q.qid);
+  // Only when the question changes, and always against the ANSWERED height, so the layout
+  // he lands on is the one he will still be looking at after he picks.
+  if(isNew) centreBlock(i);
+}
+
+/* THE HINT, from the button or from `h`. One path for both, and the BUTTON'S OWN VISIBILITY
+   is the gate: it is already hidden when the question has no hint or has been answered, so
+   there is no second copy of that condition to fall out of step. */
+function toggleHint(){
+  const hb = $('#hintbtn'), ht = $('#hinttext');
+  if(hb.classList.contains('hide')) return;
+  S.hintOpen = !S.hintOpen;
+  ht.classList.toggle('hide', !S.hintOpen);
+  /* RECORDED PER QUESTION, NOT PER PRESS. Still one hint however many times he opens the
+     same one — the number is meant to say how many questions he needed help on, and
+     counting keystrokes would make a fidget look like a gap. It rides in S, so a Retake
+     clears it: it describes this attempt, unlike ☆ and ?.
+
+     SHUTTING IT AGAIN TAKES THE DEDUCTION BACK (08-12, his ask): `h` is next to the keys
+     that answer, so it gets hit by accident, and a projected score docked for a hint he
+     never read is wrong about the only thing that number is for. Open then shut = not
+     used. He can also read it and shut it, and that is his to do — nothing here can tell
+     the two apart, and the projected score is his own instrument to be honest with. */
+  if(S.hintOpen){ if(!S.hints) S.hints = {}; S.hints[qk(S.i)] = true; }
+  else if(S.hints) delete S.hints[qk(S.i)];
+  save();
+}
+
+/* REDO — put this question back the way it was before he answered it, and nothing else.
+   For the mis-click: an option is a full-width card and the row above it is the question,
+   so the wrong one gets hit. It clears the pick FOR THIS PASS only.
+
+   AND IT RESHUFFLES THE OPTIONS (08-14, his ask). A mis-click still shows him the right
+   answer for the moment it takes to press Redo, so putting the same four cards back in the
+   same four places hands him the answer by position — he would be picking a slot he
+   remembers, not an answer he knows. Reshuffled, what he saw is worth nothing. Purely
+   cosmetic: `data-k` still carries the original index, so the pick he then makes is stored,
+   scored and exported exactly as an untouched question's would be. See optOrder().
+
+   WHAT IT DELIBERATELY DOES NOT TOUCH: the research and fix boxes (they live in R, not in
+   S, and what he found stands whatever he clicked), ☆, ?, and the hint. Retake is the one
+   that clears, and it is at the end of the quiz where it belongs.
+
+   No re-centring: `question()` sees the same index, so the frozen padding stays and the
+   block does not jump under him. */
+function redoQuestion(){
+  const i = S.i;
+  if(pick(i) === undefined) return;
+  if(S.phase === 2) delete S.pass2[qk(i)]; else delete S.answers[qk(i)];
+  reshuffleOpts(i);
+  save(); question();
+}
+
+/* STARRING is not the same thing as skipping and the two maps never mix. Starred = worth
+   coming back to, right or wrong, still fully part of the run and the score. Skipped =
+   removed from it. Keeping them apart is what lets exam reuse later take the starred ones as
+   candidates and treat the skipped ones as permanently excluded. */
+function toggleStar(i){
+  const k = qk(i);
+  if(S.starred[k]) delete S.starred[k]; else S.starred[k] = true;
+  save(); syncTabs();
+  const b = $('#star');
+  if(b){ b.textContent = S.starred[k] ? '★' : '☆'; b.classList.toggle('on', !!S.starred[k]); }
+}
+
+/* ? IS NOT ☆ AND IT IS NOT WRONG EITHER. His words: "I have no idea and whether or not I get
+   this right or wrong, it still needs work." So it is a third map beside `starred` and
+   `skipped`, it changes no score, and it survives a Retake and a rebuild exactly as the
+   other two do — a guess that happened to land right is the case it exists for, and that
+   question would otherwise leave no trace anywhere. */
+function toggleUnsure(i){
+  const k = qk(i);
+  if(!S.unsure) S.unsure = {};
+  if(S.unsure[k]) delete S.unsure[k]; else S.unsure[k] = true;
+  save();
+  const b = $('#qmark');
+  if(b) b.classList.toggle('on', !!S.unsure[k]);
+}
+
+/* ---- the research box ----------------------------------------------------------------
+   One box per question, opened from a row under the options, holding THREE panes of which
+   exactly one is on screen — Research, Fix this question, Reflection.
+
+   WHY TWO AND NOT ONE (08-12). Everything he wrote here used to land under a single
+   `## My research` heading, and the exam prompt reads that heading as MATERIAL — the rung-4
+   pile of things never yet asked. That is right for a definition he looked up and wrong for
+   "this stem never said which joint": an instruction filed as material gets tested rather
+   than obeyed, so the flawed question came back unchanged. So the pane on the left is what
+   he FOUND and the pane on the right is what the QUESTION should have been, they travel to
+   the sheet under two different headings, and the pipeline routes them to two different
+   places — content into the exam's sources, direction into the exam's prompt.
+
+   THE BOX SHUTS WHEN THE QUESTION CHANGES. It used to stay open across the whole quiz on the
+   theory that an evening of looking things up should not need it reopening fifteen times;
+   in practice he ended up scrolling past an empty box on every question he had nothing to
+   say about. The CONTENT is per question and always was. */
+const rpanel = $('#research'), rtoggle = $('#rtoggle'), rbody = $('#rbody');
+const rtext = $('#rtext'), rfix = $('#rfix'), rrefl = $('#rrefl');
+const rshots = $('#rshots'), rsay = $('#rsay');
+/* The pane on screen. STICKY ACROSS QUESTIONS like `rOpen`, and for the same reason: he
+   works in one mode for a stretch, and a box that snapped back to Research on every question
+   would need re-choosing fifteen times an evening. */
+let rPane = 'research';
+const PANES = {research: rtext, fix: rfix, refl: rrefl};
+let rOpen = false;
+let rFor = null;          // the qid the box currently holds
+let rTimer = null;
+
+function showResearch(on){ if(rpanel) rpanel.classList.toggle('hide', !on); }
+
+/* Write ALL THREE textareas back to the question they belong to. Called before the box is
+   pointed at a different question, on blur, on a debounce while typing, and on the way out of
+   the page — the textareas are the live copy and everything else reads from R.
+   All three at once, never just the visible one: the hidden panes are `display:none`, not
+   unmounted, so their `.value` is still the truth for their pane and writing only the
+   showing one would blank the other two on the first keystroke. */
+function flushResearch(){
+  if(rFor === null || !rtext) return;
+  const cur = rget(rFor);
+  if(!rput(rFor, rtext.value, cur.i, rfix ? rfix.value : cur.f,
+           rrefl ? rrefl.value : cur.x)) warnFull();
+  paintToggle();
+}
+function mountResearch(id){
+  if(!rpanel) return;
+  /* FLUSHED ON EVERY MOUNT, INCLUDING A RE-MOUNT OF THE SAME QUESTION. Below this line the
+     panes are overwritten from R, so anything still sitting in the debounce is gone — and
+     answering re-mounts. Type a sentence, click an option inside 400ms, and the sentence was
+     silently deleted. Only the cross-question case used to flush, which is why that went
+     unnoticed: it needs the two events within a fifth of a second of each other. */
+  if(rFor !== null){ clearTimeout(rTimer); flushResearch(); }
+  // A NEW question, so the box goes away with the old one. Same question re-rendered leaves
+  // it exactly as he left it, mid-paste and all.
+  if(rFor !== null && rFor !== id) rOpen = false;
+  rFor = id;
+  const r = rget(id);
+  rtext.value = r.t;
+  if(rfix) rfix.value = r.f;
+  if(rrefl) rrefl.value = r.x;
+  rbody.classList.toggle('hide', !rOpen);
+  rsay.textContent = ''; rsay.classList.remove('warn');
+  drawShots();
+  paintPane();
+  paintToggle();
+}
+/* Which pane is showing, and which of the three already have something in them. Split out of
+   `openResearch` because it is also called on every mount — the dots belong to the question,
+   not to the last key he pressed. */
+function paintPane(){
+  const r = rget(rFor), has = {research: !!(r.t.trim() || r.i.length),
+                               fix: !!r.f.trim(), refl: !!r.x.trim()};
+  Object.keys(PANES).forEach(k => {
+    if(PANES[k]) PANES[k].classList.toggle('hide', k !== rPane);
+  });
+  document.querySelectorAll('.rtab').forEach(b => {
+    b.setAttribute('aria-selected', b.dataset.pane === rPane);
+    b.classList.toggle('has', !!has[b.dataset.pane]);
+  });
+}
+/* The row says what is behind it, so a question he has already written on is visible
+   without opening anything. */
+function paintToggle(){
+  if(!rtoggle) return;
+  const r = rget(rFor), n = r.i.length, bits = [];
+  if(r.t.trim()) bits.push('notes');
+  if(n) bits.push(n + (n > 1 ? ' images' : ' image'));
+  if(r.f.trim()) bits.push('a fix');
+  if(r.x.trim()) bits.push('a reflection');
+  rtoggle.textContent = bits.length ? ('My box · ' + bits.join(', '))
+                                    : '+ Research, a fix, or a reflection';
+  rtoggle.classList.toggle('has', !!bits.length);
+}
+function drawShots(){
+  const imgs = rget(rFor).i;
+  rshots.classList.toggle('hide', !imgs.length);
+  rshots.innerHTML = imgs.map((src, n) =>
+    '<span class="shot"><img src="' + src + '" alt="Pasted image ' + (n+1) + '">'
+    + '<button class="x" data-rm="' + n + '" aria-label="Remove image">×</button></span>').join('');
+  rshots.querySelectorAll('[data-rm]').forEach(b => {
+    b.onclick = () => {
+      const imgs2 = rget(rFor).i.slice();
+      imgs2.splice(+b.dataset.rm, 1);
+      rput(rFor, rtext.value, imgs2, rfix ? rfix.value : '', rrefl ? rrefl.value : '');
+      drawShots(); paintToggle(); paintPane();
+      rsay.textContent = ''; rsay.classList.remove('warn');
+    };
+  });
+}
+
+/* IMAGES ARE SHRUNK BEFORE THEY ARE STORED, and that is not a nicety — localStorage is a
+   few megabytes for the whole origin, and one full-size screenshot off a web page is
+   comfortably a megabyte of base64. Long edge 1100px, WebP where the browser has it,
+   JPEG where it does not. A diagram is still readable and a page's worth of them fits. */
+function shrink(file, cb){
+  const url = URL.createObjectURL(file);
+  const img = new Image();
+  img.onload = () => {
+    const max = 1100;
+    const s = Math.min(1, max / Math.max(img.naturalWidth, img.naturalHeight));
+    const c = document.createElement('canvas');
+    c.width = Math.max(1, Math.round(img.naturalWidth * s));
+    c.height = Math.max(1, Math.round(img.naturalHeight * s));
+    const ctx = c.getContext('2d');
+    // JPEG has no transparency and paints it black, so a white plate goes down first —
+    // most diagrams he will paste are black line art on a transparent background.
+    ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, c.width, c.height);
+    ctx.drawImage(img, 0, 0, c.width, c.height);
+    URL.revokeObjectURL(url);
+    let out = '';
+    try{ out = c.toDataURL('image/webp', 0.72); }catch(e){}
+    if(out.slice(0, 15) !== 'data:image/webp') out = c.toDataURL('image/jpeg', 0.78);
+    cb(out);
+  };
+  img.onerror = () => { URL.revokeObjectURL(url); cb(null); };
+  img.src = url;
+}
+function warnFull(){
+  rsay.textContent = 'This browser is out of room — remove an image and try again.';
+  rsay.classList.add('warn');
+}
+
+/* ONE WAY IN, from a chip or from r / f / t, and it lands him in the box ready to type:
+   scrolled to, focused, caret at the end. `block:'center'` rather than `'nearest'` because
+   the box opens below the fold on a long question and 'nearest' stops the moment its top
+   edge is visible — which is not far enough to type in.
+
+   ONE RULE FOR ALL THREE KEYS (08-16): the key switches to its pane, and pressing the key
+   for the pane already showing closes the box. It used to be that `r` toggled and `f` never
+   closed, which was right when they were two panes side by side and both always visible —
+   with one pane on screen at a time there is only one question a key can be answering
+   ("show me this one"), and one rule for three keys is the only version he can hold in his
+   head. Esc still closes from inside, where every letter is just a letter. */
+function openResearch(pane){
+  if(!rpanel || rpanel.classList.contains('hide')) return;
+  const want = PANES[pane] ? pane : 'research';
+  if(rOpen && rPane === want){ closeResearch(); return; }
+  rPane = want;
+  rOpen = true;
+  rbody.classList.remove('hide');
+  paintPane();
+  const el = PANES[rPane];
+  el.focus();
+  el.setSelectionRange(el.value.length, el.value.length);
+  rbody.scrollIntoView({block:'center', behavior:'smooth'});
+}
+function openFix(){ openResearch('fix'); }
+function openRefl(){ openResearch('refl'); }
+/* ONE WAY OUT, and it saves on the way — the debounce may not have fired, and a box that
+   swallowed the last sentence he typed would be worse than one that never closed. The blur
+   matters as much as the hide: with the caret still parked in a hidden textarea, every
+   option key afterwards would be typed into it instead of answering. */
+function closeResearch(){
+  if(!rpanel) return;
+  clearTimeout(rTimer);
+  flushResearch();
+  rOpen = false;
+  rbody.classList.add('hide');
+  const a = document.activeElement;
+  if(a && rbody.contains(a)) a.blur();
+}
+function toggleResearch(){
+  if(!rpanel || rpanel.classList.contains('hide')) return;
+  if(rOpen) closeResearch(); else openResearch(rPane);
+}
+
+/* ---- `* ` MAKES A BULLET, ANYWHERE HE TYPES (08-16, his ask) --------------------------
+   *"I much prefer them to be like in notion where you can do `* ` with the space inside to
+   create a bullet point. My mind thinks in them."*
+
+   A textarea holds plain text and cannot render a list, so the bullet IS a character: `* `
+   becomes `• `, and the markdown writers turn `• ` back into `- ` on the way to Notion,
+   where it lands as a real bullet block. Three behaviours, all Notion's:
+
+     `* ` or `- ` at the start of a line  → becomes `• `
+     newline at the end of a bullet       → the next line starts as a bullet
+     newline on an EMPTY bullet           → the bullet is removed and the list ends
+
+   WHICH KEY MAKES A NEWLINE IS NOT THE SAME IN BOTH PLACES, and that is not an
+   inconsistency to fix. In the question box plain Enter means "next question" (08-12, his
+   rule) and Shift+Enter is the newline; on the sheet's notes box there is nowhere to go, so
+   Enter is the newline. `bulletNewline()` is given whichever key applies. */
+function setVal(el, v, caret){
+  el.value = v;
+  el.setSelectionRange(caret, caret);
+  // The debounce lives on the `input` listener, and a programmatic `.value` write does not
+  // fire one — without this the bullet he just made is not saved until he types again.
+  el.dispatchEvent(new Event('input', {bubbles: true}));
+}
+function lineStart(v, at){ const n = v.lastIndexOf('\n', at - 1); return n + 1; }
+/* ON `input`, NOT ON A KEYUP. A keyup is not fired by every way text arrives — an IME, an
+   autocomplete, a dictation, and the automation this was tested with all change the value
+   without one — and a bullet rule that works only when the space came from a physical key is
+   a rule he will hit the exception to. `input` is the one event every path fires.
+   It cannot loop: after the swap the line reads `• `, which this pattern does not match.
+   And it converts almost nothing by accident — the WHOLE line up to the caret has to be
+   exactly `* `, so pasting a paragraph with an asterisk in it is untouched. */
+function bulletType(el){
+  const v = el.value, at = el.selectionStart;
+  if(at !== el.selectionEnd) return;
+  const s = lineStart(v, at);
+  const m = v.slice(s, at).match(/^([ \t]*)([*-]) $/);
+  if(!m) return;
+  const head = m[1] + '• ';
+  setVal(el, v.slice(0, s) + head + v.slice(at), s + head.length);
+}
+/* -> true if it handled the key, in which case the caller preventDefaults. */
+function bulletNewline(el){
+  const v = el.value, at = el.selectionStart;
+  if(at !== el.selectionEnd) return false;
+  const s = lineStart(v, at);
+  const m = v.slice(s, at).match(/^([ \t]*)• (.*)$/);
+  if(!m) return false;
+  if(!m[2].trim()){                       // an empty bullet ends the list, as in Notion
+    setVal(el, v.slice(0, s) + v.slice(at), s);
+    return true;
+  }
+  const head = '\n' + m[1] + '• ';
+  setVal(el, v.slice(0, at) + head + v.slice(at), at + head.length);
+  return true;
+}
+/* Tab NESTS a bullet and Shift+Tab lifts it, two spaces at a time — the same depth the
+   markdown writers read. It is claimed ONLY on a bullet line, so Tab out of an empty box
+   still moves focus and the keyboard is never trapped. */
+function bulletIndent(el, out){
+  const v = el.value, at = el.selectionStart;
+  const s = lineStart(v, at);
+  if(!/^[ \t]*• /.test(v.slice(s))) return false;
+  if(out){
+    const m = v.slice(s).match(/^[ \t]{1,2}/);
+    if(!m) return true;                   // already flush left; the key is still swallowed
+    setVal(el, v.slice(0, s) + v.slice(s + m[0].length), Math.max(s, at - m[0].length));
+  } else {
+    setVal(el, v.slice(0, s) + '  ' + v.slice(s), at + 2);
+  }
+  return true;
+}
+
+if(rpanel){
+  rtoggle.onclick = toggleResearch;
+  document.querySelectorAll('.rtab').forEach(b => {
+    // Clicking the chip for the pane already showing must NOT close the box — he is aiming
+    // at a target on screen, unlike the key, which he presses from outside.
+    b.onclick = () => { if(rPane === b.dataset.pane){ PANES[rPane].focus(); return; }
+                        rPane = b.dataset.pane; paintPane(); PANES[rPane].focus(); };
+  });
+  [rtext, rfix, rrefl].forEach(el => {
+    if(!el) return;
+    el.addEventListener('input', () => { bulletType(el);
+                                         clearTimeout(rTimer); rTimer = setTimeout(flushResearch, 400); });
+    el.addEventListener('blur', flushResearch);
+    el.addEventListener('keydown', e => {
+      if(e.key === 'Tab' && bulletIndent(el, e.shiftKey)){ e.preventDefault(); return; }
+      // SHIFT+Enter is the newline in here, so it is the one that continues a bullet. Plain
+      // Enter is "next question" and is handled in the one document keydown handler.
+      if(e.key === 'Enter' && e.shiftKey && bulletNewline(el)) e.preventDefault();
+    });
+  });
+
+  /* ENTER-MOVES-ON IS NOT HANDLED HERE. It lives in the one document keydown handler, with
+     every other key on the quiz tab — see the ENTER IS THE ONE EXCEPTION block there. A
+     second listener on this element would be a second path to the same action, and briefly
+     was: both fired on one press and the quiz advanced two questions. */
+
+  /* NO preventDefault. A copied web selection puts BOTH a text flavour and an image file on
+     the clipboard; swallowing the event to grab the image would throw the text away. The
+     text lands in the textarea by itself and the files are picked off beside it. */
+  rbody.addEventListener('paste', e => {
+    const items = (e.clipboardData && e.clipboardData.items) || [];
+    const files = [];
+    for(let n = 0; n < items.length; n++){
+      if(items[n].kind === 'file' && /^image\//.test(items[n].type)){
+        const f = items[n].getAsFile();
+        if(f) files.push(f);
+      }
+    }
+    if(!files.length) return;
+    const target = rFor;
+    rsay.textContent = 'Adding ' + files.length + ' image' + (files.length > 1 ? 's' : '') + '…';
+    rsay.classList.remove('warn');
+    let left = files.length;
+    files.forEach(f => shrink(f, data => {
+      left--;
+      if(data && target === rFor){
+        // Hold the list as it was: a failed rput has already written the oversized entry
+        // into R, so the revert needs a copy taken BEFORE the attempt, not after it.
+        const prev = rget(target).i.slice(), fx = rfix ? rfix.value : '',
+              rx = rrefl ? rrefl.value : '';
+        if(rput(target, rtext.value, prev.concat([data]), fx, rx)){ drawShots(); paintToggle(); paintPane(); }
+        else { rput(target, rtext.value, prev, fx, rx); warnFull(); return; }
+      }
+      if(left === 0 && !rsay.classList.contains('warn')) rsay.textContent = '';
+    }));
+  });
+  addEventListener('beforeunload', flushResearch);
+}
+
+/* One question can be dropped from the run, the way the notebook lets him delete one —
+   except nothing is deleted in NotebookLM, so a rebuild brings it back and the end card
+   can put it back at any time.
+
+   SKIPPING THE LAST QUESTION SUBMITS. It used to send him back to question 1, because the
+   skipped index left `active()` and draw()'s fallback was `act[0]`. Deleting the last item
+   in a list means the list is finished, so this does exactly what Finish does. */
+function openMenu(){
+  const host = $('.more');
+  if(host.querySelector('.menu')) return closeMenu();
+  const m = document.createElement('div');
+  m.className = 'menu';
+  m.innerHTML = '<button id="skipq">Skip this question</button>';
+  host.appendChild(m);
+  m.querySelector('#skipq').onclick = ()=>{
+    const list = runList(), pos = list.indexOf(S.i);
+    if(list.length <= 1) return closeMenu();        // never skip the last one standing
+    const sec = D.questions[S.i].sec;
+    S.skipped[qk(S.i)] = true;
+    delete S.answers[qk(S.i)];
+    delete S.pass2[qk(S.i)];
+    delete S.starred[qk(S.i)];                     // a deleted question is not a starred one
+    if(S.unsure) delete S.unsure[qk(S.i)];         // nor one that still needs work
+    // A RESERVE TAKES ITS PLACE IMMEDIATELY, in the same section and the same sitting, so the
+    // count he is working against does not move: skip question 6 of 11 and it is still 11.
+    // Promoted BEFORE `wasLast` is decided — a skip on the last question with a reserve in
+    // hand is not the end of the paper, it is one more question, and finishing there would
+    // have handed him an end card with a question still owed.
+    const filled = promoteReserve(sec) >= 0;
+    const wasLast = !filled && pos === list.length - 1;
+    closeMenu();
+    syncTabs();
+    if(wasLast){ finish(); return; }
+    // After the removal the list has shrunk, so the item now AT `pos` is the one that
+    // followed the skipped question. Forwards, never back to the top.
+    S.i = runList()[pos];
+    S.hintOpen = false;
+    lastShown = -1;
+    save(); question(); window.scrollTo(0,0);
+  };
+  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
+}
+function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(); }
+
+function finish(){
+  S.done = true; S.at = new Date().toISOString();
+  recycling = false;          // the clean-up pass is over; a second pass starts in order
+  // THE SITTING'S SUBCHAPTERS ARE NOW SAT. Written here rather than on the end card because
+  // the end card is also what he sees on every later visit, and re-rendering it must not keep
+  // re-stamping the time. A second pass reopens the run and lands back here when it ends, so
+  // the stamp is the last time the section was actually finished, which is what it should be.
+  if(D.parts && S.only) S.only.forEach(sec=>{ S.sat[sec] = S.at; });
+  save(); end(); window.scrollTo(0,0);
+}
+
+/* One scored breakdown, keyed by whatever `keyOf` pulls off a question. Returns '' when no
+   question carries the field, which is what keeps the subchapter quiz's end card identical.
+   Rows come out in SRC_ORDER when the key is a glyph and in natural order otherwise, so the
+   provenance table always reads down his priority ladder even if the paper is shuffled. */
+function group(act, keyOf, head, label){
+  const by = {};
+  act.forEach(i=>{
+    // A CROSS-SECTION QUESTION COUNTS IN BOTH SECTIONS, because it tested both. It is one
+    // question on the paper and two lines in the report, so the column does not add up to
+    // the total — which is correct, and the alternative is worse: filing it under whichever
+    // section happened to be written first would hide the other one's weakness entirely.
+    const ks = [].concat(keyOf(i) || []);
+    ks.forEach(k=>{
+      if(!k) return;
+      by[k] = by[k] || {n:0,t:0};
+      by[k].t++;
+      if(finalRight(i)) by[k].n++;
+    });
+  });
+  let keys = Object.keys(by);
+  if(!keys.length) return '';
+  const ranked = keys.filter(k => SRC_ORDER.indexOf(k) >= 0).length === keys.length;
+  keys = ranked ? SRC_ORDER.filter(k => by[k])
+                : keys.sort((a,b)=>a.localeCompare(b, undefined, {numeric:true}));
+  let h = '<div class="topics"><h3>'+esc(head)+'</h3>';
+  keys.forEach(k=>{
+    h += '<div class="trow"><span>'+(label ? label(k) : esc(k))+'</span>'
+       + '<span class="n">'+by[k].n+'/'+by[k].t+'</span>'
+       + '<span class="tbar"><i style="width:'+(by[k].n/by[k].t*100)+'%"></i></span></div>';
+  });
+  return h + '</div>';
+}
+
+/* THE PICKER — the one new screen, and the only place the sectioning is visible before he
+   starts. Shown when parts are on, the paper has more than one subchapter, and this sitting
+   has not been chosen yet. Choosing writes `S.only` and everything after it is the ordinary
+   exam: same order, same second pass, same end card, one direction to the end.
+
+   IT IS ALSO THE SCOREBOARD. His second ask — *"or just display the score of the subsections
+   that I have got done"* — is answered by the same screen rather than a separate one, because
+   it is the screen he lands on when he opens the link again. */
+let pickSel = null;
+
+function picker(){
+  const p = paperStat();
+  if(!pickSel) pickSel = p.left.map(s => s.sec);          // default: what is still outstanding
+  const chosen = p.secs.filter(s => pickSel.indexOf(s.sec) >= 0);
+  const nq = chosen.reduce((a,s)=>a+s.t, 0);
+
+  let h = '<div class="picker"><h3>' + (p.done.length ? 'Pick up where you left off'
+                                                      : 'Which sections are you sitting?')
+        + '</h3>';
+  h += '<p class="psub">' + p.whole + ' questions across ' + p.secs.length
+     + ' subchapters. Sit as many as you have time for — the rest keep, and this link '
+     + 'reopens on this screen.</p>';
+
+  if(p.done.length){
+    h += '<p class="pscore"><b>' + p.n + ' / ' + p.t + '</b> <span>' + p.pct + '% across '
+       + p.done.length + ' of ' + p.secs.length + ' subchapters'
+       + (p.all ? ' — the whole paper' : '') + '</span></p>';
+  }
+
+  h += '<div class="prows">';
+  p.secs.forEach(s=>{
+    const on = pickSel.indexOf(s.sec) >= 0;
+    const note = s.done ? ('Finished · ' + s.n + '/' + s.t)
+               : s.started ? (s.answered + ' of ' + s.t + ' answered')
+               : (s.t + ' question' + (s.t > 1 ? 's' : ''));
+    h += '<button class="prow' + (on ? ' pon' : '') + (s.done ? ' pdone' : '')
+       + '" data-sec="' + esc(s.sec) + '">'
+       + '<span class="pmark">' + (on ? G_OK : '') + '</span>'
+       + '<span class="plabel">' + esc(s.sec)
+       + ((D.secTitles||{})[s.sec] ? ' <em>' + esc(D.secTitles[s.sec]) + '</em>' : '')
+       + '</span>'
+       + '<span class="pnote">' + note + '</span>'
+       + (s.done ? '<span class="pbar"><i style="width:' + (s.t ? s.n/s.t*100 : 0)
+                 + '%"></i></span>' : '') + '</button>';
+  });
+  h += '</div>';
+
+  h += '<div class="pgo">'
+     + '<button class="pill go" id="pstart"' + (nq ? '' : ' disabled') + '>'
+     + (nq ? 'Start · ' + nq + ' question' + (nq > 1 ? 's' : '') : 'Pick a subchapter')
+     + '</button>'
+     + (p.left.length && p.left.length < p.secs.length
+        ? '<button class="link" id="pleft">Everything left</button>' : '')
+     + '<button class="link" id="pall">The whole paper</button>'
+     + '</div>';
+
+  if(p.done.length) h += '<p class="note">Finished subchapters keep their answers. Sitting '
+                       + 'one again replaces that score.</p>';
+  h += '</div>';
+
+  $('#quizview').innerHTML = h;
+  $('#rail').style.width = '0%';
+  $('#band').classList.add('off');
+  showResearch(false);
+  ['#back','#hintbtn','#hinttext','#redo','#next','#review','#retake','#pass2','#towritten']
+    .forEach(k => $(k).classList.add('hide'));
+  $('#footer').classList.add('hide');
+
+  document.querySelectorAll('.prow').forEach(b => b.onclick = ()=>{
+    const k = b.dataset.sec, at = pickSel.indexOf(k);
+    if(at >= 0) pickSel.splice(at, 1); else pickSel.push(k);
+    picker();
+  });
+  const start = $('#pstart');
+  if(start) start.onclick = ()=> beginSitting(pickSel.slice());
+  const left = $('#pleft');
+  if(left) left.onclick = ()=> beginSitting(p.left.map(s=>s.sec));
+  $('#pall').onclick = ()=> beginSitting(p.secs.map(s=>s.sec));
+  renderScore();
+  centreBlock();
+}
+
+/* ONE DIRECTION FROM HERE. A sitting starts at the top of its own list with a clean phase —
+   the answers from any earlier sitting stay in `S.answers` untouched, they are simply not in
+   `active()` any more, which is what lets him come back to a section a fortnight later
+   without the page having kept a second copy of anything. */
+function beginSitting(secs){
+  if(!secs.length) return;
+  S.only = secs;
+  S.phase = 1; S.p2list = null; S.done = false; S.reviewing = false; S.hintOpen = false;
+  // RE-SITTING A FINISHED SECTION MUST ACTUALLY RE-SIT IT. Without this it would open on the
+  // end card, every question already answered, and the "Start" he just pressed would look
+  // broken. Its old answers go, and `sat` with them, because that section is now in progress.
+  secs.forEach(sec=>{
+    if(S.sat[sec]){
+      secQs(sec).forEach(i=>{ delete S.answers[qk(i)]; delete S.pass2[qk(i)]; });
+      delete S.sat[sec];
+    }
+  });
+  const l = runList();
+  S.i = l.length ? l[0] : 0;
+  pickSel = null;
+  lastShown = -1;
+  save(); draw(); window.scrollTo(0,0);
+}
+
+function end(){
+  const act = active(S), n = score(S), t = act.length;
+  const pct = t ? Math.round(n/t*100) : 0;
+  const red = redeemed().length;
+  let h = '<p class="score">'+n+' <small>/ '+t+'</small></p>'
+        + '<p class="sub">'+pct+'% · '+when(S.at)+'</p>'
+        + '<div class="chart"><i class="r" style="width:'+(t?n/t*100:0)+'%"></i>'
+        + '<i class="w" style="width:'+(t?(t-n)/t*100:0)+'%"></i></div>'
+        + '<p class="legend"><span>'+G_OK+' <b>'+n+'</b> correct</span>'
+        + '<span>'+G_NO+' <b>'+(t-n)+'</b> wrong</span>'
+        // The chart stays TWO segments. A third fill for redemptions would need its own
+        // grayscale-safe hatch and would make the one number he reads harder to read; the
+        // count says it in words instead.
+        + (red ? '<span>+<b>'+red+'</b> on the second pass</span>' : '') + '</p>';
+
+  const by = {};
+  act.forEach(i=>{
+    const q = D.questions[i], k = q.topic || '';
+    if(!k) return;
+    by[k] = by[k] || {n:0,t:0};
+    by[k].t++;
+    if(finalRight(i)) by[k].n++;
+  });
+  const keys = Object.keys(by);
+  if(keys.length){
+    h += '<div class="topics"><h3>Topics covered</h3>';
+    keys.forEach(k=>{
+      h += '<div class="trow"><span>'+esc(k)+'</span><span class="n">'+by[k].n+'/'+by[k].t+'</span>'
+         + '<span class="tbar"><i style="width:'+(by[k].n/by[k].t*100)+'%"></i></span></div>';
+    });
+    h += '</div>';
+  }
+
+  /* THE TWO EXAM-ONLY TABLES. Both are built from fields a subchapter quiz never carries, so
+     both are simply absent there — no flag, no branch anywhere else, and nothing about the
+     quiz page changed the day these were added.
+
+     BY SUBCHAPTER is the one he asked for by name: a paper spanning seven sections that can
+     only report one number tells him he scored 78% and nothing about where to go back to.
+     BY WHY IT WAS ASKED is the one that closes the loop — it is the only place that answers
+     whether the thing he got wrong last week actually stuck. */
+  h += group(act, i => [D.questions[i].sec, D.questions[i].link], 'By subchapter', null);
+  h += group(act, i => D.questions[i].src, 'Why it was asked',
+             g => SRC[g] ? esc(g) + '  ' + esc(SRC[g]) : esc(g));
+
+  if(S.history.length){
+    h += '<p class="hist">Earlier attempts: ' + S.history.slice().reverse()
+        .map(a=>'<span>'+a.score+'/'+a.total+' on '+when(a.at)+'</span>').join(' · ') + '</p>';
+  }
+  /* THE PAPER, UNDER THE SITTING (08-16). The score above is this evening's — one subchapter,
+     or two. This is the exam: every subchapter, what it scored or that it is still waiting,
+     and one total across the ones he has actually sat. Absent on an unsectioned page. */
+  if(sectioned()){
+    const p = paperStat();
+    h += '<div class="topics parts"><h3>This exam</h3>';
+    p.secs.forEach(s=>{
+      const sitting = S.only && S.only.indexOf(s.sec) >= 0;
+      h += '<div class="trow"><span>' + esc(s.sec)
+         + (sitting ? '<em> just sat</em>' : '') + '</span>'
+         + '<span class="n">' + (s.done ? s.n + '/' + s.t : '—') + '</span>'
+         + '<span class="tbar' + (s.done ? '' : ' waiting') + '"><i style="width:'
+         + (s.done && s.t ? s.n/s.t*100 : 0) + '%"></i></span></div>';
+    });
+    h += '<p class="ptotal"><b>' + p.n + ' / ' + p.t + '</b> '
+       + (p.all ? 'the whole paper' :
+          'across ' + p.done.length + ' of ' + p.secs.length + ' subchapters · '
+          + p.left.reduce((a,s)=>a+s.t,0) + ' question'
+          + (p.left.reduce((a,s)=>a+s.t,0) > 1 ? 's' : '') + ' still to sit')
+       + '</p></div>';
+    if(p.left.length) h += '<p class="note"><button class="link" id="more">'
+                         + 'Sit another subchapter</button> — ' + p.left.map(s=>esc(s.sec)).join(', ')
+                         + ' left</p>';
+    else h += '<p class="note"><button class="link" id="more">Choose subchapters</button> — '
+            + 'every one is done; sitting one again replaces its score.</p>';
+  }
+
+  const nskip = Object.keys(S.skipped||{}).length;
+  if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
+              + '<button class="link" id="unskip">put them back</button></p>';
+  if(S.rebuilt) h += '<p class="note">These questions were rebuilt since your last attempt.</p>';
+  h += '<p class="note"><a href="'+D.root+'">All my quizzes</a>'
+     + (D.notebook ? ' · <a href="'+D.notebook+'">Open in Gemini Notebook</a>' : '') + '</p>';
+
+  $('#quizview').innerHTML = h;
+  const u = $('#unskip');
+  if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  const m = $('#more');
+  if(m) m.onclick = ()=>{ S.only = null; S.done = false; S.reviewing = false;
+                          pickSel = null; save(); draw(); window.scrollTo(0,0); };
+  $('#rail').style.width = '100%';
+  $('#band').classList.add('off');
+  showResearch(false);
+  $('#footer').classList.remove('hide');
+  $('#back').classList.add('hide');
+  $('#hintbtn').classList.add('hide');
+  $('#hinttext').classList.add('hide');
+  $('#redo').classList.add('hide');
+  $('#next').classList.add('hide');
+  $('#review').classList.remove('hide');
+  $('#review').textContent = 'Review ' + NOUN.toLowerCase();
+  $('#retake').classList.remove('hide');
+  // No wrong answers left to retry → no button at all, which is also what stops the second
+  // pass looping into a third: anything answered on pass two leaves pending2() for good.
+  $('#pass2').classList.toggle('hide', pending2().length === 0);
+  /* THE WRITTEN HALF IS THE PRIMARY WAY OUT OF AN EXAM'S END CARD (08-16, his ask): *"the
+     main button after the end of a large mcq for exams should be to move on onto frqs."* So
+     the second pass keeps its place but loses the accent — it is still there, it is just no
+     longer what the page is pointing at. A quiz has no written half and is unchanged. */
+  $('#towritten').classList.toggle('hide', !(D.frq && D.frq.length));
+  renderScore();
+  lastShown = -1;
+  centreBlock();
+}
+
+/* One question's full record: the right answer, what he chose on each pass, the rationale.
+   Shared by the review list and the Starred tab so the two can never drift apart. */
+function itemHTML(i, n){
+  const q = D.questions[i], first = ans(i), second = ans2(i);
+  let h = '<div class="item">';
+  if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
+  h += '<p class="qq">'+(n===undefined?'':(n+1)+'. ')+esc(q.q)+'</p>'
+     + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
+  if(!firstRight(i)){
+    h += '<p class="rline mine"><span class="g">'+G_NO+'</span><span>You chose: '
+       + (first===undefined ? 'nothing' : esc(q.options[first])) + '</span></p>';
+    if(second !== undefined){
+      h += '<p class="rline mine"><span class="g">'+(second===q.correct?G_OK:G_NO)+'</span>'
+         + '<span>Second pass: '+esc(q.options[second])
+         + (second===q.correct ? ' — redeemed' : '') + '</span></p>';
+    }
+  }
+  const why = q.rationales ? q.rationales[q.correct] : '';
+  if(why) h += '<p class="why" style="padding-left:0">'+esc(why)+'</p>';
+  return h + '</div>';
+}
+
+function review(){
+  let h = '<div class="rev"><h3>Every question</h3>';
+  active(S).forEach((i,n)=>{ h += itemHTML(i, n); });
+  h += '</div>';
+  $('#quizview').innerHTML = h;
+  $('#band').classList.add('off');
+  showResearch(false);
+  $('#footer').classList.remove('hide');
+  $('#back').classList.add('hide');
+  $('#hintbtn').classList.add('hide');
+  $('#hinttext').classList.add('hide');
+  $('#redo').classList.add('hide');
+  $('#next').classList.add('hide');
+  $('#pass2').classList.add('hide');
+  $('#towritten').classList.add('hide');
+  $('#review').classList.remove('hide');
+  $('#review').textContent = 'Summary';
+  $('#retake').classList.remove('hide');
+  quizPad = BASE_PAD + 'px';                      // a long list, never centred
+  $('main').style.paddingTop = quizPad;
+  window.scrollTo(0,0);
+}
+
+/* ---- the Starred tab, which now also holds the reflections (08-16) -------------------
+   Its own view rather than a section of the review list, because the point is to find them
+   again quickly on a later visit — including on a quiz he has not retaken. Right or wrong
+   does not matter; "this one is important" is the only thing being recorded.
+
+   HIS INSTRUCTION: *"the top sections should house starred and those with reflection
+   components. On the main sheet it should have questions that have been starred (no
+   reflection) and questions with their fix boxes, and research with its research."* So this
+   tab is the one place a reflection is ever written down, and the study sheet — which is the
+   paste the week's exam is built from — never carries one. A question qualifies for this
+   list by being starred OR by having a reflection; the two are independent. */
+function topList(){
+  const out = [];
+  D.questions.forEach((q, i) => {
+    const x = rget(q.qid).x.trim();
+    if(S.starred[q.qid] || x) out.push({n: i + 1, i: i, q: q, x: x});
+  });
+  return out;
+}
+function drawStarred(){
+  flushResearch();                 // the pane on screen is the live copy — see renderResearch
+  const list = topList();
+  const box = $('#starredview');
+  if(!list.length){
+    box.innerHTML = '<h3>Starred</h3><p class="empty">Nothing starred yet. '
+      + 'Use the ☆ beside a question, or write a reflection with <kbd>t</kbd>.</p>';
+    return;
+  }
+  const nx = list.filter(x => x.x).length;
+  let h = '<h3>Starred · ' + list.length
+        + (nx ? ' <span class="say">· ' + nx + ' with a reflection</span>' : '') + '</h3>'
+        + '<div class="sheettools"><button class="link" id="copystar">Copy</button>'
+        + '<button class="link" id="copyrefl">Copy reflections only</button></div>'
+        + '<p class="say">Copy writes the concept, the question, the answers and your '
+        + 'reflection, in blocks Notion keeps apart. It is not read by any exam.</p>';
+  list.forEach(x => {
+    // ONE replace, and the tail is assembled first on purpose: itemHTML's only `</div>` is
+    // its own closing one, so chaining a second .replace() would land inside whatever the
+    // first one just inserted.
+    let tail = x.x ? '<div class="rtxt refl">' + tinyMd(boxMarkdown(x.x)) + '</div>' : '';
+    tail += '<p class="rline">';
+    if(S.starred[x.q.qid]) tail += '<button class="link" data-unstar="' + x.i + '">Unstar</button>';
+    tail += '<button class="link" data-refl="' + x.i + '">'
+          + (x.x ? 'Edit reflection' : 'Add a reflection') + '</button>'
+          + '<button class="link" data-copy1="' + x.i + '">Copy this one</button></p>';
+    // Its OWN number, not its position in this list — the copy prints the same one, and a
+    // reflection he pastes into Notion has to point at a question he can find again.
+    h += itemHTML(x.i, x.n - 1).replace('</div>', tail + '</div>');
+  });
+  box.innerHTML = h;
+  box.querySelectorAll('[data-unstar]').forEach(b=>{
+    b.onclick = ()=>{ delete S.starred[qk(+b.dataset.unstar)]; save(); syncTabs(); drawStarred(); };
+  });
+  // Straight from the list to the box on the question, because that is where a reflection is
+  // written — the tab is where they are read back and copied, not a second editor.
+  box.querySelectorAll('[data-refl]').forEach(b=>{
+    b.onclick = ()=>{ S.i = +b.dataset.refl; S.done = false; S.reviewing = false;
+                      lastShown = -1; save();
+                      // rOpen down first, or openRefl() reads "already on this pane" and
+                      // closes the box it was asked to open.
+                      rOpen = false; setTab('quiz'); openRefl(); };
+  });
+  box.querySelectorAll('[data-copy1]').forEach(b=>{
+    b.onclick = ()=> copyText(oneReflection(topList()
+                      .filter(x => x.i === +b.dataset.copy1)[0]), b, 'Copy this one');
+  });
+  $('#copystar').onclick = ()=> copyText(reflMarkdown(), $('#copystar'), 'Copy');
+  $('#copyrefl').onclick = ()=> copyText(reflOnlyMarkdown(), $('#copyrefl'),
+                                         'Copy reflections only');
+}
+
+/* ---- what the Copy on that tab writes -------------------------------------------------
+   HIS SHAPE, off the screenshot he sent: the concept, then the question, then the right
+   answer, then the wrong ones, then what he wrote. *"Make it short though and i can focus
+   moreso on the textbox since that the periority : the other are just details to use to
+   write in my own way."* So every detail line is ONE line and the reflection is the block
+   with room in it.
+
+   EVERY BLOCK IS SEPARATED BY A BLANK LINE, which is the whole of the *"sometimes it sticks
+   together weirdly when I paste"* fix: Notion merges consecutive lines into one paragraph,
+   so the answer and the rationale used to arrive glued to the stem.
+
+   ONE HEADING FOR THE WHOLE THING, `## Reflections`, and it is load-bearing — see REFLHEAD. */
+const REFLHEAD = 'Reflections';
+function oneReflection(x){
+  if(!x) return '';
+  const q = x.q, mine = ans(x.i), why = q.rationales ? q.rationales[q.correct] : '';
+  const wrong = q.options.map((o, k) => ({o: o, k: k}))
+                         .filter(o => o.k !== q.correct)
+                         .map(o => o.o + (o.k === mine ? ' (you chose)' : ''));
+  let out = '### ' + (q.topic || ('Question ' + x.n)) + '\n\n'
+          + '**' + x.n + '.** ' + q.q + '\n\n'
+          + G_OK + ' ' + q.options[q.correct] + '\n\n'
+          + G_NO + ' ' + wrong.join(' · ') + '\n';
+  if(why) out += '\n' + why + '\n';
+  if(x.x) out += '\n' + boxMarkdown(x.x) + '\n';
+  return out;
+}
+function reflMarkdown(){
+  const list = topList();
+  if(!list.length) return '';
+  return '## ' + REFLHEAD + '\n\n' + list.map(oneReflection).join('\n');
+}
+/* THE TEXTBOX ON ITS OWN, *"copy it independently"* — his thinking with just enough of a
+   label to know which question it came off, and none of the answers. */
+function reflOnlyMarkdown(){
+  const list = topList().filter(x => x.x);
+  if(!list.length) return '';
+  return '## ' + REFLHEAD + '\n\n' + list.map(x =>
+    '### ' + (x.q.topic || ('Question ' + x.n)) + '\n\n' + boxMarkdown(x.x) + '\n').join('\n');
+}
+
+/* ---- the score, written where he copies from ---------------------------------------- */
+/* THE PROJECTED SCORE DOCKS A MARK FOR EVERY HINT, which is his rule and his reasoning:
+   a high score with a lot of hints "is actually a sign that you didn't know them very
+   well". So `(right − hints) / total`, floored at zero — the number he would have got
+   with the hints shut. It never touches the real score; both are printed, and the gap
+   between them is the thing worth looking at.
+
+   Hints are counted per question, so this cannot go more negative than the score itself. */
+function scoreParts(){
+  const act = active(S), n = score(S), t = act.length, red = redeemed().length;
+  const hints = act.filter(i => (S.hints || {})[qk(i)]).length;
+  const proj = Math.max(0, n - hints);
+  return {n:n, t:t, pct: t ? Math.round(n/t*100) : 0, red:red, first:n-red, wrong:t-n,
+          skipped: Object.keys(S.skipped||{}).length,
+          hints:hints, proj:proj, projpct: t ? Math.round(proj/t*100) : 0};
+}
+function hintLine(p){
+  if(!p.hints) return 'No hints used';
+  return p.hints + ' hint' + (p.hints > 1 ? 's' : '') + ' used · projected '
+       + p.proj + ' / ' + p.t + ' (' + p.projpct + '%) with the hints docked';
+}
+function scoreMarkdown(){
+  if(!S.done) return '';
+  const p = scoreParts();
+  return '**' + NOUN + ':** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
+       + (p.red ? ', +' + p.red + ' redeemed' : '') + ', ' + p.wrong + ' wrong'
+       + (p.skipped ? ', ' + p.skipped + ' skipped' : '') + ' · ' + when(S.at)
+       + '\n**Hints:** ' + hintLine(p);
+}
+function renderScore(){
+  const el = $('#scorecard');
+  if(!el) return;
+  el.classList.toggle('hide', !S.done);
+  if(!S.done) return;
+  const p = scoreParts();
+  el.innerHTML = '<b>'+p.n+' / '+p.t+'</b><span>'+p.pct+'% · '+p.first+' right'
+    + (p.red ? ', +'+p.red+' on the second pass' : '') + ', '+p.wrong+' wrong'
+    + (p.skipped ? ' · '+p.skipped+' skipped' : '') + ' · '+when(S.at)+'</span>'
+    + '<span class="proj">'+hintLine(p)+'</span>';
+}
+
+function when(iso){
+  if(!iso) return '';
+  const d = new Date(iso);
+  return d.toLocaleDateString(undefined,{month:'short',day:'numeric'})
+       + ' ' + d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});
+}
+
+/* ---- controls ------------------------------------------------------------------ */
+function goTo(i){
+  S.i = i; S.hintOpen = false; save(); question(); window.scrollTo(0,0);
+}
+/* Everything in this pass he has not answered. On the second pass that means not
+   re-answered, because `pick()` reads the pass he is on. */
+function gaps(){ return runList().filter(i => pick(i) === undefined); }
+
+/* THE END OF THE LIST IS NOT THE END OF THE QUIZ (08-12, his ask). Enter moves on whether or
+   not he answered, so a run can reach the last question with holes in it — and a quiz handed
+   in with holes is just a lower score for no reason. So the last question sends him back to
+   the first thing he left blank, and from then on forward means "the next blank one" until
+   there are none, which is the moment Finish becomes real.
+
+   `recycling` is the mode, and it has to be a mode rather than a rule about gaps: before he
+   has reached the end, forward means the next question in order — that is a quiz. After it,
+   forward means the next hole — that is a clean-up pass. The same key, two jobs, and which
+   one it is doing is decided by whether he has been to the end yet.
+
+   NOT SAVED. A reload starts him at the top of the list again, where in-order is right. */
+let recycling = false;
+function advance(){
+  const act = runList(), pos = act.indexOf(S.i), left = gaps();
+  if(recycling){
+    if(!left.length){ finish(); return; }
+    const nx = left.find(j => j > S.i);
+    const to = nx !== undefined ? nx : left[0];
+    if(to === S.i) return;                        // the last hole is the one he is looking at
+    goTo(to); return;
+  }
+  if(pos < act.length - 1){ goTo(act[pos + 1]); return; }
+  if(left.length){ recycling = true; goTo(left[0]); return; }
+  finish();
+}
+function step(dir){
+  if(dir > 0){ advance(); return; }
+  const act = runList(), nx = act[act.indexOf(S.i) - 1];
+  if(nx === undefined) return;
+  goTo(nx);
+}
+$('#next').onclick = ()=> step(1);
+$('#back').onclick = ()=> step(-1);
+$('#towritten').onclick = ()=> setTab('frq');
+$('#review').onclick = ()=>{ S.reviewing = !S.reviewing; draw(); };
+/* THE SECOND PASS — the preferred way out of the end card, and the one that keeps
+   everything. It re-runs only what he got wrong, on a list frozen at the moment he presses
+   it, and a right answer here redeems the question in the final score. */
+$('#pass2').onclick = ()=>{
+  const list = pending2();
+  if(!list.length) return;
+  S.phase = 2; S.p2list = list; S.i = list[0];
+  S.done = false; S.reviewing = false; S.hintOpen = false;
+  lastShown = -1;
+  save(); draw(); window.scrollTo(0,0);
+};
+/* RETAKE CLEARS, which is why it sits apart from the other two. The attempt goes into
+   history first so nothing is lost, and the questions he deleted or starred stay that way —
+   they are decisions about the quiz, not part of one attempt at it. */
+$('#retake').onclick = ()=>{
+  // ON A SECTIONED PAPER THE HISTORY LINE IS THE PAPER, not the last sitting — the same
+  // reasoning as `save()`. `blank()` returns `only: null` and `sat: {}`, so a retake drops
+  // every sitting at once and lands back on the picker, which is what "retake the exam" means.
+  if(S.done){ const p = D.parts ? paperStat() : null;
+              S.history.push({at:S.at, score: p ? p.n : score(S),
+                              total: p ? p.t : active(S).length}); }
+  const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
+  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  pickSel = null;
+  lastShown = -1;
+  save(); syncTabs(); renderScore(); draw();
+};
+document.querySelectorAll('.tab').forEach(b=> b.onclick = ()=> setTab(b.dataset.tab));
+
+/* ---- his own additions -------------------------------------------------------------
+   A textarea, localStorage, and string work. NO API, no model, nothing paid — the
+   formatting below is deterministic, which is the whole reason it can be free.
+
+   The loop this closes: he pastes the result into the subchapter's Notion row, and the
+   weekly exam already scrapes that row first (board-notes.md → exam-notes.md). So anything
+   he adds here becomes exam content without touching the pipeline. */
+const NKEY = KEY + ':notes';
+const ta = $('#mynotes'), savedmsg = $('#savedmsg');
+
+function loadNotes(){ try{ return localStorage.getItem(NKEY) || ''; }catch(e){ return ''; } }
+function saveNotes(){
+  try{ localStorage.setItem(NKEY, ta.value); }catch(e){}
+  savedmsg.textContent = ta.value.trim() ? 'Saved in this browser' : '';
+}
+
+/* His shorthand → the sheet's own markdown shape, so the paste reads as one document
+   rather than a tidy half and a raw half. Bolds the term before a `:` or a dash, keeps his
+   indentation as nesting, and numbers everything (markdown renumbers `1.` itself, and
+   Notion honours that on paste). A line he already formatted is left alone. */
+function fmtLine(t){
+  if(/\*\*/.test(t)) return t;
+  let m = t.match(/^([^:]{1,60}?):\s+(.+)$/);
+  if(!m) m = t.match(/^(.{1,60}?)\s+[—–-]\s+(.+)$/);
+  return m ? '**' + m[1].trim() + '** — ' + m[2].trim() : t;
+}
+/* A LINE HE BULLETED STAYS A BULLET (08-16). Everything used to come out as `1. `, which
+   markdown renumbers and Notion honours — fine for a list of terms, wrong now that `* ` in
+   the box means he chose a bullet. So `•` (and a `-`/`*` he typed himself) becomes `- ` and
+   everything else still becomes `1. `. Both are real Notion blocks on paste. */
+function noteMarkdown(){
+  const out = [];
+  (ta.value || '').split('\n').forEach(raw=>{
+    const line = raw.replace(/\t/g, '  ');
+    const m = line.match(/^(\s*)(•\s+|[-*+]\s+|\d+[.)]\s+)?(.*)$/);
+    const text = m[3].trim();
+    if(!text) return;
+    const depth = Math.min(Math.floor(m[1].length / 2), 2);
+    const bullet = /^(•|[-*+])\s/.test(m[2] || '');
+    out.push('   '.repeat(depth) + (bullet ? '- ' : '1. ') + fmtLine(text));
+  });
+  return out.join('\n');
+}
+/* WHAT HE TYPED IN A BOX, TURNED INTO BLOCKS NOTION WILL PARSE — and this is the function
+   that answers *"sometimes it sticks together weirdly when I paste."*
+
+   Notion merges consecutive lines into ONE paragraph block unless a blank line separates
+   them, so a reflection written as four short lines arrived as one run-on sentence. Every
+   block that comes out of here is separated by a blank line, and a bullet is emitted as
+   `- `, which Notion turns into a real bulleted block rather than text with a dash in it. */
+function boxMarkdown(text){
+  const out = [];
+  String(text || '').split('\n').forEach(raw => {
+    const line = raw.replace(/\t/g, '  ');
+    const m = line.match(/^(\s*)(•\s+|[-*+]\s+)?(.*)$/);
+    const body = m[3].trim();
+    if(!body) return;
+    const depth = Math.min(Math.floor(m[1].length / 2), 2);
+    out.push(m[2] ? '   '.repeat(depth) + '- ' + body : body);
+  });
+  // A run of bullets is one list and must NOT be broken up; two paragraphs, or a paragraph
+  // next to a list, need the blank line between them or Notion glues them together.
+  let md = '';
+  out.forEach((l, k) => {
+    const bul = /^\s*- /.test(l), prevBul = k ? /^\s*- /.test(out[k-1]) : false;
+    if(k) md += (bul && prevBul) ? '\n' : '\n\n';
+    md += l;
+  });
+  return md;
+}
+/* ---- ☆ and ? read back on the sheet --------------------------------------------------
+   Both marks end up in the same place for the same reason he gave: he stopped and marked
+   the question, so it is worth having beside the sheet when he pastes it into Notion — and
+   the ? ones especially, because a lucky guess leaves no other trace. Each entry is the
+   full record from `itemHTML`, so the sheet and the review list can never disagree. */
+function markedList(map){
+  const out = [];
+  D.questions.forEach((q, i) => { if((map || {})[q.qid]) out.push({n: i + 1, i: i, q: q}); });
+  return out;
+}
+
+/* WHAT HE GOT WRONG — the one part of the record that never left the browser.
+   Starred, Needs work and My research have ridden the Copy into Notion since 08-11, and the
+   week's exam is built from that Notion row; the wrong answers were the missing rung, so the
+   exam could prefer a question he flagged but not one he actually failed. This is that rung,
+   and it costs one section in a paste he already makes.
+
+   FINAL verdicts, so a question redeemed on the second pass is NOT listed — he ended the
+   attempt knowing it. Skipped questions are excluded for the same reason as everywhere else:
+   they were taken out of the run. */
+function missedList(){
+  const out = [];
+  active(S).forEach(i => {
+    if(ans(i) !== undefined && !finalRight(i)) out.push({n: i + 1, i: i, q: D.questions[i]});
+  });
+  return out.sort((a,b)=>a.n-b.n);
+}
+function renderMarked(sel, list, head, say){
+  const box = $(sel);
+  if(!box) return;
+  box.classList.toggle('hide', !list.length);
+  if(!list.length) return;
+  let h = '<h3>' + head + ' · ' + list.length + '</h3><p class="say">' + say + '</p>';
+  list.forEach(x => { h += itemHTML(x.i, x.n - 1); });
+  box.innerHTML = h;
+}
+function markedMarkdown(list, head){
+  if(!list.length) return '';
+  let out = '\n\n## ' + head + '\n';
+  list.forEach(x => {
+    const q = x.q, why = q.rationales ? q.rationales[q.correct] : '';
+    out += '\n### ' + x.n + '. ' + q.q + '\n\n'
+         + '**Answer:** ' + q.options[q.correct] + '\n'
+         + (why ? '\n' + why + '\n' : '');
+  });
+  return out;
+}
+function markedHTML(list, head){
+  if(!list.length) return '';
+  let h = '<h2>' + head + '</h2>';
+  list.forEach(x => {
+    const q = x.q, why = q.rationales ? q.rationales[q.correct] : '';
+    h += '<h3>' + x.n + '. ' + esc(q.q) + '</h3>'
+       + '<p><strong>Answer:</strong> ' + esc(q.options[q.correct]) + '</p>'
+       + (why ? '<p>' + esc(why) + '</p>' : '');
+  });
+  return h;
+}
+
+/* ---- what he found, read back on the sheet ------------------------------------------
+   Grouped by the question, in question order, and NOT filtered by anything: a question he
+   skipped still keeps its research, because the research is his and the skip was about the
+   question. Numbering is the question's own position, so it does not move when the run does. */
+function researchList(){
+  const out = [];
+  D.questions.forEach((q, i) => {
+    const r = rget(q.qid);
+    if(r.t.trim() || r.i.length) out.push({n: i + 1, q: q, r: r});
+  });
+  return out;
+}
+/* The right-hand pane, listed on its own. A question can appear in one list, the other, or
+   both — they are two different statements about it and neither implies the other. */
+function fixList(){
+  const out = [];
+  D.questions.forEach((q, i) => {
+    const r = rget(q.qid);
+    if(r.f.trim()) out.push({n: i + 1, q: q, r: r});
+  });
+  return out;
+}
+function paras(t){
+  return t.trim().split(/\n{2,}/)
+          .map(p => '<p>' + esc(p).replace(/\n/g, '<br>') + '</p>').join('');
+}
+/* Everything the sheet grows below the book's own material, in the order the Copy writes
+   it: what he marked, then what he went and found. */
+function renderSheetExtras(){
+  renderMarked('#starredsheet', markedList(S.starred), 'Starred',
+               'Marked while answering, right or wrong.');
+  renderMarked('#unsuresheet', markedList(S.unsure), 'Needs work',
+               'Marked ? — no idea at the time, so the answer is not proof of anything.');
+  renderResearch();
+  renderFixes();
+}
+function renderResearch(){
+  const el = $('#researchview');
+  if(!el) return;
+  // The textarea is the live copy while a question is on screen, so write it back before
+  // reading R — otherwise the sheet shows everything except the paragraph he just typed.
+  flushResearch();
+  const list = researchList();
+  el.classList.toggle('hide', !list.length);
+  if(!list.length) return;
+  let h = '<h3>My research</h3><p class="say">What you pasted while answering, under the '
+        + 'question that sent you looking. Copy takes this with the sheet.</p>';
+  list.forEach(x => {
+    h += '<div class="ritem"><p class="rq">' + x.n + '. ' + esc(x.q.q) + '</p>';
+    if(x.r.t.trim()) h += '<div class="rtxt">' + paras(x.r.t) + '</div>';
+    x.r.i.forEach((src, k) => {
+      h += '<img class="rimg" src="' + src + '" alt="Pasted image ' + (k+1) + '">';
+    });
+    h += '</div>';
+  });
+  el.innerHTML = h;
+}
+/* THE QUESTION IS PRINTED WITH THE FIX, and it has to be: the next exam is asked to rewrite
+   a specific question, and it never sees this quiz's paper — `exam-prior-questions.md` is
+   given to it as the do-not-repeat list, not as something to work from. The stem and the
+   right answer sitting under his instruction are the whole of what it has to go on. */
+function renderFixes(){
+  const el = $('#fixview');
+  if(!el) return;
+  flushResearch();
+  const list = fixList();
+  el.classList.toggle('hide', !list.length);
+  if(!list.length) return;
+  let h = '<h3>Fix these questions</h3><p class="say">What was wrong with the question '
+        + 'itself. The next exam is told to rewrite these the way you said, not to test what '
+        + 'you wrote here.</p>';
+  list.forEach(x => {
+    h += '<div class="ritem"><p class="rq">' + x.n + '. ' + esc(x.q.q) + '</p>'
+       + '<p class="rans"><strong>Answer:</strong> ' + esc(x.q.options[x.q.correct]) + '</p>'
+       + '<div class="rtxt">' + paras(x.r.f) + '</div></div>';
+  });
+  el.innerHTML = h;
+}
+
+/* THE IMAGES DO NOT GO IN THE PLAIN TEXT, and that is the point of the two flavours below.
+   A pasted screenshot is a couple of hundred kilobytes of base64; dropping that into the
+   markdown would make one Notion row unreadable and the paste enormous. So the text
+   flavour names each image and the HTML flavour carries it. */
+function researchMarkdown(){
+  const list = researchList();
+  if(!list.length) return '';
+  let out = '\n\n## My research\n';
+  list.forEach(x => {
+    out += '\n### ' + x.n + '. ' + x.q.q + '\n\n';
+    // Through boxMarkdown so his bullets arrive as bullets and two lines do not arrive as
+    // one paragraph — see the note there about how Notion joins consecutive lines.
+    const t = boxMarkdown(x.r.t).trim();
+    if(t) out += t + '\n\n';
+    if(x.r.i.length){
+      x.r.i.forEach((_, k) => { out += '_[image ' + (k+1) + ' — on the quiz page]_\n'; });
+      out += '\n';
+    }
+  });
+  return out.replace(/\n+$/, '\n');
+}
+/* THREE HEADINGS WHOSE TEXT IS LOAD-BEARING. `notion_board.py notes` splits all three out of
+   the row body BY NAME — `split_fixes()`, and `FIX_HEADING` / `SKIP_HEADING` / `REFL_HEADING`
+   there are these three strings. Everything else on the row stays material. Rename one here
+   and it silently becomes material again, which is the bug this whole split exists to fix.
+   `REFLHEAD` is declared with the Starred tab's Copy, beside the function that writes it. */
+const FIXHEAD = 'Fix these questions';
+const SKIPHEAD = 'Skipped';
+
+/* THE CARDS HE DELETED, and this section exists to keep them OUT of things (08-14, his rule:
+   skipped cards *"are never reformed and never appear"*, on any exam, v2 or v3).
+
+   It is the one place on this page where a skipped question is written down. Everywhere else
+   they are gone by design — out of the run, out of the score, out of the denominator, out of
+   the sheet — because they were taken out of the quiz. But "gone" only ever meant gone from
+   THIS browser: the exam is built from what he pastes into Notion, so a card he deleted here
+   was invisible to it and perfectly likely to come back as an exam question. This is the one
+   line of the paste that stops that, and `remember_skipped()` files it permanently.
+
+   It says so in the heading's own body text because it will be read by a person too, and a
+   bare list of questions under his notes reads exactly like a list of things to be tested. */
+function skipMarkdown(){
+  const list = markedList(S.skipped);
+  if(!list.length) return '';
+  let out = '\n\n## ' + SKIPHEAD + '\n\n'
+          + '_Deleted while taking the quiz. Not material — these are the ideas to stop '
+          + 'asking about._\n';
+  list.forEach(x => { out += '\n### ' + x.n + '. ' + x.q.q + '\n'; });
+  return out.replace(/\n+$/, '\n');
+}
+function fixMarkdown(){
+  const list = fixList();
+  if(!list.length) return '';
+  let out = '\n\n## ' + FIXHEAD + '\n';
+  list.forEach(x => {
+    out += '\n### ' + x.n + '. ' + x.q.q + '\n\n'
+         + '**Answer:** ' + x.q.options[x.q.correct] + '\n\n'
+         + '**Change it to:**\n\n' + boxMarkdown(x.r.f).trim() + '\n';
+  });
+  return out.replace(/\n+$/, '\n');
+}
+
+/* THE SCORE RIDES ALONG WITH THE COPY. One press still takes score + sheet + his own notes
+   as a single markdown block, which is what Notion parses on paste — so the row that the
+   week's exam is built from also records how the quiz went, and he can see later whether
+   this section needs testing again. His research is last, so the shape of the paste he
+   already knows is unchanged and the new material is appended under it. */
+function fullMarkdown(){
+  const mine = noteMarkdown();
+  const sc = scoreMarkdown();
+  return (sc ? sc + '\n\n' : '') + (D.sheet || '')
+       + (mine ? '\n\n## My notes\n\n' + mine + '\n' : '')
+       + markedMarkdown(markedList(S.starred), 'Starred')
+       + markedMarkdown(missedList(), 'Missed')
+       + markedMarkdown(markedList(S.unsure), 'Needs work')
+       + researchMarkdown()
+       + fixMarkdown()
+       + skipMarkdown()
+       + frqMarkdown();
+}
+
+/* THE HTML FLAVOUR EXISTS ONLY FOR THE IMAGES, and it is only put on the clipboard when
+   there is one. That rule is what protects the paste he already relies on: with no images
+   the clipboard holds plain markdown and Notion parses it exactly as it does today. With
+   images there is no other way — no clipboard format carries markdown AND a picture — so
+   the whole document goes over as HTML, which Notion also turns into real blocks.
+
+   The sheet's own HTML is reused rather than re-rendered: #sheetmd already holds what
+   md_to_html produced, so the two can never drift. */
+function fullHTML(){
+  let h = '';
+  const sc = scoreMarkdown();
+  if(sc) h += tinyMd(sc);
+  const md = $('#sheetmd');
+  if(md) h += md.innerHTML;
+  const mine = noteMarkdown();
+  if(mine) h += '<h2>My notes</h2>' + tinyMd(mine);
+  h += markedHTML(markedList(S.starred), 'Starred');
+  h += markedHTML(missedList(), 'Missed');
+  h += markedHTML(markedList(S.unsure), 'Needs work');
+  const list = researchList();
+  if(list.length){
+    h += '<h2>My research</h2>';
+    list.forEach(x => {
+      h += '<h3>' + x.n + '. ' + esc(x.q.q) + '</h3>';
+      if(x.r.t.trim()) h += paras(x.r.t);
+      x.r.i.forEach(src => { h += '<p><img src="' + src + '"></p>'; });
+    });
+  }
+  const fixes = fixList();
+  if(fixes.length){
+    h += '<h2>' + FIXHEAD + '</h2>';
+    fixes.forEach(x => {
+      h += '<h3>' + x.n + '. ' + esc(x.q.q) + '</h3>'
+         + '<p><strong>Answer:</strong> ' + esc(x.q.options[x.q.correct]) + '</p>'
+         + '<p><strong>Change it to:</strong> ' + esc(x.r.f.trim()) + '</p>';
+    });
+  }
+  /* The HTML flavour has to carry this too. It goes on the clipboard INSTEAD of the markdown
+     whenever there is a pasted image anywhere on the quiz, so anything missing here is
+     missing from the Notion row on exactly those weeks — and a skipped card that does not
+     reach the row is a card the exam is free to ask about again. */
+  const skips = markedList(S.skipped);
+  if(skips.length){
+    h += '<h2>' + SKIPHEAD + '</h2>'
+       + '<p><em>Deleted while taking the quiz. Not material — these are the ideas to stop '
+       + 'asking about.</em></p>';
+    skips.forEach(x => { h += '<h3>' + x.n + '. ' + esc(x.q.q) + '</h3>'; });
+  }
+  const fm = frqMarkdown();
+  if(fm) h += tinyMd(fm);
+  return '<meta charset="utf-8">' + h;
+}
+
+/* A 25-line renderer so Preview shows the same shape the paste will have. Lists and bold
+   only — anything more and this would be a markdown library, which is the dependency the
+   whole file exists to avoid. */
+function tinyMd(md){
+  const esc2 = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const inline = s => esc2(s).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+  // THE STACK HOLDS TAG NAMES, not just a depth, since 08-16: `- ` is a bullet and `1. ` is
+  // numbered, and the preview has to show which he wrote or it is not a preview of the paste.
+  let html = '', stack = [];
+  const shut = () => { while(stack.length) html += '</' + stack.pop() + '>'; };
+  md.split('\n').forEach(line=>{
+    if(!line.trim()) return;
+    const h = line.match(/^(#{1,4})\s+(.*)$/);
+    if(h){ shut();
+           html += '<h' + Math.min(h[1].length+1,5) + '>' + inline(h[2]) + '</h' + Math.min(h[1].length+1,5) + '>'; return; }
+    const m = line.match(/^(\s*)([-*+]|\d+[.)])\s+(.*)$/);
+    if(!m){ shut(); html += '<p>' + inline(line.trim()) + '</p>'; return; }
+    const d = Math.floor(m[1].length / 3), tag = /^\d/.test(m[2]) ? 'ol' : 'ul';
+    while(stack.length > d + 1) html += '</' + stack.pop() + '>';
+    // A list that changes kind at the same depth is a new list, not a continued one.
+    if(stack.length === d + 1 && stack[d] !== tag){ html += '</' + stack.pop() + '>'; }
+    while(stack.length < d + 1){ html += '<' + tag + '>'; stack.push(tag); }
+    html += '<li>' + inline(m[3]) + '</li>';
+  });
+  shut();
+  return html;
+}
+
+if(ta){
+  ta.value = loadNotes();
+  saveNotes();
+  let t = null;
+  ta.addEventListener('input', ()=>{ bulletType(ta); clearTimeout(t); t = setTimeout(saveNotes, 400); });
+  ta.addEventListener('blur', saveNotes);
+  // Bullets here too, and PLAIN Enter is the newline — this box is not a question and has
+  // nowhere to move on to, which is why the document handler leaves it alone.
+  ta.addEventListener('keydown', e => {
+    if(e.key === 'Tab' && bulletIndent(ta, e.shiftKey)){ e.preventDefault(); return; }
+    if(e.key === 'Enter' && !e.shiftKey && bulletNewline(ta)) e.preventDefault();
+  });
+  $('#previewnotes').onclick = ()=>{
+    const p = $('#minepreview'), on = p.classList.contains('hide');
+    p.innerHTML = on ? (noteMarkdown() ? tinyMd(noteMarkdown())
+                                       : '<p>Nothing written yet.</p>') : '';
+    p.classList.toggle('hide', !on);
+    $('#previewnotes').textContent = on ? 'Hide preview' : 'Preview';
+  };
+}
+
+/* COPIES THE MARKDOWN, NOT THE RENDERED TEXT. He pastes this into Notion, and Notion parses
+   markdown on paste — so the headings, the numbering and the bold terms all survive as real
+   Notion blocks. Copying the visible text would paste one flat wall. */
+const cp = $('#copysheet');
+if(cp) cp.onclick = async ()=>{
+  flushResearch();
+  // Both strings are built BEFORE the first await: Safari only honours a clipboard write
+  // inside the gesture that asked for it, and work done after an await is outside it.
+  const md = fullMarkdown();
+  const shots = researchList().some(x => x.r.i.length);
+  const html = shots ? fullHTML() : '';
+  let done = false;
+  if(shots && window.ClipboardItem && navigator.clipboard && navigator.clipboard.write){
+    try{
+      await navigator.clipboard.write([new ClipboardItem({
+        'text/html':  new Blob([html], {type: 'text/html'}),
+        'text/plain': new Blob([md],   {type: 'text/plain'})
+      })]);
+      done = true;
+    }catch(e){}                      // fall through to the plain paste rather than nothing
+  }
+  if(!done){
+    try{ await navigator.clipboard.writeText(md); done = true; }
+    catch(e){
+      const t = document.createElement('textarea');
+      t.value = md; t.style.position='fixed'; t.style.opacity='0';
+      document.body.appendChild(t); t.select();
+      try{ document.execCommand('copy'); }catch(_){}
+      t.remove();
+    }
+  }
+  cp.textContent = shots ? 'Copied + images' : 'Copied';
+  cp.classList.add('copied');
+  setTimeout(()=>{ cp.textContent = 'Copy'; cp.classList.remove('copied'); }, 1600);
+};
+
+// Re-centre when the window changes shape; the frozen padding would be wrong afterwards.
+// Against the ANSWERED height, like every other call — measuring what is on screen is the
+// bug this file already fixed once.
+addEventListener('resize', ()=>{
+  fitTitle();
+  if(D.tab==='quiz' && !S.reviewing && !S.done) centreBlock(S.i);
+});
+
+document.addEventListener('keydown', e=>{
+  const t = e.target;
+  /* ESC IS THE WAY OUT FROM INSIDE THE BOX, and it has to be checked before the rule below
+     lets typing through. `r` cannot do this job: once the caret is in the pane, `r` is the
+     letter r — the first character of "radius", "reflex" and "rephrase" — so a second `r`
+     that closed the box would eat it. Esc is read while typing; `r` toggles from outside. */
+  if(e.key === 'Escape' && rbody && !rbody.classList.contains('hide')){
+    e.preventDefault(); closeResearch(); return;
+  }
+  /* TYPING IS NOT ANSWERING. The research box is a textarea ON THE QUIZ TAB, so without
+     this every letter he types would be read as an option key and `h` would open the hint —
+     the notes box on the sheet tab was only safe because that tab returns above.
+
+     ENTER IS THE ONE EXCEPTION, AND ONLY IN THE TWO RESEARCH PANES (08-12, his ask):
+     *"when I press enter it moves onto the next question. I move onto the next question
+     whenever I press enter."* One key means one thing everywhere on the quiz tab, including
+     from inside the box he was just typing in. SHIFT+ENTER IS THE NEWLINE — a textarea
+     still needs one, and this is the swap every chat box has already taught his hands.
+     It closes on the way out, which flushes what he typed and takes the caret with it;
+     without the blur the next keystroke would still be going into a hidden textarea.
+     The sheet's notes box is NOT in this: it is not a question and has nowhere to go. */
+  if(t && (t.tagName === 'TEXTAREA' || t.tagName === 'INPUT' || t.isContentEditable)){
+    if(e.key === 'Enter' && !e.shiftKey && PANES[rPane] && t === PANES[rPane]
+       && D.tab === 'quiz' && !S.done && !S.reviewing){
+      e.preventDefault();
+      closeResearch();
+      step(1);
+    }
+    return;
+  }
+
+  /* THE WHOLE END OF A QUIZ IS ONE KEY. Enter walks it in the order he works in — second
+     pass, then the review list, then the sheet — and `c` on the sheet copies. Enter already
+     meant "next" all the way through the questions, so it just carries on meaning it past
+     the last one instead of stopping dead at the end card.
+
+     Each step is taken by CLICKING THE REAL BUTTON, so there is one path into a second pass
+     and one into the review list, whether he pressed the key or the button. A step with no
+     button on screen is skipped rather than faked: no wrong answers means no 2nd Pass, so
+     Enter goes straight to the review list. */
+  if(D.tab === 'sheet'){
+    if(e.key === 'c' || e.key === 'C'){ const b = $('#copysheet'); if(b) b.click(); }
+    return;
+  }
+  if(D.tab !== 'quiz') return;
+  if(S.done || S.reviewing){
+    if(e.key !== 'Enter') return;
+    e.preventDefault();
+    if(!S.reviewing && pending2().length){ $('#pass2').click(); return; }
+    if(!S.reviewing){ $('#review').click(); return; }
+    if(D.hasSheet) setTab('sheet');
+    return;
+  }
+  const q = D.questions[S.i];
+  // Forward is forward whether or not he answered — see advance() for where the last
+  // question goes now. The old `if(!$('#next').disabled)` guard is gone with the disabling.
+  if(e.key === 'Enter' || e.key === 'ArrowRight'){ step(1); return; }
+  if(e.key === 'ArrowLeft'){ if(!$('#back').disabled) step(-1); return; }
+  // `h` IS THE HINT, not option H. Every quiz here has four options, so H as an option key
+  // has never been reachable; if one ever has eight, the eighth is still `8`.
+  if(e.key === 'h' || e.key === 'H'){ toggleHint(); return; }
+  // `r` OPENS THE BOX ON THE RESEARCH PANE — the point of the key is "I want to paste this
+  // now". R is past H, so it can never be an option key. From inside the box `r` is a letter
+  // and Esc is what shuts it; see the Escape branch at the top.
+  if(e.key === 'r' || e.key === 'R'){ e.preventDefault(); openResearch('research'); return; }
+  /* `f` OPENS THE BOX ON THE FIX PANE. It is claimed BEFORE the option lookup below, and
+     unlike `h` and `r` that costs something real: F is the SIXTH option letter, so a quiz
+     with six or more options would lose `f` as an answer key. Every quiz and exam this
+     system has ever generated has four, and the prompts do not offer a way to ask for more,
+     so the cost is theoretical — but it is a tighter margin than `h` (eighth) or `r` (past
+     the end), and if that ever changes this is the line that breaks. */
+  if(e.key === 'f' || e.key === 'F'){ e.preventDefault(); openFix(); return; }
+  /* `t` IS THE REFLECTION PANE — "thoughts", his own word for what goes in it. It had to be
+     past G like the rest, and every letter that spells the word is either an option key (e)
+     or already taken (r, f), so the mnemonic is the noun rather than the label. */
+  if(e.key === 't' || e.key === 'T'){ e.preventDefault(); openRefl(); return; }
+  /* `u` IS REDO, and it is `u` because `r` was already research (08-16). He asked for the
+     key and said he had wanted `r` for it — but `r` has meant the box since 08-11 and moving
+     it would cost the one key he uses most to swap in the one he uses after a mis-click.
+     `u` for undo is what the button actually does: it is the mis-click undo. It goes through
+     the BUTTON, whose visibility is already the gate — hidden until he has answered. */
+  if(e.key === 'u' || e.key === 'U'){
+    const b = $('#redo');
+    if(b && !b.classList.contains('hide')) b.click();
+    return;
+  }
+  // `s` STARS and `/` TAGS IT "no idea" — the two marks he makes while reading, on the two
+  // keys nearest that. Both are past G, so neither can ever be an option key. `?` is bound
+  // beside `/` because it is the same key with a shift on it and the glyph he sees is `?`;
+  // preventDefault stops Firefox's quick-find opening underneath the page.
+  if(e.key === 's' || e.key === 'S'){ toggleStar(S.i); return; }
+  if(e.key === '/' || e.key === '?'){ e.preventDefault(); toggleUnsure(S.i); return; }
+  /* THE KEY NAMES A POSITION ON SCREEN, not an option. `2` and `B` mean the second card he
+     can see, which is the only thing either of them could mean to him — after a Redo has
+     reshuffled the cards that is no longer option 2, so it goes through optOrder() to find
+     which one it now is. Before any Redo the map is the identity and this is what it was. */
+  let pos = -1;
+  if(/^[1-9]$/.test(e.key)) pos = +e.key - 1;
+  else if(/^[a-gA-G]$/.test(e.key)) pos = D.letters.indexOf(e.key.toUpperCase());
+  if(pos >= 0 && pos < q.options.length && pick(S.i) === undefined){
+    // click the real button rather than repeating its handler — one path for answering
+    const btn = $('#quizview').querySelector('.opt[data-k="' + optOrder(S.i)[pos] + '"]');
+    if(btn) btn.click();
+  }
+});
+
+save();
+syncTabs();
+renderScore();
+setTab(D.tab || 'quiz');
+</script>
+</body>
+</html>
