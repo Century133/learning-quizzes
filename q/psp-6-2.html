@@ -887,14 +887,19 @@ function active(s){
    question and nothing downstream can tell it apart. Promotion is recorded on the qid, so it
    survives a reload and cannot be handed out twice. Skipping with none left behaves exactly
    as it always did: the paper is one question shorter. */
+/* BUCKETED BY SUBCHAPTER, AND A QUIZ IS ONE BUCKET (08-17). `q.sec || ''` is the whole of the
+   difference: an exam holds two back per subchapter, a subchapter quiz — which carries no
+   `sec` at all — holds two back off the end of the one list it has. His ask was that the exam
+   rules reach quizzes too, and a skipped question shrinking the paper was the one place they
+   did not. */
+function bucketOf(i){ return D.questions[i].sec || ''; }
 function reserveIds(sec){
   if(!(D.reserve > 0)) return [];
-  const l = D.questions.map((_,i)=>i).filter(i => D.questions[i].sec === sec);
+  const l = D.questions.map((_,i)=>i).filter(i => bucketOf(i) === sec);
   return l.slice(Math.max(0, l.length - D.reserve));
 }
 function isReserve(i){
-  const sec = D.questions[i].sec;
-  return !!sec && reserveIds(sec).indexOf(i) >= 0;
+  return reserveIds(bucketOf(i)).indexOf(i) >= 0;
 }
 /* Skipped or an unpromoted reserve — the two ways a question is not part of the paper. One
    predicate so the run, the score, the picker and the section tables can never disagree. */
@@ -904,7 +909,6 @@ function onPaper(s, i){
 }
 /* Called the instant a question is skipped. Returns the promoted index, or -1. */
 function promoteReserve(sec){
-  if(!sec) return -1;
   const next = reserveIds(sec).find(i => !S.promoted[qk(i)] && !S.skipped[qk(i)]);
   if(next === undefined) return -1;
   S.promoted[qk(next)] = true;
@@ -1976,7 +1980,7 @@ function openMenu(){
   m.querySelector('#skipq').onclick = ()=>{
     const list = runList(), pos = list.indexOf(S.i);
     if(list.length <= 1) return closeMenu();        // never skip the last one standing
-    const sec = D.questions[S.i].sec;
+    const sec = bucketOf(S.i);
     S.skipped[qk(S.i)] = true;
     delete S.answers[qk(S.i)];
     delete S.pass2[qk(S.i)];
