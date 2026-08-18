@@ -1,8 +1,11 @@
 <!-- THE SITE MARK. One stroke: the hook of a question mark that runs down into the valley of a
-     check and up its long arm — the quiz and the mark it gives itself, in one glyph. Blue at the
-     question end (--accent #8ab4f8), green at the tip (--right #81c995), the site's own two
-     colours. Kept to a single path with round caps so it survives 16px in a tab; the tile is a
-     shade off the page black (#17181a on --bg #131314) so it still reads on a light tab bar. -->
+     check and up its long arm, the quiz and the mark it gives itself in one glyph. Blue at the
+     question end (accent #8ab4f8), green at the tip (right #81c995), the site's own two colours.
+     NO DOUBLE HYPHEN ANYWHERE IN THIS COMMENT: an SVG is XML, XML forbids it inside a comment,
+     and the CSS variable names that were written here at first (with two leading hyphens) made
+     the whole file a parse error. It still served 200 and the page still linked it; browsers
+     just silently showed no icon. Kept to one path with round caps so it survives 16px in a
+     tab; the tile is a shade off the page black so it still reads on a light tab bar. -->
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="My quizzes">
   <defs>
     <linearGradient id="g" x1="14" y1="46" x2="55" y2="16" gradientUnits="userSpaceOnUse">
