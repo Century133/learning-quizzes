@@ -3058,6 +3058,18 @@ addEventListener('resize', ()=>{
 });
 
 document.addEventListener('keydown', e=>{
+  /* A SHORTCUT IS NOT AN ANSWER (08-18, his ask). ⌘C over a selected option was answering C,
+     which is the one keystroke this page's read-aloud selection exists to be followed by:
+     select the option, copy it, and the copy picks the answer for you.
+
+     THE BAIL IS EVERY SYSTEM MODIFIER, NOT JUST ⌘C, because `c` was never the only casualty.
+     Every letter this page binds is also half of a shortcut he uses — ⌘A select-all was
+     answering A, ⌘F answering F and opening the fix box, ⌘R reopening research, ⌘S starring.
+     Nothing on this page has ever wanted a modifier, so a held ⌘ / ⌃ / ⌥ means the keystroke
+     belongs to the browser or the OS and not to us.
+
+     SHIFT IS NOT IN THE LIST and must not be: `?` is shift+`/`, and it is the "no idea" mark. */
+  if(e.metaKey || e.ctrlKey || e.altKey) return;
   const t = e.target;
   /* ESC IS THE WAY OUT FROM INSIDE THE BOX, and it has to be checked before the rule below
      lets typing through. `r` cannot do this job: once the caret is in the pane, `r` is the
