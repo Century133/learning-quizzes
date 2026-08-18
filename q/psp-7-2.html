@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#131314">
+<link rel="icon" href="../icon.svg" type="image/svg+xml">
 <title>7.2 Obedience, Power, and Leadership</title>
 <style>
 :root{--bg:#131314;--surface:#1e1f20;--surface-hi:#26282a;--text:#e3e3e3;
@@ -45,6 +46,14 @@ header{position:sticky;top:0;z-index:5;background:var(--bg);
    `fitTitle()` measures both and adds .mid only when the real title clears the real tabs. */
 .title{font-size:.9rem;font-weight:500;white-space:nowrap;overflow:hidden;
  text-overflow:ellipsis;flex:1;text-align:center}
+/* THE CLOCK IS A REAL ITEM IN THE ROW, not an overlay. It was absolute for one build and
+   that was wrong: the title is `flex:1` and starts at the left edge whenever it is too wide
+   to centre, so an absolute clock printed itself straight through the first two words of
+   "7.2 Obedience, Power, and Leadership". A flex item cannot overlap anything.
+   `tabular-nums` and a min-width keep the digits from twitching the row every second. */
+.clock{flex:0 0 auto;min-width:3.1em;font-size:.78rem;color:var(--muted);
+ font-variant-numeric:tabular-nums;letter-spacing:.04em;
+ user-select:none;-webkit-user-select:none}
 /* Out of the flex row and centred on the bar's padding box — the same box the rail spans,
    so the title lines up with the progress track under it and with the band below that. */
 .bar.mid .title{position:absolute;left:0;right:0;margin:0 auto;width:max-content;
@@ -553,6 +562,9 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
 <body>
 <header>
   <div class="wrap bar">
+    <!-- FIRST IN THE ROW, so the title's flex box starts after it and the two can never
+         overlap. `fitTitle()` counts its width as the left gutter. -->
+    <span class="clock no-read-aloud hide" id="clock" aria-hidden="true"></span>
     <span class="title no-read-aloud">7.2 Obedience, Power, and Leadership</span>
     <span class="tabs" id="tabs"><button class="tab" data-tab="quiz" aria-selected="true">Quiz</button><button class="tab hide" data-tab="starred" aria-selected="false">Starred</button><button class="tab hide" data-tab="frq" aria-selected="false">Written</button><button class="tab" data-tab="sheet" aria-selected="false">Study sheet</button></span>
   </div>
@@ -833,7 +845,8 @@ function qk(i){ return D.questions[i].qid; }
    `answers`, never stored, so there is exactly one place a number can come from. */
 function blank(){ return {v:2, hash:D.hash, i:0, answers:{}, pass2:{}, skipped:{}, starred:{},
                           unsure:{}, hints:{}, phase:1, p2list:null, done:false, at:null,
-                          shuf:{}, history:[], only:null, sat:{}, promoted:{}}; }
+                          shuf:{}, history:[], only:null, sat:{}, promoted:{},
+                          ms:0, clock:false}; }
 function migrate(s){
   // v1 keyed every map on the array index. The hash matches, so the indices are still valid
   // and this is a straight re-key — done once, then never again.
@@ -887,6 +900,11 @@ function load(){
     // set of options that may no longer be the same length — optOrder() throws out any that
     // no longer fit, so a stale one is harmless anyway.
     if(!s.shuf) s.shuf = {};
+    // The clock and the choice to look at it are both new on 08-18 and absent from every
+    // attempt saved before it. Zero and hidden are the right defaults for an attempt that was
+    // never timed: it reads as "not measured" rather than as a suspiciously fast paper.
+    if(typeof s.ms !== 'number') s.ms = 0;
+    if(typeof s.clock !== 'boolean') s.clock = false;
     return s;
   }catch(e){ return blank(); }
 }
@@ -919,7 +937,7 @@ function save(){
   const pp = D.parts ? paperStat() : null;
   S.meta = {title:D.title, subtitle:D.subtitle, book:D.book,
             total: pp ? pp.t : active(S).length,
-            at:S.at, done:S.done, score: pp ? pp.n : score(S)};
+            at:S.at, done:S.done, score: pp ? pp.n : score(S), ms:S.ms};
   try{ localStorage.setItem(KEY, JSON.stringify(S)); saveFailed(false); }
   catch(e){ saveFailed(true); }
 }
@@ -1374,7 +1392,13 @@ function fitTitle(){
      which it can be asked how wide it actually is. Both classList calls happen inside one
      frame, so nothing is painted half-way. */
   bar.classList.add('mid');
-  const side = (tabs && !tabs.classList.contains('hide')) ? tabs.offsetWidth : 0;
+  /* THE WIDER GUTTER DECIDES IT. A centred title has to clear whatever is furthest into the
+     row on EITHER side — the tabs on the right, and since 08-18 the clock on the left when
+     he has it showing. Measuring only the tabs is what let the clock and the title share the
+     same pixels for one build. */
+  const clk = $('#clock');
+  const side = Math.max((tabs && !tabs.classList.contains('hide')) ? tabs.offsetWidth : 0,
+                        (clk && !clk.classList.contains('hide')) ? clk.offsetWidth : 0);
   if(t.getBoundingClientRect().width > bar.clientWidth - 2 * (side + 14))
     bar.classList.remove('mid');
 }
@@ -2117,8 +2141,12 @@ function openMenu(){
   if(host.querySelector('.menu')) return closeMenu();
   const m = document.createElement('div');
   m.className = 'menu';
-  m.innerHTML = '<button id="skipq">Skip this question</button>';
+  // The clock's only other way in. `w` is not written anywhere else on the page, and a key
+  // nothing announces is a key he has to remember he asked for.
+  m.innerHTML = '<button id="skipq">Skip this question</button>'
+              + '<button id="clocktog">' + (S.clock ? 'Hide' : 'Show') + ' time  ( w )</button>';
   host.appendChild(m);
+  m.querySelector('#clocktog').onclick = ()=>{ toggleClock(); closeMenu(); };
   m.querySelector('#skipq').onclick = ()=>{
     const list = runList(), pos = list.indexOf(S.i);
     if(list.length <= 1) return closeMenu();        // never skip the last one standing
@@ -2570,6 +2598,53 @@ function reflOnlyMarkdown(){
     '### ' + (x.q.topic || ('Question ' + x.n)) + '\n\n' + boxMarkdown(x.x) + '\n').join('\n');
 }
 
+/* ---- THE CLOCK (08-18, his ask) -------------------------------------------------------
+   *"keep track of the time spent on quizzes going forward and its also in the copy next to
+   the score. It also lives on the top, and its default is hidden but I can see how long it
+   takes if I unhide it."*
+
+   IT COUNTS TIME THE PAGE WAS ACTUALLY IN FRONT OF HIM, not wall time since he opened it.
+   A quiz left open in a background tab over lunch would otherwise report an hour and a half
+   and make every number after it worthless. So the tick only banks a second when the tab is
+   visible and the paper is not finished, and `tickAt` is dropped the moment either stops
+   being true — which is what makes closing the laptop mid-question free rather than costly.
+
+   IT SURVIVES A RELOAD because it lives in the saved attempt (`S.ms`) like everything else.
+   The quiz is meant to be picked up and put down; a clock that restarted with the page would
+   only ever measure the last sitting.
+
+   HIDDEN IS THE DEFAULT AND `w` IS THE KEY (w for watch — every letter nearer the meaning
+   was taken: `t` is the reflection pane, `h` the hint, `s` the star). The choice persists,
+   so it is a setting and not a per-question toggle.
+
+   IT IS `aria-hidden` AND `.no-read-aloud` EVEN WHEN VISIBLE, which he asked for explicitly.
+   A number that changes every second is the single worst thing to hand a page reader: it is
+   chrome to him and it would be a fresh interruption to it every second. */
+function fmtMs(ms){
+  const t = Math.max(0, Math.round(ms/1000)), p2 = n => (n<10?'0':'') + n;
+  const h = Math.floor(t/3600), m = Math.floor((t%3600)/60), sec = t%60;
+  return h ? h + ':' + p2(m) + ':' + p2(sec) : m + ':' + p2(sec);
+}
+let tickAt = null, tickN = 0;
+function paintClock(){
+  const el = $('#clock');
+  if(!el) return;
+  el.classList.toggle('hide', !S.clock);
+  if(S.clock) el.textContent = fmtMs(S.ms);
+}
+function tick(){
+  const now = Date.now();
+  if(!S.done && !document.hidden){
+    if(tickAt) S.ms += now - tickAt;
+    tickAt = now;
+  }else tickAt = null;
+  paintClock();
+  // A WRITE A SECOND WOULD BE A WRITE A SECOND. Every answer already saves, and this only has
+  // to cover the case of a tab closed mid-question — 15 seconds is the most that can cost.
+  if(++tickN % 15 === 0) save();
+}
+function toggleClock(){ S.clock = !S.clock; save(); paintClock(); fitTitle(); }
+
 /* ---- the score, written where he copies from ---------------------------------------- */
 /* THE PROJECTED SCORE DOCKS A MARK FOR EVERY HINT, which is his rule and his reasoning:
    a high score with a lot of hints "is actually a sign that you didn't know them very
@@ -2596,7 +2671,12 @@ function scoreMarkdown(){
   const p = scoreParts();
   return '**' + NOUN + ':** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
        + (p.red ? ', +' + p.red + ' redeemed' : '') + ', ' + p.wrong + ' wrong'
-       + (p.skipped ? ', ' + p.skipped + ' skipped' : '') + ' · ' + when(S.at)
+       + (p.skipped ? ', ' + p.skipped + ' skipped' : '')
+       // NEXT TO THE SCORE, which is where he asked for it — the pace belongs with the mark
+       // it was got at, and a line of its own would be one more thing to line up in Notion.
+       // An attempt saved before the clock existed has ms:0 and prints no time at all rather
+       // than claiming it took no time.
+       + (S.ms ? ' · ' + fmtMs(S.ms) : '') + ' · ' + when(S.at)
        + '\n**Hints:** ' + hintLine(p);
 }
 function renderScore(){
@@ -2682,9 +2762,14 @@ $('#retake').onclick = ()=>{
   // every sitting at once and lands back on the picker, which is what "retake the exam" means.
   if(S.done){ const p = D.parts ? paperStat() : null;
               S.history.push({at:S.at, score: p ? p.n : score(S),
-                              total: p ? p.t : active(S).length}); }
+                              total: p ? p.t : active(S).length, ms:S.ms}); }
   const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
+  // THE TIME RESETS AND THE CHOICE TO SEE IT DOES NOT. A retake is a new attempt, so its
+  // clock starts at zero — but whether he is watching the clock is a setting about the page,
+  // and having to press `w` again after every retake would be the page forgetting him.
+  const watching = S.clock;
   S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  S.clock = watching;
   pickSel = null;
   lastShown = -1;
   save(); syncTabs(); renderScore(); draw();
@@ -3229,6 +3314,9 @@ document.addEventListener('keydown', e=>{
   // beside `/` because it is the same key with a shift on it and the glyph he sees is `?`;
   // preventDefault stops Firefox's quick-find opening underneath the page.
   if(e.key === 's' || e.key === 'S'){ toggleStar(S.i); return; }
+  // `w` FOR WATCH — the clock in the bar, off by default. Past G like every other command
+  // key here, so it can never be an option letter.
+  if(e.key === 'w' || e.key === 'W'){ toggleClock(); return; }
   if(e.key === '/' || e.key === '?'){ e.preventDefault(); toggleUnsure(S.i); return; }
   /* THE KEY NAMES A POSITION ON SCREEN, not an option. `2` and `B` mean the second card he
      can see, which is the only thing either of them could mean to him — after a Redo has
@@ -3243,6 +3331,14 @@ document.addEventListener('keydown', e=>{
     if(btn) btn.click();
   }
 });
+
+/* THE CLOCK RUNS FROM HERE. `visibilitychange` drops the mark rather than banking it, so
+   the seconds a hidden tab spends are never counted; `pagehide` is the one save that catches
+   a tab closed between the 15-second writes. */
+setInterval(tick, 1000);
+document.addEventListener('visibilitychange', ()=>{ tickAt = null; tick(); save(); });
+addEventListener('pagehide', ()=>{ tick(); save(); });
+paintClock();
 
 save();
 syncTabs();
