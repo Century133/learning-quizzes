@@ -158,25 +158,32 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
 .opt.enter,.qhead.enter{animation:fadein .24s ease both}
 @keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 
-/* ---- SELECTABLE TEXT, and it is timed rather than global ----
-   He searches the web while he works, so the wording has to leave the page. Two different
-   problems, one each side of the answer:
+/* ---- SELECTABLE TEXT = WHAT A SCREEN READER SHOULD SAY (08-18, his ask) ----
+   NaturalReader reads a SELECTION, so on this page selection is no longer just about
+   copying — it is the read-aloud contract. Select the card, press play, and what comes out
+   has to be the question and the four options and nothing else. So the rule flipped from
+   "what is safe to select" to "what is worth hearing":
 
-   THE QUESTION was never selectable because the browser's own stylesheet turns selection
-   off inside a <button>, and the whole question head sits in one. `user-select:text` on the
-   text itself puts it back; it costs nothing, because nothing up there is a click target
-   except the ☆ and the ⋮, which are excluded below.
+   SELECTABLE: the question, every option (answered or not), the rationale, the hint, the
+   study sheet. Drag across the card and that is exactly what you get.
 
-   THE OPTIONS STAY LOCKED UNTIL HE HAS ANSWERED, and that is deliberate, not an oversight.
-   An option IS the button — drag across one to select it and the mouseup answers the
-   question with whatever he happened to start the drag on. So selection is enabled on
-   `:disabled`, which is exactly the set of options that can no longer be clicked: every
-   option, the moment the answer is in. On a second pass the pending question re-enables and
-   locks again, which is right — it is live again. */
+   NOT SELECTABLE: the chapter title in the bar and the whole .meta line — the `1 / 14`
+   counter, `2nd pass`, the section, the topic, the source. All of it is chrome, and a reader
+   that opens with "eleven point one interactions of skeletal muscles, one slash fourteen"
+   buries the question. The ✓ / ✕ marks go too, for the same reason: they are read as
+   "check mark" and "multiply", which is noise where a glyph was meant.
+
+   THE OPTIONS USED TO STAY LOCKED UNTIL HE HAD ANSWERED, and that was not superstition.
+   An option IS the button — drag across one and the mouseup answers the question with
+   whatever the drag started on. Selection is on for all of them now, and the guard moved
+   into JS instead: `question()` refuses a click that came at the end of a drag or that
+   lands with text selected inside that same option. See THE DRAG GUARD there. */
 .q,.qq,.why,.lab,.hinttext,.rline,.tag,.sheet,.topics,.legend{
  user-select:text;-webkit-user-select:text}
-.opt{user-select:none;-webkit-user-select:none}
-.opt.locked,.opt.locked *{user-select:text;-webkit-user-select:text;cursor:auto}
+.opt,.opt *{user-select:text;-webkit-user-select:text}
+.opt.locked{cursor:auto}
+.line .mark,.lab .g{user-select:none;-webkit-user-select:none}
+.title,.meta,.meta *{user-select:none;-webkit-user-select:none}
 .star,.dots,.tab,button.pill{user-select:none;-webkit-user-select:none}
 
 /* ---- HIS RESEARCH, one box per question ----
@@ -1513,6 +1520,10 @@ function buildQ(i, picked, fresh, en){
   return h + '</div>';
 }
 
+/* Set the moment an option records an answer and read only by the double-click rollback
+   below — 600ms later it means nothing. */
+let justAnswered = null;
+
 function question(fresh){
   const i = S.i, q = D.questions[i], picked = pick(i);
   const answered = picked !== undefined;
@@ -1524,18 +1535,77 @@ function question(fresh){
   $('#rail').style.width = ((pos + (answered?1:0)) / act.length * 100) + '%';
   $('#quizview').innerHTML = buildQ(i, picked, fresh, isNew ? ' enter' : '');
   $('#quizview').querySelectorAll('.opt').forEach(b=>{
-    b.onclick = ()=>{
+    // THE DRAG GUARD (08-18). Unanswered options are selectable now, so NaturalReader can
+    // read them — which puts a drag and a click on the same button. Two tests separate them,
+    // and both have to pass before an answer is recorded:
+    //   1. the pointer barely moved between mousedown and mouseup (a click, not a sweep)
+    //   2. nothing is selected inside THIS option when the click lands
+    // Test 2 alone is not enough: a drag that ends outside the button, or one the browser
+    // collapses on mouseup, would still read as a click. Test 1 alone is not enough either:
+    // extending an existing selection with shift+click never moves the pointer.
+    let from = null;
+    b.addEventListener('mousedown', e => { from = [e.clientX, e.clientY]; });
+    b.onclick = e=>{
       // `aria-disabled` AND NOT `disabled`, SINCE 08-16. A real `disabled` button will not let
       // its text be selected however `user-select` is set — browsers block selection inside a
       // disabled control — so the rationale he wanted to copy off an answered question could
       // not be picked up at all: *"Im trying to copy on v2 exams and its not letting me."*
       // The lock is now the guard on this line, and the class is what styles it.
       if(b.classList.contains('locked')) return;
+      const moved = from && Math.hypot(e.clientX-from[0], e.clientY-from[1]) > 5;
+      from = null;
+      // BOTH TESTS ARE FOR THE MOUSE AND ONLY THE MOUSE. `e.detail` is 0 on a click nobody
+      // made with a pointer, which is how the `a`–`g` keys answer — they call `.click()` on
+      // the real button so there is one path for answering. Without this line the keys would
+      // go dead exactly when they are most wanted: select an option to hear it read, press
+      // its letter, and the selection sitting inside that button would refuse the key.
+      if(e.detail > 0){
+        if(moved) return;
+        const sel = window.getSelection && window.getSelection();
+        if(sel && !sel.isCollapsed && sel.toString().trim()
+           && b.contains(sel.anchorNode) && b.contains(sel.focusNode)) return;
+      }
       // The first pass is never overwritten — a second-pass answer goes in its own map.
       if(S.phase === 2) S.pass2[qk(i)] = +b.dataset.k; else S.answers[qk(i)] = +b.dataset.k;
+      justAnswered = {k: qk(i), t: Date.now(), phase: S.phase};
       save(); question(true);
     };
   });
+
+  /* THE DOUBLE-CLICK ROLLBACK, the other half of the drag guard (08-18).
+     A double- or triple-click selects a word or the whole line — the natural way to hand an
+     option to NaturalReader. But the FIRST click of that sequence is a plain click and has
+     already answered the question by the time the second one arrives; no guard can see it
+     coming. So it is undone afterwards instead: `dblclick` fires on click two, and if an
+     answer went in within the last 600ms it comes straight back out.
+
+     WHY NOT DELAY THE ANSWER instead and cancel it if a second click follows. Because that
+     puts the double-click interval — a fifth of a second — in front of EVERY answer on the
+     page, to protect a gesture he may use twice a session. This costs nothing until it fires.
+
+     NO RESHUFFLE, unlike Redo: the options must not move under a selection he is mid-way
+     through making. A triple-click then lands its third click on an option that is live again
+     with the paragraph selected inside it — which the selection guard above refuses, so the
+     sequence ends where it should, selected and unanswered. */
+  $('#quizview').ondblclick = e=>{
+    if(!justAnswered || Date.now() - justAnswered.t > 600) return;
+    const opt = e.target.closest && e.target.closest('.opt');
+    if(!opt) return;
+    const k = opt.dataset.k;
+    const j = justAnswered; justAnswered = null;
+    if(j.phase === 2) delete S.pass2[j.k]; else delete S.answers[j.k];
+    save(); question();
+    // The re-render threw away the node the double-click had just selected a word inside, and
+    // took the selection with it — so a double-click would undo the answer and then leave him
+    // with nothing highlighted to press play on. Put it back, on the SAME option and on the
+    // whole line rather than the one word, because selecting an option is what the gesture
+    // was for.
+    const t = $('#quizview').querySelector('.opt[data-k="'+k+'"] .t');
+    if(t){
+      const sel = getSelection(), rg = document.createRange();
+      rg.selectNodeContents(t); sel.removeAllRanges(); sel.addRange(rg);
+    }
+  };
   $('#star').onclick = ()=> toggleStar(i);
   $('#qmark').onclick = ()=> toggleUnsure(i);
   $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
