@@ -467,6 +467,11 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
    (`.rline.mine`) and this block sits later in the file — unscoped, it was handing every
    wrong-answer line in the review list a 34px gap and a rule above it. */
 .own{margin:34px 0 0;padding-top:18px;border-top:1px solid var(--line)}
+/* HIS BOX IS FIRST ON THE SHEET (08-19, his ask): "my own section to write down any missing
+   notes". A rule above the first thing on the page has nothing to separate it from, so it
+   moves down onto the book's material, which now follows him instead of preceding him. */
+.own.first{margin-top:6px;padding-top:0;border-top:0}
+#sheetmd{margin-top:30px;padding-top:20px;border-top:1px solid var(--line)}
 .own h3{margin:0 0 4px;padding:0;border:0}
 .own .say{color:var(--muted);font-size:.85rem;margin:0 0 12px}
 .own .item:first-of-type{border-top:0;padding-top:6px}

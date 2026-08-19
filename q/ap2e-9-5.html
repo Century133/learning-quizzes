@@ -46,6 +46,31 @@ header{position:sticky;top:0;z-index:5;background:var(--bg);
    `fitTitle()` measures both and adds .mid only when the real title clears the real tabs. */
 .title{font-size:.9rem;font-weight:500;white-space:nowrap;overflow:hidden;
  text-overflow:ellipsis;flex:1;text-align:center}
+/* THE CLOCK IS MIST UNTIL HE ASKS (08-18, his second pass at it). *"make it like of mistty
+   and blurry at the top and an unhide button which shows it, but I also like the hotkey w."*
+
+   BLURRED, NOT HIDDEN, and that is the whole design. Hiding it made the bar move every time
+   he pressed `w`, and — worse — the press stuck, so a quiz he had once been curious about
+   showed him a running clock for the rest of the paper. A blur costs the same pixels either
+   way: nothing in the row moves, and there is always something there to click.
+
+   IT IS THE BUTTON. There is no separate control, because a control beside an unreadable
+   smudge is two things where one will do — press `w`, or click the smudge.
+
+   `tabindex="-1"` IS LOAD-BEARING: it keeps the clock out of the tab order, so Enter — which
+   means "next question" everywhere on this page — can never land on it and toggle instead.
+
+   A REAL <button> ALSO MEANS THE READER SKIPS IT FOR FREE: `button` is on NaturalReader's
+   ignore list, so this is silent even before the `.no-read-aloud` class it also carries.
+   He asked for that explicitly, and a number that changes every second is the worst thing a
+   page reader could be handed. */
+.clock{flex:0 0 auto;min-width:3.4em;background:none;border:0;padding:0;text-align:left;
+ font:inherit;font-size:.78rem;color:var(--muted);
+ font-variant-numeric:tabular-nums;letter-spacing:.04em;cursor:pointer;
+ user-select:none;-webkit-user-select:none;
+ filter:blur(4px);opacity:.45;transition:filter .18s ease,opacity .18s ease}
+.clock:hover{opacity:.75}
+.clock.on{filter:none;opacity:1;cursor:pointer}
 /* Out of the flex row and centred on the bar's padding box — the same box the rail spans,
    so the title lines up with the progress track under it and with the band below that. */
 .bar.mid .title{position:absolute;left:0;right:0;margin:0 auto;width:max-content;
@@ -119,7 +144,7 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
 
 /* ---- options ---- */
 .opts{display:flex;flex-direction:column;gap:var(--ogap)}
-.opt{display:block;width:100%;text-align:left;background:var(--surface);
+.opt{display:block;width:100%;margin:0;text-align:left;background:var(--surface);
  border:1px solid transparent;border-radius:var(--radius);padding:var(--opad);
  color:var(--text);font:inherit;font-size:var(--osize);cursor:pointer;
  transition:background .16s ease,border-color .16s ease,opacity .16s ease}
@@ -159,25 +184,57 @@ main{flex:1;display:flex;flex-direction:column;justify-content:flex-start;paddin
 .opt.enter,.qhead.enter{animation:fadein .24s ease both}
 @keyframes fadein{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 
-/* ---- SELECTABLE TEXT, and it is timed rather than global ----
-   He searches the web while he works, so the wording has to leave the page. Two different
-   problems, one each side of the answer:
+/* ---- NATURALREADER READS THE DOM, NOT THE SELECTION — and that is the rule that matters
+        (08-18, corrected the same day) ----
+   The first version of this shipped on the theory that the extension speaks whatever is
+   selected, so making a thing unselectable would silence it. THAT IS WRONG and the page
+   proved it: it read the chapter title and `1 / 14` off an untouched, unselectable header.
 
-   THE QUESTION was never selectable because the browser's own stylesheet turns selection
-   off inside a <button>, and the whole question head sits in one. `user-select:text` on the
-   text itself puts it back; it costs nothing, because nothing up there is a click target
-   except the ☆ and the ⋮, which are excluded below.
+   ITS `Play` MODE WALKS THE DOM FROM THE TOP. Read out of the extension's own content
+   script (`injected/nr-ext-text-processor/html-doc.js`, v7.0.12), it finds blocks of text,
+   and BEFORE it collects the words it hides every element matching one selector list:
 
-   THE OPTIONS STAY LOCKED UNTIL HE HAS ANSWERED, and that is deliberate, not an oversight.
-   An option IS the button — drag across one to select it and the mouseup answers the
-   question with whatever he happened to start the drag on. So selection is enabled on
-   `:disabled`, which is exactly the set of options that can no longer be clicked: every
-   option, the moment the answer is in. On a second pass the pending question re-enables and
-   locks again, which is right — it is live again. */
+     select, textarea, button, label, audio, video, dialog, embed, menu, nav, noframes,
+     noscript, object, script, style, svg, aside, footer, #footer, .no-read-aloud, …
+
+   Two things fall out of that list and they are the entire fix:
+
+   1. **`button` is in it**, so every option was invisible to the reader — an option was a
+      `<button>`. That is why it read the question and then stopped. The options are now
+      `role="button"` divs. Nothing else about them changed.
+   2. **`.no-read-aloud` is in it**, and it is a plain class — an opt-out written for exactly
+      this. It is on the bar title, the whole `.meta` line, and the ✓ / ✕ glyphs. Those are
+      the three things he asked to go quiet, and they now go quiet at the source rather than
+      by being hard to select.
+
+   SELECTION IS STILL WORTH GETTING RIGHT, for the other half of the extension — Highlight
+   to Read reads a selection, and he copies wording out to search it. So the rules below
+   stay, and they line up with the list above: what you can select is what gets read. */
+
+/* ---- SELECTABLE TEXT = WHAT A SCREEN READER SHOULD SAY (08-18, his ask) ----
+   Select the card, press play on Highlight to Read, and what comes out has to be the
+   question and the four options and nothing else. The rule is "what is worth hearing":
+
+   SELECTABLE: the question, every option (answered or not), the rationale, the hint, the
+   study sheet. Drag across the card and that is exactly what you get.
+
+   NOT SELECTABLE: the chapter title in the bar and the whole .meta line — the `1 / 14`
+   counter, `2nd pass`, the section, the topic, the source. All of it is chrome, and a reader
+   that opens with "eleven point one interactions of skeletal muscles, one slash fourteen"
+   buries the question. The ✓ / ✕ marks go too, for the same reason: they are read as
+   "check mark" and "multiply", which is noise where a glyph was meant.
+
+   THE OPTIONS USED TO STAY LOCKED UNTIL HE HAD ANSWERED, and that was not superstition.
+   An option IS the button — drag across one and the mouseup answers the question with
+   whatever the drag started on. Selection is on for all of them now, and the guard moved
+   into JS instead: `question()` refuses a click that came at the end of a drag or that
+   lands with text selected inside that same option. See THE DRAG GUARD there. */
 .q,.qq,.why,.lab,.hinttext,.rline,.tag,.sheet,.topics,.legend{
  user-select:text;-webkit-user-select:text}
-.opt{user-select:none;-webkit-user-select:none}
-.opt.locked,.opt.locked *{user-select:text;-webkit-user-select:text;cursor:auto}
+.opt,.opt *{user-select:text;-webkit-user-select:text}
+.opt.locked{cursor:auto}
+.line .mark,.lab .g{user-select:none;-webkit-user-select:none}
+.title,.meta,.meta *{user-select:none;-webkit-user-select:none}
 .star,.dots,.tab,button.pill{user-select:none;-webkit-user-select:none}
 
 /* ---- HIS RESEARCH, one box per question ----
@@ -413,6 +470,11 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
    (`.rline.mine`) and this block sits later in the file — unscoped, it was handing every
    wrong-answer line in the review list a 34px gap and a rule above it. */
 .own{margin:34px 0 0;padding-top:18px;border-top:1px solid var(--line)}
+/* HIS BOX IS FIRST ON THE SHEET (08-19, his ask): "my own section to write down any missing
+   notes". A rule above the first thing on the page has nothing to separate it from, so it
+   moves down onto the book's material, which now follows him instead of preceding him. */
+.own.first{margin-top:6px;padding-top:0;border-top:0}
+#sheetmd{margin-top:30px;padding-top:20px;border-top:1px solid var(--line)}
 .own h3{margin:0 0 4px;padding:0;border:0}
 .own .say{color:var(--muted);font-size:.85rem;margin:0 0 12px}
 .own .item:first-of-type{border-top:0;padding-top:6px}
@@ -522,7 +584,12 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
 <body>
 <header>
   <div class="wrap bar">
-    <span class="title">9.5 Types of Body Movements</span>
+    <!-- FIRST IN THE ROW, so the title's flex box starts after it and the two can never
+         overlap. `fitTitle()` counts its width as the left gutter. It is ALWAYS here and
+         always the same width — only the blur changes — so nothing in the bar ever moves. -->
+    <button class="clock no-read-aloud" id="clock" tabindex="-1" aria-hidden="true"
+            title="Time on this quiz  ( w )">0:00</button>
+    <span class="title no-read-aloud">9.5 Types of Body Movements</span>
     <span class="tabs" id="tabs"><button class="tab" data-tab="quiz" aria-selected="true">Quiz</button><button class="tab hide" data-tab="starred" aria-selected="false">Starred</button><button class="tab hide" data-tab="frq" aria-selected="false">Written</button><button class="tab" data-tab="sheet" aria-selected="false">Study sheet</button></span>
   </div>
   <!-- In the same .wrap as the title and the tabs: the progress track used to run the full
@@ -566,6 +633,22 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
     <div class="sheettools">
       <button class="link" id="previewnotes">Preview</button>
       <button class="link" id="copysheet">Copy</button>
+    </div>
+    <!-- FIRST ON THE SHEET on purpose (08-19): it is the one part of this page he writes,
+         and under a long generated sheet he was not finding it. Still LAST in the Copy, so
+         the paste he already knows is unchanged. Enter starts the next bullet, always. -->
+    <div class="own first">
+      <h3>My notes</h3>
+      <p class="say">Your own notes and thoughts — what the sheet missed, what you found
+      interesting, how these topics link up. <b>Enter starts the next bullet</b>; Enter on an
+      empty bullet ends the list. Tab nests. Copy takes this with the sheet, ready to paste
+      into the Notion row — and that row is what the week's exam is built from.</p>
+      <textarea id="mynotes" spellcheck="true" placeholder="• rebound effect: suppressed thought comes back stronger once you stop trying
+  • same shape as the ironic-process stuff from 3.2
+• self-control is finite — one hard task leaves less for the next
+• worth asking on the exam: how would you test this outside a lab"></textarea>
+      <p class="saved" id="savedmsg"></p>
+      <div id="minepreview" class="hide"></div>
     </div>
     <div id="sheetmd"><h3>Flexion and extension</h3>
 <p>These movements occur in the sagittal plane and involve anterior or posterior movements of the body or limbs.</p>
@@ -663,17 +746,6 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
 <h4>Key terms</h4>
 <p><strong>Ligaments</strong>: Fibrous tissues that constrain range of motion or prevent extension beyond anatomical limits.</p>
 <p><strong>Structural type</strong>: The physical classification (e.g., ball-and-socket vs. hinge) that determines available movement types.</p></div>
-    <div class="own">
-      <h3>My notes</h3>
-      <p class="say">What the sheet missed. Write it however you write — one thing a line,
-      <code>Term: what it is</code>, indent to nest. Copy takes this with the sheet, formatted,
-      ready to paste into the Notion row. That row is what the week's exam is built from.</p>
-      <textarea id="mynotes" spellcheck="true" placeholder="Rebound effect: suppressed thought comes back stronger once you stop trying
-   ex. telling yourself not to check the score
-Self-control is finite - one hard task leaves less for the next"></textarea>
-      <p class="saved" id="savedmsg"></p>
-      <div id="minepreview" class="hide"></div>
-    </div>
     <!-- Last on the sheet, and last in the Copy, so the paste reads sheet → his notes →
          what he went and found, grouped under the question that sent him looking. -->
     <div class="own hide" id="starredsheet"></div>
@@ -758,7 +830,8 @@ function qk(i){ return D.questions[i].qid; }
    `answers`, never stored, so there is exactly one place a number can come from. */
 function blank(){ return {v:2, hash:D.hash, i:0, answers:{}, pass2:{}, skipped:{}, starred:{},
                           unsure:{}, hints:{}, phase:1, p2list:null, done:false, at:null,
-                          shuf:{}, history:[], only:null, sat:{}, promoted:{}}; }
+                          shuf:{}, history:[], only:null, sat:{}, promoted:{},
+                          ms:0}; }
 function migrate(s){
   // v1 keyed every map on the array index. The hash matches, so the indices are still valid
   // and this is a straight re-key — done once, then never again.
@@ -812,6 +885,10 @@ function load(){
     // set of options that may no longer be the same length — optOrder() throws out any that
     // no longer fit, so a stale one is harmless anyway.
     if(!s.shuf) s.shuf = {};
+    // The clock and the choice to look at it are both new on 08-18 and absent from every
+    // attempt saved before it. Zero and hidden are the right defaults for an attempt that was
+    // never timed: it reads as "not measured" rather than as a suspiciously fast paper.
+    if(typeof s.ms !== 'number') s.ms = 0;
     return s;
   }catch(e){ return blank(); }
 }
@@ -844,7 +921,7 @@ function save(){
   const pp = D.parts ? paperStat() : null;
   S.meta = {title:D.title, subtitle:D.subtitle, book:D.book,
             total: pp ? pp.t : active(S).length,
-            at:S.at, done:S.done, score: pp ? pp.n : score(S)};
+            at:S.at, done:S.done, score: pp ? pp.n : score(S), ms:S.ms};
   try{ localStorage.setItem(KEY, JSON.stringify(S)); saveFailed(false); }
   catch(e){ saveFailed(true); }
 }
@@ -1299,7 +1376,13 @@ function fitTitle(){
      which it can be asked how wide it actually is. Both classList calls happen inside one
      frame, so nothing is painted half-way. */
   bar.classList.add('mid');
-  const side = (tabs && !tabs.classList.contains('hide')) ? tabs.offsetWidth : 0;
+  /* THE WIDER GUTTER DECIDES IT. A centred title has to clear whatever is furthest into the
+     row on EITHER side — the tabs on the right, and since 08-18 the clock on the left when
+     he has it showing. Measuring only the tabs is what let the clock and the title share the
+     same pixels for one build. */
+  const clk = $('#clock');
+  const side = Math.max((tabs && !tabs.classList.contains('hide')) ? tabs.offsetWidth : 0,
+                        clk ? clk.offsetWidth : 0);
   if(t.getBoundingClientRect().width > bar.clientWidth - 2 * (side + 14))
     bar.classList.remove('mid');
 }
@@ -1426,7 +1509,8 @@ function buildQ(i, picked, fresh, en){
   // up in the bar — it belongs with the thing it counts. On a second pass it counts the
   // second pass, so four wrong answers read as "1 / 4" and not as a broken 16.
   let h = '<div class="qhead' + en + '"><div class="qcol">'
-        + '<p class="meta"><span class="num">' + (pos+1) + ' / ' + act.length + '</span>'
+        + '<p class="meta no-read-aloud"><span class="num">' + (pos+1) + ' / '
+        + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
         // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
         // 10 reads as the paper having lost his place, which is how he read it.
@@ -1482,21 +1566,39 @@ function buildQ(i, picked, fresh, en){
       if(lab && fresh) cls += ' fresh';
       why = q.rationales ? (q.rationales[k]||'') : '';
     }
-    h += '<button class="'+cls+(answered?' locked':'')+'" data-k="'+k+'"'
+    /* A <p>, AND BOTH HALVES OF THAT MATTER (08-18). See NATURALREADER READS THE DOM in the
+       CSS for the whole mechanism; the short of it is:
+
+       NOT A <button>, because `button` is on the extension's ignore list, so for as long as
+       an option was one its text did not exist to the reader — it read the question and went
+       quiet. That was the first fix, and on its own it was not enough.
+
+       A <p> RATHER THAN A <div>, because four sibling divs became four separate blocks, and
+       the extension then threw all four away as outliers: it trims blocks whose length is
+       far from their neighbours', and beside a 385-character question four 10-character
+       options look like page furniture. Four `<p>` children make `.opts` ONE block by the
+       extension's own multi-block rule, so the count drops under the four-block minimum its
+       trimmer needs and nothing is trimmed at all. `role="button"` keeps it a control. */
+    h += '<p role="button" tabindex="0" class="'+cls+(answered?' locked':'')
+       + '" data-k="'+k+'"'
        + (answered?' aria-disabled="true"':'')+'>'
        + '<span class="line"><span class="k">'+D.letters[pos]+'.</span>'
        + '<span class="t">'+esc(o)+'</span>'
-       + '<span class="mark">'+mark+'</span></span>';
+       + '<span class="mark no-read-aloud">'+mark+'</span></span>';
     if(lab){
       h += '<span class="rat"><span class="ratin">'
-         + '<span class="lab"><span class="g">'+mark+'</span>'+lab+'</span>'
+         + '<span class="lab"><span class="g no-read-aloud">'+mark+'</span>'+lab+'</span>'
          + (why ? '<span class="why" style="display:block">'+esc(why)+'</span>' : '')
          + '</span></span>';
     }
-    h += '</button>';
+    h += '</p>';
   });
   return h + '</div>';
 }
+
+/* Set the moment an option records an answer and read only by the double-click rollback
+   below — 600ms later it means nothing. */
+let justAnswered = null;
 
 function question(fresh){
   const i = S.i, q = D.questions[i], picked = pick(i);
@@ -1509,18 +1611,84 @@ function question(fresh){
   $('#rail').style.width = ((pos + (answered?1:0)) / act.length * 100) + '%';
   $('#quizview').innerHTML = buildQ(i, picked, fresh, isNew ? ' enter' : '');
   $('#quizview').querySelectorAll('.opt').forEach(b=>{
-    b.onclick = ()=>{
+    // THE DRAG GUARD (08-18). Unanswered options are selectable now, so NaturalReader can
+    // read them — which puts a drag and a click on the same button. Two tests separate them,
+    // and both have to pass before an answer is recorded:
+    //   1. the pointer barely moved between mousedown and mouseup (a click, not a sweep)
+    //   2. nothing is selected inside THIS option when the click lands
+    // Test 2 alone is not enough: a drag that ends outside the button, or one the browser
+    // collapses on mouseup, would still read as a click. Test 1 alone is not enough either:
+    // extending an existing selection with shift+click never moves the pointer.
+    let from = null;
+    b.addEventListener('mousedown', e => { from = [e.clientX, e.clientY]; });
+    // A `<div role="button">` does not answer to Space the way a real button did, so the one
+    // thing the tag change would have quietly taken away is put back by hand. Enter is NOT
+    // here on purpose: it means "next question" everywhere on this page and must keep
+    // meaning that with an option focused.
+    b.addEventListener('keydown', e => {
+      if(e.key === ' ' || e.key === 'Spacebar'){ e.preventDefault(); b.click(); }
+    });
+    b.onclick = e=>{
       // `aria-disabled` AND NOT `disabled`, SINCE 08-16. A real `disabled` button will not let
       // its text be selected however `user-select` is set — browsers block selection inside a
       // disabled control — so the rationale he wanted to copy off an answered question could
       // not be picked up at all: *"Im trying to copy on v2 exams and its not letting me."*
       // The lock is now the guard on this line, and the class is what styles it.
       if(b.classList.contains('locked')) return;
+      const moved = from && Math.hypot(e.clientX-from[0], e.clientY-from[1]) > 5;
+      from = null;
+      // BOTH TESTS ARE FOR THE MOUSE AND ONLY THE MOUSE. `e.detail` is 0 on a click nobody
+      // made with a pointer, which is how the `a`–`g` keys answer — they call `.click()` on
+      // the real button so there is one path for answering. Without this line the keys would
+      // go dead exactly when they are most wanted: select an option to hear it read, press
+      // its letter, and the selection sitting inside that button would refuse the key.
+      if(e.detail > 0){
+        if(moved) return;
+        const sel = window.getSelection && window.getSelection();
+        if(sel && !sel.isCollapsed && sel.toString().trim()
+           && b.contains(sel.anchorNode) && b.contains(sel.focusNode)) return;
+      }
       // The first pass is never overwritten — a second-pass answer goes in its own map.
       if(S.phase === 2) S.pass2[qk(i)] = +b.dataset.k; else S.answers[qk(i)] = +b.dataset.k;
+      justAnswered = {k: qk(i), t: Date.now(), phase: S.phase};
       save(); question(true);
     };
   });
+
+  /* THE DOUBLE-CLICK ROLLBACK, the other half of the drag guard (08-18).
+     A double- or triple-click selects a word or the whole line — the natural way to hand an
+     option to NaturalReader. But the FIRST click of that sequence is a plain click and has
+     already answered the question by the time the second one arrives; no guard can see it
+     coming. So it is undone afterwards instead: `dblclick` fires on click two, and if an
+     answer went in within the last 600ms it comes straight back out.
+
+     WHY NOT DELAY THE ANSWER instead and cancel it if a second click follows. Because that
+     puts the double-click interval — a fifth of a second — in front of EVERY answer on the
+     page, to protect a gesture he may use twice a session. This costs nothing until it fires.
+
+     NO RESHUFFLE, unlike Redo: the options must not move under a selection he is mid-way
+     through making. A triple-click then lands its third click on an option that is live again
+     with the paragraph selected inside it — which the selection guard above refuses, so the
+     sequence ends where it should, selected and unanswered. */
+  $('#quizview').ondblclick = e=>{
+    if(!justAnswered || Date.now() - justAnswered.t > 600) return;
+    const opt = e.target.closest && e.target.closest('.opt');
+    if(!opt) return;
+    const k = opt.dataset.k;
+    const j = justAnswered; justAnswered = null;
+    if(j.phase === 2) delete S.pass2[j.k]; else delete S.answers[j.k];
+    save(); question();
+    // The re-render threw away the node the double-click had just selected a word inside, and
+    // took the selection with it — so a double-click would undo the answer and then leave him
+    // with nothing highlighted to press play on. Put it back, on the SAME option and on the
+    // whole line rather than the one word, because selecting an option is what the gesture
+    // was for.
+    const t = $('#quizview').querySelector('.opt[data-k="'+k+'"] .t');
+    if(t){
+      const sel = getSelection(), rg = document.createRange();
+      rg.selectNodeContents(t); sel.removeAllRanges(); sel.addRange(rg);
+    }
+  };
   $('#star').onclick = ()=> toggleStar(i);
   $('#qmark').onclick = ()=> toggleUnsure(i);
   $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
@@ -1875,6 +2043,27 @@ function bulletNewline(el){
   setVal(el, v.slice(0, at) + head + v.slice(at), at + head.length);
   return true;
 }
+/* ONE BOX IS ALWAYS A LIST — #mynotes, and only it (08-19, his ask): "every time I press
+   enter, I would just like it to go to the next bullet point so I can keep it moving." So
+   Enter starts a bullet on a PLAIN line too, not only when he already made one.
+
+   Deliberately not the research panes: plain Enter there means next question, and a bullet
+   he never asked for would be the price of moving on. Notion's escape is kept exactly —
+   Enter on an EMPTY bullet drops it — because it is the only way out of the list, and out
+   is where a pasted paragraph belongs. */
+function bulletAlways(el){
+  if(bulletNewline(el)) return true;        // already on a bullet: the existing rules win
+  const v = el.value, at = el.selectionStart;
+  if(at !== el.selectionEnd) return false;
+  const s = lineStart(v, at);
+  const line = v.slice(s, at);
+  if(!line.trim()) return false;            // a blank line stays blank; two Enters = a gap
+  if(/^[ \t]*(\d+[.)]|[-*+])\s/.test(line)) return false;   // he is writing his own list
+  const head = '\n' + line.match(/^[ \t]*/)[0] + '• ';
+  setVal(el, v.slice(0, at) + head + v.slice(at), at + head.length);
+  return true;
+}
+
 /* Tab NESTS a bullet and Shift+Tab lifts it, two spaces at a time — the same depth the
    markdown writers read. It is claimed ONLY on a bullet line, so Tab out of an empty box
    still moves focus and the keyboard is never trapped. */
@@ -1963,8 +2152,12 @@ function openMenu(){
   if(host.querySelector('.menu')) return closeMenu();
   const m = document.createElement('div');
   m.className = 'menu';
-  m.innerHTML = '<button id="skipq">Skip this question</button>';
+  // The clock's only other way in. `w` is not written anywhere else on the page, and a key
+  // nothing announces is a key he has to remember he asked for.
+  m.innerHTML = '<button id="skipq">Skip this question</button>'
+              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>';
   host.appendChild(m);
+  m.querySelector('#clocktog').onclick = ()=>{ toggleClock(); closeMenu(); };
   m.querySelector('#skipq').onclick = ()=>{
     const list = runList(), pos = list.indexOf(S.i);
     if(list.length <= 1) return closeMenu();        // never skip the last one standing
@@ -2416,6 +2609,61 @@ function reflOnlyMarkdown(){
     '### ' + (x.q.topic || ('Question ' + x.n)) + '\n\n' + boxMarkdown(x.x) + '\n').join('\n');
 }
 
+/* ---- THE CLOCK (08-18, his ask) -------------------------------------------------------
+   *"keep track of the time spent on quizzes going forward and its also in the copy next to
+   the score. It also lives on the top, and its default is hidden but I can see how long it
+   takes if I unhide it."*
+
+   IT COUNTS TIME THE PAGE WAS ACTUALLY IN FRONT OF HIM, not wall time since he opened it.
+   A quiz left open in a background tab over lunch would otherwise report an hour and a half
+   and make every number after it worthless. So the tick only banks a second when the tab is
+   visible and the paper is not finished, and `tickAt` is dropped the moment either stops
+   being true — which is what makes closing the laptop mid-question free rather than costly.
+
+   IT SURVIVES A RELOAD because it lives in the saved attempt (`S.ms`) like everything else.
+   The quiz is meant to be picked up and put down; a clock that restarted with the page would
+   only ever measure the last sitting.
+
+   BLURRED IS THE DEFAULT AND `w` IS THE KEY (w for watch — every letter nearer the meaning
+   was taken: `t` is the reflection pane, `h` the hint, `s` the star). Clicking the smudge
+   does the same thing. The reveal is NOT saved: see `clockOn` below for why.
+
+   IT IS `aria-hidden`, `.no-read-aloud` AND A `<button>` EVEN WHEN REVEALED, which he asked
+   for explicitly. A number that changes every second is the single worst thing to hand a page
+   reader: it is chrome to him and a fresh interruption to it every second. */
+function fmtMs(ms){
+  const t = Math.max(0, Math.round(ms/1000)), p2 = n => (n<10?'0':'') + n;
+  const h = Math.floor(t/3600), m = Math.floor((t%3600)/60), sec = t%60;
+  return h ? h + ':' + p2(m) + ':' + p2(sec) : m + ':' + p2(sec);
+}
+let tickAt = null, tickN = 0;
+/* NOT IN `S`, AND THAT IS THE FIX. It used to be saved with the attempt, so one press of `w`
+   out of curiosity left the clock running in the bar for the rest of the paper and every
+   session after it — which read, from the outside, as the thing unhiding itself. Hidden is
+   the default now in the only sense that matters: it is the default EVERY time the page
+   opens. Within a sitting it is a toggle, and it forgets. */
+let clockOn = false;
+function paintClock(){
+  const el = $('#clock');
+  if(!el) return;
+  el.classList.toggle('on', clockOn);
+  // The digits are always current, blurred or not — revealing it must show the real time,
+  // not start counting from the moment he looked.
+  el.textContent = fmtMs(S.ms);
+}
+function tick(){
+  const now = Date.now();
+  if(!S.done && !document.hidden){
+    if(tickAt) S.ms += now - tickAt;
+    tickAt = now;
+  }else tickAt = null;
+  paintClock();
+  // A WRITE A SECOND WOULD BE A WRITE A SECOND. Every answer already saves, and this only has
+  // to cover the case of a tab closed mid-question — 15 seconds is the most that can cost.
+  if(++tickN % 15 === 0) save();
+}
+function toggleClock(){ clockOn = !clockOn; paintClock(); }
+
 /* ---- the score, written where he copies from ---------------------------------------- */
 /* THE PROJECTED SCORE DOCKS A MARK FOR EVERY HINT, which is his rule and his reasoning:
    a high score with a lot of hints "is actually a sign that you didn't know them very
@@ -2442,7 +2690,12 @@ function scoreMarkdown(){
   const p = scoreParts();
   return '**' + NOUN + ':** ' + p.n + ' / ' + p.t + ' (' + p.pct + '%) — ' + p.first + ' right'
        + (p.red ? ', +' + p.red + ' redeemed' : '') + ', ' + p.wrong + ' wrong'
-       + (p.skipped ? ', ' + p.skipped + ' skipped' : '') + ' · ' + when(S.at)
+       + (p.skipped ? ', ' + p.skipped + ' skipped' : '')
+       // NEXT TO THE SCORE, which is where he asked for it — the pace belongs with the mark
+       // it was got at, and a line of its own would be one more thing to line up in Notion.
+       // An attempt saved before the clock existed has ms:0 and prints no time at all rather
+       // than claiming it took no time.
+       + (S.ms ? ' · ' + fmtMs(S.ms) : '') + ' · ' + when(S.at)
        + '\n**Hints:** ' + hintLine(p);
 }
 function renderScore(){
@@ -2528,8 +2781,10 @@ $('#retake').onclick = ()=>{
   // every sitting at once and lands back on the picker, which is what "retake the exam" means.
   if(S.done){ const p = D.parts ? paperStat() : null;
               S.history.push({at:S.at, score: p ? p.n : score(S),
-                              total: p ? p.t : active(S).length}); }
+                              total: p ? p.t : active(S).length, ms:S.ms}); }
   const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
+  // The time resets with the attempt. `clockOn` is not in S at all, so the blur survives
+  // a retake on its own.
   S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
   pickSel = null;
   lastShown = -1;
@@ -2912,12 +3167,17 @@ if(ta){
   saveNotes();
   let t = null;
   ta.addEventListener('input', ()=>{ bulletType(ta); clearTimeout(t); t = setTimeout(saveNotes, 400); });
-  ta.addEventListener('blur', saveNotes);
-  // Bullets here too, and PLAIN Enter is the newline — this box is not a question and has
-  // nowhere to move on to, which is why the document handler leaves it alone.
+  // A bullet is waiting for him the moment he clicks in, so the list never has to be
+  // started by hand. Dropped again on the way out if he typed nothing, or an untouched box
+  // would save a lone `• ` and claim it had something in it.
+  ta.addEventListener('focus', ()=>{ if(!ta.value) setVal(ta, '• ', 2); });
+  ta.addEventListener('blur', ()=>{ if(!/[^\s•]/.test(ta.value)) ta.value = ''; saveNotes(); });
+  // PLAIN Enter is the newline here — this box is not a question and has nowhere to move on
+  // to, which is why the document handler leaves it alone — and since 08-19 that newline
+  // always arrives as the next bullet. Shift+Enter is the way to a plain line.
   ta.addEventListener('keydown', e => {
     if(e.key === 'Tab' && bulletIndent(ta, e.shiftKey)){ e.preventDefault(); return; }
-    if(e.key === 'Enter' && !e.shiftKey && bulletNewline(ta)) e.preventDefault();
+    if(e.key === 'Enter' && !e.shiftKey && bulletAlways(ta)) e.preventDefault();
   });
   $('#previewnotes').onclick = ()=>{
     const p = $('#minepreview'), on = p.classList.contains('hide');
@@ -2973,6 +3233,18 @@ addEventListener('resize', ()=>{
 });
 
 document.addEventListener('keydown', e=>{
+  /* A SHORTCUT IS NOT AN ANSWER (08-18, his ask). ⌘C over a selected option was answering C,
+     which is the one keystroke this page's read-aloud selection exists to be followed by:
+     select the option, copy it, and the copy picks the answer for you.
+
+     THE BAIL IS EVERY SYSTEM MODIFIER, NOT JUST ⌘C, because `c` was never the only casualty.
+     Every letter this page binds is also half of a shortcut he uses — ⌘A select-all was
+     answering A, ⌘F answering F and opening the fix box, ⌘R reopening research, ⌘S starring.
+     Nothing on this page has ever wanted a modifier, so a held ⌘ / ⌃ / ⌥ means the keystroke
+     belongs to the browser or the OS and not to us.
+
+     SHIFT IS NOT IN THE LIST and must not be: `?` is shift+`/`, and it is the "no idea" mark. */
+  if(e.metaKey || e.ctrlKey || e.altKey) return;
   const t = e.target;
   /* ESC IS THE WAY OUT FROM INSIDE THE BOX, and it has to be checked before the rule below
      lets typing through. `r` cannot do this job: once the caret is in the pane, `r` is the
@@ -3063,6 +3335,9 @@ document.addEventListener('keydown', e=>{
   // beside `/` because it is the same key with a shift on it and the glyph he sees is `?`;
   // preventDefault stops Firefox's quick-find opening underneath the page.
   if(e.key === 's' || e.key === 'S'){ toggleStar(S.i); return; }
+  // `w` FOR WATCH — the clock in the bar, off by default. Past G like every other command
+  // key here, so it can never be an option letter.
+  if(e.key === 'w' || e.key === 'W'){ toggleClock(); return; }
   if(e.key === '/' || e.key === '?'){ e.preventDefault(); toggleUnsure(S.i); return; }
   /* THE KEY NAMES A POSITION ON SCREEN, not an option. `2` and `B` mean the second card he
      can see, which is the only thing either of them could mean to him — after a Redo has
@@ -3077,6 +3352,15 @@ document.addEventListener('keydown', e=>{
     if(btn) btn.click();
   }
 });
+
+/* THE CLOCK RUNS FROM HERE. `visibilitychange` drops the mark rather than banking it, so
+   the seconds a hidden tab spends are never counted; `pagehide` is the one save that catches
+   a tab closed between the 15-second writes. */
+if($('#clock')) $('#clock').onclick = e => { e.currentTarget.blur(); toggleClock(); };
+setInterval(tick, 1000);
+document.addEventListener('visibilitychange', ()=>{ tickAt = null; tick(); save(); });
+addEventListener('pagehide', ()=>{ tick(); save(); });
+paintClock();
 
 save();
 syncTabs();

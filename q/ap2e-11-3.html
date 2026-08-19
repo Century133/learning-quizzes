@@ -470,6 +470,11 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
    (`.rline.mine`) and this block sits later in the file — unscoped, it was handing every
    wrong-answer line in the review list a 34px gap and a rule above it. */
 .own{margin:34px 0 0;padding-top:18px;border-top:1px solid var(--line)}
+/* HIS BOX IS FIRST ON THE SHEET (08-19, his ask): "my own section to write down any missing
+   notes". A rule above the first thing on the page has nothing to separate it from, so it
+   moves down onto the book's material, which now follows him instead of preceding him. */
+.own.first{margin-top:6px;padding-top:0;border-top:0}
+#sheetmd{margin-top:30px;padding-top:20px;border-top:1px solid var(--line)}
 .own h3{margin:0 0 4px;padding:0;border:0}
 .own .say{color:var(--muted);font-size:.85rem;margin:0 0 12px}
 .own .item:first-of-type{border-top:0;padding-top:6px}
@@ -628,6 +633,22 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
     <div class="sheettools">
       <button class="link" id="previewnotes">Preview</button>
       <button class="link" id="copysheet">Copy</button>
+    </div>
+    <!-- FIRST ON THE SHEET on purpose (08-19): it is the one part of this page he writes,
+         and under a long generated sheet he was not finding it. Still LAST in the Copy, so
+         the paste he already knows is unchanged. Enter starts the next bullet, always. -->
+    <div class="own first">
+      <h3>My notes</h3>
+      <p class="say">Your own notes and thoughts — what the sheet missed, what you found
+      interesting, how these topics link up. <b>Enter starts the next bullet</b>; Enter on an
+      empty bullet ends the list. Tab nests. Copy takes this with the sheet, ready to paste
+      into the Notion row — and that row is what the week's exam is built from.</p>
+      <textarea id="mynotes" spellcheck="true" placeholder="• rebound effect: suppressed thought comes back stronger once you stop trying
+  • same shape as the ironic-process stuff from 3.2
+• self-control is finite — one hard task leaves less for the next
+• worth asking on the exam: how would you test this outside a lab"></textarea>
+      <p class="saved" id="savedmsg"></p>
+      <div id="minepreview" class="hide"></div>
     </div>
     <div id="sheetmd"><h3>Muscle naming</h3>
 <p>Anatomists categorize skeletal muscles using specific criteria that describe their physical characteristics or functional roles.</p>
@@ -881,17 +902,6 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
 <li>adducts the eye.</li>
 </ol>
 </ol></div>
-    <div class="own">
-      <h3>My notes</h3>
-      <p class="say">What the sheet missed. Write it however you write — one thing a line,
-      <code>Term: what it is</code>, indent to nest. Copy takes this with the sheet, formatted,
-      ready to paste into the Notion row. That row is what the week's exam is built from.</p>
-      <textarea id="mynotes" spellcheck="true" placeholder="Rebound effect: suppressed thought comes back stronger once you stop trying
-   ex. telling yourself not to check the score
-Self-control is finite - one hard task leaves less for the next"></textarea>
-      <p class="saved" id="savedmsg"></p>
-      <div id="minepreview" class="hide"></div>
-    </div>
     <!-- Last on the sheet, and last in the Copy, so the paste reads sheet → his notes →
          what he went and found, grouped under the question that sent him looking. -->
     <div class="own hide" id="starredsheet"></div>
@@ -2189,6 +2199,27 @@ function bulletNewline(el){
   setVal(el, v.slice(0, at) + head + v.slice(at), at + head.length);
   return true;
 }
+/* ONE BOX IS ALWAYS A LIST — #mynotes, and only it (08-19, his ask): "every time I press
+   enter, I would just like it to go to the next bullet point so I can keep it moving." So
+   Enter starts a bullet on a PLAIN line too, not only when he already made one.
+
+   Deliberately not the research panes: plain Enter there means next question, and a bullet
+   he never asked for would be the price of moving on. Notion's escape is kept exactly —
+   Enter on an EMPTY bullet drops it — because it is the only way out of the list, and out
+   is where a pasted paragraph belongs. */
+function bulletAlways(el){
+  if(bulletNewline(el)) return true;        // already on a bullet: the existing rules win
+  const v = el.value, at = el.selectionStart;
+  if(at !== el.selectionEnd) return false;
+  const s = lineStart(v, at);
+  const line = v.slice(s, at);
+  if(!line.trim()) return false;            // a blank line stays blank; two Enters = a gap
+  if(/^[ \t]*(\d+[.)]|[-*+])\s/.test(line)) return false;   // he is writing his own list
+  const head = '\n' + line.match(/^[ \t]*/)[0] + '• ';
+  setVal(el, v.slice(0, at) + head + v.slice(at), at + head.length);
+  return true;
+}
+
 /* Tab NESTS a bullet and Shift+Tab lifts it, two spaces at a time — the same depth the
    markdown writers read. It is claimed ONLY on a bullet line, so Tab out of an empty box
    still moves focus and the keyboard is never trapped. */
@@ -3292,12 +3323,17 @@ if(ta){
   saveNotes();
   let t = null;
   ta.addEventListener('input', ()=>{ bulletType(ta); clearTimeout(t); t = setTimeout(saveNotes, 400); });
-  ta.addEventListener('blur', saveNotes);
-  // Bullets here too, and PLAIN Enter is the newline — this box is not a question and has
-  // nowhere to move on to, which is why the document handler leaves it alone.
+  // A bullet is waiting for him the moment he clicks in, so the list never has to be
+  // started by hand. Dropped again on the way out if he typed nothing, or an untouched box
+  // would save a lone `• ` and claim it had something in it.
+  ta.addEventListener('focus', ()=>{ if(!ta.value) setVal(ta, '• ', 2); });
+  ta.addEventListener('blur', ()=>{ if(!/[^\s•]/.test(ta.value)) ta.value = ''; saveNotes(); });
+  // PLAIN Enter is the newline here — this box is not a question and has nowhere to move on
+  // to, which is why the document handler leaves it alone — and since 08-19 that newline
+  // always arrives as the next bullet. Shift+Enter is the way to a plain line.
   ta.addEventListener('keydown', e => {
     if(e.key === 'Tab' && bulletIndent(ta, e.shiftKey)){ e.preventDefault(); return; }
-    if(e.key === 'Enter' && !e.shiftKey && bulletNewline(ta)) e.preventDefault();
+    if(e.key === 'Enter' && !e.shiftKey && bulletAlways(ta)) e.preventDefault();
   });
   $('#previewnotes').onclick = ()=>{
     const p = $('#minepreview'), on = p.classList.contains('hide');
