@@ -339,6 +339,75 @@ kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid
  cursor:pointer;white-space:nowrap}
 .menu button:hover{background:var(--surface)}
 
+/* ---- READ ALOUD — the page's own voice (08-20) --------------------------------------
+   THE WHOLE WIDGET IS CHROME, so every part of it carries `.no-read-aloud` and is a real
+   `<button>` wherever it can be one. NaturalReader must never read the controls of the
+   reader that replaced it, and `<button>` is on its ignore list for free.
+
+   `tabindex="-1"` on every control, for the clock's reason: Enter means "next question"
+   everywhere on this page, and a focusable control down here would swallow it. */
+.reader{position:fixed;right:18px;bottom:76px;z-index:7;display:flex;align-items:center;
+ gap:2px;padding:4px;border-radius:999px;border:1px solid var(--line);
+ background:var(--surface-hi);box-shadow:0 8px 24px rgba(0,0,0,.45);
+ user-select:none;-webkit-user-select:none}
+.reader.on{border-color:var(--accent)}
+.reader button{background:none;border:0;color:var(--muted);font:inherit;font-size:.8rem;
+ line-height:1;padding:7px 8px;border-radius:999px;cursor:pointer}
+.reader button:hover{background:var(--surface);color:var(--text)}
+.reader .rate{font-variant-numeric:tabular-nums;min-width:26px}
+.reader .play{width:32px;height:32px;padding:0;font-size:.78rem;background:var(--surface);
+ color:var(--text)}
+.reader.on .play{background:var(--accent);color:#0b0b0c}
+
+/* ---- the voice panel ----
+   Same furniture as the ⋮ menu, one size up, because it is the same kind of thing: a small
+   stack of settings hanging off a control. */
+/* SCROLLS RATHER THAN RUNS OFF THE TOP. On a short window the panel is taller than the gap
+   above the widget, and a settings panel whose first control is off-screen is worse than a
+   scrollbar. */
+.vset{position:fixed;right:18px;bottom:120px;z-index:8;width:296px;padding:14px 16px 15px;
+ border-radius:14px;border:1px solid var(--line);background:var(--surface-hi);
+ box-shadow:0 12px 30px rgba(0,0,0,.55);
+ max-height:calc(100vh - 140px);overflow-y:auto}
+.vset .vhead{display:flex;align-items:center;justify-content:space-between;
+ font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+ margin:0 0 10px}
+.vset .vx{background:none;border:0;color:var(--muted);font:inherit;font-size:.8rem;
+ padding:2px 4px;cursor:pointer;border-radius:5px}
+.vset .vx:hover{background:var(--surface);color:var(--text)}
+.vset select{width:100%;font:inherit;font-size:.86rem;color:var(--text);
+ background:var(--surface);border:1px solid var(--line);border-radius:8px;
+ padding:8px 9px;margin:0 0 4px}
+.vset .vrow{display:flex;align-items:baseline;justify-content:space-between;
+ font-size:.82rem;color:var(--muted);margin:13px 0 4px}
+.vset .vrow b{color:var(--text);font-weight:500;font-variant-numeric:tabular-nums;
+ font-size:.8rem}
+.vset input[type=range]{width:100%;accent-color:var(--accent);margin:0}
+.vset .vchk{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--muted);
+ margin:14px 0 0;cursor:pointer}
+.vset .vchk input{accent-color:var(--accent);margin:0}
+.vset .vtest{display:block;width:100%;margin:13px 0 0;font:inherit;font-size:.82rem;
+ color:var(--text);background:var(--surface);border:1px solid var(--line);
+ border-radius:8px;padding:8px;cursor:pointer}
+.vset .vtest:hover{border-color:var(--muted)}
+/* ONE KEY PER LINE. This is the only place on the page that says what Space and the arrows
+   do, so it has to be readable at a glance rather than a wrapped run-on of separators. */
+.vset .vkeys{margin:14px 0 0;padding:12px 0 0;border-top:1px solid var(--line);
+ display:grid;grid-template-columns:auto 1fr;gap:7px 10px;align-items:baseline;
+ font-size:.75rem;color:var(--muted)}
+.vset .vkeys kbd{font-size:.7rem;padding:1px 5px;justify-self:start}
+.vset .vkeys span{justify-self:start}
+.vset .vnote{margin:9px 0 0;font-size:.72rem;line-height:1.5;color:var(--muted);opacity:.8}
+
+/* WHAT IS BEING READ, MARKED WITHOUT MOVING ANYTHING. Every other highlight on this page
+   is a border or a ring for the same reason: the question is centred once and frozen, so a
+   mark that changed a box's height would drag the whole card under him mid-sentence. An
+   option already has a 1px border to recolour; the question gets an underline, which is the
+   one decoration that costs no layout at all. */
+.opt.speaking{border-color:var(--accent)}
+.q .sp.speaking{text-decoration:underline;text-decoration-color:var(--accent);
+ text-decoration-thickness:2px;text-underline-offset:7px}
+
 /* ---- bottom bar ---- */
 footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg) 30%);
  padding:8px 0 10px}
@@ -746,6 +815,38 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
     <div class="own hide" id="fixview"></div>
   </div>
 </main>
+
+<!-- THE READER (08-20). Fixed, so it never touches the frozen centring; outside <main> and
+     `.no-read-aloud` throughout, so it is invisible to NaturalReader; `tabindex="-1"` on
+     every control, so Enter — "next question" everywhere on this page — can never land on
+     one of them. Its own speed label doubles as the way into the panel. -->
+<div class="reader hide no-read-aloud" id="reader" aria-hidden="true">
+  <button class="gear" id="vgear" tabindex="-1" title="Voice, speed and pauses">⚙</button>
+  <button class="rate" id="vrate" tabindex="-1" title="Speed">1x</button>
+  <button class="play" id="vplay" tabindex="-1" title="Read aloud  ( space )">▶</button>
+</div>
+<div class="vset hide no-read-aloud" id="vset" aria-hidden="true">
+  <div class="vhead"><span>Read aloud</span><button class="vx" id="vclose" tabindex="-1">✕</button></div>
+  <select id="vvoice" title="Voice"></select>
+  <div class="vrow"><span>Speed</span><b id="vspeedn">1x</b></div>
+  <input type="range" id="vspeed" min="50" max="250" step="5" value="100">
+  <!-- THE TWO PAUSES ARE THE POINT, not decoration. A question read straight into "A." with
+       no gap gives him nowhere to think; a gap between the choices is where the comparing
+       happens. Both scale with the speed, so turning it up shortens them to match. -->
+  <div class="vrow"><span>Pause after the question</span><b id="vpqn">0.9s</b></div>
+  <input type="range" id="vpq" min="0" max="4000" step="100" value="900">
+  <div class="vrow"><span>Pause between choices</span><b id="vpon">0.5s</b></div>
+  <input type="range" id="vpo" min="0" max="2500" step="100" value="500">
+  <label class="vchk"><input type="checkbox" id="vrat" checked> Read the answer and why</label>
+  <button class="vtest" id="vtest" tabindex="-1">Hear this voice</button>
+  <div class="vkeys">
+    <kbd>space</kbd><span>Play / pause</span>
+    <kbd>↑</kbd><span>Say that line again</span>
+    <kbd>↓</kbd><span>Skip on a line</span>
+    <kbd>v</kbd><span>Reader off</span>
+  </div>
+  <p class="vnote" id="vnote"></p>
+</div>
 
 <footer id="footer" class="wrap hide">
   <p class="hinttext hide" id="hinttext"></p>
@@ -1388,6 +1489,7 @@ function setTab(name){
   $('#sheetview').classList.toggle('hide', name!=='sheet');
   $('#frqview').classList.toggle('hide', name!=='frq');
   $('#footer').classList.toggle('hide', name!=='quiz');
+  showReader();
   if(name==='quiz'){
     draw();
     // Restore the frozen offset rather than recomputing it: answer, read the sheet, come
@@ -1475,6 +1577,9 @@ function draw(){
   // The box belongs to a question on screen. The end card and the review list have none, so
   // it goes away there rather than floating under a score.
   showResearch(!(S.reviewing || S.done));
+  // Same rule for the reader, and it also SHUTS UP when it goes — an end card has no
+  // question on it, and a voice still reading one while he looks at his score is a bug.
+  showReader();
   if(S.reviewing) return review();
   if(S.done) return end();
   // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
@@ -1530,7 +1635,15 @@ function buildQ(i, picked, fresh, en){
         + (q.src ? '<span class="dot">·</span><span class="src" title="' + srcName(q.src)
                  + '">' + esc(q.src) + '</span>' : '')
         + '</p>'
-        + '<h1 class="q">' + esc(q.q) + '</h1></div>'
+        /* ONE SPAN PER SENTENCE, so the reader can mark the line it is on rather than the
+           whole stem (08-20). `<span>` and not `<p>`: the extension counts a block by its
+           direct `<p>` children, and a three-sentence question that became three blocks
+           would put the card back over the four-block minimum where its outlier trimmer
+           throws the options away. Inline elements change no layout and no selection, so
+           the centring and the copy-out both read exactly as they did. */
+        + '<h1 class="q">'
+        + sents(q.q).map((s,n)=> '<span class="sp" data-s="'+n+'">'+esc(s)+'</span>').join(' ')
+        + '</h1></div>'
         // ? BEFORE ☆, because it is the one pressed while the question is still unanswered:
         // "no idea" is a thing he knows before he picks, and starring is usually after.
         // The key is in the tooltip because there is nowhere else on the page that says it,
@@ -1613,13 +1726,13 @@ function question(fresh){
     // extending an existing selection with shift+click never moves the pointer.
     let from = null;
     b.addEventListener('mousedown', e => { from = [e.clientX, e.clientY]; });
-    // A `<div role="button">` does not answer to Space the way a real button did, so the one
-    // thing the tag change would have quietly taken away is put back by hand. Enter is NOT
-    // here on purpose: it means "next question" everywhere on this page and must keep
-    // meaning that with an option focused.
-    b.addEventListener('keydown', e => {
-      if(e.key === ' ' || e.key === 'Spacebar'){ e.preventDefault(); b.click(); }
-    });
+    /* SPACE IS NOT HERE ANY MORE (08-20). It used to answer the focused option — a
+       `<p role="button">` does not get Space free the way the old `<button>` did, so it was
+       put back by hand. Space is PLAY / PAUSE for the reader now, and it has to be the
+       same key everywhere or it is not a play key at all: clicking an option leaves it
+       focused, so an option-level binding would swallow the very next press. The letters
+       `a`–`g` and the digits still answer, which is how he answers anyway. Enter was never
+       here — it means "next question" everywhere on this page. */
     b.onclick = e=>{
       // `aria-disabled` AND NOT `disabled`, SINCE 08-16. A real `disabled` button will not let
       // its text be selected however `user-select` is set — browsers block selection inside a
@@ -1718,6 +1831,20 @@ function question(fresh){
   // Only when the question changes, and always against the ANSWERED height, so the layout
   // he lands on is the one he will still be looking at after he picks.
   if(isNew) centreBlock(i);
+
+  /* THE READER FOLLOWS HIM (08-20, his ask): *"once the speech toggle is in, it plays the
+     next question automatically when we move onto the next question so it keeps me in
+     flow."* So a NEW question reads itself from the top, and answering one reads back the
+     verdict and why — which is the other half of the flow, because it means he never has to
+     reach for anything between hearing a question and hearing whether he got it.
+
+     `isNew` is the gate and it has to be: `question()` also re-renders on every answer, on a
+     Redo and on coming back from the sheet, and each of those restarting the question from
+     "Which of the following…" would be maddening. Both calls are no-ops while the reader is
+     off — `sayHere()` checks the toggle itself, so there is one place that knows. */
+  showReader();
+  if(isNew) sayHere(false);
+  else if(fresh && answered) sayHere(true);
 }
 
 /* THE HINT, from the button or from `h`. One path for both, and the BUTTON'S OWN VISIBILITY
@@ -2147,9 +2274,15 @@ function openMenu(){
   // The clock's only other way in. `w` is not written anywhere else on the page, and a key
   // nothing announces is a key he has to remember he asked for.
   m.innerHTML = '<button id="skipq">Skip this question</button>'
+              // The reader's own two entries. Space and `v` are written nowhere else on the
+              // page, and a key nothing announces is a key he has to remember he asked for.
+              + '<button id="readtog">' + (sayOn ? 'Stop' : 'Start') + ' read-aloud  ( space )</button>'
+              + '<button id="voiceset">Voice, speed and pauses…</button>'
               + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>';
   host.appendChild(m);
   m.querySelector('#clocktog').onclick = ()=>{ toggleClock(); closeMenu(); };
+  m.querySelector('#readtog').onclick = ()=>{ closeMenu(); sayOn ? sayOff() : sayToggle(); };
+  m.querySelector('#voiceset').onclick = ()=>{ closeMenu(); openVset(); };
   m.querySelector('#skipq').onclick = ()=>{
     const list = runList(), pos = list.indexOf(S.i);
     if(list.length <= 1) return closeMenu();        // never skip the last one standing
@@ -2655,6 +2788,362 @@ function tick(){
   if(++tickN % 15 === 0) save();
 }
 function toggleClock(){ clockOn = !clockOn; paintClock(); }
+
+/* ---- READ ALOUD — the page reads its own questions (08-20) ---------------------------
+   His ask: *"a speak question feature which speaks the question and the answer choices…
+   space to be the ability to play and to pause, up and down keys to go back and forward in
+   case I missed something"*, plus *"once the speech toggle is in, it plays the next question
+   automatically when we move onto the next question so it keeps me in flow."*
+
+   WHY THE PAGE AND NOT THE EXTENSION. NaturalReader walks the DOM from the top and reads
+   whatever it finds, which is why this file bends its markup around the extension's own
+   block finder (see NATURALREADER READS THE DOM). The page knows what a question IS — it
+   knows where the stem ends, which four strings are the choices, and which rationale
+   belongs to the answer he just gave — so it can put a pause in the one place a reader
+   walking the DOM cannot: between the question and the first choice. That gap is the
+   feature. The rest is a play button around it.
+
+   THE VOICE IS THE BROWSER'S, and that is a deliberate limit. These pages are static files
+   on GitHub Pages with no server and no key, so anything with an API behind it is out; the
+   Web Speech API is free, offline, and already has every voice the Mac has. The good ones
+   are a free download rather than a better page — see `vnote`, which says so on screen.
+
+   NOT SAVED, LIKE THE CLOCK. `sayOn` is a plain module-level flag, so every page opens
+   silent and one press of Space starts it. A saved-on reader would mean opening a quiz link
+   and being talked at, and browsers are within their rights to refuse the first utterance
+   when nothing has been clicked yet. The SETTINGS are saved, and globally — the voice and
+   the pauses are how he reads, not facts about one quiz. */
+const VKEY = 'lq:speech';
+const VDEF = {voice:'', rate:1, gapQ:900, gapO:500, rats:true};
+let V = (function(){
+  try{ return Object.assign({}, VDEF, JSON.parse(localStorage.getItem(VKEY) || '{}')); }
+  catch(e){ return Object.assign({}, VDEF); }
+})();
+function vput(){ try{ localStorage.setItem(VKEY, JSON.stringify(V)); }catch(e){} }
+
+const TTS = window.speechSynthesis || null;
+let sayOn = false;              // the toggle. Not persisted — see above.
+let sQ = [], sAt = -1;          // the queue, and where in it we are (-1 = nothing running)
+let sPaused = false;
+let sTimer = null, sKeep = null;
+let sTag = 0;                   // bumped to orphan every callback still in flight
+let voices = [];
+
+/* THE NOVELTY VOICES ARE THE PROBLEM, not the missing ones. macOS ships Bells, Boing,
+   Zarvox and a dozen other joke voices in the same list as Samantha, and `getVoices()[0]`
+   is as likely to be one of those as not. So the list is ranked rather than filtered — a
+   joke voice sorts to the bottom and stays pickable, because that is his call and not
+   this file's. Anything calling itself Natural, Neural, Premium or Enhanced is a real
+   neural voice and goes first; Google's are Chrome's own network voices and are next. */
+const JOKE = /^(albert|bad news|bahh|bells|boing|bubbles|cellos|good news|jester|junior|kathy|organ|superstar|trinoids|whisper|wobble|zarvox|ralph|fred|grandma|grandpa|rocko|shelley|sandy|eddy|flo|reed|deranged|hysterical|princess|bruce|agnes|vicki|victoria|kanya|pipe organ)\b/i;
+/* THE SIRI VOICES DO NOT SAY SO. Aaron and Nicky are the best things on a stock Mac and
+   are named like everything else in the list, so a rule that only looks for the words
+   "premium" or "siri" sorts them in with Boing. This is the plain-name list of voices that
+   are real speech rather than a character. */
+const GOOD = /^(samantha|alex|aaron|nicky|allison|ava|susan|tom|evan|nathan|zoe|serena|joelle|isha|daniel|arthur|martha|catherine|gordon|karen|moira|tessa|rishi|matilda|jamie|oliver|kate|fiona|veena)\b/i;
+function vscore(v){
+  const n = v.name || '';
+  let s = 0;
+  if(/natural|neural/i.test(n)) s += 60;
+  if(/premium/i.test(n)) s += 50;
+  if(/enhanced/i.test(n)) s += 40;
+  if(/siri/i.test(n)) s += 35;
+  if(/^google/i.test(n)) s += 30;                 // Chrome's own network voices
+  if(GOOD.test(n)) s += 25;
+  if(/^microsoft/i.test(n)) s += 18;
+  if(v.default) s += 8;                           // the OS pick breaks a tie
+  if(/^en-?us/i.test(v.lang || '')) s += 6;
+  else if(/^en-?gb/i.test(v.lang || '')) s += 3;
+  if(JOKE.test(n)) s -= 200;
+  return s;
+}
+function loadVoices(){
+  let all = [];
+  try{ all = TTS ? (TTS.getVoices() || []) : []; }catch(e){ all = []; }
+  const en = all.filter(v => /^en/i.test(v.lang || ''));
+  voices = (en.length ? en : all).slice().sort((a,b)=> vscore(b) - vscore(a)
+                                                   || (a.name||'').localeCompare(b.name||''));
+  // A saved voice that is not on this machine any more falls back to the best one here
+  // rather than to silence.
+  if(!voices.some(v => v.name === V.voice)) V.voice = voices.length ? voices[0].name : '';
+  drawVoices();
+}
+function theVoice(){ return voices.find(v => v.name === V.voice) || voices[0] || null; }
+
+/* WHAT GETS SPOKEN IS NOT WHAT IS ON SCREEN. A bullet, an arrow and a mid-dot are all
+   punctuation to the eye and all noise to a synthesiser — `→` comes out as nothing at best
+   and "right arrow" at worst — so the few symbols these questions actually use are turned
+   into the words he would say if he read the line out himself. */
+function sayText(t){
+  return String(t == null ? '' : t)
+    .replace(/[•*_`]/g, ' ')
+    .replace(/\s*(→|->)\s*/g, ' leads to ')
+    .replace(/\s*↑\s*/g, ' increased ')
+    .replace(/\s*↓\s*/g, ' decreased ')
+    .replace(/\s*[–—]\s*/g, ', ')
+    .replace(/\s*·\s*/g, ', ')
+    // ONLY A SLASH BETWEEN TWO WORDS. `sympathetic/parasympathetic` is one word said "or";
+    // `24/7` and `1/2` are not, and a blanket rule turns every one of them into nonsense.
+    .replace(/([a-z])\s*\/\s*([a-z])/gi, '$1 or $2')
+    .replace(/\s+/g, ' ').trim();
+}
+/* ONE SENTENCE IS ONE STEP, because ↑ is "say that again" and a whole paragraph is not a
+   thing to repeat. An option is never split: "back one" on a list of choices means the
+   previous CHOICE, whatever it is made of. */
+function sents(t){
+  const out = [];
+  String(t == null ? '' : t).split(/(?<=[.!?])\s+(?=["'(\[]?[A-Z0-9])/)
+    .forEach(s => { s = s.trim(); if(s) out.push(s); });
+  return out.length ? out : [String(t == null ? '' : t)];
+}
+
+/* The queue is rebuilt from state every time rather than kept in step with it, so a Redo,
+   a reshuffle or a second pass can never leave it reading last question's options.
+   `mode === 'rat'` is the just-answered case: he has heard the question and the choices
+   already, and what he wants now is the verdict. */
+function buildQueue(mode){
+  const i = S.i, q = D.questions[i], picked = pick(i);
+  const answered = picked !== undefined;
+  const out = [];
+  if(mode !== 'rat'){
+    // The same split as `buildQ` used to draw the spans, so line N of the queue and span N
+    // on screen are the same sentence. One function, called twice.
+    sents(q.q).forEach((s, n) => out.push({t:s, sel:'.q .sp[data-s="' + n + '"]', gap: n ? 240 : 0}));
+    optOrder(i).forEach((k, pos) => {
+      out.push({t: D.letters[pos] + '. ' + q.options[k],
+                sel: '.opt[data-k="' + k + '"]',
+                gap: pos === 0 ? V.gapQ : V.gapO});
+    });
+  }
+  if(answered && V.rats){
+    const right = picked === q.correct;
+    const rat = k => (q.rationales ? (q.rationales[k] || '') : '');
+    const push = (txt, k, gap) => sents(txt).forEach((s, n) =>
+      out.push({t:s, sel: '.opt[data-k="' + k + '"]', gap: n ? 240 : gap}));
+    push(right ? 'Right answer.' : 'Not quite.', picked, mode === 'rat' ? 300 : V.gapQ);
+    if(rat(picked)) push(rat(picked), picked, 240);
+    // A WRONG ANSWER GETS THE RIGHT ONE READ TOO, and named by the letter he can see —
+    // hearing why his pick was wrong without hearing which one was right is half a lesson.
+    if(!right){
+      const pos = optOrder(i).indexOf(q.correct);
+      push('The right answer is ' + D.letters[pos] + '.', q.correct, V.gapO);
+      if(rat(q.correct)) push(rat(q.correct), q.correct, 240);
+    }
+  }
+  return out;
+}
+
+function paintSpeak(sel){
+  document.querySelectorAll('.speaking').forEach(e => e.classList.remove('speaking'));
+  if(!sel) return;
+  const el = $('#quizview') && $('#quizview').querySelector(sel);
+  if(el) el.classList.add('speaking');
+}
+function speaking(){ return sayOn && !sPaused && sAt >= 0; }
+function paintReader(){
+  const box = $('#reader');
+  if(!box) return;
+  box.classList.toggle('on', sayOn);
+  const p = $('#vplay');
+  if(p){
+    p.textContent = speaking() ? '❙❙' : '▶';
+    p.title = (speaking() ? 'Pause' : 'Read aloud') + '  ( space )';
+  }
+  const r = $('#vrate');
+  if(r) r.textContent = (Math.round(V.rate * 100) / 100) + 'x';
+}
+
+/* EVERY STOP GOES THROUGH HERE, and the tag bump is the whole reason. `cancel()` fires
+   `onend` on whatever was speaking, and that handler's job is to start the next line — so
+   without a generation counter, stopping the reader is indistinguishable from finishing a
+   sentence and it would carry straight on talking. */
+function sayStop(){
+  sTag++;
+  clearTimeout(sTimer); sTimer = null;
+  clearInterval(sKeep); sKeep = null;
+  try{ if(TTS) TTS.cancel(); }catch(e){}
+  paintSpeak(null);
+}
+function sayAt(n, wait){
+  sayStop();
+  const tag = sTag;
+  if(n < 0) n = 0;
+  if(!sQ.length || n >= sQ.length){ sAt = -1; sPaused = false; paintReader(); return; }
+  sAt = n; sPaused = false;
+  const it = sQ[n];
+  // THE PAUSES SCALE WITH THE SPEED. At 2x he is reading twice as fast and wants half the
+  // silence; a fixed gap at 2x feels like the page has stalled. 30ms is a floor rather than
+  // a pause — Chrome drops an utterance handed to it in the same tick as a `cancel()`.
+  const ms = Math.max(30, wait === false ? 0 : (it.gap || 0) / Math.max(0.5, V.rate));
+  sTimer = setTimeout(()=>{
+    if(tag !== sTag) return;
+    paintSpeak(it.sel);
+    let u;
+    try{ u = new SpeechSynthesisUtterance(sayText(it.t)); }catch(e){ return; }
+    const v = theVoice();
+    if(v) u.voice = v;
+    u.rate = V.rate; u.pitch = 1; u.volume = 1;
+    u.onend = ()=>{ if(tag === sTag) sayAt(n + 1); };
+    u.onerror = ()=>{ if(tag === sTag) sayAt(n + 1); };
+    try{ TTS.speak(u); }catch(e){}
+    // CHROME CUTS AN UTTERANCE OFF AT ABOUT FIFTEEN SECONDS unless something touches the
+    // queue, which only bites on the long rationales. A pause/resume pair resets its timer
+    // and is inaudible; it is skipped while he has it paused, or it would un-pause him.
+    clearInterval(sKeep);
+    sKeep = setInterval(()=>{
+      if(!TTS || sPaused || !TTS.speaking) return;
+      try{ TTS.pause(); TTS.resume(); }catch(e){}
+    }, 9000);
+    paintReader();
+  }, ms);
+}
+
+/* PAUSE IS A STOP THAT REMEMBERS, not `TTS.pause()`. Chrome's own pause is reliable for
+   local voices and not for the network ones, where a paused utterance can refuse to resume
+   at all — so resuming REPLAYS THE CURRENT LINE from its start. That is also the better
+   behaviour for what he asked for: he pauses because he missed something. */
+/* THE MARK STAYS UP WHILE IT IS PAUSED — `sayStop()` clears it, and it has to, but paused
+   is the one stop where the answer to "where was I" is still worth showing. */
+function sayPause(){
+  const at = sAt;
+  sayStop(); sPaused = true;
+  if(sQ[at]) paintSpeak(sQ[at].sel);
+  paintReader();
+}
+function sayResume(){ if(sAt < 0) return sayHere(false); sayAt(sAt, false); paintReader(); }
+
+/* The current question, from the top. `mode` is passed straight through to the queue. */
+function sayHere(ratOnly){
+  if(!sayOn || !TTS) return;
+  if(D.tab !== 'quiz' || S.done || S.reviewing) return;
+  if(sectioned() && !S.only) return;              // the picker is not a question
+  sQ = buildQueue(ratOnly ? 'rat' : 'all');
+  if(!sQ.length){ sAt = -1; paintReader(); return; }
+  sayAt(0, false);
+  paintReader();
+}
+function sayOff(){ sayOn = false; sPaused = false; sAt = -1; sQ = []; sayStop(); paintReader(); }
+/* SPACE. Idle → read this question; reading → pause; paused → pick the line back up.
+   Starting is also what turns the reader ON, so the first press does the obvious thing and
+   every question after it reads itself. */
+function sayToggle(){
+  if(!TTS) return;
+  if(speaking()){ sayPause(); return; }
+  if(sPaused){ sayOn = true; sayResume(); return; }
+  sayOn = true;
+  showReader();
+  sayHere(false);
+}
+/* ↑ AND ↓, and they only exist while the reader has something to say — otherwise they are
+   the page's own scroll keys and taking those away to control a silent reader would be a
+   worse trade than the feature is worth. Returns whether it took the key. */
+function saySkip(d){
+  if(!sayOn || !sQ.length) return false;
+  const n = sAt < 0 ? sQ.length - 1 : sAt + d;
+  if(n >= sQ.length){ sayStop(); sAt = -1; sPaused = false; paintReader(); return true; }
+  sayAt(n < 0 ? 0 : n, false);
+  paintReader();
+  return true;
+}
+function showReader(){
+  const box = $('#reader');
+  if(!box) return;
+  const live = D.tab === 'quiz' && !S.done && !S.reviewing && !(sectioned() && !S.only);
+  box.classList.toggle('hide', !live);
+  if(!live){ closeVset(); if(sAt >= 0 || sPaused) { sayStop(); sAt = -1; sPaused = false; } }
+  paintReader();
+}
+
+/* ---- the voice panel ---- */
+function drawVoices(){
+  const sel = $('#vvoice');
+  if(!sel) return;
+  sel.innerHTML = voices.map(v =>
+    '<option value="' + esc(v.name) + '"' + (v.name === V.voice ? ' selected' : '') + '>'
+    + esc(v.name) + ' · ' + esc(v.lang || '') + '</option>').join('');
+  const note = $('#vnote');
+  if(note){
+    // THE HONEST LINE, AND IT STAYS UP. The best free voices are not something this page can
+    // ship — they are a download on his own machine, and once they are there they turn up in
+    // this list by themselves and sort to the top of it. Saying where they come from is
+    // cheaper than him wondering why the list is all Samantha and Boing.
+    note.textContent = voices.length === 0
+      ? 'No voices found — this browser has no speech synthesis.'
+      : 'Better voices are a free download: System Settings → Accessibility → Spoken Content'
+      + ' → System Voice → Manage Voices. Take a Premium one. Restart the browser and it is'
+      + ' at the top of this list.';
+  }
+}
+function paintVset(){
+  const sp = $('#vspeed'), pq = $('#vpq'), po = $('#vpo'), rt = $('#vrat');
+  if(!sp) return;
+  sp.value = Math.round(V.rate * 100);
+  pq.value = V.gapQ; po.value = V.gapO; rt.checked = !!V.rats;
+  // 180 wpm at 1x is NaturalReader's own scale, which is the one his hands already know.
+  $('#vspeedn').textContent = (Math.round(V.rate * 100) / 100) + 'x · ~'
+                            + Math.round(V.rate * 180) + ' wpm';
+  $('#vpqn').textContent = (V.gapQ / 1000).toFixed(1) + 's';
+  $('#vpon').textContent = (V.gapO / 1000).toFixed(1) + 's';
+  paintReader();
+}
+let vsetOpen = false;
+function openVset(){
+  const p = $('#vset');
+  if(!p) return;
+  vsetOpen = true; p.classList.remove('hide');
+  loadVoices(); paintVset();
+}
+function closeVset(){
+  const p = $('#vset');
+  vsetOpen = false;
+  if(p) p.classList.add('hide');
+}
+function toggleVset(){ vsetOpen ? closeVset() : openVset(); }
+
+if(TTS){
+  loadVoices();
+  // Chrome fills the list asynchronously and fires this once it has; without it the first
+  // open of the panel on a cold page is empty.
+  TTS.onvoiceschanged = loadVoices;
+}
+if($('#reader')){
+  $('#vplay').onclick = e => { e.currentTarget.blur(); sayToggle(); };
+  $('#vgear').onclick = e => { e.stopPropagation(); e.currentTarget.blur(); toggleVset(); };
+  $('#vrate').onclick = e => { e.stopPropagation(); e.currentTarget.blur(); toggleVset(); };
+  $('#vclose').onclick = closeVset;
+  $('#vvoice').onchange = e => { V.voice = e.target.value; vput(); if(speaking()) sayAt(sAt, false); };
+  $('#vspeed').oninput = e => { V.rate = +e.target.value / 100; vput(); paintVset(); };
+  $('#vspeed').onchange = ()=> { if(speaking()) sayAt(sAt, false); };
+  $('#vpq').oninput = e => { V.gapQ = +e.target.value; vput(); paintVset(); };
+  $('#vpo').oninput = e => { V.gapO = +e.target.value; vput(); paintVset(); };
+  $('#vrat').onchange = e => { V.rats = e.target.checked; vput(); };
+  /* THE SAMPLE GOES STRAIGHT TO THE SYNTHESISER and never through the queue. Putting it in
+     `sQ` would leave ↑ and ↓ walking a one-line sample instead of the question he is
+     looking at, for as long as it took him to press something else. */
+  $('#vtest').onclick = ()=>{
+    sayStop(); sAt = -1; sPaused = false; sQ = [];
+    try{
+      const u = new SpeechSynthesisUtterance(
+        'The question is read first. Then a pause. Then A, B, C and D.');
+      const v = theVoice();
+      if(v) u.voice = v;
+      u.rate = V.rate;
+      TTS.speak(u);
+    }catch(e){}
+    paintReader();
+  };
+  // Clicking anywhere that is not the panel or the widget shuts it. `mousedown` rather than
+  // `click`, so dragging a slider and releasing outside the panel does not close it.
+  document.addEventListener('mousedown', e => {
+    if(!vsetOpen) return;
+    if(e.target.closest && (e.target.closest('#vset') || e.target.closest('#reader'))) return;
+    closeVset();
+  });
+  paintVset();
+}
+// A voice does not stop when the tab does. The clock's rule, for the same reason.
+document.addEventListener('visibilitychange', ()=>{ if(document.hidden && speaking()) sayPause(); });
+addEventListener('pagehide', ()=>{ try{ if(TTS) TTS.cancel(); }catch(e){} });
 
 /* ---- the score, written where he copies from ---------------------------------------- */
 /* THE PROJECTED SCORE DOCKS A MARK FOR EVERY HINT, which is his rule and his reasoning:
@@ -3257,7 +3746,12 @@ document.addEventListener('keydown', e=>{
      It closes on the way out, which flushes what he typed and takes the caret with it;
      without the blur the next keystroke would still be going into a hidden textarea.
      The sheet's notes box is NOT in this: it is not a question and has nowhere to go. */
-  if(t && (t.tagName === 'TEXTAREA' || t.tagName === 'INPUT' || t.isContentEditable)){
+  /* SELECT AND INPUT ARE IN HERE FOR SPACE'S SAKE (08-20). The voice panel is a `<select>`
+     and three sliders, and on all four Space and the arrow keys are the control's own —
+     Space opens the picker, the arrows move the slider. His rule for the whole feature:
+     *"Spaces dont trigger reading when textbox."* */
+  if(t && (t.tagName === 'TEXTAREA' || t.tagName === 'INPUT' || t.tagName === 'SELECT'
+           || t.isContentEditable)){
     if(e.key === 'Enter' && !e.shiftKey && PANES[rPane] && t === PANES[rPane]
        && D.tab === 'quiz' && !S.done && !S.reviewing){
       e.preventDefault();
@@ -3290,6 +3784,25 @@ document.addEventListener('keydown', e=>{
     return;
   }
   const q = D.questions[S.i];
+  /* SPACE IS PLAY / PAUSE (08-20, his ask) — idle it starts reading this question, reading
+     it pauses, paused it picks the line back up. It is claimed here, above everything, and
+     `preventDefault` is not optional: Space scrolls a page, and it would also re-fire
+     whichever button he last clicked with the mouse, since that button still has focus.
+     Typing is already out — the textarea/input/select bail is above this and returns. */
+  if(e.key === ' ' || e.key === 'Spacebar'){ e.preventDefault(); sayToggle(); return; }
+  /* ↑ AND ↓ ARE BACK A LINE AND ON A LINE, *"in case I missed something"* — but only while
+     the reader has something to say. With it off they stay the page's scroll keys, which
+     is the right trade: a long rationale still has to be scrollable, and taking the scroll
+     keys away to steer a reader that is not running would cost more than it gives.
+     `saySkip` says whether it took the key. */
+  if(e.key === 'ArrowUp' || e.key === 'ArrowDown'){
+    if(saySkip(e.key === 'ArrowUp' ? -1 : 1)) e.preventDefault();
+    return;
+  }
+  // `v` FOR VOICE — the off switch, and the only way to stop the reader following him from
+  // question to question. Past G like every other command key here, so it can never be an
+  // option letter. Space starts it; `v` puts it away.
+  if(e.key === 'v' || e.key === 'V'){ e.preventDefault(); sayOn ? sayOff() : sayToggle(); return; }
   // Forward is forward whether or not he answered — see advance() for where the last
   // question goes now. The old `if(!$('#next').disabled)` guard is gone with the disabling.
   if(e.key === 'Enter' || e.key === 'ArrowRight'){ step(1); return; }

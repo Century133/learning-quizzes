@@ -336,6 +336,75 @@ kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid
  cursor:pointer;white-space:nowrap}
 .menu button:hover{background:var(--surface)}
 
+/* ---- READ ALOUD — the page's own voice (08-20) --------------------------------------
+   THE WHOLE WIDGET IS CHROME, so every part of it carries `.no-read-aloud` and is a real
+   `<button>` wherever it can be one. NaturalReader must never read the controls of the
+   reader that replaced it, and `<button>` is on its ignore list for free.
+
+   `tabindex="-1"` on every control, for the clock's reason: Enter means "next question"
+   everywhere on this page, and a focusable control down here would swallow it. */
+.reader{position:fixed;right:18px;bottom:76px;z-index:7;display:flex;align-items:center;
+ gap:2px;padding:4px;border-radius:999px;border:1px solid var(--line);
+ background:var(--surface-hi);box-shadow:0 8px 24px rgba(0,0,0,.45);
+ user-select:none;-webkit-user-select:none}
+.reader.on{border-color:var(--accent)}
+.reader button{background:none;border:0;color:var(--muted);font:inherit;font-size:.8rem;
+ line-height:1;padding:7px 8px;border-radius:999px;cursor:pointer}
+.reader button:hover{background:var(--surface);color:var(--text)}
+.reader .rate{font-variant-numeric:tabular-nums;min-width:26px}
+.reader .play{width:32px;height:32px;padding:0;font-size:.78rem;background:var(--surface);
+ color:var(--text)}
+.reader.on .play{background:var(--accent);color:#0b0b0c}
+
+/* ---- the voice panel ----
+   Same furniture as the ⋮ menu, one size up, because it is the same kind of thing: a small
+   stack of settings hanging off a control. */
+/* SCROLLS RATHER THAN RUNS OFF THE TOP. On a short window the panel is taller than the gap
+   above the widget, and a settings panel whose first control is off-screen is worse than a
+   scrollbar. */
+.vset{position:fixed;right:18px;bottom:120px;z-index:8;width:296px;padding:14px 16px 15px;
+ border-radius:14px;border:1px solid var(--line);background:var(--surface-hi);
+ box-shadow:0 12px 30px rgba(0,0,0,.55);
+ max-height:calc(100vh - 140px);overflow-y:auto}
+.vset .vhead{display:flex;align-items:center;justify-content:space-between;
+ font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+ margin:0 0 10px}
+.vset .vx{background:none;border:0;color:var(--muted);font:inherit;font-size:.8rem;
+ padding:2px 4px;cursor:pointer;border-radius:5px}
+.vset .vx:hover{background:var(--surface);color:var(--text)}
+.vset select{width:100%;font:inherit;font-size:.86rem;color:var(--text);
+ background:var(--surface);border:1px solid var(--line);border-radius:8px;
+ padding:8px 9px;margin:0 0 4px}
+.vset .vrow{display:flex;align-items:baseline;justify-content:space-between;
+ font-size:.82rem;color:var(--muted);margin:13px 0 4px}
+.vset .vrow b{color:var(--text);font-weight:500;font-variant-numeric:tabular-nums;
+ font-size:.8rem}
+.vset input[type=range]{width:100%;accent-color:var(--accent);margin:0}
+.vset .vchk{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--muted);
+ margin:14px 0 0;cursor:pointer}
+.vset .vchk input{accent-color:var(--accent);margin:0}
+.vset .vtest{display:block;width:100%;margin:13px 0 0;font:inherit;font-size:.82rem;
+ color:var(--text);background:var(--surface);border:1px solid var(--line);
+ border-radius:8px;padding:8px;cursor:pointer}
+.vset .vtest:hover{border-color:var(--muted)}
+/* ONE KEY PER LINE. This is the only place on the page that says what Space and the arrows
+   do, so it has to be readable at a glance rather than a wrapped run-on of separators. */
+.vset .vkeys{margin:14px 0 0;padding:12px 0 0;border-top:1px solid var(--line);
+ display:grid;grid-template-columns:auto 1fr;gap:7px 10px;align-items:baseline;
+ font-size:.75rem;color:var(--muted)}
+.vset .vkeys kbd{font-size:.7rem;padding:1px 5px;justify-self:start}
+.vset .vkeys span{justify-self:start}
+.vset .vnote{margin:9px 0 0;font-size:.72rem;line-height:1.5;color:var(--muted);opacity:.8}
+
+/* WHAT IS BEING READ, MARKED WITHOUT MOVING ANYTHING. Every other highlight on this page
+   is a border or a ring for the same reason: the question is centred once and frozen, so a
+   mark that changed a box's height would drag the whole card under him mid-sentence. An
+   option already has a 1px border to recolour; the question gets an underline, which is the
+   one decoration that costs no layout at all. */
+.opt.speaking{border-color:var(--accent)}
+.q .sp.speaking{text-decoration:underline;text-decoration-color:var(--accent);
+ text-decoration-thickness:2px;text-underline-offset:7px}
+
 /* ---- bottom bar ---- */
 footer{position:sticky;bottom:0;background:linear-gradient(transparent,var(--bg) 30%);
  padding:8px 0 10px}
