@@ -346,29 +346,29 @@ kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid
 
    `tabindex="-1"` on every control, for the clock's reason: Enter means "next question"
    everywhere on this page, and a focusable control down here would swallow it. */
-.reader{position:fixed;right:18px;bottom:76px;z-index:7;display:flex;align-items:center;
- gap:2px;padding:4px;border-radius:999px;border:1px solid var(--line);
- background:var(--surface-hi);box-shadow:0 8px 24px rgba(0,0,0,.45);
- user-select:none;-webkit-user-select:none}
+.reader{position:relative;display:flex;align-items:center;flex:0 0 auto;
+ gap:2px;padding:3px;border-radius:999px;border:1px solid var(--line);
+ background:var(--surface);user-select:none;-webkit-user-select:none}
 .reader.on{border-color:var(--accent)}
-.reader button{background:none;border:0;color:var(--muted);font:inherit;font-size:.8rem;
- line-height:1;padding:7px 8px;border-radius:999px;cursor:pointer}
-.reader button:hover{background:var(--surface);color:var(--text)}
-.reader .rate{font-variant-numeric:tabular-nums;min-width:26px}
-.reader .play{width:32px;height:32px;padding:0;font-size:.78rem;background:var(--surface);
+.reader button{background:none;border:0;color:var(--muted);font:inherit;font-size:.78rem;
+ line-height:1;padding:6px 7px;border-radius:999px;cursor:pointer}
+.reader button:hover{background:var(--surface-hi);color:var(--text)}
+.reader .rate{font-variant-numeric:tabular-nums;min-width:24px}
+.reader .play{width:29px;height:29px;padding:0;font-size:.74rem;background:var(--surface-hi);
  color:var(--text)}
 .reader.on .play{background:var(--accent);color:#0b0b0c}
 
 /* ---- the voice panel ----
    Same furniture as the ⋮ menu, one size up, because it is the same kind of thing: a small
    stack of settings hanging off a control. */
-/* SCROLLS RATHER THAN RUNS OFF THE TOP. On a short window the panel is taller than the gap
-   above the widget, and a settings panel whose first control is off-screen is worse than a
-   scrollbar. */
-.vset{position:fixed;right:18px;bottom:120px;z-index:8;width:296px;padding:14px 16px 15px;
+/* OPENS UPWARD FROM THE BUTTON THAT OPENED IT — absolute inside `.reader`, which is the
+   same relationship the ⋮ menu has with its own dots. SCROLLS RATHER THAN RUNNING OFF THE
+   TOP: on a short window the panel is taller than the gap above the footer, and a settings
+   panel whose first control is off-screen is worse than a scrollbar. */
+.vset{position:absolute;left:0;bottom:44px;z-index:8;width:296px;padding:14px 16px 15px;
  border-radius:14px;border:1px solid var(--line);background:var(--surface-hi);
  box-shadow:0 12px 30px rgba(0,0,0,.55);
- max-height:calc(100vh - 140px);overflow-y:auto}
+ max-height:calc(100vh - 130px);overflow-y:auto}
 .vset .vhead{display:flex;align-items:center;justify-content:space-between;
  font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
  margin:0 0 10px}
@@ -378,10 +378,12 @@ kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid
 .vset select{width:100%;font:inherit;font-size:.86rem;color:var(--text);
  background:var(--surface);border:1px solid var(--line);border-radius:8px;
  padding:8px 9px;margin:0 0 4px}
-.vset .vrow{display:flex;align-items:baseline;justify-content:space-between;
+.vset .vrow{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
  font-size:.82rem;color:var(--muted);margin:13px 0 4px}
+/* The number never wraps and never gets squeezed into the label — the label is the half
+   that gives way, because a slider with an unreadable value is not a slider. */
 .vset .vrow b{color:var(--text);font-weight:500;font-variant-numeric:tabular-nums;
- font-size:.8rem}
+ font-size:.8rem;flex:0 0 auto;white-space:nowrap}
 .vset input[type=range]{width:100%;accent-color:var(--accent);margin:0}
 .vset .vchk{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--muted);
  margin:14px 0 0;cursor:pointer}
@@ -839,41 +841,53 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
   </div>
 </main>
 
-<!-- THE READER (08-20). Fixed, so it never touches the frozen centring; outside <main> and
-     `.no-read-aloud` throughout, so it is invisible to NaturalReader; `tabindex="-1"` on
-     every control, so Enter — "next question" everywhere on this page — can never land on
-     one of them. Its own speed label doubles as the way into the panel. -->
-<div class="reader hide no-read-aloud" id="reader" aria-hidden="true">
-  <button class="gear" id="vgear" tabindex="-1" title="Voice, speed and pauses">⚙</button>
-  <button class="rate" id="vrate" tabindex="-1" title="Speed">1x</button>
-  <button class="play" id="vplay" tabindex="-1" title="Read aloud  ( space )">▶</button>
-</div>
-<div class="vset hide no-read-aloud" id="vset" aria-hidden="true">
-  <div class="vhead"><span>Read aloud</span><button class="vx" id="vclose" tabindex="-1">✕</button></div>
-  <select id="vvoice" title="Voice"></select>
-  <div class="vrow"><span>Speed</span><b id="vspeedn">1x</b></div>
-  <input type="range" id="vspeed" min="50" max="250" step="5" value="100">
-  <!-- THE TWO PAUSES ARE THE POINT, not decoration. A question read straight into "A." with
-       no gap gives him nowhere to think; a gap between the choices is where the comparing
-       happens. Both scale with the speed, so turning it up shortens them to match. -->
-  <div class="vrow"><span>Pause after the question</span><b id="vpqn">0.9s</b></div>
-  <input type="range" id="vpq" min="0" max="4000" step="100" value="900">
-  <div class="vrow"><span>Pause between choices</span><b id="vpon">0.5s</b></div>
-  <input type="range" id="vpo" min="0" max="2500" step="100" value="500">
-  <label class="vchk"><input type="checkbox" id="vrat" checked> Read the answer and why</label>
-  <button class="vtest" id="vtest" tabindex="-1">Hear this voice</button>
-  <div class="vkeys">
-    <kbd>space</kbd><span>Play / pause</span>
-    <kbd>↑</kbd><span>Say that line again</span>
-    <kbd>↓</kbd><span>Skip on a line</span>
-    <kbd>v</kbd><span>Reader off</span>
-  </div>
-  <p class="vnote" id="vnote"></p>
-</div>
-
 <footer id="footer" class="wrap hide">
   <p class="hinttext hide" id="hinttext"></p>
   <div class="acts">
+    <!-- THE READER LIVES IN THE FOOTER (08-20, second pass). It floated bottom-right for one
+         build and he asked why — the honest answer was that the position was arbitrary, and
+         nothing else on this page is placed arbitrarily. The footer is already the row of
+         "what you can do to this question right now": Back, Hint, Redo, Next. Play belongs
+         with those. It also stops the widget hovering over the options, rides the sticky
+         footer instead of a hard-coded offset, and hides with `#footer` on every tab that
+         has no question — which is exactly when the reader should be gone.
+
+         `.no-read-aloud` throughout and `tabindex="-1"` on every control, so Enter — "next
+         question" everywhere on this page — can never land on one of them. The panel is
+         `position:absolute` inside this relative box, so it opens UP from the button that
+         opened it rather than from a corner of the window. -->
+    <div class="reader hide no-read-aloud" id="reader">
+      <button class="gear" id="vgear" tabindex="-1" title="Voice, speed and pauses">⚙</button>
+      <button class="rate" id="vrate" tabindex="-1" title="Speed">1x</button>
+      <button class="play" id="vplay" tabindex="-1" title="Read aloud  ( space )">▶</button>
+      <div class="vset hide" id="vset">
+        <div class="vhead"><span>Read aloud</span><button class="vx" id="vclose" tabindex="-1">✕</button></div>
+        <select id="vvoice" title="Voice"></select>
+        <div class="vrow"><span>Speed</span><b id="vspeedn">1x</b></div>
+        <input type="range" id="vspeed" min="50" max="250" step="5" value="100">
+        <!-- THE PAUSES ARE THE POINT, not decoration. A question read straight into "A." with
+             no gap gives him nowhere to think; a gap between the choices is where the
+             comparing happens; and a wrong answer explained the instant he picks it lands
+             before he has finished looking at what he got wrong. All three scale with the
+             speed, so turning it up shortens them to match. -->
+        <div class="vrow"><span>Pause after the question</span><b id="vpqn">0.9s</b></div>
+        <input type="range" id="vpq" min="0" max="4000" step="100" value="900">
+        <div class="vrow"><span>Pause between choices</span><b id="vpon">0.5s</b></div>
+        <input type="range" id="vpo" min="0" max="2500" step="100" value="500">
+        <div class="vrow"><span>Pause before the explanation</span><b id="vpan">1.2s</b></div>
+        <input type="range" id="vpa" min="0" max="6000" step="100" value="1200">
+        <label class="vchk"><input type="checkbox" id="vrat" checked> Explain a wrong answer</label>
+        <button class="vtest" id="vtest" tabindex="-1">Hear this voice</button>
+        <div class="vkeys">
+          <kbd>space</kbd><span>Play / pause</span>
+          <kbd>↑</kbd><span>Say that line again</span>
+          <kbd>↓</kbd><span>Skip on a line</span>
+          <kbd>v</kbd><span>Reader off</span>
+        </div>
+        <p class="vnote" id="vnote"></p>
+        <p class="vnote">These settings follow you. One quiz, every quiz, now and later.</p>
+      </div>
+    </div>
     <button class="pill ghost" id="back">Back</button>
     <button class="pill ghost hide" id="hintbtn">Hint</button>
     <!-- The mis-click undo. Same slot as Hint, which has just left it, and it clears the
@@ -1867,7 +1881,10 @@ function question(fresh){
      off — `sayHere()` checks the toggle itself, so there is one place that knows. */
   showReader();
   if(isNew) sayHere(false);
-  else if(fresh && answered) sayHere(true);
+  // A RIGHT ANSWER IS LOADED, NOT SPOKEN — `hold`. He can see the tick and mostly already
+  // knows why; the explanation waits on the play button instead of talking over him. A wrong
+  // one still explains itself out loud, after its own pause. Both are one call.
+  else if(fresh && answered) sayHere(true, picked === q.correct);
 }
 
 /* THE HINT, from the button or from `h`. One path for both, and the BUTTON'S OWN VISIBILITY
@@ -2837,7 +2854,7 @@ function toggleClock(){ clockOn = !clockOn; paintClock(); }
    when nothing has been clicked yet. The SETTINGS are saved, and globally — the voice and
    the pauses are how he reads, not facts about one quiz. */
 const VKEY = 'lq:speech';
-const VDEF = {voice:'', rate:1, gapQ:900, gapO:500, rats:true};
+const VDEF = {voice:'', rate:1, gapQ:900, gapO:500, gapA:1200, rats:true};
 let V = (function(){
   try{ return Object.assign({}, VDEF, JSON.parse(localStorage.getItem(VKEY) || '{}')); }
   catch(e){ return Object.assign({}, VDEF); }
@@ -2943,7 +2960,11 @@ function buildQueue(mode){
     const rat = k => (q.rationales ? (q.rationales[k] || '') : '');
     const push = (txt, k, gap) => sents(txt).forEach((s, n) =>
       out.push({t:s, sel: '.opt[data-k="' + k + '"]', gap: n ? 240 : gap}));
-    push(right ? 'Right answer.' : 'Not quite.', picked, mode === 'rat' ? 300 : V.gapQ);
+    // THE GAP BEFORE THE VERDICT IS ITS OWN SETTING (08-20, his ask): *"a slider for how long
+    // after the question was wrong does it begin to explain it."* It is not the same pause as
+    // the one after the question — that one is thinking time before he picks, this one is
+    // looking time after he has, and he wanted to see what he got wrong before being told.
+    push(right ? 'Right answer.' : 'Not quite.', picked, mode === 'rat' ? V.gapA : V.gapQ);
     if(rat(picked)) push(rat(picked), picked, 240);
     // A WRONG ANSWER GETS THE RIGHT ONE READ TOO, and named by the letter he can see —
     // hearing why his pick was wrong without hearing which one was right is half a lesson.
@@ -3035,13 +3056,20 @@ function sayPause(){
 }
 function sayResume(){ if(sAt < 0) return sayHere(false); sayAt(sAt, false); paintReader(); }
 
-/* The current question, from the top. `mode` is passed straight through to the queue. */
-function sayHere(ratOnly){
+/* The current question, from the top. `mode` is passed straight through to the queue.
+
+   `hold` LOADS THE QUEUE AND DOES NOT PLAY IT, which is the right-answer case (08-20, his
+   ask): *"when I get a question correct, I don't need to hear why it's correct… if I do
+   wanna hear why it's right, I can press play."* So it parks, paused, on the explanation.
+   Space plays it; Enter moves on and the next question reads itself as normal. Nothing is
+   lost and nothing is said. */
+function sayHere(ratOnly, hold){
   if(!sayOn || !TTS) return;
   if(D.tab !== 'quiz' || S.done || S.reviewing) return;
   if(sectioned() && !S.only) return;              // the picker is not a question
   sQ = buildQueue(ratOnly ? 'rat' : 'all');
-  if(!sQ.length){ sAt = -1; paintReader(); return; }
+  if(!sQ.length){ sayStop(); sAt = -1; sPaused = false; paintReader(); return; }
+  if(hold){ sayStop(); sAt = 0; sPaused = true; paintReader(); return; }
   sayAt(0, false);
   paintReader();
 }
@@ -3098,15 +3126,16 @@ function drawVoices(){
   }
 }
 function paintVset(){
-  const sp = $('#vspeed'), pq = $('#vpq'), po = $('#vpo'), rt = $('#vrat');
+  const sp = $('#vspeed'), pq = $('#vpq'), po = $('#vpo'), pa = $('#vpa'), rt = $('#vrat');
   if(!sp) return;
   sp.value = Math.round(V.rate * 100);
-  pq.value = V.gapQ; po.value = V.gapO; rt.checked = !!V.rats;
+  pq.value = V.gapQ; po.value = V.gapO; pa.value = V.gapA; rt.checked = !!V.rats;
   // 180 wpm at 1x is NaturalReader's own scale, which is the one his hands already know.
   $('#vspeedn').textContent = (Math.round(V.rate * 100) / 100) + 'x · ~'
                             + Math.round(V.rate * 180) + ' wpm';
   $('#vpqn').textContent = (V.gapQ / 1000).toFixed(1) + 's';
   $('#vpon').textContent = (V.gapO / 1000).toFixed(1) + 's';
+  $('#vpan').textContent = (V.gapA / 1000).toFixed(1) + 's';
   paintReader();
 }
 let vsetOpen = false;
@@ -3139,6 +3168,7 @@ if($('#reader')){
   $('#vspeed').onchange = ()=> { if(speaking()) sayAt(sAt, false); };
   $('#vpq').oninput = e => { V.gapQ = +e.target.value; vput(); paintVset(); };
   $('#vpo').oninput = e => { V.gapO = +e.target.value; vput(); paintVset(); };
+  $('#vpa').oninput = e => { V.gapA = +e.target.value; vput(); paintVset(); };
   $('#vrat').onchange = e => { V.rats = e.target.checked; vput(); };
   /* THE SAMPLE GOES STRAIGHT TO THE SYNTHESISER and never through the queue. Putting it in
      `sQ` would leave ↑ and ↓ walking a one-line sample instead of the question he is
@@ -3164,6 +3194,24 @@ if($('#reader')){
   });
   paintVset();
 }
+/* TETHERED — ONE SET OF SETTINGS, EVERY QUIZ, IN BOTH DIRECTIONS (08-20, his ask): *"my
+   settings on the most recent quiz adjusted for the other ones so that it always stays the
+   same… even if I was on an old quiz and I moved the slider, it should still impact the
+   future quiz."*
+
+   The saving half was already right — `lq:speech` is a GLOBAL key with no quiz id in it, so
+   every page reads the same one and the newest change wins wherever it was made. This is the
+   other half: `storage` fires in every OTHER tab on the origin the moment one of them writes,
+   so a quiz already open picks the change up as he drags the slider rather than at its next
+   reload. Two quizzes side by side now move together. */
+addEventListener('storage', e => {
+  if(e.key !== VKEY || !e.newValue) return;
+  let next;
+  try{ next = JSON.parse(e.newValue); }catch(err){ return; }
+  V = Object.assign({}, VDEF, next);
+  loadVoices();
+  paintVset();
+});
 // A voice does not stop when the tab does. The clock's rule, for the same reason.
 document.addEventListener('visibilitychange', ()=>{ if(document.hidden && speaking()) sayPause(); });
 addEventListener('pagehide', ()=>{ try{ if(TTS) TTS.cancel(); }catch(e){} });

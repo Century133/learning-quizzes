@@ -343,29 +343,29 @@ kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid
 
    `tabindex="-1"` on every control, for the clock's reason: Enter means "next question"
    everywhere on this page, and a focusable control down here would swallow it. */
-.reader{position:fixed;right:18px;bottom:76px;z-index:7;display:flex;align-items:center;
- gap:2px;padding:4px;border-radius:999px;border:1px solid var(--line);
- background:var(--surface-hi);box-shadow:0 8px 24px rgba(0,0,0,.45);
- user-select:none;-webkit-user-select:none}
+.reader{position:relative;display:flex;align-items:center;flex:0 0 auto;
+ gap:2px;padding:3px;border-radius:999px;border:1px solid var(--line);
+ background:var(--surface);user-select:none;-webkit-user-select:none}
 .reader.on{border-color:var(--accent)}
-.reader button{background:none;border:0;color:var(--muted);font:inherit;font-size:.8rem;
- line-height:1;padding:7px 8px;border-radius:999px;cursor:pointer}
-.reader button:hover{background:var(--surface);color:var(--text)}
-.reader .rate{font-variant-numeric:tabular-nums;min-width:26px}
-.reader .play{width:32px;height:32px;padding:0;font-size:.78rem;background:var(--surface);
+.reader button{background:none;border:0;color:var(--muted);font:inherit;font-size:.78rem;
+ line-height:1;padding:6px 7px;border-radius:999px;cursor:pointer}
+.reader button:hover{background:var(--surface-hi);color:var(--text)}
+.reader .rate{font-variant-numeric:tabular-nums;min-width:24px}
+.reader .play{width:29px;height:29px;padding:0;font-size:.74rem;background:var(--surface-hi);
  color:var(--text)}
 .reader.on .play{background:var(--accent);color:#0b0b0c}
 
 /* ---- the voice panel ----
    Same furniture as the ⋮ menu, one size up, because it is the same kind of thing: a small
    stack of settings hanging off a control. */
-/* SCROLLS RATHER THAN RUNS OFF THE TOP. On a short window the panel is taller than the gap
-   above the widget, and a settings panel whose first control is off-screen is worse than a
-   scrollbar. */
-.vset{position:fixed;right:18px;bottom:120px;z-index:8;width:296px;padding:14px 16px 15px;
+/* OPENS UPWARD FROM THE BUTTON THAT OPENED IT — absolute inside `.reader`, which is the
+   same relationship the ⋮ menu has with its own dots. SCROLLS RATHER THAN RUNNING OFF THE
+   TOP: on a short window the panel is taller than the gap above the footer, and a settings
+   panel whose first control is off-screen is worse than a scrollbar. */
+.vset{position:absolute;left:0;bottom:44px;z-index:8;width:296px;padding:14px 16px 15px;
  border-radius:14px;border:1px solid var(--line);background:var(--surface-hi);
  box-shadow:0 12px 30px rgba(0,0,0,.55);
- max-height:calc(100vh - 140px);overflow-y:auto}
+ max-height:calc(100vh - 130px);overflow-y:auto}
 .vset .vhead{display:flex;align-items:center;justify-content:space-between;
  font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
  margin:0 0 10px}
@@ -375,10 +375,12 @@ kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid
 .vset select{width:100%;font:inherit;font-size:.86rem;color:var(--text);
  background:var(--surface);border:1px solid var(--line);border-radius:8px;
  padding:8px 9px;margin:0 0 4px}
-.vset .vrow{display:flex;align-items:baseline;justify-content:space-between;
+.vset .vrow{display:flex;align-items:baseline;justify-content:space-between;gap:12px;
  font-size:.82rem;color:var(--muted);margin:13px 0 4px}
+/* The number never wraps and never gets squeezed into the label — the label is the half
+   that gives way, because a slider with an unreadable value is not a slider. */
 .vset .vrow b{color:var(--text);font-weight:500;font-variant-numeric:tabular-nums;
- font-size:.8rem}
+ font-size:.8rem;flex:0 0 auto;white-space:nowrap}
 .vset input[type=range]{width:100%;accent-color:var(--accent);margin:0}
 .vset .vchk{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--muted);
  margin:14px 0 0;cursor:pointer}
