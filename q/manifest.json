@@ -334,5 +334,13 @@
   "book": "A&P 2e",
   "url": "q/ap2e-11-4.html",
   "total": 16
+ },
+ {
+  "id": "psp-8-1",
+  "title": "8.1 Initial Attraction",
+  "subtitle": "Chapter 8 · Liking and Loving",
+  "book": "PSP",
+  "url": "q/psp-8-1.html",
+  "total": 14
  }
 ]
