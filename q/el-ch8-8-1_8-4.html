@@ -875,11 +875,15 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
         <select id="vvoice" title="Voice"></select>
         <div class="vrow"><span>Speed</span><b id="vspeedn">1x</b></div>
         <input type="range" id="vspeed" min="50" max="250" step="5" value="100">
-        <!-- THE PAUSES ARE THE POINT, not decoration. A question read straight into "A." with
-             no gap gives him nowhere to think; a gap between the choices is where the
-             comparing happens; and a wrong answer explained the instant he picks it lands
-             before he has finished looking at what he got wrong. All three scale with the
-             speed, so turning it up shortens them to match. -->
+        <!-- THE PAUSES ARE THE POINT, not decoration, and they are IN THE ORDER HE MEETS
+             THEM: after Enter, after the stem, between the choices, before being told. A
+             question that starts talking the instant he presses Enter gives him no moment to
+             look at it; one read straight into "A." gives him nowhere to think; a gap between
+             the choices is where the comparing happens; and a wrong answer explained the
+             instant he picks it lands before he has finished looking at what he got wrong.
+             All four scale with the speed, so turning it up shortens them to match. -->
+        <div class="vrow"><span>Pause before the next question</span><b id="vpnn">0.6s</b></div>
+        <input type="range" id="vpn" min="0" max="4000" step="100" value="600">
         <div class="vrow"><span>Pause after the question</span><b id="vpqn">0.9s</b></div>
         <input type="range" id="vpq" min="0" max="4000" step="100" value="900">
         <div class="vrow"><span>Pause between choices</span><b id="vpon">0.5s</b></div>
@@ -1830,6 +1834,10 @@ function question(fresh){
     const j = justAnswered; justAnswered = null;
     if(j.phase === 2) delete S.pass2[j.k]; else delete S.answers[j.k];
     save(); question();
+    // THE OTHER WAY BACK OUT OF AN ANSWER, so it gets the same reset the Redo button does:
+    // the verdict it was half-way through explaining is no longer true. No reshuffle here,
+    // so the queue only has to lose the verdict, but it is the same one line either way.
+    sayHere('question', 'hold');
     // The re-render threw away the node the double-click had just selected a word inside, and
     // took the selection with it — so a double-click would undo the answer and then leave him
     // with nothing highlighted to press play on. Put it back, on the SAME option and on the
@@ -1890,11 +1898,11 @@ function question(fresh){
      "Which of the following…" would be maddening. Both calls are no-ops while the reader is
      off — `sayHere()` checks the toggle itself, so there is one place that knows. */
   showReader();
-  if(isNew) sayHere(false);
-  // A RIGHT ANSWER IS LOADED, NOT SPOKEN — `hold`. He can see the tick and mostly already
-  // knows why; the explanation waits on the play button instead of talking over him. A wrong
-  // one still explains itself out loud, after its own pause. Both are one call.
-  else if(fresh && answered) sayHere(true, picked === q.correct);
+  if(isNew) sayHere('question', 'lead');
+  // A RIGHT ANSWER IS LOADED, NOT SPOKEN. He can see the tick and mostly already knows why;
+  // the explanation waits on the play button instead of talking over him. A wrong one still
+  // explains itself out loud, after its own pause. Both are one call.
+  else if(fresh && answered) sayHere('verdict', picked === q.correct ? 'hold' : 'now');
 }
 
 /* THE HINT, from the button or from `h`. One path for both, and the BUTTON'S OWN VISIBILITY
@@ -1943,6 +1951,17 @@ function redoQuestion(){
   if(S.phase === 2) delete S.pass2[qk(i)]; else delete S.answers[qk(i)];
   reshuffleOpts(i);
   save(); question();
+  /* UNDO RESETS THE AUDIO (08-20, his ask): *"when I press undo, it should reset the audio
+     too. It seems at this moment to just continue playing the right and the wrong answer."*
+     It carried on because `question()` re-renders without `fresh`, so nothing told the
+     reader the answer it was explaining had just been taken back.
+
+     IT HOLDS RATHER THAN REPLAYS. He is undoing a mis-click on a question he has already
+     heard; reading the whole stem and four choices again after every slip would be noise.
+     So it goes quiet, the queue is the unanswered question again, and Space replays it if
+     he does want it — the same move a right answer makes. The reshuffle above is also why
+     it cannot just be stopped: the options have moved, so the old queue is wrong. */
+  sayHere('question', 'hold');
 }
 
 /* STARRING is not the same thing as skipping and the two maps never mix. Starred = worth
@@ -2864,7 +2883,7 @@ function toggleClock(){ clockOn = !clockOn; paintClock(); }
    when nothing has been clicked yet. The SETTINGS are saved, and globally — the voice and
    the pauses are how he reads, not facts about one quiz. */
 const VKEY = 'lq:speech';
-const VDEF = {voice:'', rate:1, gapQ:900, gapO:500, gapA:1200, rats:true};
+const VDEF = {voice:'', rate:1, gapN:600, gapQ:900, gapO:500, gapA:1200, rats:true};
 let V = (function(){
   try{ return Object.assign({}, VDEF, JSON.parse(localStorage.getItem(VKEY) || '{}')); }
   catch(e){ return Object.assign({}, VDEF); }
@@ -2949,13 +2968,16 @@ function sents(t){
 
 /* The queue is rebuilt from state every time rather than kept in step with it, so a Redo,
    a reshuffle or a second pass can never leave it reading last question's options.
-   `mode === 'rat'` is the just-answered case: he has heard the question and the choices
-   already, and what he wants now is the verdict. */
-function buildQueue(mode){
+
+   TWO SHAPES ONLY. `'question'` is the whole card — stem, then the choices. `'verdict'` is
+   the just-answered case: he has heard the question and the choices already, and what he
+   wants now is whether he got it. Everything else about how the reader behaves — lead-in,
+   play, hold — is `sayHere`'s job, not this one's. */
+function buildQueue(shape){
   const i = S.i, q = D.questions[i], picked = pick(i);
   const answered = picked !== undefined;
   const out = [];
-  if(mode !== 'rat'){
+  if(shape !== 'verdict'){
     // The same split as `buildQ` used to draw the spans, so line N of the queue and span N
     // on screen are the same sentence. One function, called twice.
     sents(q.q).forEach((s, n) => out.push({t:s, sel:'.q .sp[data-s="' + n + '"]', gap: n ? 240 : 0}));
@@ -2974,7 +2996,7 @@ function buildQueue(mode){
     // after the question was wrong does it begin to explain it."* It is not the same pause as
     // the one after the question — that one is thinking time before he picks, this one is
     // looking time after he has, and he wanted to see what he got wrong before being told.
-    push(right ? 'Right answer.' : 'Not quite.', picked, mode === 'rat' ? V.gapA : V.gapQ);
+    push(right ? 'Right answer.' : 'Not quite.', picked, shape === 'verdict' ? V.gapA : V.gapQ);
     if(rat(picked)) push(rat(picked), picked, 240);
     // A WRONG ANSWER GETS THE RIGHT ONE READ TOO, and named by the letter he can see —
     // hearing why his pick was wrong without hearing which one was right is half a lesson.
@@ -3064,23 +3086,35 @@ function sayPause(){
   if(sQ[at]) paintSpeak(sQ[at].sel);
   paintReader();
 }
-function sayResume(){ if(sAt < 0) return sayHere(false); sayAt(sAt, false); paintReader(); }
+function sayResume(){ if(sAt < 0) return sayHere('question', 'now'); sayAt(sAt, false); paintReader(); }
 
-/* The current question, from the top. `mode` is passed straight through to the queue.
+/* LOAD THE READER FOR WHAT IS ON SCREEN. `shape` is which queue (`'question'` or
+   `'verdict'`); `play` is what to do with it, and it is the whole behaviour of the feature
+   in one word:
 
-   `hold` LOADS THE QUEUE AND DOES NOT PLAY IT, which is the right-answer case (08-20, his
-   ask): *"when I get a question correct, I don't need to hear why it's correct… if I do
-   wanna hear why it's right, I can press play."* So it parks, paused, on the explanation.
-   Space plays it; Enter moves on and the next question reads itself as normal. Nothing is
-   lost and nothing is said. */
-function sayHere(ratOnly, hold){
+     'lead'  he moved onto this question — wait `Pause before the next question`, then read.
+     'now'   he asked for it — read it, no lead-in.
+     'hold'  load it and say NOTHING, parked paused on line one, ▶ on the button.
+
+   `'hold'` IS TWO OF HIS ASKS AND THEY ARE THE SAME MOVE. A right answer holds the verdict —
+   *"I don't need to hear why it's correct… if I do wanna hear why it's right, I can press
+   play."* An undo holds the question — *"when I press undo, it should reset the audio too."*
+   Both are "stop talking, keep what you had, wait for Space", and both come out of one line. */
+function sayHere(shape, play){
   if(!sayOn || !TTS) return;
   if(D.tab !== 'quiz' || S.done || S.reviewing) return;
   if(sectioned() && !S.only) return;              // the picker is not a question
-  sQ = buildQueue(ratOnly ? 'rat' : 'all');
+  sQ = buildQueue(shape);
   if(!sQ.length){ sayStop(); sAt = -1; sPaused = false; paintReader(); return; }
-  if(hold){ sayStop(); sAt = 0; sPaused = true; paintReader(); return; }
-  sayAt(0, false);
+  if(play === 'hold'){ sayStop(); sAt = 0; sPaused = true; paintReader(); return; }
+  /* THE LEAD-IN LIVES ON LINE ONE'S OWN GAP rather than in `sayAt`, so it is paid once on
+     arrival and never again: `↑` back to the top and Space out of a pause both call
+     `sayAt(n, false)`, which skips gaps entirely. A lead-in he had to sit through every time
+     he replayed the stem would be the opposite of what it is for. */
+  if(play === 'lead'){
+    sQ[0] = Object.assign({}, sQ[0], {gap: V.gapN});
+    sayAt(0, true);
+  } else sayAt(0, false);
   paintReader();
 }
 function sayOff(){ sayOn = false; sPaused = false; sAt = -1; sQ = []; sayStop(); paintReader(); }
@@ -3093,7 +3127,7 @@ function sayToggle(){
   if(sPaused){ sayOn = true; sayResume(); return; }
   sayOn = true;
   showReader();
-  sayHere(false);
+  sayHere('question', 'now');
 }
 /* ↑ AND ↓, and they only exist while the reader has something to say — otherwise they are
    the page's own scroll keys and taking those away to control a silent reader would be a
@@ -3136,13 +3170,16 @@ function drawVoices(){
   }
 }
 function paintVset(){
-  const sp = $('#vspeed'), pq = $('#vpq'), po = $('#vpo'), pa = $('#vpa'), rt = $('#vrat');
+  const sp = $('#vspeed'), pn = $('#vpn'), pq = $('#vpq'), po = $('#vpo'),
+        pa = $('#vpa'), rt = $('#vrat');
   if(!sp) return;
   sp.value = Math.round(V.rate * 100);
-  pq.value = V.gapQ; po.value = V.gapO; pa.value = V.gapA; rt.checked = !!V.rats;
+  pn.value = V.gapN; pq.value = V.gapQ; po.value = V.gapO; pa.value = V.gapA;
+  rt.checked = !!V.rats;
   // 180 wpm at 1x is NaturalReader's own scale, which is the one his hands already know.
   $('#vspeedn').textContent = (Math.round(V.rate * 100) / 100) + 'x · ~'
                             + Math.round(V.rate * 180) + ' wpm';
+  $('#vpnn').textContent = (V.gapN / 1000).toFixed(1) + 's';
   $('#vpqn').textContent = (V.gapQ / 1000).toFixed(1) + 's';
   $('#vpon').textContent = (V.gapO / 1000).toFixed(1) + 's';
   $('#vpan').textContent = (V.gapA / 1000).toFixed(1) + 's';
@@ -3176,6 +3213,7 @@ if($('#reader')){
   $('#vvoice').onchange = e => { V.voice = e.target.value; vput(); if(speaking()) sayAt(sAt, false); };
   $('#vspeed').oninput = e => { V.rate = +e.target.value / 100; vput(); paintVset(); };
   $('#vspeed').onchange = ()=> { if(speaking()) sayAt(sAt, false); };
+  $('#vpn').oninput = e => { V.gapN = +e.target.value; vput(); paintVset(); };
   $('#vpq').oninput = e => { V.gapQ = +e.target.value; vput(); paintVset(); };
   $('#vpo').oninput = e => { V.gapO = +e.target.value; vput(); paintVset(); };
   $('#vpa').oninput = e => { V.gapA = +e.target.value; vput(); paintVset(); };
