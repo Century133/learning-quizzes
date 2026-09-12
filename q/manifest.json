@@ -462,5 +462,13 @@
   "book": "BMGT301",
   "url": "q/bmgt301-course-exam-1-3_3-2-course.html",
   "total": 36
+ },
+ {
+  "id": "bmgt301-1-1",
+  "title": "1.1 Tech's Tectonic Shift: Radically Changing Business Landscapes",
+  "subtitle": "Chapter 1 · Setting the Stage: Technology and the Modern Enterprise",
+  "book": "BMGT301",
+  "url": "q/bmgt301-1-1.html",
+  "total": 13
  }
 ]
