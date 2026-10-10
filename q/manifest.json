@@ -768,19 +768,19 @@
   "total": 10
  },
  {
-  "id": "oneoffs-1-2",
-  "title": "1.2 The Art of War · Sun Tzu (Giles)",
-  "subtitle": "Chapter 1 · 2026",
-  "book": "One-offs",
-  "url": "q/oneoffs-1-2.html",
-  "total": 10
- },
- {
   "id": "oneoffs-1-2-highlights",
   "title": "The Art of War · Sun Tzu (Giles) · highlights",
   "subtitle": "Only what I highlighted · 920 passages",
   "book": "One-offs",
   "url": "q/oneoffs-1-2-highlights.html",
   "total": 23
+ },
+ {
+  "id": "oneoffs-1-2",
+  "title": "1.2 The Art of War · Sun Tzu (Giles)",
+  "subtitle": "Chapter 1 · 2026",
+  "book": "One-offs",
+  "url": "q/oneoffs-1-2.html",
+  "total": 8
  }
 ]
