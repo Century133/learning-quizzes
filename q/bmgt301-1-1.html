@@ -326,6 +326,32 @@ kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid
 .qmark:hover{background:var(--surface);color:var(--text)}
 .qmark.on{color:var(--text);border-color:var(--accent);background:var(--surface-hi)}
 
+/* ---- tags (10-12): his own labels on a question, kept per quiz ---- */
+.tagrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.tchip{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:.78rem;
+ color:var(--text);background:var(--surface-hi);border:1px solid var(--line);
+ border-radius:6px;padding:2px 8px;line-height:1.5}
+.tchip.sm{font-size:.7rem;margin:0 6px 9px 0}
+button.tchip{cursor:pointer}
+button.tchip:hover{border-color:var(--muted)}
+.tx{background:none;border:0;color:var(--muted);font:inherit;padding:0;cursor:pointer;line-height:1}
+.tx:hover{color:var(--text)}
+.tagin{flex:1 1 140px;min-width:120px;background:none;border:0;outline:0;color:var(--text);
+ font:inherit;font-size:.82rem;padding:3px 2px}
+.tagin::placeholder{color:var(--muted);opacity:.75}
+.tsug{flex:1 0 100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tnew{color:var(--muted);font-size:.76rem}
+.tagtable{margin:26px 0 0;text-align:left}
+.tagtable h3{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+ font-weight:500;margin:0 0 6px}
+.tagline{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line);
+ font-size:.88rem}
+.tagline .tn{flex:1;color:var(--muted);font-variant-numeric:tabular-nums}
+.tgroup{margin-top:30px}
+.menu .keys{border-top:1px solid var(--line);margin:5px 0 0;padding:8px 10px 4px;
+ display:grid;grid-template-columns:auto 1fr;gap:5px 10px;font-size:.78rem;color:var(--muted);
+ align-items:center}
+
 /* ---- the ⋮ menu ---- */
 .more{position:relative;flex:0 0 auto}
 .dots{background:none;border:0;color:var(--muted);font-size:1.15rem;line-height:1;
@@ -973,7 +999,157 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "bmgt301-1-1", "title": "1.1 Tech's Tectonic Shift: Radically Changing Business Landscapes", "subtitle": "Chapter 1 · Setting the Stage: Technology and the Modern Enterprise", "book": "BMGT301", "hash": "dfb9c911ac2e080e", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "Comparing the financial landscape of Alphabet (Google) and Apple against traditional media and manufacturing leaders, what trend characterizes the current shift in global corporate profitability?", "options": ["Traditional media firms maintain lead profitability by acquiring digital startups.", "Tech firms dominate profits by charging high fees for physical content distribution.", "Traditional media firms maintain lead profitability through government-protected networks.", "Tech firms dominate profits by capturing advertising dollars fleeing old media."], "rationales": ["While media firms attempt to pivot, the text highlights that tech giants have already surpassed them to become the most valuable firms in history.", "Digital giants generally avoid physical distribution costs, leveraging platforms rather than traditional networks or newspapers.", "The source emphasizes that advertising dollars are actively leaving traditional networks for tech-driven platforms, eroding that historic advantage.", "The source explicitly states that billions in advertising flee old media for digital efforts, making Google the most profitable media company on the planet."], "correct": 3, "hint": "think about where advertising revenue is moving in the modern economy.", "topic": "Corporate Performance", "sec": "", "src": "", "link": "", "qid": "7bdce3f94a"}, {"q": "Younger firms like Spotify and TikTok have successfully challenged established U.S. giants. Which pairing correctly identifies the origin and market segment of the firm that currently represents the most significant threat to Meta?", "options": ["Sweden / Social Media", "China / Subscription Music", "China / Social Media", "Sweden / Subscription Music"], "rationales": ["The Swedish firm mentioned in the text is Spotify, which competes in music, whereas the social media threat is Chinese.", "While firms like TikTok are Chinese, the subscription music challenger mentioned (Spotify) is actually based in Sweden.", "The text identifies TikTok as starting in China and being Meta's most significant threat yet.", "This correctly identifies Spotify's origin and market, but Spotify is noted for beating Apple, not for being the primary threat to Meta."], "correct": 2, "hint": "distinguish between the origins of the music disruptor and the social media disruptor.", "topic": "Global Competition", "sec": "", "src": "", "link": "", "qid": "9f655e04dd"}, {"q": "Large tech firms like Google, IBM, and Microsoft are increasingly recognized as top employers globally. According to the current trends in sub-Saharan Africa, how are these firms engaging with the local talent pool?", "options": ["They are establishing local R&D centers to tap into world-class infrastructure and talent.", "They are primarily using local talent for low-level remote customer service roles.", "They are shifting talent away from African nations toward campuses in the United States.", "They are avoiding local operations until water and electricity coverage match mobile coverage."], "rationales": ["The source notes that tech giants now run R&D centers in several sub-Saharan African nations to access gaining infrastructure and world-class talent.", "The text specifically highlights R&D (research and development) and significant operations, which are high-level engineering and innovation functions.", "While U.S. campuses are mentioned for AI talent, the source highlights a specific move to establish operations within African nations.", "The text points out that firms are moving in despite mobile coverage currently outstripping access to water and electricity."], "correct": 0, "hint": "identify the specific type of facility tech giants are opening in developing regions.", "topic": "Emerging Markets", "sec": "", "src": "", "link": "", "qid": "eab1031e29"}, {"q": "Drone technology is being deployed by both commercial and humanitarian organizations. How does the deployment of drones by agricultural firms currently compare to the efforts of Zipline?", "options": ["Agriculture focuses on regular crop surveying for yield improvement, while Zipline delivers medical supplies.", "Agriculture uses drones for pizza-delivery speed, while Zipline uses them for infrared crop analysis.", "Agriculture uses drones to replace satellite flights, while Zipline uses them to replace agricultural planes.", "Agriculture focuses on medical distribution to rural workers, while Zipline focuses on doorstep consumer delivery."], "rationales": ["Farmers use drones for infrared imagery and variations in irrigation, whereas Zipline is noted for delivering life-saving medical packages.", "This flips the primary use cases; Zipline provides pizza-delivery speed for medical supplies, not agricultural data.", "While agricultural drones do survey more regularly than satellites, Zipline is replacing slow ground delivery for urgent medical needs, not planes.", "Zipline is the humanitarian medical supplier; consumer doorstep delivery is described as a 'work in progress' for firms like Amazon."], "correct": 0, "hint": "consider the difference between a data-gathering application and a logistical delivery application.", "topic": "Robotic Automation", "sec": "", "src": "", "link": "", "qid": "7d5bbd0a98"}, {"q": "Firms like Uber and Airbnb are cited as major disruptors of the business landscape. What shared characteristic of their business models allows them to scale radically differently than traditional taxi or hotel services?", "options": ["They own no physical property or vehicle inventory of their own.", "They primarily rely on government subsidies to lower consumer prices.", "They focus on creating content rather than facilitating service connections.", "They use traditional inventory management systems to ensure vehicle availability."], "rationales": ["The text highlights that the world's largest taxi service owns no vehicles and the largest accommodations provider owns no hotels.", "The source emphasizes their digital/asset-light nature rather than financial support from government entities.", "These firms are facilitators; the text contrasts them with content creators like Google or Facebook, though they all share asset-light models.", "Their disruption stems from moving away from traditional inventory models entirely, using platforms to leverage assets owned by others."], "correct": 0, "hint": "identify what these firms lack compared to their 20th-century counterparts.", "topic": "Disruptive Strategy", "sec": "", "src": "", "link": "", "qid": "c9d517acc0"}, {"q": "Nvidia has emerged as the 'arms merchant' in the AI battle. Which pairing correctly describes Nvidia's current market position in high-end AI chips and its subsequent pricing strategy?", "options": ["80 to 95 percent market share / Premium prices", "49 percent market share / Competitive, low-margin pricing", "49 percent market share / Premium prices", "80 to 95 percent market share / Competitive, low-margin pricing"], "rationales": ["The text estimates Nvidia's share between 80 and 95 percent, allowing it to set premium prices unapologetically high.", "Nvidia holds a much higher market share (over 80 percent) and uses its power to maintain high, non-competitive margins.", "The 49 percent figure refers to Microsoft's stake in OpenAI, not Nvidia's market share of AI chips.", "With such high market dominance, the text explicitly states Nvidia keeps profit margins 'unapologetically high' rather than lowering them."], "correct": 0, "hint": "look for the relationship between a near-monopoly market share and the ability to control profits.", "topic": "AI Infrastructure", "sec": "", "src": "", "link": "", "qid": "eb514a3d5e"}, {"q": "Social media has emerged as a catalyst for global change. According to the principles of modern management, what is the primary consequence of mobile cameras and social platforms for today's leaders?", "options": ["Social media reduces the need for ethical training as the crowd self-regulates automatically.", "Managers can easily expunge racism or dictators by simply posting a status update.", "The service and ethics bar is higher because every lapse can be permanently recorded.", "Platforms have inherent morality that automatically filters out unethical corporate behavior."], "rationales": ["The text suggests the opposite: firms are struggling with bad actors and organized crime, requiring higher managerial vigilance.", "The text clarifies that a status update alone 'won't depose a dictator' but serves instead as an organizing catalyst.", "The text notes that when every flaw is just a short hop from social media, managers face a 'permanent record' and a higher ethics bar.", "The source explicitly states that technology itself 'has no morality' and firms struggle with hate and misinformation."], "correct": 2, "hint": "consider the impact of transparency and permanent digital records.", "topic": "Ethical Management", "sec": "", "src": "", "link": "", "qid": "c7095e778d"}, {"q": "Open source software is written by thousands of programmers and given away for free. How has this model primarily transformed the revenue structure of the modern computing industry?", "options": ["It eliminated the profit potential of large tech giants like Amazon and Microsoft.", "It forced all software to be provided exclusively as a service (SaaS) to remain viable.", "It limited high-powered computing to only large organizations that can afford free-software maintenance.", "It lowered computing costs for both startups and established blue-chip firms."], "rationales": ["The text notes that these firms are among those that pay programmers to write the free code, indicating it is part of their profitable business strategy.", "While SaaS is mentioned as a utility, open source is described as a force that powers websites and lowers baseline costs, not a mandate for SaaS.", "The source emphasizes that these advancements turn sophisticated computing into a utility available even to the 'smallest businesses and nonprofits.'", "The text states that open source has rewritten revenue models and lowered computing costs for businesses worldwide."], "correct": 3, "hint": "focus on how 'free' code affects the barrier to entry and operating expenses for businesses.", "topic": "Software Economics", "sec": "", "src": "", "link": "", "qid": "28a8d7b262"}, {"q": "European regulators are currently leading a shift in Big Tech oversight. What is a specific expected impact of the EU's new regulations on messaging platforms and app stores?", "options": ["App stores will be restricted to only European-developed software to protect privacy.", "European firms will be granted immunity from antitrust investigations to foster local growth.", "Messaging platforms will be nationalized to prevent the spread of foreign misinformation.", "Platforms will be required to open up to competitors and grant consumers more data control."], "rationales": ["The regulation aims to 'open' app stores, suggesting more access for various developers, not a restriction based on geographic origin.", "The text notes that major firms (including Alibaba and US tech giants) are under investigation globally, including in Europe.", "The goal of the regulation mentioned is to open competition and data control, not to establish state ownership.", "The source states that sweeping regulation in Europe will 'open messaging platforms and app stores' and provide more data control."], "correct": 3, "hint": "identify the primary goal of the EU's antitrust and digital market efforts.", "topic": "Regulatory Impact", "sec": "", "src": "", "link": "", "qid": "c3c479ef37"}, {"q": "The world's trillion-dollar firms historically dominated separate markets. According to current market trends, what shift is occurring in their competitive behavior and investment focus?", "options": ["They are increasingly competing with one another / Investing heavily in AI", "They are increasingly competing with one another / Diverging away from AI to avoid overlap", "They are avoiding direct competition / Investing heavily in AI", "They are avoiding direct competition / Diverging away from AI to avoid overlap"], "rationales": ["The text explicitly says trillion-dollar firms are 'increasingly competing with each other' and all are investing the largest portions of R&D in AI.", "The source identifies AI as the primary shared investment area for all five firms, not a point of divergence.", "The source states they are moving toward competition as they enter new markets, even while all focusing on the same tech (AI).", "Both attributes are incorrect; these firms are becoming more competitive and are all converging on AI investment."], "correct": 0, "hint": "evaluate how the move toward a shared technology impacts the boundaries between dominant firms.", "topic": "Tech Giant Strategy", "sec": "", "src": "", "link": "", "qid": "df008bfc51"}], "hasSheet": true, "parts": false, "secTitles": {}, "reserve": 2, "frq": [], "notebook": "https://notebooklm.google.com/notebook/873a623f-584e-43aa-a1b5-4059031032cd/artifact/1d467fbf-5f54-4ce9-b0a4-f8e20b7c155e", "root": "../index.html", "tab": "quiz", "sheet": "## Corporate Performance\nTechnology enables extreme wealth creation and market dominance for firms successfully navigating digital transformation.\n\n### Key terms\n1. **Market capitalization** — the total value of a publicly traded firm (share count x price).\n   ex. Apple, Microsoft, Alphabet, Meta, Amazon, and Nvidia topping $1 trillion value.\n2. **Digital economy** — the global economic portion tied directly to digital technologies.\n   20 percent of the world economy is digital; remaining 80 percent runs on it.\n\n### Names and studies\n1. **Forbes report** — analyzed digital transformation rates; 72 percent failure shows high-risk nature.\n\n## Global Competition\nTechnology-driven competition has evolved from a U.S.-only model into a diverse global phenomenon.\n\n### Key terms\n1. **Non-U.S. tech leaders** — dominant technology firms founded and headquartered outside the United States.\n   ex. Spotify (Sweden), TikTok (China), and Shopify (Canada).\n2. **Foreign e-commerce disruptors** — retail firms leveraging technology to challenge incumbents like Amazon.\n   ex. Shein and Temu, both founded in China.\n\n## Emerging Markets\nAffordable mobile technology acts as an economic lubricant by bypassing traditional infrastructure limitations.\n\n### Key terms\n1. **Mobile money** — using text messages to replace cash and provide electronic payments to the unbanked.\n   ex. Kenya’s M-Pesa and Somaliland’s Zaad replacing physical currency.\n2. **Agrarian tech empowerment** — tools providing pricing info to rural workers to prevent middleman exploitation.\n   ex. Ghana’s Esoko using mobile phones for farming info and commodity pricing.\n3. **Life-saving verification** — tech-based systems used to authenticate products and prevent fraud.\n   ex. Sproxil using text message verification to combat drug counterfeiting.\n\n### Names and studies\n1. **Afghan police M-Pesa adoption** — transitioned to mobile pay; revealed skimming and cut corruption.\n\n## Robotic Automation\nLow-cost processors and autonomous systems revolutionize logistics and agricultural yield management.\n\n### Key terms\n1. **Agricultural drones** — low-cost flying devices used to survey crops and improve yields.\n   ex. Infrared imagery identifying irrigation variation, plant damage, and infestations.\n2. **Humanitarian logistics** — autonomous delivery systems providing medical supplies to remote regions.\n   ex. Zipline delivering blood and supplies at \"pizza-delivery speed.\"\n\n## Disruptive Strategy\nModern firms prioritize asset-light models and ecosystems to dominate markets without physical infrastructure.\n\n### Key terms\n1. **Asset-light business models** — dominating a sector without owning physical infrastructure or inventory.\n   ex. Uber (no vehicles), Airbnb (no hotels), and Alibaba (no inventory).\n2. **Platforms** — integrated ecosystems creating value through add-ons vs. stand-alone products.\n   ex. Apple’s integrated services providing cumulative value to owners vs. products alone.\n\n## AI Infrastructure\nArtificial intelligence relies on high-end hardware and energy-intensive data center networks.\n\n### Key terms\n1. **Microprocessors** — the computer's calculating brain that executes program instructions.\n   ex. Nvidia high-end chips commanding 80 to 95 percent of the AI market.\n2. **Server farms** — massive networks of computer servers providing the backbone for SaaS/cloud.\n   Data centers in Ireland consume 18 percent of the country’s electricity.\n3. **R&D (Research and Development)** — the firm portion focused on pioneering innovation and new tech.\n   Largest R&D portions for $1 trillion firms are currently invested in AI.\n\n## Ethical Management\nRapid advancement creates moral hazards regarding demographic bias, accuracy, and property rights.\n\n### Key terms\n1. **Algorithmic bias** — AI systems making discriminatory recommendations against specific demographics.\n   ex. Recommendations found to be harmful to women and people of color.\n2. **GenAI Hallucinations** — instances where chatbots or generative models fabricate false information.\n   ex. Lawyers using tools that \"made up\" legal cases.\n3. **Intellectual property concerns** — using copyrighted materials to train models without compensation.\n   ex. Systems trained on work from artists and journalists without consent.\n\n### Names and studies\n1. **AI development joint letter** — scientists requested 6-month pause; development sped up; shows competitive pressure overrides ethics.\n\n## Software Economics\nDevelopment and distribution models have turned high-powered computing into an affordable utility.\n\n### Key terms\n1. **Open source software** — free code written by programmers to rewrite industry revenue models.\n   ex. Projects funded by Google and Netflix to lower computing costs.\n2. **SaaS (Software as a Service)** — a delivery model turning high-powered computing into a utility.\n   Lowering computing costs for everyone from startups to blue-chip firms.\n\n## Regulatory Impact\nGlobal governments are actively using legal oversight to manage tech giant influence and privacy.\n\n### Key terms\n1. **Antitrust investigations** — legal inquiries into competitive practices and market influence.\n   ex. Ongoing investigations in the US, EU, China, Australia, and Brazil.\n2. **Data control regulation** — rules designed to give consumers more authority over personal info.\n   ex. New EU rules impacting app stores and messaging platforms.\n\n## Tech Giant Strategy\nValuable firms utilize holding structures and immersive tech to build high-margin service ecosystems.\n\n### Key terms\n1. **Holding company structure** — parent firm managing diverse divisions in separate markets.\n   ex. Google rechristening as Alphabet to manage driverless cars and life extension.\n2. **Spatial computing** — a consumer tech era leveraging virtual and augmented reality.\n   ex. Apple’s VisionPro pushing advancements in wearable immersive hardware.\n3. **Ecosystem lock-in** — creating a constellation of services that add cumulative value.\n   Apple’s services division is now larger than Boeing, Nike, or Coca-Cola."}</script>
+<script id="quiz-data" type="application/json">{"id": "bmgt301-1-1", "title": "1.1 Tech's Tectonic Shift: Radically Changing Business Landscapes", "subtitle": "Chapter 1 · Setting the Stage: Technology and the Modern Enterprise", "book": "BMGT301", "hash": "dfb9c911ac2e080e", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "Comparing the financial landscape of Alphabet (Google) and Apple against traditional media and manufacturing leaders, what trend characterizes the current shift in global corporate profitability?", "options": ["Traditional media firms maintain lead profitability by acquiring digital startups.", "Tech firms dominate profits by charging high fees for physical content distribution.", "Traditional media firms maintain lead profitability through government-protected networks.", "Tech firms dominate profits by capturing advertising dollars fleeing old media."], "rationales": ["While media firms attempt to pivot, the text highlights that tech giants have already surpassed them to become the most valuable firms in history.", "Digital giants generally avoid physical distribution costs, leveraging platforms rather than traditional networks or newspapers.", "The source emphasizes that advertising dollars are actively leaving traditional networks for tech-driven platforms, eroding that historic advantage.", "The source explicitly states that billions in advertising flee old media for digital efforts, making Google the most profitable media company on the planet."], "correct": 3, "hint": "think about where advertising revenue is moving in the modern economy.", "topic": "Corporate Performance", "sec": "", "src": "", "link": "", "qid": "7bdce3f94a"}, {"q": "Younger firms like Spotify and TikTok have successfully challenged established U.S. giants. Which pairing correctly identifies the origin and market segment of the firm that currently represents the most significant threat to Meta?", "options": ["Sweden / Social Media", "China / Subscription Music", "China / Social Media", "Sweden / Subscription Music"], "rationales": ["The Swedish firm mentioned in the text is Spotify, which competes in music, whereas the social media threat is Chinese.", "While firms like TikTok are Chinese, the subscription music challenger mentioned (Spotify) is actually based in Sweden.", "The text identifies TikTok as starting in China and being Meta's most significant threat yet.", "This correctly identifies Spotify's origin and market, but Spotify is noted for beating Apple, not for being the primary threat to Meta."], "correct": 2, "hint": "distinguish between the origins of the music disruptor and the social media disruptor.", "topic": "Global Competition", "sec": "", "src": "", "link": "", "qid": "9f655e04dd"}, {"q": "Large tech firms like Google, IBM, and Microsoft are increasingly recognized as top employers globally. According to the current trends in sub-Saharan Africa, how are these firms engaging with the local talent pool?", "options": ["They are establishing local R&D centers to tap into world-class infrastructure and talent.", "They are primarily using local talent for low-level remote customer service roles.", "They are shifting talent away from African nations toward campuses in the United States.", "They are avoiding local operations until water and electricity coverage match mobile coverage."], "rationales": ["The source notes that tech giants now run R&D centers in several sub-Saharan African nations to access gaining infrastructure and world-class talent.", "The text specifically highlights R&D (research and development) and significant operations, which are high-level engineering and innovation functions.", "While U.S. campuses are mentioned for AI talent, the source highlights a specific move to establish operations within African nations.", "The text points out that firms are moving in despite mobile coverage currently outstripping access to water and electricity."], "correct": 0, "hint": "identify the specific type of facility tech giants are opening in developing regions.", "topic": "Emerging Markets", "sec": "", "src": "", "link": "", "qid": "eab1031e29"}, {"q": "Drone technology is being deployed by both commercial and humanitarian organizations. How does the deployment of drones by agricultural firms currently compare to the efforts of Zipline?", "options": ["Agriculture focuses on regular crop surveying for yield improvement, while Zipline delivers medical supplies.", "Agriculture uses drones for pizza-delivery speed, while Zipline uses them for infrared crop analysis.", "Agriculture uses drones to replace satellite flights, while Zipline uses them to replace agricultural planes.", "Agriculture focuses on medical distribution to rural workers, while Zipline focuses on doorstep consumer delivery."], "rationales": ["Farmers use drones for infrared imagery and variations in irrigation, whereas Zipline is noted for delivering life-saving medical packages.", "This flips the primary use cases; Zipline provides pizza-delivery speed for medical supplies, not agricultural data.", "While agricultural drones do survey more regularly than satellites, Zipline is replacing slow ground delivery for urgent medical needs, not planes.", "Zipline is the humanitarian medical supplier; consumer doorstep delivery is described as a 'work in progress' for firms like Amazon."], "correct": 0, "hint": "consider the difference between a data-gathering application and a logistical delivery application.", "topic": "Robotic Automation", "sec": "", "src": "", "link": "", "qid": "7d5bbd0a98"}, {"q": "Firms like Uber and Airbnb are cited as major disruptors of the business landscape. What shared characteristic of their business models allows them to scale radically differently than traditional taxi or hotel services?", "options": ["They own no physical property or vehicle inventory of their own.", "They primarily rely on government subsidies to lower consumer prices.", "They focus on creating content rather than facilitating service connections.", "They use traditional inventory management systems to ensure vehicle availability."], "rationales": ["The text highlights that the world's largest taxi service owns no vehicles and the largest accommodations provider owns no hotels.", "The source emphasizes their digital/asset-light nature rather than financial support from government entities.", "These firms are facilitators; the text contrasts them with content creators like Google or Facebook, though they all share asset-light models.", "Their disruption stems from moving away from traditional inventory models entirely, using platforms to leverage assets owned by others."], "correct": 0, "hint": "identify what these firms lack compared to their 20th-century counterparts.", "topic": "Disruptive Strategy", "sec": "", "src": "", "link": "", "qid": "c9d517acc0"}, {"q": "Nvidia has emerged as the 'arms merchant' in the AI battle. Which pairing correctly describes Nvidia's current market position in high-end AI chips and its subsequent pricing strategy?", "options": ["80 to 95 percent market share / Premium prices", "49 percent market share / Competitive, low-margin pricing", "49 percent market share / Premium prices", "80 to 95 percent market share / Competitive, low-margin pricing"], "rationales": ["The text estimates Nvidia's share between 80 and 95 percent, allowing it to set premium prices unapologetically high.", "Nvidia holds a much higher market share (over 80 percent) and uses its power to maintain high, non-competitive margins.", "The 49 percent figure refers to Microsoft's stake in OpenAI, not Nvidia's market share of AI chips.", "With such high market dominance, the text explicitly states Nvidia keeps profit margins 'unapologetically high' rather than lowering them."], "correct": 0, "hint": "look for the relationship between a near-monopoly market share and the ability to control profits.", "topic": "AI Infrastructure", "sec": "", "src": "", "link": "", "qid": "eb514a3d5e"}, {"q": "Social media has emerged as a catalyst for global change. According to the principles of modern management, what is the primary consequence of mobile cameras and social platforms for today's leaders?", "options": ["Social media reduces the need for ethical training as the crowd self-regulates automatically.", "Managers can easily expunge racism or dictators by simply posting a status update.", "The service and ethics bar is higher because every lapse can be permanently recorded.", "Platforms have inherent morality that automatically filters out unethical corporate behavior."], "rationales": ["The text suggests the opposite: firms are struggling with bad actors and organized crime, requiring higher managerial vigilance.", "The text clarifies that a status update alone 'won't depose a dictator' but serves instead as an organizing catalyst.", "The text notes that when every flaw is just a short hop from social media, managers face a 'permanent record' and a higher ethics bar.", "The source explicitly states that technology itself 'has no morality' and firms struggle with hate and misinformation."], "correct": 2, "hint": "consider the impact of transparency and permanent digital records.", "topic": "Ethical Management", "sec": "", "src": "", "link": "", "qid": "c7095e778d"}, {"q": "Open source software is written by thousands of programmers and given away for free. How has this model primarily transformed the revenue structure of the modern computing industry?", "options": ["It eliminated the profit potential of large tech giants like Amazon and Microsoft.", "It forced all software to be provided exclusively as a service (SaaS) to remain viable.", "It limited high-powered computing to only large organizations that can afford free-software maintenance.", "It lowered computing costs for both startups and established blue-chip firms."], "rationales": ["The text notes that these firms are among those that pay programmers to write the free code, indicating it is part of their profitable business strategy.", "While SaaS is mentioned as a utility, open source is described as a force that powers websites and lowers baseline costs, not a mandate for SaaS.", "The source emphasizes that these advancements turn sophisticated computing into a utility available even to the 'smallest businesses and nonprofits.'", "The text states that open source has rewritten revenue models and lowered computing costs for businesses worldwide."], "correct": 3, "hint": "focus on how 'free' code affects the barrier to entry and operating expenses for businesses.", "topic": "Software Economics", "sec": "", "src": "", "link": "", "qid": "28a8d7b262"}, {"q": "European regulators are currently leading a shift in Big Tech oversight. What is a specific expected impact of the EU's new regulations on messaging platforms and app stores?", "options": ["App stores will be restricted to only European-developed software to protect privacy.", "European firms will be granted immunity from antitrust investigations to foster local growth.", "Messaging platforms will be nationalized to prevent the spread of foreign misinformation.", "Platforms will be required to open up to competitors and grant consumers more data control."], "rationales": ["The regulation aims to 'open' app stores, suggesting more access for various developers, not a restriction based on geographic origin.", "The text notes that major firms (including Alibaba and US tech giants) are under investigation globally, including in Europe.", "The goal of the regulation mentioned is to open competition and data control, not to establish state ownership.", "The source states that sweeping regulation in Europe will 'open messaging platforms and app stores' and provide more data control."], "correct": 3, "hint": "identify the primary goal of the EU's antitrust and digital market efforts.", "topic": "Regulatory Impact", "sec": "", "src": "", "link": "", "qid": "c3c479ef37"}, {"q": "The world's trillion-dollar firms historically dominated separate markets. According to current market trends, what shift is occurring in their competitive behavior and investment focus?", "options": ["They are increasingly competing with one another / Investing heavily in AI", "They are increasingly competing with one another / Diverging away from AI to avoid overlap", "They are avoiding direct competition / Investing heavily in AI", "They are avoiding direct competition / Diverging away from AI to avoid overlap"], "rationales": ["The text explicitly says trillion-dollar firms are 'increasingly competing with each other' and all are investing the largest portions of R&D in AI.", "The source identifies AI as the primary shared investment area for all five firms, not a point of divergence.", "The source states they are moving toward competition as they enter new markets, even while all focusing on the same tech (AI).", "Both attributes are incorrect; these firms are becoming more competitive and are all converging on AI investment."], "correct": 0, "hint": "evaluate how the move toward a shared technology impacts the boundaries between dominant firms.", "topic": "Tech Giant Strategy", "sec": "", "src": "", "link": "", "qid": "df008bfc51"}], "hasSheet": true, "parts": false, "secTitles": {}, "reserve": 2, "tags": false, "frq": [], "notebook": "https://notebooklm.google.com/notebook/873a623f-584e-43aa-a1b5-4059031032cd/artifact/1d467fbf-5f54-4ce9-b0a4-f8e20b7c155e", "root": "../index.html", "tab": "quiz", "sheet": "## Corporate Performance\nTechnology enables extreme wealth creation and market dominance for firms successfully navigating digital transformation.\n\n### Key terms\n1. **Market capitalization** — the total value of a publicly traded firm (share count x price).\n   ex. Apple, Microsoft, Alphabet, Meta, Amazon, and Nvidia topping $1 trillion value.\n2. **Digital economy** — the global economic portion tied directly to digital technologies.\n   20 percent of the world economy is digital; remaining 80 percent runs on it.\n\n### Names and studies\n1. **Forbes report** — analyzed digital transformation rates; 72 percent failure shows high-risk nature.\n\n## Global Competition\nTechnology-driven competition has evolved from a U.S.-only model into a diverse global phenomenon.\n\n### Key terms\n1. **Non-U.S. tech leaders** — dominant technology firms founded and headquartered outside the United States.\n   ex. Spotify (Sweden), TikTok (China), and Shopify (Canada).\n2. **Foreign e-commerce disruptors** — retail firms leveraging technology to challenge incumbents like Amazon.\n   ex. Shein and Temu, both founded in China.\n\n## Emerging Markets\nAffordable mobile technology acts as an economic lubricant by bypassing traditional infrastructure limitations.\n\n### Key terms\n1. **Mobile money** — using text messages to replace cash and provide electronic payments to the unbanked.\n   ex. Kenya’s M-Pesa and Somaliland’s Zaad replacing physical currency.\n2. **Agrarian tech empowerment** — tools providing pricing info to rural workers to prevent middleman exploitation.\n   ex. Ghana’s Esoko using mobile phones for farming info and commodity pricing.\n3. **Life-saving verification** — tech-based systems used to authenticate products and prevent fraud.\n   ex. Sproxil using text message verification to combat drug counterfeiting.\n\n### Names and studies\n1. **Afghan police M-Pesa adoption** — transitioned to mobile pay; revealed skimming and cut corruption.\n\n## Robotic Automation\nLow-cost processors and autonomous systems revolutionize logistics and agricultural yield management.\n\n### Key terms\n1. **Agricultural drones** — low-cost flying devices used to survey crops and improve yields.\n   ex. Infrared imagery identifying irrigation variation, plant damage, and infestations.\n2. **Humanitarian logistics** — autonomous delivery systems providing medical supplies to remote regions.\n   ex. Zipline delivering blood and supplies at \"pizza-delivery speed.\"\n\n## Disruptive Strategy\nModern firms prioritize asset-light models and ecosystems to dominate markets without physical infrastructure.\n\n### Key terms\n1. **Asset-light business models** — dominating a sector without owning physical infrastructure or inventory.\n   ex. Uber (no vehicles), Airbnb (no hotels), and Alibaba (no inventory).\n2. **Platforms** — integrated ecosystems creating value through add-ons vs. stand-alone products.\n   ex. Apple’s integrated services providing cumulative value to owners vs. products alone.\n\n## AI Infrastructure\nArtificial intelligence relies on high-end hardware and energy-intensive data center networks.\n\n### Key terms\n1. **Microprocessors** — the computer's calculating brain that executes program instructions.\n   ex. Nvidia high-end chips commanding 80 to 95 percent of the AI market.\n2. **Server farms** — massive networks of computer servers providing the backbone for SaaS/cloud.\n   Data centers in Ireland consume 18 percent of the country’s electricity.\n3. **R&D (Research and Development)** — the firm portion focused on pioneering innovation and new tech.\n   Largest R&D portions for $1 trillion firms are currently invested in AI.\n\n## Ethical Management\nRapid advancement creates moral hazards regarding demographic bias, accuracy, and property rights.\n\n### Key terms\n1. **Algorithmic bias** — AI systems making discriminatory recommendations against specific demographics.\n   ex. Recommendations found to be harmful to women and people of color.\n2. **GenAI Hallucinations** — instances where chatbots or generative models fabricate false information.\n   ex. Lawyers using tools that \"made up\" legal cases.\n3. **Intellectual property concerns** — using copyrighted materials to train models without compensation.\n   ex. Systems trained on work from artists and journalists without consent.\n\n### Names and studies\n1. **AI development joint letter** — scientists requested 6-month pause; development sped up; shows competitive pressure overrides ethics.\n\n## Software Economics\nDevelopment and distribution models have turned high-powered computing into an affordable utility.\n\n### Key terms\n1. **Open source software** — free code written by programmers to rewrite industry revenue models.\n   ex. Projects funded by Google and Netflix to lower computing costs.\n2. **SaaS (Software as a Service)** — a delivery model turning high-powered computing into a utility.\n   Lowering computing costs for everyone from startups to blue-chip firms.\n\n## Regulatory Impact\nGlobal governments are actively using legal oversight to manage tech giant influence and privacy.\n\n### Key terms\n1. **Antitrust investigations** — legal inquiries into competitive practices and market influence.\n   ex. Ongoing investigations in the US, EU, China, Australia, and Brazil.\n2. **Data control regulation** — rules designed to give consumers more authority over personal info.\n   ex. New EU rules impacting app stores and messaging platforms.\n\n## Tech Giant Strategy\nValuable firms utilize holding structures and immersive tech to build high-margin service ecosystems.\n\n### Key terms\n1. **Holding company structure** — parent firm managing diverse divisions in separate markets.\n   ex. Google rechristening as Alphabet to manage driverless cars and life extension.\n2. **Spatial computing** — a consumer tech era leveraging virtual and augmented reality.\n   ex. Apple’s VisionPro pushing advancements in wearable immersive hardware.\n3. **Ecosystem lock-in** — creating a constellation of services that add cumulative value.\n   Apple’s services division is now larger than Boeing, Nike, or Coca-Cola."}</script>
+<script>
+(function(){
+  if(window.lqSync) return;
+  const API = 'https://terp-plate.vercel.app/api/quiz-sync', MK = 'lqsync:meta';
+  const none = {first: Promise.resolve([]), now: async()=>[], listen(){}};
+  let key = '';
+  try{ key = localStorage.getItem('lq:key') || ''; }catch(e){}
+  const hm = /[#&]k=([A-Za-z0-9_-]{40,})/.exec(location.hash);
+  if(hm) key = hm[1];
+  if(!key || !window.crypto || !crypto.subtle){ window.lqSync = none; return; }
+
+  const skip = k => k.indexOf('lq:') !== 0 || k === 'lq:key' || k === 'lq:speech';
+  const rawSet = Storage.prototype.setItem;
+  let meta = {};
+  try{ meta = JSON.parse(localStorage.getItem(MK) || '{}') || {}; }catch(e){}
+  const putMeta = ()=>{ try{ rawSet.call(localStorage, MK, JSON.stringify(meta)); }catch(e){} };
+  const hash = t => { let h = 5381; for(let i=0;i<t.length;i++) h = ((h<<5) + h + t.charCodeAt(i)) | 0; return h; };
+  const isState = k => /^lq:[^:]+$/.test(k) && k !== 'lq:hub';
+  function weight(s){
+    return Object.keys(s.answers||{}).length + Object.keys(s.pass2||{}).length
+         + Object.keys(s.skipped||{}).length + Object.keys(s.starred||{}).length
+         + Object.keys(s.unsure||{}).length + 1000 * (s.history||[]).length + (s.done ? 500 : 0);
+  }
+  // '' = nothing worth sending
+  function sig(k, v){
+    if(isState(k)){
+      try{ const s = JSON.parse(v);
+        if(!s || typeof s !== 'object') return '';
+        if(!weight(s) && !s.only && !s.tagf) return '';
+        const c = Object.assign({}, s); delete c.ms; delete c.qms; delete c.meta; delete c.hintOpen;
+        return JSON.stringify(c);
+      }catch(e){ return ''; }
+    }
+    return (v && v !== '{}' && v !== '[]' && v !== '{"defs":[],"q":{}}') ? v : '';
+  }
+  let frozen = false, applying = false, timer = null, busy = false;
+  function mark(k, v){
+    if(skip(k)) return;
+    const g = sig(k, v), h = hash(g), m = meta[k] || (meta[k] = {t:0});
+    if(m.h === h) return;
+    m.h = h;
+    if(g){ m.t = Date.now(); m.d = 1; clearTimeout(timer); timer = setTimeout(run, 1500); }
+    putMeta();
+  }
+  Storage.prototype.setItem = function(k, v){
+    if(this === localStorage && frozen && String(k).indexOf('lq:') === 0) return;
+    rawSet.call(this, k, v);
+    if(this === localStorage && !applying){ try{ mark(String(k), String(v)); }catch(e){} }
+  };
+  // What was already here before sync existed: age unknown, so it is stamped low, and a real
+  // attempt outranks a thinner one by how much is in it.
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(skip(k) || meta[k]) continue;
+      const v = localStorage.getItem(k), g = sig(k, v);
+      meta[k] = {t: 0, h: hash(g)};
+      if(g){ let w = 1; if(isState(k)){ try{ w = 1 + weight(JSON.parse(v)); }catch(e){} }
+             meta[k].t = w; meta[k].d = 1; }
+    }
+    putMeta();
+  }catch(e){}
+
+  const enc = new TextEncoder(), dec = new TextDecoder();
+  const toB = s => { s = s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length % 4) s += '=';
+                     return Uint8Array.from(atob(s), c => c.charCodeAt(0)); };
+  const fromB = u => { let t = ''; for(let i=0;i<u.length;i+=8192) t += String.fromCharCode.apply(null, u.subarray(i, i+8192));
+                       return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+  const hex = b => Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,'0')).join('');
+  let ck = null, bucket = '';
+  const ready = (async()=>{
+    ck = await crypto.subtle.importKey('raw', toB(key), 'AES-GCM', false, ['encrypt','decrypt']);
+    bucket = hex(await crypto.subtle.digest('SHA-256', enc.encode('lq-sync:' + key))).slice(0, 32);
+  })();
+  const kid = async k => hex(await crypto.subtle.digest('SHA-256', enc.encode(bucket + '|' + k))).slice(0, 32);
+  async function seal(o){
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv}, ck, enc.encode(JSON.stringify(o)));
+    return fromB(iv) + '.' + fromB(new Uint8Array(ct));
+  }
+  async function unseal(t){
+    const p = t.split('.');
+    return JSON.parse(dec.decode(await crypto.subtle.decrypt({name:'AES-GCM', iv:toB(p[0])}, ck, toB(p[1]))));
+  }
+
+  function pageId(){
+    const el = document.getElementById('quiz-data');
+    if(!el) return null;
+    try{ return JSON.parse(el.textContent).id; }catch(e){ return null; }
+  }
+  async function run(){
+    if(busy || frozen) return [];
+    busy = true;
+    const changed = [];
+    try{
+      await ready;
+      const have = {}, puts = [], sent = {};
+      for(const k of Object.keys(meta)){
+        const m = meta[k];
+        if(!m.id) m.id = await kid(k);
+        have[m.id] = m.t || 0;
+        if(m.d){
+          const v = localStorage.getItem(k);
+          if(v === null){ m.d = 0; continue; }
+          puts.push({k: m.id, v: await seal({k, v}), ts: m.t});
+          sent[k] = m.t;
+        }
+      }
+      const r = await fetch(API, {method:'POST', headers:{'content-type':'text/plain'},
+                                  body: JSON.stringify({bucket, have, puts})});
+      if(!r.ok) throw new Error('sync ' + r.status);
+      const j = await r.json();
+      for(const k in sent) if(meta[k].t === sent[k]) meta[k].d = 0;
+      for(const row of j.rows || []){
+        let o; try{ o = await unseal(row.v); }catch(e){ continue; }
+        if(!o || skip(o.k)) continue;
+        const m = meta[o.k] || (meta[o.k] = {t:0});
+        if((m.t || 0) >= row.ts) continue;
+        applying = true;
+        try{ rawSet.call(localStorage, o.k, o.v); }catch(e){}
+        applying = false;
+        m.t = row.ts; m.d = 0; m.h = hash(sig(o.k, o.v)); m.id = row.k;
+        changed.push(o.k);
+      }
+      putMeta();
+    }catch(e){}
+    busy = false;
+    if(changed.length && window.lqSync.live){
+      const id = pageId();
+      const mine = id ? changed.some(k => k === 'lq:' + id || k.indexOf('lq:' + id + ':') === 0)
+                      : !!document.getElementById('manifest');
+      if(mine){ frozen = true; location.reload(); }
+    }
+    return changed;
+  }
+  function wake(){ if(document.visibilityState !== 'hidden') run(); }
+  function leave(){ if(document.visibilityState === 'hidden') run(); }
+  function listen(){
+    document.removeEventListener('visibilitychange', wake); document.addEventListener('visibilitychange', wake);
+    document.removeEventListener('visibilitychange', leave); document.addEventListener('visibilitychange', leave);
+    removeEventListener('focus', wake); addEventListener('focus', wake);
+  }
+  // `live` = this page should reload itself when its own quiz arrives newer. The locked shell
+  // turns it on only after it has drawn the page.
+  window.lqSync = {first: null, now: run, listen, live: true};
+  listen();
+  setInterval(wake, 20000);
+  window.lqSync.first = run();
+})();
+</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -1135,10 +1311,44 @@ function save(){
    the sitting's subchapters into this one function is what makes a half-paper behave exactly
    like a whole one — one direction, one end card, one second pass — with no branch anywhere
    downstream. `only: null` (not chosen, or a page built without parts) filters nothing. */
+/* ---- TAGS (10-12, his ask) ------------------------------------------------------------
+   *"a text box at first, but it functions like a Notion tag property … once I press enter it
+   creates a tag and that tag stays for this exam and only for this exam."* Its own key, like
+   the research box, so a Retake and a rebuild keep them. `defs` is the order he made them in;
+   a tag no question carries any more is dropped from it. Off unless the page was built with
+   `tags`, so every page built before this is what it was. */
+const TKEY = KEY + ':tags';
+let T = (function(){
+  try{ const t = JSON.parse(localStorage.getItem(TKEY) || '{}') || {};
+       return {defs: t.defs || [], q: t.q || {}}; }
+  catch(e){ return {defs:[], q:{}}; } })();
+function tput(){ try{ localStorage.setItem(TKEY, JSON.stringify(T)); }catch(e){} }
+function tagsOf(i){ return T.q[qk(i)] || []; }
+function hasTag(i, name){ return tagsOf(i).indexOf(name) >= 0; }
+function tagAdd(i, raw){
+  const name = String(raw).trim().replace(/\s+/g, ' ');
+  if(!name) return;
+  const known = T.defs.find(d => d.toLowerCase() === name.toLowerCase()) || name;
+  if(T.defs.indexOf(known) < 0) T.defs.push(known);
+  const l = T.q[qk(i)] || (T.q[qk(i)] = []);
+  if(l.indexOf(known) < 0) l.push(known);
+  tput();
+}
+function tagDrop(i, name){
+  const id = qk(i);
+  T.q[id] = (T.q[id] || []).filter(x => x !== name);
+  if(!T.q[id].length) delete T.q[id];
+  if(!Object.keys(T.q).some(k => T.q[k].indexOf(name) >= 0)) T.defs = T.defs.filter(d => d !== name);
+  tput();
+}
+
 function active(s){
-  const only = D.parts ? (s.only || null) : null;
+  // A TAG RUN ("test only these") rides here for the same reason the section filter does.
+  const tf = D.tags ? (s.tagf || null) : null;
+  const only = (D.parts && !tf) ? (s.only || null) : null;
   return D.questions.map((_,i)=>i).filter(i => onPaper(s, i)
-    && (!only || only.indexOf(D.questions[i].sec) >= 0));
+    && (!only || only.indexOf(D.questions[i].sec) >= 0)
+    && (!tf || hasTag(i, tf)));
 }
 /* ---- THE RESERVES (08-16) ------------------------------------------------------------
    His ask: *"if 1 question is skipped, another one is replaced in that section about it… you
@@ -1406,7 +1616,9 @@ function flushFrq(){
 function drawFrq(){
   const box = $('#frqview');
   if(!box || !(D.frq||[]).length) return;
-  let h = '<p class="say">Three written answers, from the same sources as the paper. Write '
+  const NW = D.frq.length, WORDS = ['No','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'];
+  let h = '<p class="say">' + (WORDS[NW] || NW) + ' written answer' + (NW === 1 ? '' : 's')
+        + ', from the same sources as the paper. Write '
         + 'one, then mark it: every point that can be settled by what you wrote is checked '
         + 'for you, and the ones that need judgement are handed back. Click any row to '
         + 'overrule it.</p>';
@@ -1697,7 +1909,7 @@ function draw(){
   // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
   // the rest of the sitting, so nothing about answering, going back or the second pass has
   // to know the picker exists.
-  if(sectioned() && !S.only) return picker();
+  if(sectioned() && !S.only && !S.tagf) return picker();
   const act = runList();
   if(!act.length) return end();
   if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
@@ -1706,6 +1918,61 @@ function draw(){
 
 /* Pure markup, no DOM writes and no state changes — so the same builder can render the
    question and be measured off-screen for the centring reserve. */
+/* The tag box above the question. Chips for what this question carries, then the box: type and
+   Enter makes the tag (or reuses one spelled the same), the ones he already made show under it
+   to click, Backspace on an empty box takes the last one off, Esc leaves. */
+function tagRowInner(i){
+  const mine = tagsOf(i);
+  let h = '';
+  mine.forEach((n,k)=>{ h += '<span class="tchip">' + esc(n) + '<button class="tx" data-drop="' + k
+                           + '" tabindex="-1" aria-label="Remove tag">×</button></span>'; });
+  return h + '<input id="tagin" class="tagin" type="text" autocomplete="off" spellcheck="false" '
+           + 'placeholder="' + (mine.length ? 'Add a tag' : 'Tag this question  ( l )') + '">'
+           + '<div class="tsug hide" id="tsug"></div>';
+}
+function paintSug(i){
+  const inp = $('#tagin'), box = $('#tsug');
+  if(!inp || !box) return;
+  const raw = inp.value.trim(), v = raw.toLowerCase(), mine = tagsOf(i);
+  let h = T.defs.map((d,n)=>({d,n}))
+    .filter(x => mine.indexOf(x.d) < 0 && (!v || x.d.toLowerCase().indexOf(v) >= 0))
+    .map(x => '<button class="tchip pick" data-n="' + x.n + '" tabindex="-1">' + esc(x.d) + '</button>')
+    .join('');
+  if(v && !T.defs.some(d => d.toLowerCase() === v))
+    h += '<span class="tnew">Enter makes “' + esc(raw) + '”</span>';
+  box.innerHTML = h;
+  box.classList.toggle('hide', !h || document.activeElement !== inp);
+  // mousedown, not click: the box must not blur (and hide these) before the pick lands
+  box.querySelectorAll('.pick').forEach(b => { b.onmousedown = e => {
+    e.preventDefault(); tagAdd(i, T.defs[+b.dataset.n]); redrawTags(i, true); }; });
+}
+function redrawTags(i, focus){
+  const row = $('#tagrow');
+  if(!row) return;
+  row.innerHTML = tagRowInner(i);
+  wireTags(i);
+  if(focus) $('#tagin').focus();
+}
+function wireTags(i){
+  const row = $('#tagrow'), inp = $('#tagin');
+  if(!row || !inp) return;
+  row.querySelectorAll('.tx').forEach(b => b.onclick = ()=>{
+    tagDrop(i, tagsOf(i)[+b.dataset.drop]); redrawTags(i, false); });
+  inp.onfocus = ()=> paintSug(i);
+  inp.oninput = ()=> paintSug(i);
+  inp.onblur = ()=> { const b = $('#tsug'); if(b) b.classList.add('hide'); };
+  inp.onkeydown = e => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      if(!inp.value.trim()){ inp.blur(); return; }
+      tagAdd(i, inp.value); redrawTags(i, true);
+    } else if(e.key === 'Escape'){ inp.value = ''; inp.blur(); }
+    else if(e.key === 'Backspace' && !inp.value && tagsOf(i).length){
+      tagDrop(i, tagsOf(i).slice(-1)[0]); redrawTags(i, true);
+    }
+  };
+}
+
 function buildQ(i, picked, fresh, en){
   const q = D.questions[i];
   const answered = picked !== undefined;
@@ -1717,10 +1984,12 @@ function buildQ(i, picked, fresh, en){
   // The counter sits top-left above the question, the way the notebook does it, rather than
   // up in the bar — it belongs with the thing it counts. On a second pass it counts the
   // second pass, so four wrong answers read as "1 / 4" and not as a broken 16.
-  let h = '<div class="qhead' + en + '"><div class="qcol">'
+  let h = (D.tags ? '<div class="tagrow no-read-aloud" id="tagrow">' + tagRowInner(i) + '</div>' : '')
+        + '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta no-read-aloud"><span class="num">' + (pos+1) + ' / '
         + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        + (D.tags && S.tagf ? '<span class="dot">·</span><span>only ' + esc(S.tagf) + '</span>' : '')
         // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
         // 10 reads as the paper having lost his place, which is how he read it.
         + (recycling && S.phase!==2
@@ -1916,6 +2185,7 @@ function question(fresh){
   $('#star').onclick = ()=> toggleStar(i);
   $('#qmark').onclick = ()=> toggleUnsure(i);
   $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
+  if(D.tags) wireTags(i);
 
   // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
   // touches it — and nothing above the options ever changes height.
@@ -2406,19 +2676,32 @@ function openMenu(){
   m.className = 'menu';
   // The clock's only other way in. `w` is not written anywhere else on the page, and a key
   // nothing announces is a key he has to remember he asked for.
-  m.innerHTML = '<button id="skipq">Skip this question</button>'
+  m.innerHTML = '<button id="skipq">Skip this question  ( x )</button>'
               // The reader's own two entries. Space and `v` are written nowhere else on the
               // page, and a key nothing announces is a key he has to remember he asked for.
               + '<button id="readtog">' + (sayOn ? 'Stop' : 'Start') + ' read-aloud  ( space )</button>'
               + '<button id="voiceset">Voice, speed and pauses…</button>'
-              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>';
+              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>'
+              // EVERY KEY, WRITTEN DOWN ONCE (10-12). He could not find Redo or remember its key.
+              + '<div class="keys"><kbd>x</kbd><span>Skip</span><kbd>u</kbd><span>Redo your answer</span>'
+              + '<kbd>h</kbd><span>Hint, when the question has one</span>'
+              + '<kbd>s</kbd><span>Star</span><kbd>/</kbd><span>No idea</span>'
+              + '<kbd>r</kbd><span>Research</span><kbd>f</kbd><span>Fix this question</span>'
+              + '<kbd>t</kbd><span>Reflection</span>'
+              + (D.tags ? '<kbd>l</kbd><span>Tag</span>' : '')
+              + '<kbd>↵</kbd><span>Next</span><kbd>←</kbd><span>Back</span></div>';
   host.appendChild(m);
   m.querySelector('#clocktog').onclick = ()=>{ toggleClock(); closeMenu(); };
   m.querySelector('#readtog').onclick = ()=>{ closeMenu(); sayOn ? sayOff() : sayToggle(); };
   m.querySelector('#voiceset').onclick = ()=>{ closeMenu(); openVset(); };
-  m.querySelector('#skipq').onclick = ()=>{
+  m.querySelector('#skipq').onclick = ()=>{ closeMenu(); skipQuestion(); };
+  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
+}
+/* One path for skipping, whether it came from the menu or from `x` (10-12, his ask: a key
+   *"rather than going into the top bar and then pressing skip"*). */
+function skipQuestion(){
     const list = runList(), pos = list.indexOf(S.i);
-    if(list.length <= 1) return closeMenu();        // never skip the last one standing
+    if(list.length <= 1) return;                    // never skip the last one standing
     const sec = bucketOf(S.i);
     S.skipped[qk(S.i)] = true;
     delete S.answers[qk(S.i)];
@@ -2432,7 +2715,6 @@ function openMenu(){
     // have handed him an end card with a question still owed.
     const filled = promoteReserve(sec) >= 0;
     const wasLast = !filled && pos === list.length - 1;
-    closeMenu();
     syncTabs();
     if(wasLast){ finish(); return; }
     // After the removal the list has shrunk, so the item now AT `pos` is the one that
@@ -2441,8 +2723,6 @@ function openMenu(){
     S.hintOpen = false;
     lastShown = -1;
     save(); question(); window.scrollTo(0,0);
-  };
-  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
 }
 function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(); }
 
@@ -2699,6 +2979,39 @@ function momentum(){
   return h + '</div>';
 }
 
+/* THE TAGS ON THE END CARD: how each group went, and a way to sit one group alone. A tag run
+   is a fresh attempt on only those questions (the finished one goes into history first, as a
+   Retake does); Retake, or "every question" here, goes back to the whole paper. Not offered
+   on a sectioned paper, whose picker already owns which questions a sitting holds. */
+function tagTable(){
+  if(!D.tags || !T.defs.length) return '';
+  const all = D.questions.map((_,i)=>i).filter(i => onPaper(S, i));
+  let h = '';
+  T.defs.forEach((d,n)=>{
+    const qs = all.filter(i => hasTag(i, d));
+    if(!qs.length) return;
+    const sat = qs.filter(i => ans(i) !== undefined || ans2(i) !== undefined);
+    const ok = sat.filter(i => finalRight(i)).length;
+    h += '<div class="tagline"><span class="tchip">' + esc(d) + '</span><span class="tn">'
+       + (sat.length ? ok + ' / ' + sat.length + ' right' : qs.length + ' question' + (qs.length>1?'s':''))
+       + '</span>' + (D.parts ? '' : '<button class="link" data-tagrun="' + n + '">Test only these</button>')
+       + '</div>';
+  });
+  if(!h && !S.tagf) return '';
+  if(S.tagf) h += '<p class="note">This run was only “' + esc(S.tagf) + '”. '
+                + '<button class="link" id="tagall">Back to every question</button></p>';
+  return '<div class="tagtable"><h3>By tag</h3>' + h + '</div>';
+}
+function startRun(tag){
+  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length, ms:S.ms,
+                             tag:S.tagf || undefined});
+  const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
+  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  if(tag) S.tagf = tag;
+  pickSel = null; lastShown = -1;
+  save(); syncTabs(); renderScore(); draw(); window.scrollTo(0,0);
+}
+
 function end(){
   timeOn(null);
   const act = active(S), n = score(S), t = act.length;
@@ -2780,6 +3093,7 @@ function end(){
             + 'every one is done; sitting one again replaces its score.</p>';
   }
 
+  h += tagTable();
   const nskip = Object.keys(S.skipped||{}).length;
   if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
               + '<button class="link" id="unskip">put them back</button></p>';
@@ -2790,6 +3104,10 @@ function end(){
   $('#quizview').innerHTML = h;
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  document.querySelectorAll('[data-tagrun]').forEach(b =>
+    b.onclick = ()=> startRun(T.defs[+b.dataset.tagrun]));
+  const tall = $('#tagall');
+  if(tall) tall.onclick = ()=> startRun(null);
   const ma = $('#momall');
   if(ma) ma.onclick = ()=>{ momAll = true; end(); };
   const m = $('#more');
@@ -2826,6 +3144,7 @@ function itemHTML(i, n){
   const q = D.questions[i], first = ans(i), second = ans2(i);
   let h = '<div class="item">';
   if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
+  if(D.tags) tagsOf(i).forEach(t => { h += '<span class="tchip sm">'+esc(t)+'</span>'; });
   h += '<p class="qq">'+(n===undefined?'':(n+1)+'. ')+esc(q.q)+'</p>'
      + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
   if(!firstRight(i)){
@@ -2842,12 +3161,26 @@ function itemHTML(i, n){
   return h + '</div>';
 }
 
+let revByTag = false;
 function review(){
   timeOn(null);
+  const act = active(S), canSort = D.tags && T.defs.length;
   let h = '<div class="rev"><h3>Every question</h3>';
-  active(S).forEach((i,n)=>{ h += itemHTML(i, n); });
+  if(canSort) h += '<p class="note" style="margin:0 0 6px"><button class="link" id="revsort">'
+                 + (revByTag ? 'Sort in order' : 'Sort by tag') + '</button></p>';
+  if(canSort && revByTag){
+    // a question with two tags is listed under both; the untagged ones come last
+    T.defs.concat(['']).forEach(d=>{
+      const qs = act.filter(i => d ? hasTag(i, d) : !tagsOf(i).length);
+      if(!qs.length) return;
+      h += '<h3 class="tgroup">' + (d ? esc(d) : 'No tag') + ' · ' + qs.length + '</h3>';
+      qs.forEach(i => { h += itemHTML(i, act.indexOf(i)); });
+    });
+  } else act.forEach((i,n)=>{ h += itemHTML(i, n); });
   h += '</div>';
   $('#quizview').innerHTML = h;
+  const rs = $('#revsort');
+  if(rs) rs.onclick = ()=>{ revByTag = !revByTag; review(); };
   $('#band').classList.add('off');
   showResearch(false);
   $('#footer').classList.remove('hide');
@@ -4154,6 +4487,10 @@ document.addEventListener('keydown', e=>{
   // `w` FOR WATCH — the clock in the bar, off by default. Past G like every other command
   // key here, so it can never be an option letter.
   if(e.key === 'w' || e.key === 'W'){ toggleClock(); return; }
+  // `x` SKIPS, `l` (label) PUTS THE CARET IN THE TAG BOX. Both past G, so never an option key.
+  if(e.key === 'x' || e.key === 'X'){ e.preventDefault(); skipQuestion(); return; }
+  if((e.key === 'l' || e.key === 'L') && D.tags){
+    const ti = $('#tagin'); if(ti){ e.preventDefault(); ti.focus(); } return; }
   if(e.key === '/' || e.key === '?'){ e.preventDefault(); toggleUnsure(S.i); return; }
   /* THE KEY NAMES A POSITION ON SCREEN, not an option. `2` and `B` mean the second card he
      can see, which is the only thing either of them could mean to him — after a Redo has

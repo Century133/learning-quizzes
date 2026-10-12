@@ -326,6 +326,32 @@ kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid
 .qmark:hover{background:var(--surface);color:var(--text)}
 .qmark.on{color:var(--text);border-color:var(--accent);background:var(--surface-hi)}
 
+/* ---- tags (10-12): his own labels on a question, kept per quiz ---- */
+.tagrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.tchip{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:.78rem;
+ color:var(--text);background:var(--surface-hi);border:1px solid var(--line);
+ border-radius:6px;padding:2px 8px;line-height:1.5}
+.tchip.sm{font-size:.7rem;margin:0 6px 9px 0}
+button.tchip{cursor:pointer}
+button.tchip:hover{border-color:var(--muted)}
+.tx{background:none;border:0;color:var(--muted);font:inherit;padding:0;cursor:pointer;line-height:1}
+.tx:hover{color:var(--text)}
+.tagin{flex:1 1 140px;min-width:120px;background:none;border:0;outline:0;color:var(--text);
+ font:inherit;font-size:.82rem;padding:3px 2px}
+.tagin::placeholder{color:var(--muted);opacity:.75}
+.tsug{flex:1 0 100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tnew{color:var(--muted);font-size:.76rem}
+.tagtable{margin:26px 0 0;text-align:left}
+.tagtable h3{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+ font-weight:500;margin:0 0 6px}
+.tagline{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line);
+ font-size:.88rem}
+.tagline .tn{flex:1;color:var(--muted);font-variant-numeric:tabular-nums}
+.tgroup{margin-top:30px}
+.menu .keys{border-top:1px solid var(--line);margin:5px 0 0;padding:8px 10px 4px;
+ display:grid;grid-template-columns:auto 1fr;gap:5px 10px;font-size:.78rem;color:var(--muted);
+ align-items:center}
+
 /* ---- the ⋮ menu ---- */
 .more{position:relative;flex:0 0 auto}
 .dots{background:none;border:0;color:var(--muted);font-size:1.15rem;line-height:1;
@@ -452,6 +478,44 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .ptotal{margin:14px 0 0;color:var(--muted);font-size:.88rem}
 .ptotal b{color:var(--text);font-variant-numeric:tabular-nums;font-size:1.05rem;
  font-weight:600;margin-right:8px}
+
+/* ---- MOMENTUM (08-21) ----
+   Same furniture as every other end-card table — same heading, same hairline rows, same
+   rails — because it is one more breakdown of the same sitting and must not read as a
+   dashboard bolted on. The only new shape is the strip, and it is deliberately small: it is
+   there to be glanced at, not measured off.
+
+   IT READS IN GRAYSCALE. A wrong bar is HATCHED as well as coloured, exactly like the wrong
+   half of the score chart above it, so the split survives a screenshot with the colour gone
+   and survives him printing it. */
+.mom .strip{display:flex;align-items:flex-end;gap:2px;height:56px;position:relative;
+ margin:0 0 5px;padding-top:2px}
+.mom .strip .sb{flex:1 1 0;min-width:2px;border-radius:2px 2px 0 0;background:var(--text)}
+.mom .strip .sb.r{background:var(--right)}
+.mom .strip .sb.w{background:var(--wrong);
+ background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,
+ rgba(0,0,0,.45) 3px,rgba(0,0,0,.45) 6px)}
+/* The median, drawn across the strip rather than written under it — the whole question the
+   strip answers is "which of these are the long ones", and a line answers it at a glance. */
+.mom .strip .med{position:absolute;left:0;right:0;height:0;border-top:1px dashed var(--muted);
+ opacity:.55;pointer-events:none}
+.momax{display:flex;justify-content:space-between;color:var(--muted);font-size:.72rem;
+ letter-spacing:.04em;margin:0 0 16px}
+.mline{color:var(--muted);font-size:.88rem;margin:0 0 18px}
+.mline b{color:var(--text);font-variant-numeric:tabular-nums;font-weight:500}
+.mrow{display:grid;grid-template-columns:1.1em 1.7em 1fr auto;gap:5px 10px;align-items:center;
+ padding:8px 0;border-top:1px solid var(--line);font-size:.9rem}
+.mrow .mg{color:var(--muted);font-size:.85rem;user-select:none;-webkit-user-select:none}
+.mrow .mn{color:var(--muted);font-size:.8rem;font-variant-numeric:tabular-nums;text-align:right}
+.mrow .mlab{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mrow .mt{color:var(--muted);font-size:.86rem;font-variant-numeric:tabular-nums}
+/* The rail is `.tbar`, borrowed whole from the tables above. `i.w` is the only addition:
+   time on a question he got wrong gets the same hatch as everything else wrong on the page. */
+.mrow .tbar i.w{background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,
+ rgba(0,0,0,.45) 3px,rgba(0,0,0,.45) 6px)}
+.mmore{margin:12px 0 0;font-size:.85rem}
+.mgoal{margin:16px 0 0;color:var(--muted);font-size:.88rem;max-width:52ch}
+.mgoal b{color:var(--text);font-variant-numeric:tabular-nums;font-weight:500}
 
 /* ---- THE SUBCHAPTER PICKER (08-16) ----
    Deliberately the same furniture as the end card — same heading treatment, same rails, same
@@ -907,7 +971,157 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "psp-7-1", "title": "7.1 The Many Varieties of Conformity", "subtitle": "Chapter 7 · Influencing and Conforming", "book": "PSP", "hash": "d488f8f21501bd20", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "In the study by Chartrand and Bargh, what was the primary behavioral outcome for participants who worked on a task with a stranger who occasionally rubbed their face or shook their foot?", "options": ["The participants became distracted by the movements and performed significantly worse on the primary task of discussing photographs.", "The participants perceived the behaviors as a lack of social coordination and reported liking the stranger less as a result.", "The participants noticed the unusual physical behaviors and consciously mirrored them to make the stranger feel more comfortable.", "The participants began to perform the same face-rubbing or foot-shaking behaviors without realizing they were doing so."], "rationales": ["The research focused on the social coordination and liking outcomes rather than any interference with the cognitive performance of the task.", "The study actually found that mimicry increases liking and makes social interactions feel smoother to the participants involved.", "While mimicry does build rapport, participants in this study reported no awareness of the stranger's behaviors or their own imitation.", "Research into the chameleon effect shows that people spontaneously and unconsciously imitate the mannerisms of those they are interacting with."], "correct": 3, "hint": "consider the level of awareness people have when imitating the physical movements of strangers.", "topic": "Spontaneous mimicry", "sec": "", "src": "", "link": "", "qid": "baef55d857"}, {"q": "A college student chooses a specific formal gown because she values her friends' superior judgment on fashion, and she remains convinced it was the best choice even when her friends are not around. Which combination of influence and psychological result does this scenario demonstrate?", "options": ["Informational influence and private acceptance", "Normative influence and private acceptance", "Informational influence and public conformity", "Normative influence and public conformity"], "rationales": ["Informational conformity occurs when we look to others for accurate knowledge, resulting in a genuine change in our own private beliefs.", "Normative influence is driven by a desire to be liked rather than a search for valid information or accurate judgment.", "While the influence is based on a desire for accuracy, public conformity would imply the student only pretends to like the gown to fit in.", "This combination describes a superficial change in behavior to avoid rejection, without a corresponding change in the student's actual opinion."], "correct": 0, "hint": "identify the goal of the student and whether her actual beliefs changed.", "topic": "Varieties of conformity", "sec": "", "src": "", "link": "", "qid": "c69f2dba49"}, {"q": "In Muzafer Sherif's study using the autokinetic effect, what happened to the participants' estimates of light movement after the group sessions were over and they were tested alone again?", "options": ["They continued to follow the group norm they had developed rather than returning to their original individual estimates.", "They reported that the light had stopped moving entirely once they were no longer influenced by the opinions of others.", "They became more confused and their estimates became highly erratic without the guidance of other group members.", "They immediately reverted to their initial personal estimates because the group influence was only a result of public conformity."], "rationales": ["The study demonstrated private acceptance, as the shared group norms persisted even when the social pressure of the group was removed.", "The autokinetic effect is a persistent perceptual phenomenon, and the focus of the study was the convergence of estimates, not the cessation of the effect.", "Participants did not become erratic; they maintained the stable, shared norms that had emerged during the social interaction phase.", "Unlike normative conformity, the informational influence in this ambiguous task led to long-lasting changes in private opinion."], "correct": 0, "hint": "consider whether the influence of the group was a temporary behavioral change or a lasting internal shift.", "topic": "Group norms", "sec": "", "src": "", "link": "", "qid": "c3d97e2575"}, {"q": "According to the follow-up studies conducted by Solomon Asch and others, how is a participant's level of conformity affected when the unanimity of the majority is broken by a single dissenter?", "options": ["Conformity increases because the participant feels a greater need to support the majority in the face of multiple conflicting opinions.", "Conformity only decreases if the dissenter provides the objectively correct answer that the participant was already considering.", "Conformity decreases sharply regardless of whether the dissenter gives the correct answer or a different incorrect answer.", "Conformity remains unchanged because the participant still perceives the majority group as a single, powerful unit of influence."], "rationales": ["Inconsistency within the majority actually validates the participant's own potential for disagreement, making them less likely to conform.", "Research shows that even a dissenter who gives a different wrong answer provides enough social support to reduce conformity to the majority.", "The presence of any ally or different opinion reduces the social pressure of being the lone individual standing against a unanimous group.", "The shift from a unanimous majority to a divided one significantly changes the participant's perception of the group's validity and social pressure."], "correct": 2, "hint": "think about what happens to social pressure when the majority is no longer in complete agreement.", "topic": "Unanimity of the majority", "sec": "", "src": "", "link": "", "qid": "269ec3b59f"}, {"q": "In Moscovici's research regarding blue and green slides, which specific conditions and results were observed during the experimental trials?", "options": ["A consistent minority produced conformity in the majority participants.", "An inconsistent minority produced no change in the majority participants.", "A consistent minority produced no change in the majority participants.", "An inconsistent minority produced conformity in the majority participants."], "rationales": ["Moscovici found that a minority of two could influence a majority of four, but only if they were unanimous and consistent in their responses.", "While this statement is factually true according to the study, it does not represent the primary finding that a consistent minority can produce change.", "The study showed that consistency allowed the minority to successfully influence the majority's color judgments in 18 percent of the trials.", "The inconsistent minority, who only gave the unusual response two-thirds of the time, had virtually no influence on the majority's answers."], "correct": 0, "hint": "focus on the pattern of behavior required for a small group to successfully change the views of a larger one.", "topic": "Minority influence", "sec": "", "src": "", "link": "", "qid": "5d6ec5f29a"}, {"q": "In the study by Baron, Vandello, and Brunsman, which combination of factors resulted in the highest levels of conformity as participants performed an eyewitness identification task?", "options": ["High task difficulty and low task importance.", "Low task difficulty and high task importance.", "Low task difficulty and low task importance.", "High task difficulty and high task importance."], "rationales": ["On a difficult task where the outcome doesn't matter much, participants conformed less than when the task was perceived as critical.", "When a task is easy and important, people rely more on their own certain judgments to ensure they get the answer right.", "In this condition, people conformed at a moderate level, likely because they didn't feel a strong need to either be perfectly accurate or stand out.", "When a task is hard and the stakes are high, individuals feel less confident in their own views and look to the group as a source of accurate information."], "correct": 3, "hint": "consider when a person would be most motivated to use others' opinions to ensure their own accuracy.", "topic": "Task importance", "sec": "", "src": "", "link": "", "qid": "57e2d757cc"}, {"q": "Based on the findings of Milgram's study on the streets of New York, how does the influence of a crowd change as its size increases from a small group to a larger one?", "options": ["The social impact of each member remains constant regardless of the total size of the group on the sidewalk.", "The rate at which passersby look up increases linearly for every additional person added to the crowd up to fifteen.", "The addition of new members to the majority has a smaller impact on conformity as the group size gets larger.", "The crowd loses its ability to influence others once it exceeds ten people because it is perceived as an unorganized mass."], "rationales": ["The first members of a group are seen as separate individuals with unique opinions, whereas later members are merged into the group identity.", "The effect is not linear; adding the first few people causes a massive spike, but later additions cause much smaller increases.", "Social impact theory suggests that the influence of each additional person diminishes once the crowd reaches about five or six people.", "The influence does not disappear; it simply levels off because the crowd is perceived as a single entity regardless of further increases."], "correct": 2, "hint": "think about whether the 10th person in a crowd adds as much pressure as the 2nd person did.", "topic": "Size of the majority", "sec": "", "src": "", "link": "", "qid": "7f2158cda6"}, {"q": "In the experiment by Nemeth and Kwan where participants identified words in letter strings, how did the presence of a minority dissent affect the thinking of the majority members?", "options": ["The majority members became defensive and focused more strictly on the most obvious, traditional responses.", "The majority members began to think more fully about the task and generated more creative, novel solutions.", "The majority members quickly adopted the minority's specific answer without engaging in any deeper analysis.", "The majority members only improved their performance if the novel response was supported by the majority of the group."], "rationales": ["The research found that exposure to a minority's novel idea actually expanded the range of thought for the majority rather than narrowing it.", "Dissent from a minority can stimulate more divergent and innovative thinking in the majority, even on unrelated subsequent tasks.", "The effect was not a simple copying of the minority's answer, but an increase in the majority's own creative problem-solving abilities.", "The study specifically found that novel solutions from a majority did not produce the same increase in creative thinking as those from a minority."], "correct": 1, "hint": "focus on the cognitive outcomes that occur when a majority is forced to consider a dissenting perspective.", "topic": "Minority influence", "sec": "", "src": "", "link": "", "qid": "3aa687eb5f"}, {"q": "According to the research conducted by Cialdini and his colleagues on littering, under which condition were college students least likely to throw litter on the ground?", "options": ["When they were told by an authority figure that littering was prohibited in that specific area.", "When they had just observed another person throw paper on the ground without receiving a penalty.", "When they were in a clean environment and had not observed anyone else's behavior at all.", "When they had just observed another person pick up litter and throw it into a trash can."], "rationales": ["The study focused on the passive and spontaneous effects of following the behavior of others rather than active compliance with rules.", "Seeing someone else litter actually increases the likelihood that the observer will also litter through spontaneous imitation.", "While a clean environment helps, the presence of a person actively modeling the 'correct' behavior was the strongest deterrent.", "This situation models prosocial behavior, leading to spontaneous conformity to the norm of keeping the environment clean."], "correct": 3, "hint": "consider the impact of seeing someone else actively follow a social norm.", "topic": "Passive conformity", "sec": "", "src": "", "link": "", "qid": "d45f95b8fe"}, {"q": "If a group member conforms to a norm because they genuinely believe the others possess accurate information, what is the most likely result for that individual's behavior when they are alone later?", "options": ["They will stop following the norm because they only conformed to avoid being seen as different while the group was present.", "They will experience distress and attempt to find a different group to validate their original, non-conforming views.", "They will revert to their previous behavior because the informational influence only lasts as long as they feel uncertain.", "They will continue to follow the norm because they have experienced private acceptance of the new belief."], "rationales": ["This describes public conformity, which typically follows normative influence rather than a search for accurate information.", "Distress is typically associated with failing to coordinate or failing to be accepted (normative), not with adopting accurate information.", "Once informational influence has led to an appraisal of reality, the resulting beliefs tend to be stable and long-lasting.", "Informational influence changes an individual's underlying opinions, meaning the behavior no longer depends on the group's presence."], "correct": 3, "hint": "think about the difference between changing your mind and just changing your actions for a audience.", "topic": "Private acceptance", "sec": "", "src": "", "link": "", "qid": "136c55f220"}, {"q": "Which set of characteristics makes a minority most effective at producing true, lasting attitude change in a majority group?", "options": ["Changing their position frequently to show they are open-minded and responding to the majority's feedback.", "Expressing consistent opinions over time and appearing to act out of core principles rather than ulterior motives.", "Using a rigid and inflexible style on all issues while keeping their motives and personal sacrifices hidden from the group.", "Conforming to the majority on most trials and only offering a dissenting opinion at the very end of the interaction."], "rationales": ["An inconsistent minority has virtually no influence; consistency is the primary variable that allows a minority to be effective.", "Success for minorities depends on signaling a deep investment in their position through consistency and personal sacrifice.", "While consistency on core arguments is key, successful minorities are often flexible on less critical issues and visible in their sacrifices.", "The minority must be consistent throughout the process to create the social comparison and deep thinking required for influence."], "correct": 1, "hint": "identify the behaviors that demonstrate a minority is truly committed to their position.", "topic": "Minority influence", "sec": "", "src": "", "link": "", "qid": "377079c88f"}, {"q": "How is the process of social comparison related to the occurrence of informational conformity?", "options": ["We compare the number of people in the majority with the number in the minority to decide which group to join for safety.", "We monitor others to ensure our public behavior matches the group norm even when we privately disagree with it.", "We observe others to determine if they are likely to reject us for our views, causing us to remain silent.", "We compare our opinions with those of others to gain an accurate appraisal of reality, which can lead us to adopt their views."], "rationales": ["While group size matters, social comparison specifically refers to evaluating the validity and accuracy of beliefs and behaviors.", "This process is more closely linked to normative influence and the desire for social acceptance rather than informational accuracy.", "Silence to avoid rejection is a feature of normative conformity, not the search for valid knowledge through social comparison.", "Social comparison is the mechanism through which we verify our subjective views, leading to a change in opinion to be more accurate."], "correct": 3, "hint": "consider why someone would look at others' opinions when they aren't sure of their own.", "topic": "Social comparison", "sec": "", "src": "", "link": "", "qid": "faa6919586"}], "hasSheet": true, "parts": false, "secTitles": {}, "reserve": 2, "frq": [], "notebook": "https://notebooklm.google.com/notebook/5440f088-02f5-4056-87b7-a29fd0837970/artifact/5a2cc287-8d91-48d1-8ba6-f40f4c693678", "root": "../index.html", "tab": "quiz", "sheet": "## Spontaneous mimicry\nSpontaneous mimicry occurs when individuals unintentionally imitate the behaviors, postures, or mannerisms of those around them without conscious awareness.\n\n### Key terms\n- **Spontaneous mimicry (or the chameleon effect)**: The automatic tendency to follow the behavior of others, occurring entirely outside of an individual's awareness via a perception-behavior link.\n   example — mimicking face rubbing or foot shaking.\n\n### Names and studies\n- **Robert Cialdini et al. (1990)**: Observed littering behavior in college students, finding they were more likely to litter after seeing someone else do so; however, they were least likely to litter when they saw another person pick up paper and throw it into a trash can.\n- **Tanya Chartrand and John Bargh (1999)**: Demonstrated that participants working with confederates unconsciously mimicked specific, unusual behaviors such as rubbing their faces or shaking their feet.\n- **Chartrand and Bargh (1999) [Experiment 2]**: Found that when confederates mirrored participants' posture and movements, the participants liked the confederates more and perceived the social interaction as being smoother.\n\n## Varieties of conformity\nConformity is primarily driven by two distinct motivations: the desire for accurate information and the desire for social acceptance.\n\n### Key terms\n- **Informational conformity**: Changing behavior or opinions because we believe others possess accurate information or more expertise.\n   1. example — following a weatherman's advice to wear a coat.\n- **Normative conformity**: Expressing opinions or behaving in specific ways to be accepted or avoid being isolated or rejected by a group.\n   1. example — smoking cigarettes to impress friends.\n- **Public conformity**: A superficial change in behavior or expressed opinions without a corresponding change in one's private beliefs.\n   1. example — obeying a speed limit despite disagreeing with it.\n\n## Group norms\nGroup norms involve the development of socially accepted beliefs and behaviors that emerge through shared perspectives within a specific context.\n\n### Key terms\n- **Social norms**: Socially accepted beliefs regarding what should be done or how one should behave in specific social situations.\n- **Autokinetic effect**: A perceptual phenomenon where a stationary point of light in a dark room appears to move due to small, involuntary eye movements.\n\n### Names and studies\n- **Muzafer Sherif (1936)**: Asked students to estimate light movement alone and then in groups, demonstrating that individual judgments converged into a single, shared group norm over time.\n\n## Unanimity of the majority\nThe level of consistency and complete agreement among a majority group significantly dictates the amount of social pressure exerted on an individual.\n\n### Key terms\n- **Unanimity**: The condition of complete, 100% agreement among all members of a majority group.\n- **Supporter (or Ally)**: An individual who breaks the majority's agreement, thereby reducing the pressure on the target and validating their own opinion.\n\n### Names and studies\n- **Solomon Asch (Follow-up)**: Increased the number of confederates to 16 but included one person who gave the correct answer, which caused conformity rates to drop to only 5%.\n- **Allen & Levine (1968)**: Showed that conformity is significantly reduced even if the dissenting confederate gives a different incorrect answer than the majority, as any inconsistency breaks the pressure of unanimity.\n\n## Minority influence\nMinority influence occurs when a smaller number of individuals in a group manage to prevail and change the beliefs of the larger majority.\n\n### Key terms\n- **Minority influence**: Instances where the beliefs held by the smaller number of individuals in a current social group prevail.\n\n### Names and studies\n- **Serge Moscovici et al. (1969)**: Had two confederates consistently call blue slides \"green\" in a group of six, showing that a consistent, unanimous minority could influence the majority's responses.\n- **Nemeth and Kwan (1987)**: Gave participants false feedback that a minority saw the word \"god\" in the string \"tdogto,\" which led the majority to engage in more creative, novel thinking, such as finding words made backward or using random letter orders.\n\n## Task importance\nThe impact of social influence depends on the interaction between the perceived significance of a decision and the difficulty of the task.\n\n### Key terms\n- **Task importance**: The perceived level of consequence or value an individual attaches to making a correct decision.\n\n### Names and studies\n- **Baron, Vandello, and Brunsman (1996)**: Manipulated the importance and difficulty of an eyewitness identification task, finding that importance increases conformity on difficult tasks but decreases it on easy ones.\n\n## Size of the majority\nThe number of people in a group influences the likelihood of others joining them, though the impact of adding new members eventually levels off.\n\n### Key terms\n- **Social impact**: The increase in conformity produced by adding new members to a group, which typically provides diminishing returns after the first few members.\n\n### Names and studies\n- **Solomon Asch (Size Variation)**: Varied the number of confederates from 1 to 16, showing that while conformity increases with size, the effect levels off after a certain point.\n- **Stanley Milgram et al. (1969)**: Observed groups looking up at a window in New York City, demonstrating that the influence on passersby increases with crowd size but levels off after the group reaches about six members.\n\n## Passive conformity\nPassive conformity refers to behavioral or preference changes that occur automatically and without any conscious intent or effort from others.\n\n### Key terms\n- **Passive conformity**: The spontaneous and automatic change of preferences or behaviors influenced by the social environment.\n   1. example — learning to like a roommate's music because it is frequently played.\n\n## Private acceptance\nPrivate acceptance involves a genuine, internal shift in personal beliefs that persists even when social pressure is removed.\n\n### Key terms\n- **Private acceptance**: A real and long-lasting change in an individual's private opinions, often resulting from informational influence.\n\n### Names and studies\n- **Muzafer Sherif (1936) [Persistence]**: Demonstrated that group norms created in his study were long-lasting, persisting through several \"generations\" of group members and for up to one year after testing.\n\n## Social comparison\nSocial comparison is the cognitive process individuals use to evaluate the validity of their own beliefs against the opinions of others.\n\n### Key terms\n- **Social comparison**: The process of comparing our opinions with those of others to gain an accurate appraisal of reality."}</script>
+<script id="quiz-data" type="application/json">{"id": "psp-7-1", "title": "7.1 The Many Varieties of Conformity", "subtitle": "Chapter 7 · Influencing and Conforming", "book": "PSP", "hash": "d488f8f21501bd20", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "In the study by Chartrand and Bargh, what was the primary behavioral outcome for participants who worked on a task with a stranger who occasionally rubbed their face or shook their foot?", "options": ["The participants became distracted by the movements and performed significantly worse on the primary task of discussing photographs.", "The participants perceived the behaviors as a lack of social coordination and reported liking the stranger less as a result.", "The participants noticed the unusual physical behaviors and consciously mirrored them to make the stranger feel more comfortable.", "The participants began to perform the same face-rubbing or foot-shaking behaviors without realizing they were doing so."], "rationales": ["The research focused on the social coordination and liking outcomes rather than any interference with the cognitive performance of the task.", "The study actually found that mimicry increases liking and makes social interactions feel smoother to the participants involved.", "While mimicry does build rapport, participants in this study reported no awareness of the stranger's behaviors or their own imitation.", "Research into the chameleon effect shows that people spontaneously and unconsciously imitate the mannerisms of those they are interacting with."], "correct": 3, "hint": "consider the level of awareness people have when imitating the physical movements of strangers.", "topic": "Spontaneous mimicry", "sec": "", "src": "", "link": "", "qid": "baef55d857"}, {"q": "A college student chooses a specific formal gown because she values her friends' superior judgment on fashion, and she remains convinced it was the best choice even when her friends are not around. Which combination of influence and psychological result does this scenario demonstrate?", "options": ["Informational influence and private acceptance", "Normative influence and private acceptance", "Informational influence and public conformity", "Normative influence and public conformity"], "rationales": ["Informational conformity occurs when we look to others for accurate knowledge, resulting in a genuine change in our own private beliefs.", "Normative influence is driven by a desire to be liked rather than a search for valid information or accurate judgment.", "While the influence is based on a desire for accuracy, public conformity would imply the student only pretends to like the gown to fit in.", "This combination describes a superficial change in behavior to avoid rejection, without a corresponding change in the student's actual opinion."], "correct": 0, "hint": "identify the goal of the student and whether her actual beliefs changed.", "topic": "Varieties of conformity", "sec": "", "src": "", "link": "", "qid": "c69f2dba49"}, {"q": "In Muzafer Sherif's study using the autokinetic effect, what happened to the participants' estimates of light movement after the group sessions were over and they were tested alone again?", "options": ["They continued to follow the group norm they had developed rather than returning to their original individual estimates.", "They reported that the light had stopped moving entirely once they were no longer influenced by the opinions of others.", "They became more confused and their estimates became highly erratic without the guidance of other group members.", "They immediately reverted to their initial personal estimates because the group influence was only a result of public conformity."], "rationales": ["The study demonstrated private acceptance, as the shared group norms persisted even when the social pressure of the group was removed.", "The autokinetic effect is a persistent perceptual phenomenon, and the focus of the study was the convergence of estimates, not the cessation of the effect.", "Participants did not become erratic; they maintained the stable, shared norms that had emerged during the social interaction phase.", "Unlike normative conformity, the informational influence in this ambiguous task led to long-lasting changes in private opinion."], "correct": 0, "hint": "consider whether the influence of the group was a temporary behavioral change or a lasting internal shift.", "topic": "Group norms", "sec": "", "src": "", "link": "", "qid": "c3d97e2575"}, {"q": "According to the follow-up studies conducted by Solomon Asch and others, how is a participant's level of conformity affected when the unanimity of the majority is broken by a single dissenter?", "options": ["Conformity increases because the participant feels a greater need to support the majority in the face of multiple conflicting opinions.", "Conformity only decreases if the dissenter provides the objectively correct answer that the participant was already considering.", "Conformity decreases sharply regardless of whether the dissenter gives the correct answer or a different incorrect answer.", "Conformity remains unchanged because the participant still perceives the majority group as a single, powerful unit of influence."], "rationales": ["Inconsistency within the majority actually validates the participant's own potential for disagreement, making them less likely to conform.", "Research shows that even a dissenter who gives a different wrong answer provides enough social support to reduce conformity to the majority.", "The presence of any ally or different opinion reduces the social pressure of being the lone individual standing against a unanimous group.", "The shift from a unanimous majority to a divided one significantly changes the participant's perception of the group's validity and social pressure."], "correct": 2, "hint": "think about what happens to social pressure when the majority is no longer in complete agreement.", "topic": "Unanimity of the majority", "sec": "", "src": "", "link": "", "qid": "269ec3b59f"}, {"q": "In Moscovici's research regarding blue and green slides, which specific conditions and results were observed during the experimental trials?", "options": ["A consistent minority produced conformity in the majority participants.", "An inconsistent minority produced no change in the majority participants.", "A consistent minority produced no change in the majority participants.", "An inconsistent minority produced conformity in the majority participants."], "rationales": ["Moscovici found that a minority of two could influence a majority of four, but only if they were unanimous and consistent in their responses.", "While this statement is factually true according to the study, it does not represent the primary finding that a consistent minority can produce change.", "The study showed that consistency allowed the minority to successfully influence the majority's color judgments in 18 percent of the trials.", "The inconsistent minority, who only gave the unusual response two-thirds of the time, had virtually no influence on the majority's answers."], "correct": 0, "hint": "focus on the pattern of behavior required for a small group to successfully change the views of a larger one.", "topic": "Minority influence", "sec": "", "src": "", "link": "", "qid": "5d6ec5f29a"}, {"q": "In the study by Baron, Vandello, and Brunsman, which combination of factors resulted in the highest levels of conformity as participants performed an eyewitness identification task?", "options": ["High task difficulty and low task importance.", "Low task difficulty and high task importance.", "Low task difficulty and low task importance.", "High task difficulty and high task importance."], "rationales": ["On a difficult task where the outcome doesn't matter much, participants conformed less than when the task was perceived as critical.", "When a task is easy and important, people rely more on their own certain judgments to ensure they get the answer right.", "In this condition, people conformed at a moderate level, likely because they didn't feel a strong need to either be perfectly accurate or stand out.", "When a task is hard and the stakes are high, individuals feel less confident in their own views and look to the group as a source of accurate information."], "correct": 3, "hint": "consider when a person would be most motivated to use others' opinions to ensure their own accuracy.", "topic": "Task importance", "sec": "", "src": "", "link": "", "qid": "57e2d757cc"}, {"q": "Based on the findings of Milgram's study on the streets of New York, how does the influence of a crowd change as its size increases from a small group to a larger one?", "options": ["The social impact of each member remains constant regardless of the total size of the group on the sidewalk.", "The rate at which passersby look up increases linearly for every additional person added to the crowd up to fifteen.", "The addition of new members to the majority has a smaller impact on conformity as the group size gets larger.", "The crowd loses its ability to influence others once it exceeds ten people because it is perceived as an unorganized mass."], "rationales": ["The first members of a group are seen as separate individuals with unique opinions, whereas later members are merged into the group identity.", "The effect is not linear; adding the first few people causes a massive spike, but later additions cause much smaller increases.", "Social impact theory suggests that the influence of each additional person diminishes once the crowd reaches about five or six people.", "The influence does not disappear; it simply levels off because the crowd is perceived as a single entity regardless of further increases."], "correct": 2, "hint": "think about whether the 10th person in a crowd adds as much pressure as the 2nd person did.", "topic": "Size of the majority", "sec": "", "src": "", "link": "", "qid": "7f2158cda6"}, {"q": "In the experiment by Nemeth and Kwan where participants identified words in letter strings, how did the presence of a minority dissent affect the thinking of the majority members?", "options": ["The majority members became defensive and focused more strictly on the most obvious, traditional responses.", "The majority members began to think more fully about the task and generated more creative, novel solutions.", "The majority members quickly adopted the minority's specific answer without engaging in any deeper analysis.", "The majority members only improved their performance if the novel response was supported by the majority of the group."], "rationales": ["The research found that exposure to a minority's novel idea actually expanded the range of thought for the majority rather than narrowing it.", "Dissent from a minority can stimulate more divergent and innovative thinking in the majority, even on unrelated subsequent tasks.", "The effect was not a simple copying of the minority's answer, but an increase in the majority's own creative problem-solving abilities.", "The study specifically found that novel solutions from a majority did not produce the same increase in creative thinking as those from a minority."], "correct": 1, "hint": "focus on the cognitive outcomes that occur when a majority is forced to consider a dissenting perspective.", "topic": "Minority influence", "sec": "", "src": "", "link": "", "qid": "3aa687eb5f"}, {"q": "According to the research conducted by Cialdini and his colleagues on littering, under which condition were college students least likely to throw litter on the ground?", "options": ["When they were told by an authority figure that littering was prohibited in that specific area.", "When they had just observed another person throw paper on the ground without receiving a penalty.", "When they were in a clean environment and had not observed anyone else's behavior at all.", "When they had just observed another person pick up litter and throw it into a trash can."], "rationales": ["The study focused on the passive and spontaneous effects of following the behavior of others rather than active compliance with rules.", "Seeing someone else litter actually increases the likelihood that the observer will also litter through spontaneous imitation.", "While a clean environment helps, the presence of a person actively modeling the 'correct' behavior was the strongest deterrent.", "This situation models prosocial behavior, leading to spontaneous conformity to the norm of keeping the environment clean."], "correct": 3, "hint": "consider the impact of seeing someone else actively follow a social norm.", "topic": "Passive conformity", "sec": "", "src": "", "link": "", "qid": "d45f95b8fe"}, {"q": "If a group member conforms to a norm because they genuinely believe the others possess accurate information, what is the most likely result for that individual's behavior when they are alone later?", "options": ["They will stop following the norm because they only conformed to avoid being seen as different while the group was present.", "They will experience distress and attempt to find a different group to validate their original, non-conforming views.", "They will revert to their previous behavior because the informational influence only lasts as long as they feel uncertain.", "They will continue to follow the norm because they have experienced private acceptance of the new belief."], "rationales": ["This describes public conformity, which typically follows normative influence rather than a search for accurate information.", "Distress is typically associated with failing to coordinate or failing to be accepted (normative), not with adopting accurate information.", "Once informational influence has led to an appraisal of reality, the resulting beliefs tend to be stable and long-lasting.", "Informational influence changes an individual's underlying opinions, meaning the behavior no longer depends on the group's presence."], "correct": 3, "hint": "think about the difference between changing your mind and just changing your actions for a audience.", "topic": "Private acceptance", "sec": "", "src": "", "link": "", "qid": "136c55f220"}, {"q": "Which set of characteristics makes a minority most effective at producing true, lasting attitude change in a majority group?", "options": ["Changing their position frequently to show they are open-minded and responding to the majority's feedback.", "Expressing consistent opinions over time and appearing to act out of core principles rather than ulterior motives.", "Using a rigid and inflexible style on all issues while keeping their motives and personal sacrifices hidden from the group.", "Conforming to the majority on most trials and only offering a dissenting opinion at the very end of the interaction."], "rationales": ["An inconsistent minority has virtually no influence; consistency is the primary variable that allows a minority to be effective.", "Success for minorities depends on signaling a deep investment in their position through consistency and personal sacrifice.", "While consistency on core arguments is key, successful minorities are often flexible on less critical issues and visible in their sacrifices.", "The minority must be consistent throughout the process to create the social comparison and deep thinking required for influence."], "correct": 1, "hint": "identify the behaviors that demonstrate a minority is truly committed to their position.", "topic": "Minority influence", "sec": "", "src": "", "link": "", "qid": "377079c88f"}, {"q": "How is the process of social comparison related to the occurrence of informational conformity?", "options": ["We compare the number of people in the majority with the number in the minority to decide which group to join for safety.", "We monitor others to ensure our public behavior matches the group norm even when we privately disagree with it.", "We observe others to determine if they are likely to reject us for our views, causing us to remain silent.", "We compare our opinions with those of others to gain an accurate appraisal of reality, which can lead us to adopt their views."], "rationales": ["While group size matters, social comparison specifically refers to evaluating the validity and accuracy of beliefs and behaviors.", "This process is more closely linked to normative influence and the desire for social acceptance rather than informational accuracy.", "Silence to avoid rejection is a feature of normative conformity, not the search for valid knowledge through social comparison.", "Social comparison is the mechanism through which we verify our subjective views, leading to a change in opinion to be more accurate."], "correct": 3, "hint": "consider why someone would look at others' opinions when they aren't sure of their own.", "topic": "Social comparison", "sec": "", "src": "", "link": "", "qid": "faa6919586"}], "hasSheet": true, "parts": false, "secTitles": {}, "reserve": 2, "tags": false, "frq": [], "notebook": "https://notebooklm.google.com/notebook/5440f088-02f5-4056-87b7-a29fd0837970/artifact/5a2cc287-8d91-48d1-8ba6-f40f4c693678", "root": "../index.html", "tab": "quiz", "sheet": "## Spontaneous mimicry\nSpontaneous mimicry occurs when individuals unintentionally imitate the behaviors, postures, or mannerisms of those around them without conscious awareness.\n\n### Key terms\n- **Spontaneous mimicry (or the chameleon effect)**: The automatic tendency to follow the behavior of others, occurring entirely outside of an individual's awareness via a perception-behavior link.\n   example — mimicking face rubbing or foot shaking.\n\n### Names and studies\n- **Robert Cialdini et al. (1990)**: Observed littering behavior in college students, finding they were more likely to litter after seeing someone else do so; however, they were least likely to litter when they saw another person pick up paper and throw it into a trash can.\n- **Tanya Chartrand and John Bargh (1999)**: Demonstrated that participants working with confederates unconsciously mimicked specific, unusual behaviors such as rubbing their faces or shaking their feet.\n- **Chartrand and Bargh (1999) [Experiment 2]**: Found that when confederates mirrored participants' posture and movements, the participants liked the confederates more and perceived the social interaction as being smoother.\n\n## Varieties of conformity\nConformity is primarily driven by two distinct motivations: the desire for accurate information and the desire for social acceptance.\n\n### Key terms\n- **Informational conformity**: Changing behavior or opinions because we believe others possess accurate information or more expertise.\n   1. example — following a weatherman's advice to wear a coat.\n- **Normative conformity**: Expressing opinions or behaving in specific ways to be accepted or avoid being isolated or rejected by a group.\n   1. example — smoking cigarettes to impress friends.\n- **Public conformity**: A superficial change in behavior or expressed opinions without a corresponding change in one's private beliefs.\n   1. example — obeying a speed limit despite disagreeing with it.\n\n## Group norms\nGroup norms involve the development of socially accepted beliefs and behaviors that emerge through shared perspectives within a specific context.\n\n### Key terms\n- **Social norms**: Socially accepted beliefs regarding what should be done or how one should behave in specific social situations.\n- **Autokinetic effect**: A perceptual phenomenon where a stationary point of light in a dark room appears to move due to small, involuntary eye movements.\n\n### Names and studies\n- **Muzafer Sherif (1936)**: Asked students to estimate light movement alone and then in groups, demonstrating that individual judgments converged into a single, shared group norm over time.\n\n## Unanimity of the majority\nThe level of consistency and complete agreement among a majority group significantly dictates the amount of social pressure exerted on an individual.\n\n### Key terms\n- **Unanimity**: The condition of complete, 100% agreement among all members of a majority group.\n- **Supporter (or Ally)**: An individual who breaks the majority's agreement, thereby reducing the pressure on the target and validating their own opinion.\n\n### Names and studies\n- **Solomon Asch (Follow-up)**: Increased the number of confederates to 16 but included one person who gave the correct answer, which caused conformity rates to drop to only 5%.\n- **Allen & Levine (1968)**: Showed that conformity is significantly reduced even if the dissenting confederate gives a different incorrect answer than the majority, as any inconsistency breaks the pressure of unanimity.\n\n## Minority influence\nMinority influence occurs when a smaller number of individuals in a group manage to prevail and change the beliefs of the larger majority.\n\n### Key terms\n- **Minority influence**: Instances where the beliefs held by the smaller number of individuals in a current social group prevail.\n\n### Names and studies\n- **Serge Moscovici et al. (1969)**: Had two confederates consistently call blue slides \"green\" in a group of six, showing that a consistent, unanimous minority could influence the majority's responses.\n- **Nemeth and Kwan (1987)**: Gave participants false feedback that a minority saw the word \"god\" in the string \"tdogto,\" which led the majority to engage in more creative, novel thinking, such as finding words made backward or using random letter orders.\n\n## Task importance\nThe impact of social influence depends on the interaction between the perceived significance of a decision and the difficulty of the task.\n\n### Key terms\n- **Task importance**: The perceived level of consequence or value an individual attaches to making a correct decision.\n\n### Names and studies\n- **Baron, Vandello, and Brunsman (1996)**: Manipulated the importance and difficulty of an eyewitness identification task, finding that importance increases conformity on difficult tasks but decreases it on easy ones.\n\n## Size of the majority\nThe number of people in a group influences the likelihood of others joining them, though the impact of adding new members eventually levels off.\n\n### Key terms\n- **Social impact**: The increase in conformity produced by adding new members to a group, which typically provides diminishing returns after the first few members.\n\n### Names and studies\n- **Solomon Asch (Size Variation)**: Varied the number of confederates from 1 to 16, showing that while conformity increases with size, the effect levels off after a certain point.\n- **Stanley Milgram et al. (1969)**: Observed groups looking up at a window in New York City, demonstrating that the influence on passersby increases with crowd size but levels off after the group reaches about six members.\n\n## Passive conformity\nPassive conformity refers to behavioral or preference changes that occur automatically and without any conscious intent or effort from others.\n\n### Key terms\n- **Passive conformity**: The spontaneous and automatic change of preferences or behaviors influenced by the social environment.\n   1. example — learning to like a roommate's music because it is frequently played.\n\n## Private acceptance\nPrivate acceptance involves a genuine, internal shift in personal beliefs that persists even when social pressure is removed.\n\n### Key terms\n- **Private acceptance**: A real and long-lasting change in an individual's private opinions, often resulting from informational influence.\n\n### Names and studies\n- **Muzafer Sherif (1936) [Persistence]**: Demonstrated that group norms created in his study were long-lasting, persisting through several \"generations\" of group members and for up to one year after testing.\n\n## Social comparison\nSocial comparison is the cognitive process individuals use to evaluate the validity of their own beliefs against the opinions of others.\n\n### Key terms\n- **Social comparison**: The process of comparing our opinions with those of others to gain an accurate appraisal of reality."}</script>
+<script>
+(function(){
+  if(window.lqSync) return;
+  const API = 'https://terp-plate.vercel.app/api/quiz-sync', MK = 'lqsync:meta';
+  const none = {first: Promise.resolve([]), now: async()=>[], listen(){}};
+  let key = '';
+  try{ key = localStorage.getItem('lq:key') || ''; }catch(e){}
+  const hm = /[#&]k=([A-Za-z0-9_-]{40,})/.exec(location.hash);
+  if(hm) key = hm[1];
+  if(!key || !window.crypto || !crypto.subtle){ window.lqSync = none; return; }
+
+  const skip = k => k.indexOf('lq:') !== 0 || k === 'lq:key' || k === 'lq:speech';
+  const rawSet = Storage.prototype.setItem;
+  let meta = {};
+  try{ meta = JSON.parse(localStorage.getItem(MK) || '{}') || {}; }catch(e){}
+  const putMeta = ()=>{ try{ rawSet.call(localStorage, MK, JSON.stringify(meta)); }catch(e){} };
+  const hash = t => { let h = 5381; for(let i=0;i<t.length;i++) h = ((h<<5) + h + t.charCodeAt(i)) | 0; return h; };
+  const isState = k => /^lq:[^:]+$/.test(k) && k !== 'lq:hub';
+  function weight(s){
+    return Object.keys(s.answers||{}).length + Object.keys(s.pass2||{}).length
+         + Object.keys(s.skipped||{}).length + Object.keys(s.starred||{}).length
+         + Object.keys(s.unsure||{}).length + 1000 * (s.history||[]).length + (s.done ? 500 : 0);
+  }
+  // '' = nothing worth sending
+  function sig(k, v){
+    if(isState(k)){
+      try{ const s = JSON.parse(v);
+        if(!s || typeof s !== 'object') return '';
+        if(!weight(s) && !s.only && !s.tagf) return '';
+        const c = Object.assign({}, s); delete c.ms; delete c.qms; delete c.meta; delete c.hintOpen;
+        return JSON.stringify(c);
+      }catch(e){ return ''; }
+    }
+    return (v && v !== '{}' && v !== '[]' && v !== '{"defs":[],"q":{}}') ? v : '';
+  }
+  let frozen = false, applying = false, timer = null, busy = false;
+  function mark(k, v){
+    if(skip(k)) return;
+    const g = sig(k, v), h = hash(g), m = meta[k] || (meta[k] = {t:0});
+    if(m.h === h) return;
+    m.h = h;
+    if(g){ m.t = Date.now(); m.d = 1; clearTimeout(timer); timer = setTimeout(run, 1500); }
+    putMeta();
+  }
+  Storage.prototype.setItem = function(k, v){
+    if(this === localStorage && frozen && String(k).indexOf('lq:') === 0) return;
+    rawSet.call(this, k, v);
+    if(this === localStorage && !applying){ try{ mark(String(k), String(v)); }catch(e){} }
+  };
+  // What was already here before sync existed: age unknown, so it is stamped low, and a real
+  // attempt outranks a thinner one by how much is in it.
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(skip(k) || meta[k]) continue;
+      const v = localStorage.getItem(k), g = sig(k, v);
+      meta[k] = {t: 0, h: hash(g)};
+      if(g){ let w = 1; if(isState(k)){ try{ w = 1 + weight(JSON.parse(v)); }catch(e){} }
+             meta[k].t = w; meta[k].d = 1; }
+    }
+    putMeta();
+  }catch(e){}
+
+  const enc = new TextEncoder(), dec = new TextDecoder();
+  const toB = s => { s = s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length % 4) s += '=';
+                     return Uint8Array.from(atob(s), c => c.charCodeAt(0)); };
+  const fromB = u => { let t = ''; for(let i=0;i<u.length;i+=8192) t += String.fromCharCode.apply(null, u.subarray(i, i+8192));
+                       return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+  const hex = b => Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,'0')).join('');
+  let ck = null, bucket = '';
+  const ready = (async()=>{
+    ck = await crypto.subtle.importKey('raw', toB(key), 'AES-GCM', false, ['encrypt','decrypt']);
+    bucket = hex(await crypto.subtle.digest('SHA-256', enc.encode('lq-sync:' + key))).slice(0, 32);
+  })();
+  const kid = async k => hex(await crypto.subtle.digest('SHA-256', enc.encode(bucket + '|' + k))).slice(0, 32);
+  async function seal(o){
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv}, ck, enc.encode(JSON.stringify(o)));
+    return fromB(iv) + '.' + fromB(new Uint8Array(ct));
+  }
+  async function unseal(t){
+    const p = t.split('.');
+    return JSON.parse(dec.decode(await crypto.subtle.decrypt({name:'AES-GCM', iv:toB(p[0])}, ck, toB(p[1]))));
+  }
+
+  function pageId(){
+    const el = document.getElementById('quiz-data');
+    if(!el) return null;
+    try{ return JSON.parse(el.textContent).id; }catch(e){ return null; }
+  }
+  async function run(){
+    if(busy || frozen) return [];
+    busy = true;
+    const changed = [];
+    try{
+      await ready;
+      const have = {}, puts = [], sent = {};
+      for(const k of Object.keys(meta)){
+        const m = meta[k];
+        if(!m.id) m.id = await kid(k);
+        have[m.id] = m.t || 0;
+        if(m.d){
+          const v = localStorage.getItem(k);
+          if(v === null){ m.d = 0; continue; }
+          puts.push({k: m.id, v: await seal({k, v}), ts: m.t});
+          sent[k] = m.t;
+        }
+      }
+      const r = await fetch(API, {method:'POST', headers:{'content-type':'text/plain'},
+                                  body: JSON.stringify({bucket, have, puts})});
+      if(!r.ok) throw new Error('sync ' + r.status);
+      const j = await r.json();
+      for(const k in sent) if(meta[k].t === sent[k]) meta[k].d = 0;
+      for(const row of j.rows || []){
+        let o; try{ o = await unseal(row.v); }catch(e){ continue; }
+        if(!o || skip(o.k)) continue;
+        const m = meta[o.k] || (meta[o.k] = {t:0});
+        if((m.t || 0) >= row.ts) continue;
+        applying = true;
+        try{ rawSet.call(localStorage, o.k, o.v); }catch(e){}
+        applying = false;
+        m.t = row.ts; m.d = 0; m.h = hash(sig(o.k, o.v)); m.id = row.k;
+        changed.push(o.k);
+      }
+      putMeta();
+    }catch(e){}
+    busy = false;
+    if(changed.length && window.lqSync.live){
+      const id = pageId();
+      const mine = id ? changed.some(k => k === 'lq:' + id || k.indexOf('lq:' + id + ':') === 0)
+                      : !!document.getElementById('manifest');
+      if(mine){ frozen = true; location.reload(); }
+    }
+    return changed;
+  }
+  function wake(){ if(document.visibilityState !== 'hidden') run(); }
+  function leave(){ if(document.visibilityState === 'hidden') run(); }
+  function listen(){
+    document.removeEventListener('visibilitychange', wake); document.addEventListener('visibilitychange', wake);
+    document.removeEventListener('visibilitychange', leave); document.addEventListener('visibilitychange', leave);
+    removeEventListener('focus', wake); addEventListener('focus', wake);
+  }
+  // `live` = this page should reload itself when its own quiz arrives newer. The locked shell
+  // turns it on only after it has drawn the page.
+  window.lqSync = {first: null, now: run, listen, live: true};
+  listen();
+  setInterval(wake, 20000);
+  window.lqSync.first = run();
+})();
+</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -964,7 +1178,7 @@ function qk(i){ return D.questions[i].qid; }
 function blank(){ return {v:2, hash:D.hash, i:0, answers:{}, pass2:{}, skipped:{}, starred:{},
                           unsure:{}, hints:{}, phase:1, p2list:null, done:false, at:null,
                           shuf:{}, history:[], only:null, sat:{}, promoted:{},
-                          ms:0}; }
+                          ms:0, qms:{}}; }
 function migrate(s){
   // v1 keyed every map on the array index. The hash matches, so the indices are still valid
   // and this is a straight re-key — done once, then never again.
@@ -1022,6 +1236,9 @@ function load(){
     // attempt saved before it. Zero and hidden are the right defaults for an attempt that was
     // never timed: it reads as "not measured" rather than as a suspiciously fast paper.
     if(typeof s.ms !== 'number') s.ms = 0;
+    // NEW ON 08-21 and absent from every attempt before it. An empty map means "never
+    // measured", which momentum() reads as "print nothing" rather than as a paper of zeroes.
+    if(!s.qms) s.qms = {};
     return s;
   }catch(e){ return blank(); }
 }
@@ -1066,10 +1283,44 @@ function save(){
    the sitting's subchapters into this one function is what makes a half-paper behave exactly
    like a whole one — one direction, one end card, one second pass — with no branch anywhere
    downstream. `only: null` (not chosen, or a page built without parts) filters nothing. */
+/* ---- TAGS (10-12, his ask) ------------------------------------------------------------
+   *"a text box at first, but it functions like a Notion tag property … once I press enter it
+   creates a tag and that tag stays for this exam and only for this exam."* Its own key, like
+   the research box, so a Retake and a rebuild keep them. `defs` is the order he made them in;
+   a tag no question carries any more is dropped from it. Off unless the page was built with
+   `tags`, so every page built before this is what it was. */
+const TKEY = KEY + ':tags';
+let T = (function(){
+  try{ const t = JSON.parse(localStorage.getItem(TKEY) || '{}') || {};
+       return {defs: t.defs || [], q: t.q || {}}; }
+  catch(e){ return {defs:[], q:{}}; } })();
+function tput(){ try{ localStorage.setItem(TKEY, JSON.stringify(T)); }catch(e){} }
+function tagsOf(i){ return T.q[qk(i)] || []; }
+function hasTag(i, name){ return tagsOf(i).indexOf(name) >= 0; }
+function tagAdd(i, raw){
+  const name = String(raw).trim().replace(/\s+/g, ' ');
+  if(!name) return;
+  const known = T.defs.find(d => d.toLowerCase() === name.toLowerCase()) || name;
+  if(T.defs.indexOf(known) < 0) T.defs.push(known);
+  const l = T.q[qk(i)] || (T.q[qk(i)] = []);
+  if(l.indexOf(known) < 0) l.push(known);
+  tput();
+}
+function tagDrop(i, name){
+  const id = qk(i);
+  T.q[id] = (T.q[id] || []).filter(x => x !== name);
+  if(!T.q[id].length) delete T.q[id];
+  if(!Object.keys(T.q).some(k => T.q[k].indexOf(name) >= 0)) T.defs = T.defs.filter(d => d !== name);
+  tput();
+}
+
 function active(s){
-  const only = D.parts ? (s.only || null) : null;
+  // A TAG RUN ("test only these") rides here for the same reason the section filter does.
+  const tf = D.tags ? (s.tagf || null) : null;
+  const only = (D.parts && !tf) ? (s.only || null) : null;
   return D.questions.map((_,i)=>i).filter(i => onPaper(s, i)
-    && (!only || only.indexOf(D.questions[i].sec) >= 0));
+    && (!only || only.indexOf(D.questions[i].sec) >= 0)
+    && (!tf || hasTag(i, tf)));
 }
 /* ---- THE RESERVES (08-16) ------------------------------------------------------------
    His ask: *"if 1 question is skipped, another one is replaced in that section about it… you
@@ -1337,7 +1588,9 @@ function flushFrq(){
 function drawFrq(){
   const box = $('#frqview');
   if(!box || !(D.frq||[]).length) return;
-  let h = '<p class="say">Three written answers, from the same sources as the paper. Write '
+  const NW = D.frq.length, WORDS = ['No','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'];
+  let h = '<p class="say">' + (WORDS[NW] || NW) + ' written answer' + (NW === 1 ? '' : 's')
+        + ', from the same sources as the paper. Write '
         + 'one, then mark it: every point that can be settled by what you wrote is checked '
         + 'for you, and the ones that need judgement are handed back. Click any row to '
         + 'overrule it.</p>';
@@ -1536,6 +1789,9 @@ function setTab(name){
     // back — the question must be exactly where he left it.
     if(quizPad !== null) $('main').style.paddingTop = quizPad;
   } else {
+    // The sheet, the starred list and the written half are not the question, so his
+    // reading time on them belongs to no question. `draw()` puts it back on the way in.
+    timeOn(null);
     if(name==='starred') drawStarred();
     if(name==='sheet'){ renderScore(); renderSheetExtras(); }
     if(name==='frq') drawFrq();
@@ -1625,7 +1881,7 @@ function draw(){
   // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
   // the rest of the sitting, so nothing about answering, going back or the second pass has
   // to know the picker exists.
-  if(sectioned() && !S.only) return picker();
+  if(sectioned() && !S.only && !S.tagf) return picker();
   const act = runList();
   if(!act.length) return end();
   if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
@@ -1634,6 +1890,61 @@ function draw(){
 
 /* Pure markup, no DOM writes and no state changes — so the same builder can render the
    question and be measured off-screen for the centring reserve. */
+/* The tag box above the question. Chips for what this question carries, then the box: type and
+   Enter makes the tag (or reuses one spelled the same), the ones he already made show under it
+   to click, Backspace on an empty box takes the last one off, Esc leaves. */
+function tagRowInner(i){
+  const mine = tagsOf(i);
+  let h = '';
+  mine.forEach((n,k)=>{ h += '<span class="tchip">' + esc(n) + '<button class="tx" data-drop="' + k
+                           + '" tabindex="-1" aria-label="Remove tag">×</button></span>'; });
+  return h + '<input id="tagin" class="tagin" type="text" autocomplete="off" spellcheck="false" '
+           + 'placeholder="' + (mine.length ? 'Add a tag' : 'Tag this question  ( l )') + '">'
+           + '<div class="tsug hide" id="tsug"></div>';
+}
+function paintSug(i){
+  const inp = $('#tagin'), box = $('#tsug');
+  if(!inp || !box) return;
+  const raw = inp.value.trim(), v = raw.toLowerCase(), mine = tagsOf(i);
+  let h = T.defs.map((d,n)=>({d,n}))
+    .filter(x => mine.indexOf(x.d) < 0 && (!v || x.d.toLowerCase().indexOf(v) >= 0))
+    .map(x => '<button class="tchip pick" data-n="' + x.n + '" tabindex="-1">' + esc(x.d) + '</button>')
+    .join('');
+  if(v && !T.defs.some(d => d.toLowerCase() === v))
+    h += '<span class="tnew">Enter makes “' + esc(raw) + '”</span>';
+  box.innerHTML = h;
+  box.classList.toggle('hide', !h || document.activeElement !== inp);
+  // mousedown, not click: the box must not blur (and hide these) before the pick lands
+  box.querySelectorAll('.pick').forEach(b => { b.onmousedown = e => {
+    e.preventDefault(); tagAdd(i, T.defs[+b.dataset.n]); redrawTags(i, true); }; });
+}
+function redrawTags(i, focus){
+  const row = $('#tagrow');
+  if(!row) return;
+  row.innerHTML = tagRowInner(i);
+  wireTags(i);
+  if(focus) $('#tagin').focus();
+}
+function wireTags(i){
+  const row = $('#tagrow'), inp = $('#tagin');
+  if(!row || !inp) return;
+  row.querySelectorAll('.tx').forEach(b => b.onclick = ()=>{
+    tagDrop(i, tagsOf(i)[+b.dataset.drop]); redrawTags(i, false); });
+  inp.onfocus = ()=> paintSug(i);
+  inp.oninput = ()=> paintSug(i);
+  inp.onblur = ()=> { const b = $('#tsug'); if(b) b.classList.add('hide'); };
+  inp.onkeydown = e => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      if(!inp.value.trim()){ inp.blur(); return; }
+      tagAdd(i, inp.value); redrawTags(i, true);
+    } else if(e.key === 'Escape'){ inp.value = ''; inp.blur(); }
+    else if(e.key === 'Backspace' && !inp.value && tagsOf(i).length){
+      tagDrop(i, tagsOf(i).slice(-1)[0]); redrawTags(i, true);
+    }
+  };
+}
+
 function buildQ(i, picked, fresh, en){
   const q = D.questions[i];
   const answered = picked !== undefined;
@@ -1645,10 +1956,12 @@ function buildQ(i, picked, fresh, en){
   // The counter sits top-left above the question, the way the notebook does it, rather than
   // up in the bar — it belongs with the thing it counts. On a second pass it counts the
   // second pass, so four wrong answers read as "1 / 4" and not as a broken 16.
-  let h = '<div class="qhead' + en + '"><div class="qcol">'
+  let h = (D.tags ? '<div class="tagrow no-read-aloud" id="tagrow">' + tagRowInner(i) + '</div>' : '')
+        + '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta no-read-aloud"><span class="num">' + (pos+1) + ' / '
         + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        + (D.tags && S.tagf ? '<span class="dot">·</span><span>only ' + esc(S.tagf) + '</span>' : '')
         // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
         // 10 reads as the paper having lost his place, which is how he read it.
         + (recycling && S.phase!==2
@@ -1747,6 +2060,9 @@ let justAnswered = null;
 
 function question(fresh){
   const i = S.i, q = D.questions[i], picked = pick(i);
+  // THE CLOCK MOVES WITH HIM. Re-rendering the same question is harmless: timeOn() banks
+  // what is owed and carries on against the same qid.
+  timeOn(q.qid);
   const answered = picked !== undefined;
   const act = runList();
   const pos = act.indexOf(i);
@@ -1841,6 +2157,7 @@ function question(fresh){
   $('#star').onclick = ()=> toggleStar(i);
   $('#qmark').onclick = ()=> toggleUnsure(i);
   $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
+  if(D.tags) wireTags(i);
 
   // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
   // touches it — and nothing above the options ever changes height.
@@ -2331,19 +2648,32 @@ function openMenu(){
   m.className = 'menu';
   // The clock's only other way in. `w` is not written anywhere else on the page, and a key
   // nothing announces is a key he has to remember he asked for.
-  m.innerHTML = '<button id="skipq">Skip this question</button>'
+  m.innerHTML = '<button id="skipq">Skip this question  ( x )</button>'
               // The reader's own two entries. Space and `v` are written nowhere else on the
               // page, and a key nothing announces is a key he has to remember he asked for.
               + '<button id="readtog">' + (sayOn ? 'Stop' : 'Start') + ' read-aloud  ( space )</button>'
               + '<button id="voiceset">Voice, speed and pauses…</button>'
-              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>';
+              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>'
+              // EVERY KEY, WRITTEN DOWN ONCE (10-12). He could not find Redo or remember its key.
+              + '<div class="keys"><kbd>x</kbd><span>Skip</span><kbd>u</kbd><span>Redo your answer</span>'
+              + '<kbd>h</kbd><span>Hint, when the question has one</span>'
+              + '<kbd>s</kbd><span>Star</span><kbd>/</kbd><span>No idea</span>'
+              + '<kbd>r</kbd><span>Research</span><kbd>f</kbd><span>Fix this question</span>'
+              + '<kbd>t</kbd><span>Reflection</span>'
+              + (D.tags ? '<kbd>l</kbd><span>Tag</span>' : '')
+              + '<kbd>↵</kbd><span>Next</span><kbd>←</kbd><span>Back</span></div>';
   host.appendChild(m);
   m.querySelector('#clocktog').onclick = ()=>{ toggleClock(); closeMenu(); };
   m.querySelector('#readtog').onclick = ()=>{ closeMenu(); sayOn ? sayOff() : sayToggle(); };
   m.querySelector('#voiceset').onclick = ()=>{ closeMenu(); openVset(); };
-  m.querySelector('#skipq').onclick = ()=>{
+  m.querySelector('#skipq').onclick = ()=>{ closeMenu(); skipQuestion(); };
+  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
+}
+/* One path for skipping, whether it came from the menu or from `x` (10-12, his ask: a key
+   *"rather than going into the top bar and then pressing skip"*). */
+function skipQuestion(){
     const list = runList(), pos = list.indexOf(S.i);
-    if(list.length <= 1) return closeMenu();        // never skip the last one standing
+    if(list.length <= 1) return;                    // never skip the last one standing
     const sec = bucketOf(S.i);
     S.skipped[qk(S.i)] = true;
     delete S.answers[qk(S.i)];
@@ -2357,7 +2687,6 @@ function openMenu(){
     // have handed him an end card with a question still owed.
     const filled = promoteReserve(sec) >= 0;
     const wasLast = !filled && pos === list.length - 1;
-    closeMenu();
     syncTabs();
     if(wasLast){ finish(); return; }
     // After the removal the list has shrunk, so the item now AT `pos` is the one that
@@ -2366,8 +2695,6 @@ function openMenu(){
     S.hintOpen = false;
     lastShown = -1;
     save(); question(); window.scrollTo(0,0);
-  };
-  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
 }
 function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(); }
 
@@ -2426,6 +2753,7 @@ function group(act, keyOf, head, label){
 let pickSel = null;
 
 function picker(){
+  timeOn(null);
   const p = paperStat();
   if(!pickSel) pickSel = p.left.map(s => s.sec);          // default: what is still outstanding
   const chosen = p.secs.filter(s => pickSel.indexOf(s.sec) >= 0);
@@ -2521,7 +2849,143 @@ function beginSitting(secs){
   save(); draw(); window.scrollTo(0,0);
 }
 
+/* ---- MOMENTUM — the pace half of the end card (08-21, his ask) ------------------------
+   *"once I'm done with the quiz, the same screen that shows the right and wrong answers, I
+   can also see a breakdown of momentum… ranked by correct versus incorrect, and then also
+   time spent. Maybe that'll help me determine a goal and a time per question."*
+
+   THREE THINGS IN ONE BLOCK, because they answer three different questions:
+
+   • THE STRIP is the paper in the order he sat it — where he slowed down, and whether the
+     slow ones cluster at the end (tiring) or the start (warming up). It is the only thing
+     anywhere on this page that is in time order; every other table is sorted by something.
+   • THE TWO MEDIANS are the comparison worth having: how long the ones he got right took
+     against the ones he got wrong. MEDIAN AND NOT MEAN — one question he walked away from
+     mid-paper drags an average off the map, and that is exactly the question a page that
+     only banks visible time is most likely to have.
+   • THE RANKING is what to look at next: slowest first, each one marked, so a slow ✕ sits
+     at the top of the list on its own.
+
+   THE GOAL IS HIS OWN NUMBER, NOT ONE INVENTED HERE — the median of the questions he got
+   RIGHT, rounded to five seconds. A pace he has already answered correctly at is the only
+   pace this page has any business suggesting.
+
+   IT PRINTS NOTHING UNLESS THE QUESTIONS WERE ACTUALLY TIMED. Every attempt saved before
+   today has an empty `qms`, so the block is absent on those rather than reporting a paper
+   of zeroes — the same rule the clock already uses for `ms:0` in the copy markdown. */
+const MOM_CAP = 14, MOM_SHOW = 10;
+let momAll = false;
+function qms(i){ return (S.qms || {})[qk(i)] || 0; }
+function median(a){
+  if(!a.length) return 0;
+  const s = a.slice().sort((x,y)=>x-y), h = s.length >> 1;
+  return s.length % 2 ? s[h] : Math.round((s[h-1] + s[h]) / 2);
+}
+/* What to call a question in one line. The topic tag when the quiz carries one — it is
+   already the name he thinks of it by, and it is what the topics table above uses — and the
+   stem itself when it does not. Through a div because a stem can carry math markup. */
+function momLabel(i){
+  const q = D.questions[i];
+  if(q.topic) return q.topic;
+  const d = document.createElement('div');
+  d.innerHTML = q.q || '';
+  const t = (d.textContent || '').trim();
+  return t.length > 70 ? t.slice(0, 69).trim() + '…' : t;
+}
+function momentum(){
+  const act = active(S), timed = act.filter(i => qms(i) > 0);
+  // One timed question is not a pace, and two is the least that can have a shape.
+  if(timed.length < 2) return '';
+  const rows = timed.map(i => ({i:i, ms:qms(i), ok:finalRight(i), n:act.indexOf(i)+1}));
+  const all = rows.map(r=>r.ms);
+  const max = Math.max.apply(null, all), med = median(all);
+  const okMs = rows.filter(r=>r.ok).map(r=>r.ms);
+  const noMs = rows.filter(r=>!r.ok).map(r=>r.ms);
+
+  let h = '<div class="topics mom"><h3>Momentum</h3>';
+
+  /* THE STRIP IS `aria-hidden` AND `.no-read-aloud`. It is a picture of the list printed
+     underneath it, so a page reader that walked it would read the same paper twice. */
+  h += '<div class="strip no-read-aloud" aria-hidden="true">';
+  h += '<i class="med" style="bottom:' + (max ? med/max*100 : 0) + '%"></i>';
+  rows.forEach(r=>{
+    // A floor of 4%, so a five-second question is a visible mark and not a gap in the row.
+    const pc = Math.max(4, max ? r.ms/max*100 : 0);
+    h += '<i class="sb ' + (r.ok ? 'r' : 'w') + '" style="height:' + pc + '%" title="'
+       + esc(r.n + ' · ' + (r.ok ? 'right' : 'wrong') + ' · ' + fmtMs(r.ms)) + '"></i>';
+  });
+  h += '</div>';
+  h += '<p class="momax no-read-aloud"><span>first</span>'
+     + '<span>median ' + fmtMs(med) + '</span><span>last</span></p>';
+
+  h += '<p class="mline">Median <b>' + fmtMs(med) + '</b> a question'
+     + (okMs.length ? ' · right ones <b>' + fmtMs(median(okMs)) + '</b>' : '')
+     + (noMs.length ? ' · wrong ones <b>' + fmtMs(median(noMs)) + '</b>' : '')
+     + ' · slowest <b>' + fmtMs(max) + '</b></p>';
+
+  /* A QUIZ SHOWS EVERY QUESTION AND A 40-QUESTION EXAM DOES NOT (not without asking).
+     Ranked slowest-first, the rows he needs are the ones at the top; forty of them would
+     bury the tables underneath in a list he scrolls past. `momAll` is a plain module-level
+     flag like `clockOn` — the end card opens short every time, and expanding it is one
+     click that does not survive the page. */
+  const rank = rows.slice().sort((a,b)=> b.ms - a.ms);
+  const shown = (momAll || rank.length <= MOM_CAP) ? rank : rank.slice(0, MOM_SHOW);
+  shown.forEach(r=>{
+    h += '<div class="mrow"><span class="mg">' + (r.ok ? G_OK : G_NO) + '</span>'
+       + '<span class="mn">' + r.n + '</span>'
+       + '<span class="mlab">' + esc(momLabel(r.i)) + '</span>'
+       + '<span class="mt">' + fmtMs(r.ms) + '</span>'
+       + '<span class="tbar"><i class="' + (r.ok ? '' : 'w') + '" style="width:'
+       + (max ? r.ms/max*100 : 0) + '%"></i></span></div>';
+  });
+
+  if(shown.length < rank.length)
+    h += '<p class="note mmore"><button class="link" id="momall">Show all '
+       + rank.length + ' questions</button></p>';
+
+  const base = okMs.length ? median(okMs) : med;
+  const goal = Math.max(5000, Math.round(base/5000)*5000);
+  h += '<p class="mgoal">Your own pace on the ones you got right, to the nearest five '
+     + 'seconds: <b>' + fmtMs(goal) + '</b> a question — <b>' + fmtMs(goal*act.length)
+     + '</b> for a paper this size.</p>';
+  return h + '</div>';
+}
+
+/* THE TAGS ON THE END CARD: how each group went, and a way to sit one group alone. A tag run
+   is a fresh attempt on only those questions (the finished one goes into history first, as a
+   Retake does); Retake, or "every question" here, goes back to the whole paper. Not offered
+   on a sectioned paper, whose picker already owns which questions a sitting holds. */
+function tagTable(){
+  if(!D.tags || !T.defs.length) return '';
+  const all = D.questions.map((_,i)=>i).filter(i => onPaper(S, i));
+  let h = '';
+  T.defs.forEach((d,n)=>{
+    const qs = all.filter(i => hasTag(i, d));
+    if(!qs.length) return;
+    const sat = qs.filter(i => ans(i) !== undefined || ans2(i) !== undefined);
+    const ok = sat.filter(i => finalRight(i)).length;
+    h += '<div class="tagline"><span class="tchip">' + esc(d) + '</span><span class="tn">'
+       + (sat.length ? ok + ' / ' + sat.length + ' right' : qs.length + ' question' + (qs.length>1?'s':''))
+       + '</span>' + (D.parts ? '' : '<button class="link" data-tagrun="' + n + '">Test only these</button>')
+       + '</div>';
+  });
+  if(!h && !S.tagf) return '';
+  if(S.tagf) h += '<p class="note">This run was only “' + esc(S.tagf) + '”. '
+                + '<button class="link" id="tagall">Back to every question</button></p>';
+  return '<div class="tagtable"><h3>By tag</h3>' + h + '</div>';
+}
+function startRun(tag){
+  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length, ms:S.ms,
+                             tag:S.tagf || undefined});
+  const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
+  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  if(tag) S.tagf = tag;
+  pickSel = null; lastShown = -1;
+  save(); syncTabs(); renderScore(); draw(); window.scrollTo(0,0);
+}
+
 function end(){
+  timeOn(null);
   const act = active(S), n = score(S), t = act.length;
   const pct = t ? Math.round(n/t*100) : 0;
   const red = redeemed().length;
@@ -2535,6 +2999,10 @@ function end(){
         // grayscale-safe hatch and would make the one number he reads harder to read; the
         // count says it in words instead.
         + (red ? '<span>+<b>'+red+'</b> on the second pass</span>' : '') + '</p>';
+
+  // BEFORE the topic tables and after the score: it is about this sitting, the way the score
+  // is, where everything below it is about the material.
+  h += momentum();
 
   const by = {};
   act.forEach(i=>{
@@ -2597,6 +3065,7 @@ function end(){
             + 'every one is done; sitting one again replaces its score.</p>';
   }
 
+  h += tagTable();
   const nskip = Object.keys(S.skipped||{}).length;
   if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
               + '<button class="link" id="unskip">put them back</button></p>';
@@ -2607,6 +3076,12 @@ function end(){
   $('#quizview').innerHTML = h;
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  document.querySelectorAll('[data-tagrun]').forEach(b =>
+    b.onclick = ()=> startRun(T.defs[+b.dataset.tagrun]));
+  const tall = $('#tagall');
+  if(tall) tall.onclick = ()=> startRun(null);
+  const ma = $('#momall');
+  if(ma) ma.onclick = ()=>{ momAll = true; end(); };
   const m = $('#more');
   if(m) m.onclick = ()=>{ S.only = null; S.done = false; S.reviewing = false;
                           pickSel = null; save(); draw(); window.scrollTo(0,0); };
@@ -2641,6 +3116,7 @@ function itemHTML(i, n){
   const q = D.questions[i], first = ans(i), second = ans2(i);
   let h = '<div class="item">';
   if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
+  if(D.tags) tagsOf(i).forEach(t => { h += '<span class="tchip sm">'+esc(t)+'</span>'; });
   h += '<p class="qq">'+(n===undefined?'':(n+1)+'. ')+esc(q.q)+'</p>'
      + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
   if(!firstRight(i)){
@@ -2657,11 +3133,26 @@ function itemHTML(i, n){
   return h + '</div>';
 }
 
+let revByTag = false;
 function review(){
+  timeOn(null);
+  const act = active(S), canSort = D.tags && T.defs.length;
   let h = '<div class="rev"><h3>Every question</h3>';
-  active(S).forEach((i,n)=>{ h += itemHTML(i, n); });
+  if(canSort) h += '<p class="note" style="margin:0 0 6px"><button class="link" id="revsort">'
+                 + (revByTag ? 'Sort in order' : 'Sort by tag') + '</button></p>';
+  if(canSort && revByTag){
+    // a question with two tags is listed under both; the untagged ones come last
+    T.defs.concat(['']).forEach(d=>{
+      const qs = act.filter(i => d ? hasTag(i, d) : !tagsOf(i).length);
+      if(!qs.length) return;
+      h += '<h3 class="tgroup">' + (d ? esc(d) : 'No tag') + ' · ' + qs.length + '</h3>';
+      qs.forEach(i => { h += itemHTML(i, act.indexOf(i)); });
+    });
+  } else act.forEach((i,n)=>{ h += itemHTML(i, n); });
   h += '</div>';
   $('#quizview').innerHTML = h;
+  const rs = $('#revsort');
+  if(rs) rs.onclick = ()=>{ revByTag = !revByTag; review(); };
   $('#band').classList.add('off');
   showResearch(false);
   $('#footer').classList.remove('hide');
@@ -2834,12 +3325,29 @@ function paintClock(){
   // not start counting from the moment he looked.
   el.textContent = fmtMs(S.ms);
 }
+/* ---- WHERE THE SECOND WENT (08-21) ---------------------------------------------------
+   The same delta that goes into `S.ms` goes into `S.qms[qid]`, so the total and the
+   per-question times are banked from ONE measurement and can never disagree with each other.
+
+   `qAt` IS THE QUESTION ON SCREEN AND NOTHING ELSE. The end card, the picker, the review
+   list and every other tab set it to null, so twenty minutes spent reading his own study
+   sheet is never filed under whichever question happened to be open last — the number the
+   momentum block reports is time spent on the question, not time the tab was alive. */
+let qAt = null;
+function bankMs(now){
+  const on = !S.done && !document.hidden;
+  if(tickAt && on){
+    const d = now - tickAt;
+    S.ms += d;
+    if(qAt) S.qms[qAt] = (S.qms[qAt] || 0) + d;
+  }
+  tickAt = on ? now : null;
+}
+/* Every renderer calls this, and it flushes BEFORE the switch: without the flush, up to a
+   second of question 3 would be banked against question 2. */
+function timeOn(id){ bankMs(Date.now()); qAt = id || null; }
 function tick(){
-  const now = Date.now();
-  if(!S.done && !document.hidden){
-    if(tickAt) S.ms += now - tickAt;
-    tickAt = now;
-  }else tickAt = null;
+  bankMs(Date.now());
   paintClock();
   // A WRITE A SECOND WOULD BE A WRITE A SECOND. Every answer already saves, and this only has
   // to cover the case of a tab closed mid-question — 15 seconds is the most that can cost.
@@ -3951,6 +4459,10 @@ document.addEventListener('keydown', e=>{
   // `w` FOR WATCH — the clock in the bar, off by default. Past G like every other command
   // key here, so it can never be an option letter.
   if(e.key === 'w' || e.key === 'W'){ toggleClock(); return; }
+  // `x` SKIPS, `l` (label) PUTS THE CARET IN THE TAG BOX. Both past G, so never an option key.
+  if(e.key === 'x' || e.key === 'X'){ e.preventDefault(); skipQuestion(); return; }
+  if((e.key === 'l' || e.key === 'L') && D.tags){
+    const ti = $('#tagin'); if(ti){ e.preventDefault(); ti.focus(); } return; }
   if(e.key === '/' || e.key === '?'){ e.preventDefault(); toggleUnsure(S.i); return; }
   /* THE KEY NAMES A POSITION ON SCREEN, not an option. `2` and `B` mean the second card he
      can see, which is the only thing either of them could mean to him — after a Redo has

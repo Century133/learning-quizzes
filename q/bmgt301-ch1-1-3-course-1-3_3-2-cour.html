@@ -326,6 +326,32 @@ kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid
 .qmark:hover{background:var(--surface);color:var(--text)}
 .qmark.on{color:var(--text);border-color:var(--accent);background:var(--surface-hi)}
 
+/* ---- tags (10-12): his own labels on a question, kept per quiz ---- */
+.tagrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.tchip{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:.78rem;
+ color:var(--text);background:var(--surface-hi);border:1px solid var(--line);
+ border-radius:6px;padding:2px 8px;line-height:1.5}
+.tchip.sm{font-size:.7rem;margin:0 6px 9px 0}
+button.tchip{cursor:pointer}
+button.tchip:hover{border-color:var(--muted)}
+.tx{background:none;border:0;color:var(--muted);font:inherit;padding:0;cursor:pointer;line-height:1}
+.tx:hover{color:var(--text)}
+.tagin{flex:1 1 140px;min-width:120px;background:none;border:0;outline:0;color:var(--text);
+ font:inherit;font-size:.82rem;padding:3px 2px}
+.tagin::placeholder{color:var(--muted);opacity:.75}
+.tsug{flex:1 0 100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tnew{color:var(--muted);font-size:.76rem}
+.tagtable{margin:26px 0 0;text-align:left}
+.tagtable h3{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+ font-weight:500;margin:0 0 6px}
+.tagline{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line);
+ font-size:.88rem}
+.tagline .tn{flex:1;color:var(--muted);font-variant-numeric:tabular-nums}
+.tgroup{margin-top:30px}
+.menu .keys{border-top:1px solid var(--line);margin:5px 0 0;padding:8px 10px 4px;
+ display:grid;grid-template-columns:auto 1fr;gap:5px 10px;font-size:.78rem;color:var(--muted);
+ align-items:center}
+
 /* ---- the ⋮ menu ---- */
 .more{position:relative;flex:0 0 auto}
 .dots{background:none;border:0;color:var(--muted);font-size:1.15rem;line-height:1;
@@ -1008,7 +1034,157 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "bmgt301-ch1-1-3-course-1-3_3-2-cour", "title": "Ch1 Exam · 1.3", "subtitle": "Setting the Stage- Technology and the Modern Enterprise", "book": "BMGT301", "hash": "9187c84202c11ed5", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "Case A: Rupert Murdoch, a non-technologist media mogul, leads the acquisition of MySpace but loses market share to rivals. Case B: Mark Zuckerberg, a technologist, founds and grows Facebook into a global power. Which principle best accounts for the difference in these outcomes?", "options": ["The critical role of tech-centric leadership in evaluating and making decisions in an ever-shifting space.", "The tendency for tech firms to only succeed if they are founded by individuals under the age of thirty.", "The principle of Moore's Law which dictates that social media platforms must be replaced every decade.", "The inevitable failure of any firm that attempts to acquire an existing social media platform."], "rationales": ["Business leaders with a deep understanding of technology are better equipped to navigate and succeed in the tech industry than those who lack it.", "While the examples involve young founders, the core argument is about tech knowledge, not the chronological age of the executive.", "Moore's Law refers to computing speed and cost, not the lifecycle of social media market leaders.", "The source material focuses on the leader's background and understanding of tech, not a general rule against all acquisitions."], "correct": 0, "hint": "Focus on the contrast between tech-centric successes and non-technologist failures in the digital space.", "topic": "Leadership", "sec": "1.3", "src": "+", "link": "", "qid": "4d4a106191"}, {"q": "Firms like Google, Apple, and Microsoft have topped Fortune's 'Best Companies to Work For' list for several years. This fact serves as a primary example of which concept?", "options": ["Information Systems Careers", "Legacy Print Media", "Commodity-based Finance", "Traditional Manufacturing"], "rationales": ["Tech firms consistently rank as top employers, offering varied and rewarding career paths within the information systems discipline.", "The source material notes that legacy media has struggled compared to tech-driven companies.", "The text specifically contrasts technology's role as a lifeblood against the idea of it being a mere commodity.", "The list provided in the text highlights tech giants rather than traditional manufacturing firms."], "correct": 0, "hint": "Consider which career discipline is described as being among the safest and highest-paying for graduates.", "topic": "Career Stability", "sec": "1.3", "src": "+", "link": "", "qid": "182b50d5b2"}, {"q": "When firms such as Zara and Starbucks introduce mobile apps that deliver location-based messages and facilitate cashless payment, they are utilizing technology as a(n) ______ to reach millions of consumers.", "options": ["marketing channel", "legal barrier", "outsourcing byproduct", "accounting foundation"], "rationales": ["Mobile applications represent a new and powerful way for firms to communicate with and provide services to their customer base.", "The focus is on customer engagement and sales, not on creating legal obstacles for competitors.", "Apps are strategic tools for engagement, not merely a result of cutting costs through external labor.", "While apps record transactions, the text highlights their role in reaching customers and delivering messages as part of marketing."], "correct": 0, "hint": "Think about how new software tools change the way products are delivered and messages are sent to the public.", "topic": "Marketing Channels", "sec": "1.3", "src": "+", "link": "", "qid": "43269a8a4e"}, {"q": "A student majoring in Human Resources believes they can ignore computing trends because they do not intend to work in a technical role. Which concept from the text suggests this student is likely to face career difficulties?", "options": ["The shift of technology away from strategic roles toward becoming a basic commodity.", "The Sarbanes-Oxley Act which requires all employees to have a computer science degree.", "The decline of social media as a viable tool for employee recruiting and screening.", "The Moore's Law corollary where tech skills are being embedded into all job functions."], "rationales": ["The text argues technology is becoming more important and strategic, not a commodity.", "Sarbanes-Oxley relates to accounting regulation and system accuracy, not a universal degree requirement.", "The text states that recruiting has moved online and is grounded in information systems.", "As technology becomes cheaper and more pervasive, it profoundly impacts even non-technical disciplines like HR."], "correct": 3, "hint": "Look for the principle that describes technology being 'baked into' products and careers alike.", "topic": "Tech Permeation", "sec": "1.3", "src": "+", "link": "", "qid": "d4c2c1613e"}, {"q": "An investment banker provides a valuation for a startup that is significantly lower than its eventual market price because they failed to understand the startup's underlying software advantage. This represents a failure in which critical banking task?", "options": ["Drafting patent applications for the startup's proprietary methods.", "Providing an accurate guess at a company's worth during an IPO.", "Auditing the firm's financial statements for Sarbanes-Oxley compliance.", "Managing the physical transfer of funds between international banks."], "rationales": ["Patent applications are the domain of legal teams, whereas bankers focus on valuation and financial deals.", "Bankers must understand the role of technology to value firms correctly in the public markets.", "Auditing for compliance is an accounting function, while investment bankers handle firm valuation.", "The text notes funds are transferred digitally, but the valuation failure relates to intellectual analysis, not digital logistics."], "correct": 1, "hint": "Consider what an i-banker must do when a company first wishes to sell its stock on public markets.", "topic": "Finance Valuation", "sec": "1.3", "src": "+", "link": "", "qid": "0f63968796"}, {"q": "A company compares the performance of a traditional billboard campaign against a modern Search Engine Marketing (SEM) campaign. Based on the toolkit of today's marketers, which attributes describe these channels?", "options": ["Print Media / High trackability of consumer activity", "Print Media / Low trackability of consumer activity", "Online Channels / High trackability of consumer activity", "Online Channels / Low trackability of consumer activity"], "rationales": ["The text identifies print media as 'tough-to-track' compared to Web-based efforts.", "While print media is low trackability, the 'today's toolkit' mentioned in the text emphasizes the move toward high trackability online.", "Online channels allow firms to monitor visit patterns and immediately assess if a campaign results in a purchase.", "This contradicts the text, which states online channels provide ways to track and monitor activities."], "correct": 2, "hint": "Compare the ability to monitor specific consumer actions across digital and physical media.", "topic": "Marketing ROI", "sec": "1.3", "src": "+", "link": "", "qid": "a13bd0f3e1"}, {"q": "The Sarbanes-Oxley Act has increased the stakes for ensuring systems accuracy because negligence can lead to jail time. Which discipline is now most tightly linked to technology because of this regulation?", "options": ["Human Resources", "Operations", "Marketing", "Accounting"], "rationales": ["HR uses tech for training and evaluation, but is not the primary focus of the Sarbanes-Oxley Act's auditing requirements.", "Operations uses tech for efficiency, but the specific regulation mentioned is about financial reliability and auditing.", "Marketing is impacted by tech, but the specific legal penalties of Sarbanes-Oxley target financial reporting.", "Accounting careers are built on information systems, and auditors must ensure the reliability of the underlying technology."], "correct": 3, "hint": "Identify the field where the reliability of an audit is tied directly to the reliability of the software recording the numbers.", "topic": "Audit Regulation", "sec": "1.3", "src": "+", "link": "", "qid": "3625dd9b62"}, {"q": "In the modern enterprise, value and competitive advantage are increasingly created through technology-enabled ______.", "options": ["paper-based directories", "operations", "manual floor trading", "commodity pricing"], "rationales": ["Paper directories are associated with the prior generation of HR, not modern competitive advantage.", "Firms use tech-centric designs to fundamentally change how they conduct business and gain an edge over competitors.", "Floor trading is a legacy mechanism that was threatened and largely replaced by tech-based platforms.", "The text argues technology is not a commodity, and competitive advantage comes from unique enabled processes."], "correct": 1, "hint": "Think about the functional area that focuses on the fundamental ways a firm conducts its business.", "topic": "Operations", "sec": "1.3", "src": "+", "link": "", "qid": "31303839e5"}, {"q": "A firm switches from using a private internal directory to allowing all employees to maintain professional profiles on LinkedIn. What are the likely outcomes regarding the firm's talent management?", "options": ["Paper Directory / Narrow recruiting net and Low vulnerability to talent raiding", "LinkedIn / Wide recruiting net and High vulnerability to talent raiding", "LinkedIn / Narrow recruiting net and Low vulnerability to talent raiding", "Paper Directory / Wide recruiting net and High vulnerability to talent raiding"], "rationales": ["While a paper directory is harder to raid, it does not offer the wide reach of a digital database for recruiting.", "Professional networks allow firms to find more talent, but also let competitors easily identify and target their best employees.", "LinkedIn broadens the talent net and increases the ease with which competitors can message employees.", "Paper directories were harder for competitors to access, thus guarding employees better than digital ones."], "correct": 1, "hint": "Evaluate the trade-off between being able to find new staff easily and the risk of competitors doing the same to you.", "topic": "HR Recruiting", "sec": "1.3", "src": "+", "link": "", "qid": "47fe1b66ad"}, {"q": "Corporate legal teams are seeing a massive escalation in activity in areas such as patents and privacy. What is the primary driver for this shift according to the text?", "options": ["The replacement of legal teams by automated search engine marketing tools.", "The total elimination of piracy due to advanced encryption software.", "A decrease in the importance of intellectual property in international business.", "A threefold increase in patent applications in regions like China and the U.S."], "rationales": ["While tools help sleuth facts, the need for legal expertise to manage property claims is growing, not being replaced.", "The text lists piracy as an area where activity has escalated dramatically, suggesting it is still a major issue.", "The text indicates that intellectual property is one of the 'hottest areas' and is increasing in importance.", "The rise in new inventions and business methods requires more legal experts to protect and enforce claims."], "correct": 3, "hint": "Identify the statistical trend regarding application filings that has forced firms to hire more lawyers.", "topic": "Intellectual Property", "sec": "1.3", "src": "+", "link": "", "qid": "6ef62d99a1"}, {"q": "Case 1: An investor transfers $50 million for a bridge project via a digital bank-to-bank transfer. Case 2: A floor trader at the NYSE uses hand signals to execute a stock purchase. Which statement best describes the role of technology in these cases?", "options": ["Technology is a luxury in Case 1, whereas the mechanism in Case 2 is the most efficient way to trade today.", "Both cases represent the 'prior decade' thinking that tech skills carry less value in finance.", "Both cases rely on Moore's Law to ensure that physical suitcases of cash are no longer needed.", "Technology is the lifeblood of Case 1, while the mechanism in Case 2 was largely replaced to finance tech-based platforms."], "rationales": ["The text describes tech as 'lifeblood,' not a luxury, and floor trading as a legacy system that was 'blasted open'.", "The text says this thinking was 'stunningly wrong' and that tech skills are more important than ever.", "Moore's Law relates to computing speed; the lack of suitcases is due to the digital nature of modern finance.", "Finance cannot exist without digital transfers, and the NYSE was forced to modernize to survive the threat of technology platforms."], "correct": 3, "hint": "Consider how the NYSE had to change its fundamental business model to compete with new trading software.", "topic": "Finance Platforms", "sec": "1.3", "src": "+", "link": "", "qid": "7e38c5e883"}, {"q": "In the field of Information Systems, a professional who focuses on making sure systems are easy to use is specialized in ______, whereas one who uses technology to make the firm more efficient is specialized in ______.", "options": ["field engineering / user-interface design", "user-interface design / process design", "process design / strategy", "strategy / user-interface design"], "rationales": ["Field engineering involves client-facing prototype implementation, rather than the initial internal efficiency design.", "User-interface design focuses on the human interaction, while process design focuses on organizational efficiency.", "Process design is about efficiency, while strategy is about leveraging technology for a competitive edge.", "Strategy focuses on competitive advantage, not specifically on the ease of use of a system."], "correct": 1, "hint": "Distinguish between the human-centric design of a screen and the structural design of a workflow.", "topic": "IS Job Diversity", "sec": "1.3", "src": "+", "link": "", "qid": "4d4dd84261"}, {"q": "Field engineers at major technology companies often work with sales teams to show how a company's software can solve a customer's problem by creating ______.", "options": ["prototypes", "RFID tags", "audit statements", "IPO valuations"], "rationales": ["Field engineers put together initial versions of a solution that are then turned over to the client's staff for full development.", "While tech firms use RFID, the role of a field engineer is to demonstrate software and services through working models.", "Audit statements are the product of accountants and auditors, not technology field engineers.", "Valuations are handled by finance professionals and investment bankers, not field engineers."], "correct": 0, "hint": "Think about what a technical salesperson might build to prove a product works before the customer's own team takes over.", "topic": "Field Engineering", "sec": "1.3", "src": "+", "link": "", "qid": "2f93b2f785"}, {"q": "A corporation is increasingly concerned about consumer data protection and the legal risks of data breaches. Which emerging C-level specialty roles would the firm most likely create to address these specific concerns?", "options": ["Chief Information Officer and Chief Technology Officer", "Chief Operating Officer and Chief Financial Officer", "Chief Marketing Officer and Chief Accounting Officer", "Chief Information Security Officer and Chief Privacy Officer"], "rationales": ["While these oversee tech, the 'emerging' and more specialized roles for security and privacy are the CISO and CPO.", "These are traditional executive roles; they are not the 'emerging C-level specialties' with a specific technology focus mentioned in the text.", "While these roles use tech, the text identifies CISO and CPO as the new positions focused on protection and data ethics.", "The CISO and CPO roles focus specifically on protecting systems from attack and managing sensitive consumer data."], "correct": 3, "hint": "Look for the titles that specifically mention the protection of information and the rights of consumers.", "topic": "Security Leadership", "sec": "1.3", "src": "+", "link": "", "qid": "a9339defed"}, {"q": "Senior technology positions are becoming a more common 'ticket to the chief executive's suite.' What reason does the text give for why tech roles provide good training for future CEOs?", "options": ["They are the only roles that do not require knowledge of the Sarbanes-Oxley Act.", "They are typically isolated from the disruptive forces of Moore's Law.", "They allow executives to focus solely on programming without needing to understand business strategy.", "They provide a deep understanding of the firm's operations and where it is vulnerable to attack."], "rationales": ["Technology is tightly linked to accounting and regulation, making this knowledge essential for tech leaders.", "Moore's Law is a central principle that tech leaders must understand as it impacts all products and services.", "The text states that a focus solely on technology is a recipe for disaster and that a business perspective is required.", "Tech roles allow executives to learn the breadth of a firm's activities and identify growth opportunities."], "correct": 3, "hint": "Think about how overseeing information systems gives a broad view of how an entire company functions.", "topic": "Exec Career Paths", "sec": "1.3", "src": "+", "link": "", "qid": "0e3318e445"}, {"q": "Case A: A customer complains to a store manager about a defective product. Case B: A customer broadcasts a negative review of the same product to their 50,000 followers on a social network. How do these cases differ regarding marketing influence?", "options": ["Social Media / Permanent voice and Broad word-of-mouth influence", "Social Media / Temporary voice and Narrow word-of-mouth influence", "Store Complaint / Permanent voice and Broad word-of-mouth influence", "Store Complaint / Temporary voice and Narrow word-of-mouth influence"], "rationales": ["Social media allows customers to have an enduring voice that can reach far beyond a single one-on-one interaction.", "Social media is noted for its permanent nature and its ability to broadcast influence widely.", "A face-to-face complaint is private and temporary unless the customer takes it to a digital platform.", "While true of a store complaint, the 'blown-apart marketing landscape' specifically refers to the power given to customers by social media."], "correct": 0, "hint": "Contrast the scale and duration of a private conversation versus a public digital post.", "topic": "Social Media", "sec": "1.3", "src": "+", "link": "", "qid": "7f8fb8798e"}, {"q": "Many major accounting firms have developed divisions that are now larger than their traditional audit and tax practices. What is the focus of these large, fast-growing divisions?", "options": ["Manual data entry", "Print-based media buying", "Tech-centric consulting", "Initial Public Offerings (IPOs)"], "rationales": ["Technology has moved the field away from manual processes toward sophisticated information systems.", "This is a marketing function, and a declining one, rather than a growth area for accounting firms.", "Firms like Deloitte and Accenture grew largely through their focus on technology services and consulting.", "While they audit firms that go through IPOs, the tech-centric consulting divisions are the specific high-growth areas mentioned."], "correct": 2, "hint": "Look for the type of practice that firms like Deloitte and Accenture are most famous for today.", "topic": "Consulting Growth", "sec": "1.3", "src": "+", "link": "", "qid": "d8324d7ad5"}, {"q": "A ______ leader presiding over a major corporate merger in the technology space is more likely to face ______ than their tech-savvy counterparts.", "options": ["non-technologist / success", "technologist / failure", "non-technologist / failure", "technologist / success"], "rationales": ["The examples provided (Levin, Semel, Murdoch) suggest that non-technologists often struggle when leading tech-focused firms.", "The text contrasts non-technologist failures against the technology-centric successes of leaders like Zuckerberg and Jobs.", "The text cites Jerry Levin and Time Warner's acquisition of AOL as a disastrous merger led by a non-technologist.", "While technologists often succeed, the question asks what a non-technologist is 'more likely' to face based on the historical failures listed."], "correct": 2, "hint": "Reflect on the outcomes for leaders like Jerry Levin or Rupert Murdoch when they entered the technology space.", "topic": "Leadership Background", "sec": "1.3", "src": "+", "link": "", "qid": "c4a89edcdb"}], "hasSheet": true, "parts": true, "secTitles": {"1.3": "Geek Up—Tech Is Everywhere and You'll Need It to Thrive"}, "reserve": 2, "frq": [], "notebook": "https://notebooklm.google.com/notebook/873a623f-584e-43aa-a1b5-4059031032cd/artifact/1e3a1e6e-621b-499d-b7c5-86f7f5c17a56", "root": "../index.html", "tab": "quiz", "sheet": "## Leadership\nRapidly declining costs and powerful digital tools now make technology a fundamental driver across every managerial discipline.\n### Key terms\n1.  **Moore’s Law** — a principle driving fast and cheap computing that forces technology into all products.\n2.  **Moore’s Law corollary** — the concept that tech skills are becoming embedded in every job function as costs lower.\n\n## Career Stability\nTechnical skills have evolved from a specialized niche into a primary differentiator and a source of significant job security.\n### Key terms\n1.  **Key differentiator** — tech knowledge that sets a job seeker apart in a crowded market.\n2.  **Outsourcing** — a prior-decade concern that tech jobs would move abroad, which proved incorrect as domestic tech jobs boomed.\n\n## Marketing Channels\nDigital platforms and mobile applications have revolutionized marketing by allowing firms to deliver location-based messages and track consumer activities.\n### Key terms\n1.  **Online channels** — digital paths used to track consumer activity and deliver targeted messaging.\n2.  **New channels** — emerging platforms for reaching consumers such as mobile apps and location-based services.\n   1.  **Southwest Airlines and Starbucks iPhone apps** — mobile channels delivering location-based messages and cashless payment.\n3.  **Search engine marketing (SEM)** — a component of the modern marketing toolkit focused on visibility.\n\n## Tech Permeation\nComputing power is increasingly integrated into diverse physical goods and logistics systems, making technology an essential part of non-tech products.\n### Key terms\n1.  **Baked into** — the process of embedding technology directly into non-tech products.\n   1.  **Vacuum cleaners and luggage tracking tags** — examples of everyday objects containing embedded technology.\n2.  **Radio frequency identification (RFID)** — tags used to track physical items like airport luggage.\n\n## Finance Valuation\nTechnological insight is mandatory for financial professionals to accurately determine the market value of firms during public offerings and acquisitions.\n### Key terms\n1.  **Initial public stock offerings (IPOs)** — the first time a firm sells stock on public markets, often involving tech firms.\n2.  **Merger and acquisition (M&A)** — the process of firms buying other companies to gain tech advantages.\n\n## Marketing ROI\nMarketing budgets are shifting toward the Web because digital tools provide superior data for measuring the direct effectiveness of advertising spend.\n### Key terms\n1.  **Return on investment (ROI)** — the measured effectiveness of marketing dollars, amped up by customer tracking.\n2.  **Tough-to-track media** — traditional advertising formats that are losing budget to the Web.\n   1.  **Print, radio, and television** — traditional formats that provide less data for measuring campaign success.\n### Names and studies\n1.  **Pontin (2009)** — documented the shift of marketing spend from traditional media to more trackable Web channels.\n\n## Audit Regulation\nStrict legal frameworks now make accounting accuracy inseparable from the reliability of the underlying information systems.\n### Key terms\n1.  **Information systems** — the underlying technology that records, stores, and reports accounting numbers.\n2.  **Sarbanes-Oxley Act** — a U.S. regulation that imposes heavy executive penalties for inaccurate financial reporting.\n\n## Operations\nModern operations rely on technology-enabled process design to maximize organizational efficiency and establish sustainable competitive advantages.\n### Key terms\n1.  **Technology-enabled operations** — business processes designed to create value through tech integration.\n2.  **Process design** — the act of leveraging technology to make firms more efficient.\n\n## HR Recruiting\nHuman resources has been transformed by digital tools that facilitate talent searches while increasing the risk of competitors poaching top employees.\n### Key terms\n1.  **Knowledge management systems** — tools used to organize and leverage expert teams within a firm.\n2.  **Database search program** — software used by recruiters to make the first cut of resumes based on keywords.\n3.  **Professional social networks** — online platforms that make employee directories public and increase poaching risks.\n   1.  **LinkedIn** — a service allowing competitors to easily identify and target a firm’s best talent.\n\n## Intellectual Property\nThe legal landscape is increasingly focused on technical assets as firms rush to protect inventions through a growing volume of patent filings.\n### Key terms\n1.  **Intellectual property** — legal rights related to inventions and business methods.\n2.  **Patent applications** — legal filings to protect inventions; tripled in the U.S. over a decade and in China in five years.\n### Names and studies\n1.  **Schmid & Poston (2009)** — documented the massive global increase in patent applications in the U.S. and China.\n\n## Finance Platforms\nFinancial institutions have replaced manual trading and fund movement with high-speed digital trading platforms and electronic transfers.\n### Key terms\n1.  **Digital transfers** — the method of moving funds between banks without physical cash.\n2.  **Technology-based trading platforms** — systems that replaced floor trading at the New York Stock Exchange.\n### Names and studies\n1.  **Fidelity Investments** — a mutual fund giant that spends approximately $2.8 billion annually on technology.\n\n## IS Job Diversity\nInformation systems departments offer a broad array of career paths that combine technical expertise with design, strategy, and data analysis.\n### Key terms\n1.  **User-interface design** — a role focused on ensuring technology systems are easy for people to use.\n2.  **Strategy** — a role specializing in technology for the purpose of competitive advantage.\n3.  **Business intelligence analyst** — a specialized career path focused on data and expertise.\n\n## Field Engineering\nField engineers act as technical intermediaries who collaborate with sales teams and clients to design solutions for specific business problems.\n### Key terms\n1.  **Field engineers** — technical staff who work with sales teams to build prototypes for customers.\n2.  **Solutions blueprint** — a plan identifying problems and fixes that is handed to a coding team.\n### Names and studies\n1.  **Apple field engineer** — demonstrated how organizations can leverage podcasting.\n2.  **Google field engineer** — helped firms incorporate search and video ads into online efforts.\n\n## Security Leadership\nThe rise of data-driven business has created a need for executive-level specialists dedicated to managing information security and consumer privacy.\n### Key terms\n1.  **Chief information security officer (CISO)** — a C-level specialist focused on the security of information systems.\n2.  **Chief privacy officer (CPO)** — a senior role focused on managing consumer and firm privacy.\n\n## Exec Career Paths\nExperience in managing information systems provides a comprehensive view of firm operations, making tech leadership an ideal training ground for CEOs.\n### Key terms\n1.  **Chief information officer (CIO)** — a senior position overseeing information systems development.\n2.  **C-level training ground** — the use of tech roles to learn the breadth of firm operations and vulnerabilities.\n### Names and studies\n1.  **Fortune (Fort, 2009)** — highlighted how technology management experience prepares executives for top leadership roles.\n\n## Social Media\nSocial media has empowered consumers with a permanent voice, requiring firms to balance reputation management with respectful data personalization.\n### Key terms\n1.  **Word-of-mouth influence** — the broadcast of customer opinions that can benefit or harm a firm.\n2.  **Personalization systems** — tools that balance data gathering with consumer privacy.\n\n## Consulting Growth\nThe demand for technology-driven business advice has fueled the growth of consulting practices that frequently exceed the size of their parent firms.\n### Key terms\n1.  **Tech-centric consulting** — advisory practices that often grow larger than the accounting firms that spawned them.\n### Names and studies\n1.  **Deloitte** — showed that its tech-consulting division is now larger than its audit, tax, and risk practices.\n2.  **Accenture** — split from Arthur Andersen because its tech practice was larger than the parent accounting firm.\n\n## Leadership Background\nTech-centric leaders consistently outperform non-technologists who have overseen some of the most disastrous failures when entering the technology space.\n### Key terms\n1.  **Tech-centric leadership** — an approach valuing the link between business and tech, demonstrated by successful founders.\n2.  **Non-technologist failure** — market share loss and disastrous mergers caused by leaders lacking technical focus.\n### Names and studies\n1.  **Rupert Murdoch** — purchased MySpace but lost market share to rivals due to lack of tech focus.\n2.  **Jerry Levin** — presided over the AOL-Time Warner merger, resulting in one of the most disastrous mergers in history.\n3.  **Mark Zuckerberg** — founded Facebook as a tech-centric leader and achieved massive success.\n4.  **Steve Jobs** — led Apple to success through a deep appreciation for the link between business and tech."}</script>
+<script id="quiz-data" type="application/json">{"id": "bmgt301-ch1-1-3-course-1-3_3-2-cour", "title": "Ch1 Exam · 1.3", "subtitle": "Setting the Stage- Technology and the Modern Enterprise", "book": "BMGT301", "hash": "9187c84202c11ed5", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "Case A: Rupert Murdoch, a non-technologist media mogul, leads the acquisition of MySpace but loses market share to rivals. Case B: Mark Zuckerberg, a technologist, founds and grows Facebook into a global power. Which principle best accounts for the difference in these outcomes?", "options": ["The critical role of tech-centric leadership in evaluating and making decisions in an ever-shifting space.", "The tendency for tech firms to only succeed if they are founded by individuals under the age of thirty.", "The principle of Moore's Law which dictates that social media platforms must be replaced every decade.", "The inevitable failure of any firm that attempts to acquire an existing social media platform."], "rationales": ["Business leaders with a deep understanding of technology are better equipped to navigate and succeed in the tech industry than those who lack it.", "While the examples involve young founders, the core argument is about tech knowledge, not the chronological age of the executive.", "Moore's Law refers to computing speed and cost, not the lifecycle of social media market leaders.", "The source material focuses on the leader's background and understanding of tech, not a general rule against all acquisitions."], "correct": 0, "hint": "Focus on the contrast between tech-centric successes and non-technologist failures in the digital space.", "topic": "Leadership", "sec": "1.3", "src": "+", "link": "", "qid": "4d4a106191"}, {"q": "Firms like Google, Apple, and Microsoft have topped Fortune's 'Best Companies to Work For' list for several years. This fact serves as a primary example of which concept?", "options": ["Information Systems Careers", "Legacy Print Media", "Commodity-based Finance", "Traditional Manufacturing"], "rationales": ["Tech firms consistently rank as top employers, offering varied and rewarding career paths within the information systems discipline.", "The source material notes that legacy media has struggled compared to tech-driven companies.", "The text specifically contrasts technology's role as a lifeblood against the idea of it being a mere commodity.", "The list provided in the text highlights tech giants rather than traditional manufacturing firms."], "correct": 0, "hint": "Consider which career discipline is described as being among the safest and highest-paying for graduates.", "topic": "Career Stability", "sec": "1.3", "src": "+", "link": "", "qid": "182b50d5b2"}, {"q": "When firms such as Zara and Starbucks introduce mobile apps that deliver location-based messages and facilitate cashless payment, they are utilizing technology as a(n) ______ to reach millions of consumers.", "options": ["marketing channel", "legal barrier", "outsourcing byproduct", "accounting foundation"], "rationales": ["Mobile applications represent a new and powerful way for firms to communicate with and provide services to their customer base.", "The focus is on customer engagement and sales, not on creating legal obstacles for competitors.", "Apps are strategic tools for engagement, not merely a result of cutting costs through external labor.", "While apps record transactions, the text highlights their role in reaching customers and delivering messages as part of marketing."], "correct": 0, "hint": "Think about how new software tools change the way products are delivered and messages are sent to the public.", "topic": "Marketing Channels", "sec": "1.3", "src": "+", "link": "", "qid": "43269a8a4e"}, {"q": "A student majoring in Human Resources believes they can ignore computing trends because they do not intend to work in a technical role. Which concept from the text suggests this student is likely to face career difficulties?", "options": ["The shift of technology away from strategic roles toward becoming a basic commodity.", "The Sarbanes-Oxley Act which requires all employees to have a computer science degree.", "The decline of social media as a viable tool for employee recruiting and screening.", "The Moore's Law corollary where tech skills are being embedded into all job functions."], "rationales": ["The text argues technology is becoming more important and strategic, not a commodity.", "Sarbanes-Oxley relates to accounting regulation and system accuracy, not a universal degree requirement.", "The text states that recruiting has moved online and is grounded in information systems.", "As technology becomes cheaper and more pervasive, it profoundly impacts even non-technical disciplines like HR."], "correct": 3, "hint": "Look for the principle that describes technology being 'baked into' products and careers alike.", "topic": "Tech Permeation", "sec": "1.3", "src": "+", "link": "", "qid": "d4c2c1613e"}, {"q": "An investment banker provides a valuation for a startup that is significantly lower than its eventual market price because they failed to understand the startup's underlying software advantage. This represents a failure in which critical banking task?", "options": ["Drafting patent applications for the startup's proprietary methods.", "Providing an accurate guess at a company's worth during an IPO.", "Auditing the firm's financial statements for Sarbanes-Oxley compliance.", "Managing the physical transfer of funds between international banks."], "rationales": ["Patent applications are the domain of legal teams, whereas bankers focus on valuation and financial deals.", "Bankers must understand the role of technology to value firms correctly in the public markets.", "Auditing for compliance is an accounting function, while investment bankers handle firm valuation.", "The text notes funds are transferred digitally, but the valuation failure relates to intellectual analysis, not digital logistics."], "correct": 1, "hint": "Consider what an i-banker must do when a company first wishes to sell its stock on public markets.", "topic": "Finance Valuation", "sec": "1.3", "src": "+", "link": "", "qid": "0f63968796"}, {"q": "A company compares the performance of a traditional billboard campaign against a modern Search Engine Marketing (SEM) campaign. Based on the toolkit of today's marketers, which attributes describe these channels?", "options": ["Print Media / High trackability of consumer activity", "Print Media / Low trackability of consumer activity", "Online Channels / High trackability of consumer activity", "Online Channels / Low trackability of consumer activity"], "rationales": ["The text identifies print media as 'tough-to-track' compared to Web-based efforts.", "While print media is low trackability, the 'today's toolkit' mentioned in the text emphasizes the move toward high trackability online.", "Online channels allow firms to monitor visit patterns and immediately assess if a campaign results in a purchase.", "This contradicts the text, which states online channels provide ways to track and monitor activities."], "correct": 2, "hint": "Compare the ability to monitor specific consumer actions across digital and physical media.", "topic": "Marketing ROI", "sec": "1.3", "src": "+", "link": "", "qid": "a13bd0f3e1"}, {"q": "The Sarbanes-Oxley Act has increased the stakes for ensuring systems accuracy because negligence can lead to jail time. Which discipline is now most tightly linked to technology because of this regulation?", "options": ["Human Resources", "Operations", "Marketing", "Accounting"], "rationales": ["HR uses tech for training and evaluation, but is not the primary focus of the Sarbanes-Oxley Act's auditing requirements.", "Operations uses tech for efficiency, but the specific regulation mentioned is about financial reliability and auditing.", "Marketing is impacted by tech, but the specific legal penalties of Sarbanes-Oxley target financial reporting.", "Accounting careers are built on information systems, and auditors must ensure the reliability of the underlying technology."], "correct": 3, "hint": "Identify the field where the reliability of an audit is tied directly to the reliability of the software recording the numbers.", "topic": "Audit Regulation", "sec": "1.3", "src": "+", "link": "", "qid": "3625dd9b62"}, {"q": "In the modern enterprise, value and competitive advantage are increasingly created through technology-enabled ______.", "options": ["paper-based directories", "operations", "manual floor trading", "commodity pricing"], "rationales": ["Paper directories are associated with the prior generation of HR, not modern competitive advantage.", "Firms use tech-centric designs to fundamentally change how they conduct business and gain an edge over competitors.", "Floor trading is a legacy mechanism that was threatened and largely replaced by tech-based platforms.", "The text argues technology is not a commodity, and competitive advantage comes from unique enabled processes."], "correct": 1, "hint": "Think about the functional area that focuses on the fundamental ways a firm conducts its business.", "topic": "Operations", "sec": "1.3", "src": "+", "link": "", "qid": "31303839e5"}, {"q": "A firm switches from using a private internal directory to allowing all employees to maintain professional profiles on LinkedIn. What are the likely outcomes regarding the firm's talent management?", "options": ["Paper Directory / Narrow recruiting net and Low vulnerability to talent raiding", "LinkedIn / Wide recruiting net and High vulnerability to talent raiding", "LinkedIn / Narrow recruiting net and Low vulnerability to talent raiding", "Paper Directory / Wide recruiting net and High vulnerability to talent raiding"], "rationales": ["While a paper directory is harder to raid, it does not offer the wide reach of a digital database for recruiting.", "Professional networks allow firms to find more talent, but also let competitors easily identify and target their best employees.", "LinkedIn broadens the talent net and increases the ease with which competitors can message employees.", "Paper directories were harder for competitors to access, thus guarding employees better than digital ones."], "correct": 1, "hint": "Evaluate the trade-off between being able to find new staff easily and the risk of competitors doing the same to you.", "topic": "HR Recruiting", "sec": "1.3", "src": "+", "link": "", "qid": "47fe1b66ad"}, {"q": "Corporate legal teams are seeing a massive escalation in activity in areas such as patents and privacy. What is the primary driver for this shift according to the text?", "options": ["The replacement of legal teams by automated search engine marketing tools.", "The total elimination of piracy due to advanced encryption software.", "A decrease in the importance of intellectual property in international business.", "A threefold increase in patent applications in regions like China and the U.S."], "rationales": ["While tools help sleuth facts, the need for legal expertise to manage property claims is growing, not being replaced.", "The text lists piracy as an area where activity has escalated dramatically, suggesting it is still a major issue.", "The text indicates that intellectual property is one of the 'hottest areas' and is increasing in importance.", "The rise in new inventions and business methods requires more legal experts to protect and enforce claims."], "correct": 3, "hint": "Identify the statistical trend regarding application filings that has forced firms to hire more lawyers.", "topic": "Intellectual Property", "sec": "1.3", "src": "+", "link": "", "qid": "6ef62d99a1"}, {"q": "Case 1: An investor transfers $50 million for a bridge project via a digital bank-to-bank transfer. Case 2: A floor trader at the NYSE uses hand signals to execute a stock purchase. Which statement best describes the role of technology in these cases?", "options": ["Technology is a luxury in Case 1, whereas the mechanism in Case 2 is the most efficient way to trade today.", "Both cases represent the 'prior decade' thinking that tech skills carry less value in finance.", "Both cases rely on Moore's Law to ensure that physical suitcases of cash are no longer needed.", "Technology is the lifeblood of Case 1, while the mechanism in Case 2 was largely replaced to finance tech-based platforms."], "rationales": ["The text describes tech as 'lifeblood,' not a luxury, and floor trading as a legacy system that was 'blasted open'.", "The text says this thinking was 'stunningly wrong' and that tech skills are more important than ever.", "Moore's Law relates to computing speed; the lack of suitcases is due to the digital nature of modern finance.", "Finance cannot exist without digital transfers, and the NYSE was forced to modernize to survive the threat of technology platforms."], "correct": 3, "hint": "Consider how the NYSE had to change its fundamental business model to compete with new trading software.", "topic": "Finance Platforms", "sec": "1.3", "src": "+", "link": "", "qid": "7e38c5e883"}, {"q": "In the field of Information Systems, a professional who focuses on making sure systems are easy to use is specialized in ______, whereas one who uses technology to make the firm more efficient is specialized in ______.", "options": ["field engineering / user-interface design", "user-interface design / process design", "process design / strategy", "strategy / user-interface design"], "rationales": ["Field engineering involves client-facing prototype implementation, rather than the initial internal efficiency design.", "User-interface design focuses on the human interaction, while process design focuses on organizational efficiency.", "Process design is about efficiency, while strategy is about leveraging technology for a competitive edge.", "Strategy focuses on competitive advantage, not specifically on the ease of use of a system."], "correct": 1, "hint": "Distinguish between the human-centric design of a screen and the structural design of a workflow.", "topic": "IS Job Diversity", "sec": "1.3", "src": "+", "link": "", "qid": "4d4dd84261"}, {"q": "Field engineers at major technology companies often work with sales teams to show how a company's software can solve a customer's problem by creating ______.", "options": ["prototypes", "RFID tags", "audit statements", "IPO valuations"], "rationales": ["Field engineers put together initial versions of a solution that are then turned over to the client's staff for full development.", "While tech firms use RFID, the role of a field engineer is to demonstrate software and services through working models.", "Audit statements are the product of accountants and auditors, not technology field engineers.", "Valuations are handled by finance professionals and investment bankers, not field engineers."], "correct": 0, "hint": "Think about what a technical salesperson might build to prove a product works before the customer's own team takes over.", "topic": "Field Engineering", "sec": "1.3", "src": "+", "link": "", "qid": "2f93b2f785"}, {"q": "A corporation is increasingly concerned about consumer data protection and the legal risks of data breaches. Which emerging C-level specialty roles would the firm most likely create to address these specific concerns?", "options": ["Chief Information Officer and Chief Technology Officer", "Chief Operating Officer and Chief Financial Officer", "Chief Marketing Officer and Chief Accounting Officer", "Chief Information Security Officer and Chief Privacy Officer"], "rationales": ["While these oversee tech, the 'emerging' and more specialized roles for security and privacy are the CISO and CPO.", "These are traditional executive roles; they are not the 'emerging C-level specialties' with a specific technology focus mentioned in the text.", "While these roles use tech, the text identifies CISO and CPO as the new positions focused on protection and data ethics.", "The CISO and CPO roles focus specifically on protecting systems from attack and managing sensitive consumer data."], "correct": 3, "hint": "Look for the titles that specifically mention the protection of information and the rights of consumers.", "topic": "Security Leadership", "sec": "1.3", "src": "+", "link": "", "qid": "a9339defed"}, {"q": "Senior technology positions are becoming a more common 'ticket to the chief executive's suite.' What reason does the text give for why tech roles provide good training for future CEOs?", "options": ["They are the only roles that do not require knowledge of the Sarbanes-Oxley Act.", "They are typically isolated from the disruptive forces of Moore's Law.", "They allow executives to focus solely on programming without needing to understand business strategy.", "They provide a deep understanding of the firm's operations and where it is vulnerable to attack."], "rationales": ["Technology is tightly linked to accounting and regulation, making this knowledge essential for tech leaders.", "Moore's Law is a central principle that tech leaders must understand as it impacts all products and services.", "The text states that a focus solely on technology is a recipe for disaster and that a business perspective is required.", "Tech roles allow executives to learn the breadth of a firm's activities and identify growth opportunities."], "correct": 3, "hint": "Think about how overseeing information systems gives a broad view of how an entire company functions.", "topic": "Exec Career Paths", "sec": "1.3", "src": "+", "link": "", "qid": "0e3318e445"}, {"q": "Case A: A customer complains to a store manager about a defective product. Case B: A customer broadcasts a negative review of the same product to their 50,000 followers on a social network. How do these cases differ regarding marketing influence?", "options": ["Social Media / Permanent voice and Broad word-of-mouth influence", "Social Media / Temporary voice and Narrow word-of-mouth influence", "Store Complaint / Permanent voice and Broad word-of-mouth influence", "Store Complaint / Temporary voice and Narrow word-of-mouth influence"], "rationales": ["Social media allows customers to have an enduring voice that can reach far beyond a single one-on-one interaction.", "Social media is noted for its permanent nature and its ability to broadcast influence widely.", "A face-to-face complaint is private and temporary unless the customer takes it to a digital platform.", "While true of a store complaint, the 'blown-apart marketing landscape' specifically refers to the power given to customers by social media."], "correct": 0, "hint": "Contrast the scale and duration of a private conversation versus a public digital post.", "topic": "Social Media", "sec": "1.3", "src": "+", "link": "", "qid": "7f8fb8798e"}, {"q": "Many major accounting firms have developed divisions that are now larger than their traditional audit and tax practices. What is the focus of these large, fast-growing divisions?", "options": ["Manual data entry", "Print-based media buying", "Tech-centric consulting", "Initial Public Offerings (IPOs)"], "rationales": ["Technology has moved the field away from manual processes toward sophisticated information systems.", "This is a marketing function, and a declining one, rather than a growth area for accounting firms.", "Firms like Deloitte and Accenture grew largely through their focus on technology services and consulting.", "While they audit firms that go through IPOs, the tech-centric consulting divisions are the specific high-growth areas mentioned."], "correct": 2, "hint": "Look for the type of practice that firms like Deloitte and Accenture are most famous for today.", "topic": "Consulting Growth", "sec": "1.3", "src": "+", "link": "", "qid": "d8324d7ad5"}, {"q": "A ______ leader presiding over a major corporate merger in the technology space is more likely to face ______ than their tech-savvy counterparts.", "options": ["non-technologist / success", "technologist / failure", "non-technologist / failure", "technologist / success"], "rationales": ["The examples provided (Levin, Semel, Murdoch) suggest that non-technologists often struggle when leading tech-focused firms.", "The text contrasts non-technologist failures against the technology-centric successes of leaders like Zuckerberg and Jobs.", "The text cites Jerry Levin and Time Warner's acquisition of AOL as a disastrous merger led by a non-technologist.", "While technologists often succeed, the question asks what a non-technologist is 'more likely' to face based on the historical failures listed."], "correct": 2, "hint": "Reflect on the outcomes for leaders like Jerry Levin or Rupert Murdoch when they entered the technology space.", "topic": "Leadership Background", "sec": "1.3", "src": "+", "link": "", "qid": "c4a89edcdb"}], "hasSheet": true, "parts": true, "secTitles": {"1.3": "Geek Up—Tech Is Everywhere and You'll Need It to Thrive"}, "reserve": 2, "tags": false, "frq": [], "notebook": "https://notebooklm.google.com/notebook/873a623f-584e-43aa-a1b5-4059031032cd/artifact/1e3a1e6e-621b-499d-b7c5-86f7f5c17a56", "root": "../index.html", "tab": "quiz", "sheet": "## Leadership\nRapidly declining costs and powerful digital tools now make technology a fundamental driver across every managerial discipline.\n### Key terms\n1.  **Moore’s Law** — a principle driving fast and cheap computing that forces technology into all products.\n2.  **Moore’s Law corollary** — the concept that tech skills are becoming embedded in every job function as costs lower.\n\n## Career Stability\nTechnical skills have evolved from a specialized niche into a primary differentiator and a source of significant job security.\n### Key terms\n1.  **Key differentiator** — tech knowledge that sets a job seeker apart in a crowded market.\n2.  **Outsourcing** — a prior-decade concern that tech jobs would move abroad, which proved incorrect as domestic tech jobs boomed.\n\n## Marketing Channels\nDigital platforms and mobile applications have revolutionized marketing by allowing firms to deliver location-based messages and track consumer activities.\n### Key terms\n1.  **Online channels** — digital paths used to track consumer activity and deliver targeted messaging.\n2.  **New channels** — emerging platforms for reaching consumers such as mobile apps and location-based services.\n   1.  **Southwest Airlines and Starbucks iPhone apps** — mobile channels delivering location-based messages and cashless payment.\n3.  **Search engine marketing (SEM)** — a component of the modern marketing toolkit focused on visibility.\n\n## Tech Permeation\nComputing power is increasingly integrated into diverse physical goods and logistics systems, making technology an essential part of non-tech products.\n### Key terms\n1.  **Baked into** — the process of embedding technology directly into non-tech products.\n   1.  **Vacuum cleaners and luggage tracking tags** — examples of everyday objects containing embedded technology.\n2.  **Radio frequency identification (RFID)** — tags used to track physical items like airport luggage.\n\n## Finance Valuation\nTechnological insight is mandatory for financial professionals to accurately determine the market value of firms during public offerings and acquisitions.\n### Key terms\n1.  **Initial public stock offerings (IPOs)** — the first time a firm sells stock on public markets, often involving tech firms.\n2.  **Merger and acquisition (M&A)** — the process of firms buying other companies to gain tech advantages.\n\n## Marketing ROI\nMarketing budgets are shifting toward the Web because digital tools provide superior data for measuring the direct effectiveness of advertising spend.\n### Key terms\n1.  **Return on investment (ROI)** — the measured effectiveness of marketing dollars, amped up by customer tracking.\n2.  **Tough-to-track media** — traditional advertising formats that are losing budget to the Web.\n   1.  **Print, radio, and television** — traditional formats that provide less data for measuring campaign success.\n### Names and studies\n1.  **Pontin (2009)** — documented the shift of marketing spend from traditional media to more trackable Web channels.\n\n## Audit Regulation\nStrict legal frameworks now make accounting accuracy inseparable from the reliability of the underlying information systems.\n### Key terms\n1.  **Information systems** — the underlying technology that records, stores, and reports accounting numbers.\n2.  **Sarbanes-Oxley Act** — a U.S. regulation that imposes heavy executive penalties for inaccurate financial reporting.\n\n## Operations\nModern operations rely on technology-enabled process design to maximize organizational efficiency and establish sustainable competitive advantages.\n### Key terms\n1.  **Technology-enabled operations** — business processes designed to create value through tech integration.\n2.  **Process design** — the act of leveraging technology to make firms more efficient.\n\n## HR Recruiting\nHuman resources has been transformed by digital tools that facilitate talent searches while increasing the risk of competitors poaching top employees.\n### Key terms\n1.  **Knowledge management systems** — tools used to organize and leverage expert teams within a firm.\n2.  **Database search program** — software used by recruiters to make the first cut of resumes based on keywords.\n3.  **Professional social networks** — online platforms that make employee directories public and increase poaching risks.\n   1.  **LinkedIn** — a service allowing competitors to easily identify and target a firm’s best talent.\n\n## Intellectual Property\nThe legal landscape is increasingly focused on technical assets as firms rush to protect inventions through a growing volume of patent filings.\n### Key terms\n1.  **Intellectual property** — legal rights related to inventions and business methods.\n2.  **Patent applications** — legal filings to protect inventions; tripled in the U.S. over a decade and in China in five years.\n### Names and studies\n1.  **Schmid & Poston (2009)** — documented the massive global increase in patent applications in the U.S. and China.\n\n## Finance Platforms\nFinancial institutions have replaced manual trading and fund movement with high-speed digital trading platforms and electronic transfers.\n### Key terms\n1.  **Digital transfers** — the method of moving funds between banks without physical cash.\n2.  **Technology-based trading platforms** — systems that replaced floor trading at the New York Stock Exchange.\n### Names and studies\n1.  **Fidelity Investments** — a mutual fund giant that spends approximately $2.8 billion annually on technology.\n\n## IS Job Diversity\nInformation systems departments offer a broad array of career paths that combine technical expertise with design, strategy, and data analysis.\n### Key terms\n1.  **User-interface design** — a role focused on ensuring technology systems are easy for people to use.\n2.  **Strategy** — a role specializing in technology for the purpose of competitive advantage.\n3.  **Business intelligence analyst** — a specialized career path focused on data and expertise.\n\n## Field Engineering\nField engineers act as technical intermediaries who collaborate with sales teams and clients to design solutions for specific business problems.\n### Key terms\n1.  **Field engineers** — technical staff who work with sales teams to build prototypes for customers.\n2.  **Solutions blueprint** — a plan identifying problems and fixes that is handed to a coding team.\n### Names and studies\n1.  **Apple field engineer** — demonstrated how organizations can leverage podcasting.\n2.  **Google field engineer** — helped firms incorporate search and video ads into online efforts.\n\n## Security Leadership\nThe rise of data-driven business has created a need for executive-level specialists dedicated to managing information security and consumer privacy.\n### Key terms\n1.  **Chief information security officer (CISO)** — a C-level specialist focused on the security of information systems.\n2.  **Chief privacy officer (CPO)** — a senior role focused on managing consumer and firm privacy.\n\n## Exec Career Paths\nExperience in managing information systems provides a comprehensive view of firm operations, making tech leadership an ideal training ground for CEOs.\n### Key terms\n1.  **Chief information officer (CIO)** — a senior position overseeing information systems development.\n2.  **C-level training ground** — the use of tech roles to learn the breadth of firm operations and vulnerabilities.\n### Names and studies\n1.  **Fortune (Fort, 2009)** — highlighted how technology management experience prepares executives for top leadership roles.\n\n## Social Media\nSocial media has empowered consumers with a permanent voice, requiring firms to balance reputation management with respectful data personalization.\n### Key terms\n1.  **Word-of-mouth influence** — the broadcast of customer opinions that can benefit or harm a firm.\n2.  **Personalization systems** — tools that balance data gathering with consumer privacy.\n\n## Consulting Growth\nThe demand for technology-driven business advice has fueled the growth of consulting practices that frequently exceed the size of their parent firms.\n### Key terms\n1.  **Tech-centric consulting** — advisory practices that often grow larger than the accounting firms that spawned them.\n### Names and studies\n1.  **Deloitte** — showed that its tech-consulting division is now larger than its audit, tax, and risk practices.\n2.  **Accenture** — split from Arthur Andersen because its tech practice was larger than the parent accounting firm.\n\n## Leadership Background\nTech-centric leaders consistently outperform non-technologists who have overseen some of the most disastrous failures when entering the technology space.\n### Key terms\n1.  **Tech-centric leadership** — an approach valuing the link between business and tech, demonstrated by successful founders.\n2.  **Non-technologist failure** — market share loss and disastrous mergers caused by leaders lacking technical focus.\n### Names and studies\n1.  **Rupert Murdoch** — purchased MySpace but lost market share to rivals due to lack of tech focus.\n2.  **Jerry Levin** — presided over the AOL-Time Warner merger, resulting in one of the most disastrous mergers in history.\n3.  **Mark Zuckerberg** — founded Facebook as a tech-centric leader and achieved massive success.\n4.  **Steve Jobs** — led Apple to success through a deep appreciation for the link between business and tech."}</script>
+<script>
+(function(){
+  if(window.lqSync) return;
+  const API = 'https://terp-plate.vercel.app/api/quiz-sync', MK = 'lqsync:meta';
+  const none = {first: Promise.resolve([]), now: async()=>[], listen(){}};
+  let key = '';
+  try{ key = localStorage.getItem('lq:key') || ''; }catch(e){}
+  const hm = /[#&]k=([A-Za-z0-9_-]{40,})/.exec(location.hash);
+  if(hm) key = hm[1];
+  if(!key || !window.crypto || !crypto.subtle){ window.lqSync = none; return; }
+
+  const skip = k => k.indexOf('lq:') !== 0 || k === 'lq:key' || k === 'lq:speech';
+  const rawSet = Storage.prototype.setItem;
+  let meta = {};
+  try{ meta = JSON.parse(localStorage.getItem(MK) || '{}') || {}; }catch(e){}
+  const putMeta = ()=>{ try{ rawSet.call(localStorage, MK, JSON.stringify(meta)); }catch(e){} };
+  const hash = t => { let h = 5381; for(let i=0;i<t.length;i++) h = ((h<<5) + h + t.charCodeAt(i)) | 0; return h; };
+  const isState = k => /^lq:[^:]+$/.test(k) && k !== 'lq:hub';
+  function weight(s){
+    return Object.keys(s.answers||{}).length + Object.keys(s.pass2||{}).length
+         + Object.keys(s.skipped||{}).length + Object.keys(s.starred||{}).length
+         + Object.keys(s.unsure||{}).length + 1000 * (s.history||[]).length + (s.done ? 500 : 0);
+  }
+  // '' = nothing worth sending
+  function sig(k, v){
+    if(isState(k)){
+      try{ const s = JSON.parse(v);
+        if(!s || typeof s !== 'object') return '';
+        if(!weight(s) && !s.only && !s.tagf) return '';
+        const c = Object.assign({}, s); delete c.ms; delete c.qms; delete c.meta; delete c.hintOpen;
+        return JSON.stringify(c);
+      }catch(e){ return ''; }
+    }
+    return (v && v !== '{}' && v !== '[]' && v !== '{"defs":[],"q":{}}') ? v : '';
+  }
+  let frozen = false, applying = false, timer = null, busy = false;
+  function mark(k, v){
+    if(skip(k)) return;
+    const g = sig(k, v), h = hash(g), m = meta[k] || (meta[k] = {t:0});
+    if(m.h === h) return;
+    m.h = h;
+    if(g){ m.t = Date.now(); m.d = 1; clearTimeout(timer); timer = setTimeout(run, 1500); }
+    putMeta();
+  }
+  Storage.prototype.setItem = function(k, v){
+    if(this === localStorage && frozen && String(k).indexOf('lq:') === 0) return;
+    rawSet.call(this, k, v);
+    if(this === localStorage && !applying){ try{ mark(String(k), String(v)); }catch(e){} }
+  };
+  // What was already here before sync existed: age unknown, so it is stamped low, and a real
+  // attempt outranks a thinner one by how much is in it.
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(skip(k) || meta[k]) continue;
+      const v = localStorage.getItem(k), g = sig(k, v);
+      meta[k] = {t: 0, h: hash(g)};
+      if(g){ let w = 1; if(isState(k)){ try{ w = 1 + weight(JSON.parse(v)); }catch(e){} }
+             meta[k].t = w; meta[k].d = 1; }
+    }
+    putMeta();
+  }catch(e){}
+
+  const enc = new TextEncoder(), dec = new TextDecoder();
+  const toB = s => { s = s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length % 4) s += '=';
+                     return Uint8Array.from(atob(s), c => c.charCodeAt(0)); };
+  const fromB = u => { let t = ''; for(let i=0;i<u.length;i+=8192) t += String.fromCharCode.apply(null, u.subarray(i, i+8192));
+                       return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+  const hex = b => Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,'0')).join('');
+  let ck = null, bucket = '';
+  const ready = (async()=>{
+    ck = await crypto.subtle.importKey('raw', toB(key), 'AES-GCM', false, ['encrypt','decrypt']);
+    bucket = hex(await crypto.subtle.digest('SHA-256', enc.encode('lq-sync:' + key))).slice(0, 32);
+  })();
+  const kid = async k => hex(await crypto.subtle.digest('SHA-256', enc.encode(bucket + '|' + k))).slice(0, 32);
+  async function seal(o){
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv}, ck, enc.encode(JSON.stringify(o)));
+    return fromB(iv) + '.' + fromB(new Uint8Array(ct));
+  }
+  async function unseal(t){
+    const p = t.split('.');
+    return JSON.parse(dec.decode(await crypto.subtle.decrypt({name:'AES-GCM', iv:toB(p[0])}, ck, toB(p[1]))));
+  }
+
+  function pageId(){
+    const el = document.getElementById('quiz-data');
+    if(!el) return null;
+    try{ return JSON.parse(el.textContent).id; }catch(e){ return null; }
+  }
+  async function run(){
+    if(busy || frozen) return [];
+    busy = true;
+    const changed = [];
+    try{
+      await ready;
+      const have = {}, puts = [], sent = {};
+      for(const k of Object.keys(meta)){
+        const m = meta[k];
+        if(!m.id) m.id = await kid(k);
+        have[m.id] = m.t || 0;
+        if(m.d){
+          const v = localStorage.getItem(k);
+          if(v === null){ m.d = 0; continue; }
+          puts.push({k: m.id, v: await seal({k, v}), ts: m.t});
+          sent[k] = m.t;
+        }
+      }
+      const r = await fetch(API, {method:'POST', headers:{'content-type':'text/plain'},
+                                  body: JSON.stringify({bucket, have, puts})});
+      if(!r.ok) throw new Error('sync ' + r.status);
+      const j = await r.json();
+      for(const k in sent) if(meta[k].t === sent[k]) meta[k].d = 0;
+      for(const row of j.rows || []){
+        let o; try{ o = await unseal(row.v); }catch(e){ continue; }
+        if(!o || skip(o.k)) continue;
+        const m = meta[o.k] || (meta[o.k] = {t:0});
+        if((m.t || 0) >= row.ts) continue;
+        applying = true;
+        try{ rawSet.call(localStorage, o.k, o.v); }catch(e){}
+        applying = false;
+        m.t = row.ts; m.d = 0; m.h = hash(sig(o.k, o.v)); m.id = row.k;
+        changed.push(o.k);
+      }
+      putMeta();
+    }catch(e){}
+    busy = false;
+    if(changed.length && window.lqSync.live){
+      const id = pageId();
+      const mine = id ? changed.some(k => k === 'lq:' + id || k.indexOf('lq:' + id + ':') === 0)
+                      : !!document.getElementById('manifest');
+      if(mine){ frozen = true; location.reload(); }
+    }
+    return changed;
+  }
+  function wake(){ if(document.visibilityState !== 'hidden') run(); }
+  function leave(){ if(document.visibilityState === 'hidden') run(); }
+  function listen(){
+    document.removeEventListener('visibilitychange', wake); document.addEventListener('visibilitychange', wake);
+    document.removeEventListener('visibilitychange', leave); document.addEventListener('visibilitychange', leave);
+    removeEventListener('focus', wake); addEventListener('focus', wake);
+  }
+  // `live` = this page should reload itself when its own quiz arrives newer. The locked shell
+  // turns it on only after it has drawn the page.
+  window.lqSync = {first: null, now: run, listen, live: true};
+  listen();
+  setInterval(wake, 20000);
+  window.lqSync.first = run();
+})();
+</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -1170,10 +1346,44 @@ function save(){
    the sitting's subchapters into this one function is what makes a half-paper behave exactly
    like a whole one — one direction, one end card, one second pass — with no branch anywhere
    downstream. `only: null` (not chosen, or a page built without parts) filters nothing. */
+/* ---- TAGS (10-12, his ask) ------------------------------------------------------------
+   *"a text box at first, but it functions like a Notion tag property … once I press enter it
+   creates a tag and that tag stays for this exam and only for this exam."* Its own key, like
+   the research box, so a Retake and a rebuild keep them. `defs` is the order he made them in;
+   a tag no question carries any more is dropped from it. Off unless the page was built with
+   `tags`, so every page built before this is what it was. */
+const TKEY = KEY + ':tags';
+let T = (function(){
+  try{ const t = JSON.parse(localStorage.getItem(TKEY) || '{}') || {};
+       return {defs: t.defs || [], q: t.q || {}}; }
+  catch(e){ return {defs:[], q:{}}; } })();
+function tput(){ try{ localStorage.setItem(TKEY, JSON.stringify(T)); }catch(e){} }
+function tagsOf(i){ return T.q[qk(i)] || []; }
+function hasTag(i, name){ return tagsOf(i).indexOf(name) >= 0; }
+function tagAdd(i, raw){
+  const name = String(raw).trim().replace(/\s+/g, ' ');
+  if(!name) return;
+  const known = T.defs.find(d => d.toLowerCase() === name.toLowerCase()) || name;
+  if(T.defs.indexOf(known) < 0) T.defs.push(known);
+  const l = T.q[qk(i)] || (T.q[qk(i)] = []);
+  if(l.indexOf(known) < 0) l.push(known);
+  tput();
+}
+function tagDrop(i, name){
+  const id = qk(i);
+  T.q[id] = (T.q[id] || []).filter(x => x !== name);
+  if(!T.q[id].length) delete T.q[id];
+  if(!Object.keys(T.q).some(k => T.q[k].indexOf(name) >= 0)) T.defs = T.defs.filter(d => d !== name);
+  tput();
+}
+
 function active(s){
-  const only = D.parts ? (s.only || null) : null;
+  // A TAG RUN ("test only these") rides here for the same reason the section filter does.
+  const tf = D.tags ? (s.tagf || null) : null;
+  const only = (D.parts && !tf) ? (s.only || null) : null;
   return D.questions.map((_,i)=>i).filter(i => onPaper(s, i)
-    && (!only || only.indexOf(D.questions[i].sec) >= 0));
+    && (!only || only.indexOf(D.questions[i].sec) >= 0)
+    && (!tf || hasTag(i, tf)));
 }
 /* ---- THE RESERVES (08-16) ------------------------------------------------------------
    His ask: *"if 1 question is skipped, another one is replaced in that section about it… you
@@ -1441,7 +1651,9 @@ function flushFrq(){
 function drawFrq(){
   const box = $('#frqview');
   if(!box || !(D.frq||[]).length) return;
-  let h = '<p class="say">Three written answers, from the same sources as the paper. Write '
+  const NW = D.frq.length, WORDS = ['No','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'];
+  let h = '<p class="say">' + (WORDS[NW] || NW) + ' written answer' + (NW === 1 ? '' : 's')
+        + ', from the same sources as the paper. Write '
         + 'one, then mark it: every point that can be settled by what you wrote is checked '
         + 'for you, and the ones that need judgement are handed back. Click any row to '
         + 'overrule it.</p>';
@@ -1732,7 +1944,7 @@ function draw(){
   // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
   // the rest of the sitting, so nothing about answering, going back or the second pass has
   // to know the picker exists.
-  if(sectioned() && !S.only) return picker();
+  if(sectioned() && !S.only && !S.tagf) return picker();
   const act = runList();
   if(!act.length) return end();
   if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
@@ -1741,6 +1953,61 @@ function draw(){
 
 /* Pure markup, no DOM writes and no state changes — so the same builder can render the
    question and be measured off-screen for the centring reserve. */
+/* The tag box above the question. Chips for what this question carries, then the box: type and
+   Enter makes the tag (or reuses one spelled the same), the ones he already made show under it
+   to click, Backspace on an empty box takes the last one off, Esc leaves. */
+function tagRowInner(i){
+  const mine = tagsOf(i);
+  let h = '';
+  mine.forEach((n,k)=>{ h += '<span class="tchip">' + esc(n) + '<button class="tx" data-drop="' + k
+                           + '" tabindex="-1" aria-label="Remove tag">×</button></span>'; });
+  return h + '<input id="tagin" class="tagin" type="text" autocomplete="off" spellcheck="false" '
+           + 'placeholder="' + (mine.length ? 'Add a tag' : 'Tag this question  ( l )') + '">'
+           + '<div class="tsug hide" id="tsug"></div>';
+}
+function paintSug(i){
+  const inp = $('#tagin'), box = $('#tsug');
+  if(!inp || !box) return;
+  const raw = inp.value.trim(), v = raw.toLowerCase(), mine = tagsOf(i);
+  let h = T.defs.map((d,n)=>({d,n}))
+    .filter(x => mine.indexOf(x.d) < 0 && (!v || x.d.toLowerCase().indexOf(v) >= 0))
+    .map(x => '<button class="tchip pick" data-n="' + x.n + '" tabindex="-1">' + esc(x.d) + '</button>')
+    .join('');
+  if(v && !T.defs.some(d => d.toLowerCase() === v))
+    h += '<span class="tnew">Enter makes “' + esc(raw) + '”</span>';
+  box.innerHTML = h;
+  box.classList.toggle('hide', !h || document.activeElement !== inp);
+  // mousedown, not click: the box must not blur (and hide these) before the pick lands
+  box.querySelectorAll('.pick').forEach(b => { b.onmousedown = e => {
+    e.preventDefault(); tagAdd(i, T.defs[+b.dataset.n]); redrawTags(i, true); }; });
+}
+function redrawTags(i, focus){
+  const row = $('#tagrow');
+  if(!row) return;
+  row.innerHTML = tagRowInner(i);
+  wireTags(i);
+  if(focus) $('#tagin').focus();
+}
+function wireTags(i){
+  const row = $('#tagrow'), inp = $('#tagin');
+  if(!row || !inp) return;
+  row.querySelectorAll('.tx').forEach(b => b.onclick = ()=>{
+    tagDrop(i, tagsOf(i)[+b.dataset.drop]); redrawTags(i, false); });
+  inp.onfocus = ()=> paintSug(i);
+  inp.oninput = ()=> paintSug(i);
+  inp.onblur = ()=> { const b = $('#tsug'); if(b) b.classList.add('hide'); };
+  inp.onkeydown = e => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      if(!inp.value.trim()){ inp.blur(); return; }
+      tagAdd(i, inp.value); redrawTags(i, true);
+    } else if(e.key === 'Escape'){ inp.value = ''; inp.blur(); }
+    else if(e.key === 'Backspace' && !inp.value && tagsOf(i).length){
+      tagDrop(i, tagsOf(i).slice(-1)[0]); redrawTags(i, true);
+    }
+  };
+}
+
 function buildQ(i, picked, fresh, en){
   const q = D.questions[i];
   const answered = picked !== undefined;
@@ -1752,10 +2019,12 @@ function buildQ(i, picked, fresh, en){
   // The counter sits top-left above the question, the way the notebook does it, rather than
   // up in the bar — it belongs with the thing it counts. On a second pass it counts the
   // second pass, so four wrong answers read as "1 / 4" and not as a broken 16.
-  let h = '<div class="qhead' + en + '"><div class="qcol">'
+  let h = (D.tags ? '<div class="tagrow no-read-aloud" id="tagrow">' + tagRowInner(i) + '</div>' : '')
+        + '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta no-read-aloud"><span class="num">' + (pos+1) + ' / '
         + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        + (D.tags && S.tagf ? '<span class="dot">·</span><span>only ' + esc(S.tagf) + '</span>' : '')
         // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
         // 10 reads as the paper having lost his place, which is how he read it.
         + (recycling && S.phase!==2
@@ -1951,6 +2220,7 @@ function question(fresh){
   $('#star').onclick = ()=> toggleStar(i);
   $('#qmark').onclick = ()=> toggleUnsure(i);
   $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
+  if(D.tags) wireTags(i);
 
   // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
   // touches it — and nothing above the options ever changes height.
@@ -2441,19 +2711,32 @@ function openMenu(){
   m.className = 'menu';
   // The clock's only other way in. `w` is not written anywhere else on the page, and a key
   // nothing announces is a key he has to remember he asked for.
-  m.innerHTML = '<button id="skipq">Skip this question</button>'
+  m.innerHTML = '<button id="skipq">Skip this question  ( x )</button>'
               // The reader's own two entries. Space and `v` are written nowhere else on the
               // page, and a key nothing announces is a key he has to remember he asked for.
               + '<button id="readtog">' + (sayOn ? 'Stop' : 'Start') + ' read-aloud  ( space )</button>'
               + '<button id="voiceset">Voice, speed and pauses…</button>'
-              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>';
+              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>'
+              // EVERY KEY, WRITTEN DOWN ONCE (10-12). He could not find Redo or remember its key.
+              + '<div class="keys"><kbd>x</kbd><span>Skip</span><kbd>u</kbd><span>Redo your answer</span>'
+              + '<kbd>h</kbd><span>Hint, when the question has one</span>'
+              + '<kbd>s</kbd><span>Star</span><kbd>/</kbd><span>No idea</span>'
+              + '<kbd>r</kbd><span>Research</span><kbd>f</kbd><span>Fix this question</span>'
+              + '<kbd>t</kbd><span>Reflection</span>'
+              + (D.tags ? '<kbd>l</kbd><span>Tag</span>' : '')
+              + '<kbd>↵</kbd><span>Next</span><kbd>←</kbd><span>Back</span></div>';
   host.appendChild(m);
   m.querySelector('#clocktog').onclick = ()=>{ toggleClock(); closeMenu(); };
   m.querySelector('#readtog').onclick = ()=>{ closeMenu(); sayOn ? sayOff() : sayToggle(); };
   m.querySelector('#voiceset').onclick = ()=>{ closeMenu(); openVset(); };
-  m.querySelector('#skipq').onclick = ()=>{
+  m.querySelector('#skipq').onclick = ()=>{ closeMenu(); skipQuestion(); };
+  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
+}
+/* One path for skipping, whether it came from the menu or from `x` (10-12, his ask: a key
+   *"rather than going into the top bar and then pressing skip"*). */
+function skipQuestion(){
     const list = runList(), pos = list.indexOf(S.i);
-    if(list.length <= 1) return closeMenu();        // never skip the last one standing
+    if(list.length <= 1) return;                    // never skip the last one standing
     const sec = bucketOf(S.i);
     S.skipped[qk(S.i)] = true;
     delete S.answers[qk(S.i)];
@@ -2467,7 +2750,6 @@ function openMenu(){
     // have handed him an end card with a question still owed.
     const filled = promoteReserve(sec) >= 0;
     const wasLast = !filled && pos === list.length - 1;
-    closeMenu();
     syncTabs();
     if(wasLast){ finish(); return; }
     // After the removal the list has shrunk, so the item now AT `pos` is the one that
@@ -2476,8 +2758,6 @@ function openMenu(){
     S.hintOpen = false;
     lastShown = -1;
     save(); question(); window.scrollTo(0,0);
-  };
-  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
 }
 function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(); }
 
@@ -2734,6 +3014,39 @@ function momentum(){
   return h + '</div>';
 }
 
+/* THE TAGS ON THE END CARD: how each group went, and a way to sit one group alone. A tag run
+   is a fresh attempt on only those questions (the finished one goes into history first, as a
+   Retake does); Retake, or "every question" here, goes back to the whole paper. Not offered
+   on a sectioned paper, whose picker already owns which questions a sitting holds. */
+function tagTable(){
+  if(!D.tags || !T.defs.length) return '';
+  const all = D.questions.map((_,i)=>i).filter(i => onPaper(S, i));
+  let h = '';
+  T.defs.forEach((d,n)=>{
+    const qs = all.filter(i => hasTag(i, d));
+    if(!qs.length) return;
+    const sat = qs.filter(i => ans(i) !== undefined || ans2(i) !== undefined);
+    const ok = sat.filter(i => finalRight(i)).length;
+    h += '<div class="tagline"><span class="tchip">' + esc(d) + '</span><span class="tn">'
+       + (sat.length ? ok + ' / ' + sat.length + ' right' : qs.length + ' question' + (qs.length>1?'s':''))
+       + '</span>' + (D.parts ? '' : '<button class="link" data-tagrun="' + n + '">Test only these</button>')
+       + '</div>';
+  });
+  if(!h && !S.tagf) return '';
+  if(S.tagf) h += '<p class="note">This run was only “' + esc(S.tagf) + '”. '
+                + '<button class="link" id="tagall">Back to every question</button></p>';
+  return '<div class="tagtable"><h3>By tag</h3>' + h + '</div>';
+}
+function startRun(tag){
+  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length, ms:S.ms,
+                             tag:S.tagf || undefined});
+  const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
+  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  if(tag) S.tagf = tag;
+  pickSel = null; lastShown = -1;
+  save(); syncTabs(); renderScore(); draw(); window.scrollTo(0,0);
+}
+
 function end(){
   timeOn(null);
   const act = active(S), n = score(S), t = act.length;
@@ -2815,6 +3128,7 @@ function end(){
             + 'every one is done; sitting one again replaces its score.</p>';
   }
 
+  h += tagTable();
   const nskip = Object.keys(S.skipped||{}).length;
   if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
               + '<button class="link" id="unskip">put them back</button></p>';
@@ -2825,6 +3139,10 @@ function end(){
   $('#quizview').innerHTML = h;
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  document.querySelectorAll('[data-tagrun]').forEach(b =>
+    b.onclick = ()=> startRun(T.defs[+b.dataset.tagrun]));
+  const tall = $('#tagall');
+  if(tall) tall.onclick = ()=> startRun(null);
   const ma = $('#momall');
   if(ma) ma.onclick = ()=>{ momAll = true; end(); };
   const m = $('#more');
@@ -2861,6 +3179,7 @@ function itemHTML(i, n){
   const q = D.questions[i], first = ans(i), second = ans2(i);
   let h = '<div class="item">';
   if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
+  if(D.tags) tagsOf(i).forEach(t => { h += '<span class="tchip sm">'+esc(t)+'</span>'; });
   h += '<p class="qq">'+(n===undefined?'':(n+1)+'. ')+esc(q.q)+'</p>'
      + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
   if(!firstRight(i)){
@@ -2877,12 +3196,26 @@ function itemHTML(i, n){
   return h + '</div>';
 }
 
+let revByTag = false;
 function review(){
   timeOn(null);
+  const act = active(S), canSort = D.tags && T.defs.length;
   let h = '<div class="rev"><h3>Every question</h3>';
-  active(S).forEach((i,n)=>{ h += itemHTML(i, n); });
+  if(canSort) h += '<p class="note" style="margin:0 0 6px"><button class="link" id="revsort">'
+                 + (revByTag ? 'Sort in order' : 'Sort by tag') + '</button></p>';
+  if(canSort && revByTag){
+    // a question with two tags is listed under both; the untagged ones come last
+    T.defs.concat(['']).forEach(d=>{
+      const qs = act.filter(i => d ? hasTag(i, d) : !tagsOf(i).length);
+      if(!qs.length) return;
+      h += '<h3 class="tgroup">' + (d ? esc(d) : 'No tag') + ' · ' + qs.length + '</h3>';
+      qs.forEach(i => { h += itemHTML(i, act.indexOf(i)); });
+    });
+  } else act.forEach((i,n)=>{ h += itemHTML(i, n); });
   h += '</div>';
   $('#quizview').innerHTML = h;
+  const rs = $('#revsort');
+  if(rs) rs.onclick = ()=>{ revByTag = !revByTag; review(); };
   $('#band').classList.add('off');
   showResearch(false);
   $('#footer').classList.remove('hide');
@@ -4189,6 +4522,10 @@ document.addEventListener('keydown', e=>{
   // `w` FOR WATCH — the clock in the bar, off by default. Past G like every other command
   // key here, so it can never be an option letter.
   if(e.key === 'w' || e.key === 'W'){ toggleClock(); return; }
+  // `x` SKIPS, `l` (label) PUTS THE CARET IN THE TAG BOX. Both past G, so never an option key.
+  if(e.key === 'x' || e.key === 'X'){ e.preventDefault(); skipQuestion(); return; }
+  if((e.key === 'l' || e.key === 'L') && D.tags){
+    const ti = $('#tagin'); if(ti){ e.preventDefault(); ti.focus(); } return; }
   if(e.key === '/' || e.key === '?'){ e.preventDefault(); toggleUnsure(S.i); return; }
   /* THE KEY NAMES A POSITION ON SCREEN, not an option. `2` and `B` mean the second card he
      can see, which is the only thing either of them could mean to him — after a Redo has

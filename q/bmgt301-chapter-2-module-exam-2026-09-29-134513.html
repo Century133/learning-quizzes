@@ -326,6 +326,32 @@ kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid
 .qmark:hover{background:var(--surface);color:var(--text)}
 .qmark.on{color:var(--text);border-color:var(--accent);background:var(--surface-hi)}
 
+/* ---- tags (10-12): his own labels on a question, kept per quiz ---- */
+.tagrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.tchip{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:.78rem;
+ color:var(--text);background:var(--surface-hi);border:1px solid var(--line);
+ border-radius:6px;padding:2px 8px;line-height:1.5}
+.tchip.sm{font-size:.7rem;margin:0 6px 9px 0}
+button.tchip{cursor:pointer}
+button.tchip:hover{border-color:var(--muted)}
+.tx{background:none;border:0;color:var(--muted);font:inherit;padding:0;cursor:pointer;line-height:1}
+.tx:hover{color:var(--text)}
+.tagin{flex:1 1 140px;min-width:120px;background:none;border:0;outline:0;color:var(--text);
+ font:inherit;font-size:.82rem;padding:3px 2px}
+.tagin::placeholder{color:var(--muted);opacity:.75}
+.tsug{flex:1 0 100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tnew{color:var(--muted);font-size:.76rem}
+.tagtable{margin:26px 0 0;text-align:left}
+.tagtable h3{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+ font-weight:500;margin:0 0 6px}
+.tagline{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line);
+ font-size:.88rem}
+.tagline .tn{flex:1;color:var(--muted);font-variant-numeric:tabular-nums}
+.tgroup{margin-top:30px}
+.menu .keys{border-top:1px solid var(--line);margin:5px 0 0;padding:8px 10px 4px;
+ display:grid;grid-template-columns:auto 1fr;gap:5px 10px;font-size:.78rem;color:var(--muted);
+ align-items:center}
+
 /* ---- the ⋮ menu ---- */
 .more{position:relative;flex:0 0 auto}
 .dots{background:none;border:0;color:var(--muted);font-size:1.15rem;line-height:1;
@@ -836,7 +862,157 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "bmgt301-chapter-2-module-exam-2026-09-29-134513", "title": "BMGT301 — Chapter 2 module exam", "subtitle": "7 multiple choice + 3 written · chapter 2 (Zara: Fast Fashion from Savvy Systems) · from the slides", "book": "BMGT301", "hash": "8bbc56aa3d1df71d", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "A mid-sized apparel firm currently outsources all production to factories in Southeast Asia, resulting in a six-month lead time for new designs. If the firm wishes to adopt Zara's 'fast fashion' model to reduce this cycle to under three weeks, which strategic shift is most critical regarding their value chain?", "options": ["Expanding the network of contract manufacturers to increase total output capacity.", "Shifting the marketing budget toward digital advertising to drive faster consumer demand.", "Implementing heavy vertical integration to bring production in-house.", "Hiring 'star' designers to create high-demand items that justify the long shipping times."], "rationales": ["Increasing the number of external partners often complicates logistics and oversight, potentially increasing lead times rather than achieving the hyper-responsiveness of an in-house model.", "While advertising drives demand, it does not resolve the structural production bottlenecks inherent in a six-month lead time model.", "Vertical integration allows a firm to own multiple layers of its value chain, significantly increasing control and speed by reducing dependence on external third-party schedules.", "Relying on star designers is the traditional model Zara avoids; it prioritizes individual fame over the team-based, data-driven responsiveness needed for speed."], "correct": 2, "hint": "Consider the structural difference between owning your own factories versus hiring external firms to make your goods.", "topic": "", "sec": "", "src": "", "link": "", "qid": "63e15ea5b8"}, {"q": "Which of the following are direct financial or operational benefits of Zara's strategy to maintain limited production runs for its best-selling items?", "options": ["Increased frequency of customer visits to the store.", "Reduced risk of massive write-offs due to failed product introductions.", "A significantly higher percentage of products sold at full price compared to industry averages.", "Lower costs achieved through massive economies of scale for every individual garment design."], "rationales": ["Limited runs create a sense of 'buy it now or lose it,' which motivates customers to check store inventory more often to see what's new.", "Small batches allow the firm to test the market; if a design fails, there is very little unsold inventory to write off or mark down.", "By cultivating exclusivity and scarcity, Zara sells 85% of its items without discounts, whereas the industry average is much lower at 50 to 70%.", "Limited runs explicitly trade off the cost savings of mass-scale production for the benefits of speed, exclusivity, and reduced inventory risk."], "correct": 0, "hint": "Think about how scarcity impacts both customer psychology and the need for end-of-season sales.", "topic": "", "sec": "", "src": "", "link": "", "qid": "a6ee871dd7"}, {"q": "A customer in a Zara store is looking for a specific size of a blazer that is currently out of stock on the shelf. Which technological application allows the floor staff to provide an immediate solution?", "options": ["RFID tags linked to a custom iPad app that tracks inventory across the entire supply chain.", "A customer CRM system that automatically ships the item to the user's home address when it is eventually manufactured.", "A Point-of-Sale (POS) terminal that records the customer's size preference for future manufacturing runs.", "Standard barcodes that require manual scanning of every item in the stockroom during nightly audits."], "rationales": ["RFID technology allows for real-time visibility of every item, enabling staff to instantly check if the blazer is in the backroom, a nearby store, or available at the warehouse.", "Zara's model focuses on finding existing inventory immediately rather than long-term backorders, and the iPads are used for inventory surfacing, not just CRM.", "While POS systems track sales data for design planning, they do not provide the real-time location tracking for individual items that RFID provides.", "Barcodes are less efficient and do not support the rapid, real-time 'instant check' capability that characterizes Zara's high-tech floor operations."], "correct": 0, "hint": "Identify the technology specifically mentioned for identifying the exact location of individual garments wirelessly.", "topic": "", "sec": "", "src": "", "link": "", "qid": "05d1095bcb"}, {"q": "Based on the lessons learned from Prada's failed technology deployment, an effective 'Information System' (IS) must integrate which of the following components?", "options": ["Hardware and Software", "People", "Data", "Procedures", "High-budget celebrity endorsements"], "rationales": ["These are the physical and digital tools that form the technological foundation of any information system.", "People are essential as they are the ones who interact with, manage, and are impacted by the system's output.", "Data is the raw material that the system processes to provide actionable insights for decision-makers.", "Information systems require clearly defined processes and rules for how the technology is to be used within the organizational workflow.", "Marketing and endorsements are external activities and are not part of the internal five-component framework of an information system."], "correct": 3, "hint": "Look beyond just the gadgets; think about the human and process-oriented elements of a complete solution.", "topic": "", "sec": "", "src": "", "link": "", "qid": "3e13ecb680"}, {"q": "What is a primary operational vulnerability inherent in Zara’s decision to maintain its headquarters and the majority of its manufacturing and logistics in Spain?", "options": ["A lack of local talent, forcing the company to hire star designers from Paris or Milan.", "The high cost of paying third-party contract manufacturers in the Spanish region.", "The inability to raise prices in overseas markets to compensate for transportation costs.", "Regional disruptions, such as local strikes or weather, could paralyze the global supply chain."], "rationales": ["Zara specifically avoids star designers and relies on young talent from design schools, so this is not a Spain-specific vulnerability mentioned in the text.", "Zara is vertically integrated and owns its plants; the vulnerability isn't related to third-party fees but rather the centralization of its own assets.", "The text explicitly states that Zara is able to make up for cost increases by raising prices overseas, so this is not a vulnerability but a mitigation.", "Because Zara is Spain-centric and moves nearly all deliveries through just a few locations, any disruption in that specific region threatens their entire global network."], "correct": 3, "hint": "Consider the risk of 'putting all your eggs in one basket' geographically.", "topic": "", "sec": "", "src": "", "link": "", "qid": "5b08291bbf"}, {"q": "Zara's approach to retail differs from the traditional industry model in which of the following ways?", "options": ["Designers are rotated in teams to cross-pollinate experience rather than operating as individual stars.", "New styles are introduced once or twice a season to ensure product longevity.", "Customer demand and sales data dictate what is developed, rather than designs being pushed top-down by designers.", "The firm spends almost nothing on traditional advertising."], "rationales": ["Zara fosters innovation and prevents stagnation by rotating design teams, contrasting with the 'star designer' culture of traditional high fashion.", "This is the 'rival' model; Zara introduces new styles almost daily, going from idea to shelf in about 15 days.", "Zara's model is 'pull' (demand-driven) rather than the traditional 'push' model where designers decide what customers should wear months in advance.", "Zara relies on prime store locations and word-of-mouth rather than the massive advertising budgets typical of clothing giants like Gap."], "correct": 0, "hint": "Think about how Zara saves money on marketing and how they decide what to manufacture.", "topic": "", "sec": "", "src": "", "link": "", "qid": "5a6934ffea"}, {"q": "While many firms use contract manufacturing to lower costs, what is a specific 'downside' risk highlighted by the 2013 Rana Plaza disaster mentioned in the text?", "options": ["The inability to use RFID tags on garments produced by external third parties.", "Severe brand damage and legal action resulting from poor working conditions and building safety failures.", "The high cost of maintaining vertical integration in high-risk regions.", "Increased inventory turnover rates that lead to higher logistics costs."], "rationales": ["While RFID tagging is easier in-house, the primary 'ugly downside' mentioned for contract manufacturing is related to ethics, safety, and labor abuses.", "The text uses the Rana Plaza collapse to illustrate how outsourcing to low-cost third parties can lead to humanitarian disasters that ruin a firm's reputation and lead to lawsuits.", "Contract manufacturing is the opposite of vertical integration; the risk is in the lack of ownership and control over the production facility.", "Higher inventory turnover is generally a goal, not an 'ugly downside' associated with factory disasters."], "correct": 1, "hint": "Recall the ethical and humanitarian consequences of outsourcing to unregulated factories.", "topic": "", "sec": "", "src": "", "link": "", "qid": "5be9872430"}], "hasSheet": false, "parts": false, "secTitles": {}, "reserve": 0, "frq": [{"ask": "To maintain flexibility in its manufacturing process, Zara utilizes a large amount of ___ (or gray) goods, which are unfinished fabrics that can be dyed or customized late in the production cycle based on real-time manager feedback.", "rubric": [{"t": "The answer: greige", "judge": false, "k": ["greige goods", "gray goods", "grey goods"]}], "model": "greige\n\nGreige refers to unfinished fabrics that give the firm the agility to respond to color trends or style changes as they happen, rather than committing to colors months in advance."}, {"ask": "To ensure financial accountability, Zara's management emphasizes that technology investments should forecast a positive ___, which measures the amount earned relative to the expenditure.", "rubric": [{"t": "The answer: ROI", "judge": false, "k": ["return on investment"]}], "model": "ROI\n\nROI is the standard financial metric used to justify IT spending by ensuring the benefits (savings or earnings) outweigh the costs of implementation."}, {"ask": "A key component of Zara’s logistics is its use of ___ energy systems at logistics centers and biodiesel for its trucking fleet to maintain its status as a pioneer in going green.", "rubric": [{"t": "The answer: renewable", "judge": false, "k": ["renewable energy", "clean"]}], "model": "renewable\n\nThe text highlights renewable energy as part of Zara’s commitment to sustainability within its logistics and manufacturing operations."}], "notebook": "https://notebook.google.com/notebook/873a623f-584e-43aa-a1b5-4059031032cd", "root": "../index.html", "tab": "quiz", "sheet": ""}</script>
+<script id="quiz-data" type="application/json">{"id": "bmgt301-chapter-2-module-exam-2026-09-29-134513", "title": "BMGT301 — Chapter 2 module exam", "subtitle": "7 multiple choice + 3 written · chapter 2 (Zara: Fast Fashion from Savvy Systems) · from the slides", "book": "BMGT301", "hash": "8bbc56aa3d1df71d", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "A mid-sized apparel firm currently outsources all production to factories in Southeast Asia, resulting in a six-month lead time for new designs. If the firm wishes to adopt Zara's 'fast fashion' model to reduce this cycle to under three weeks, which strategic shift is most critical regarding their value chain?", "options": ["Expanding the network of contract manufacturers to increase total output capacity.", "Shifting the marketing budget toward digital advertising to drive faster consumer demand.", "Implementing heavy vertical integration to bring production in-house.", "Hiring 'star' designers to create high-demand items that justify the long shipping times."], "rationales": ["Increasing the number of external partners often complicates logistics and oversight, potentially increasing lead times rather than achieving the hyper-responsiveness of an in-house model.", "While advertising drives demand, it does not resolve the structural production bottlenecks inherent in a six-month lead time model.", "Vertical integration allows a firm to own multiple layers of its value chain, significantly increasing control and speed by reducing dependence on external third-party schedules.", "Relying on star designers is the traditional model Zara avoids; it prioritizes individual fame over the team-based, data-driven responsiveness needed for speed."], "correct": 2, "hint": "Consider the structural difference between owning your own factories versus hiring external firms to make your goods.", "topic": "", "sec": "", "src": "", "link": "", "qid": "63e15ea5b8"}, {"q": "Which of the following are direct financial or operational benefits of Zara's strategy to maintain limited production runs for its best-selling items?", "options": ["Increased frequency of customer visits to the store.", "Reduced risk of massive write-offs due to failed product introductions.", "A significantly higher percentage of products sold at full price compared to industry averages.", "Lower costs achieved through massive economies of scale for every individual garment design."], "rationales": ["Limited runs create a sense of 'buy it now or lose it,' which motivates customers to check store inventory more often to see what's new.", "Small batches allow the firm to test the market; if a design fails, there is very little unsold inventory to write off or mark down.", "By cultivating exclusivity and scarcity, Zara sells 85% of its items without discounts, whereas the industry average is much lower at 50 to 70%.", "Limited runs explicitly trade off the cost savings of mass-scale production for the benefits of speed, exclusivity, and reduced inventory risk."], "correct": 0, "hint": "Think about how scarcity impacts both customer psychology and the need for end-of-season sales.", "topic": "", "sec": "", "src": "", "link": "", "qid": "a6ee871dd7"}, {"q": "A customer in a Zara store is looking for a specific size of a blazer that is currently out of stock on the shelf. Which technological application allows the floor staff to provide an immediate solution?", "options": ["RFID tags linked to a custom iPad app that tracks inventory across the entire supply chain.", "A customer CRM system that automatically ships the item to the user's home address when it is eventually manufactured.", "A Point-of-Sale (POS) terminal that records the customer's size preference for future manufacturing runs.", "Standard barcodes that require manual scanning of every item in the stockroom during nightly audits."], "rationales": ["RFID technology allows for real-time visibility of every item, enabling staff to instantly check if the blazer is in the backroom, a nearby store, or available at the warehouse.", "Zara's model focuses on finding existing inventory immediately rather than long-term backorders, and the iPads are used for inventory surfacing, not just CRM.", "While POS systems track sales data for design planning, they do not provide the real-time location tracking for individual items that RFID provides.", "Barcodes are less efficient and do not support the rapid, real-time 'instant check' capability that characterizes Zara's high-tech floor operations."], "correct": 0, "hint": "Identify the technology specifically mentioned for identifying the exact location of individual garments wirelessly.", "topic": "", "sec": "", "src": "", "link": "", "qid": "05d1095bcb"}, {"q": "Based on the lessons learned from Prada's failed technology deployment, an effective 'Information System' (IS) must integrate which of the following components?", "options": ["Hardware and Software", "People", "Data", "Procedures", "High-budget celebrity endorsements"], "rationales": ["These are the physical and digital tools that form the technological foundation of any information system.", "People are essential as they are the ones who interact with, manage, and are impacted by the system's output.", "Data is the raw material that the system processes to provide actionable insights for decision-makers.", "Information systems require clearly defined processes and rules for how the technology is to be used within the organizational workflow.", "Marketing and endorsements are external activities and are not part of the internal five-component framework of an information system."], "correct": 3, "hint": "Look beyond just the gadgets; think about the human and process-oriented elements of a complete solution.", "topic": "", "sec": "", "src": "", "link": "", "qid": "3e13ecb680"}, {"q": "What is a primary operational vulnerability inherent in Zara’s decision to maintain its headquarters and the majority of its manufacturing and logistics in Spain?", "options": ["A lack of local talent, forcing the company to hire star designers from Paris or Milan.", "The high cost of paying third-party contract manufacturers in the Spanish region.", "The inability to raise prices in overseas markets to compensate for transportation costs.", "Regional disruptions, such as local strikes or weather, could paralyze the global supply chain."], "rationales": ["Zara specifically avoids star designers and relies on young talent from design schools, so this is not a Spain-specific vulnerability mentioned in the text.", "Zara is vertically integrated and owns its plants; the vulnerability isn't related to third-party fees but rather the centralization of its own assets.", "The text explicitly states that Zara is able to make up for cost increases by raising prices overseas, so this is not a vulnerability but a mitigation.", "Because Zara is Spain-centric and moves nearly all deliveries through just a few locations, any disruption in that specific region threatens their entire global network."], "correct": 3, "hint": "Consider the risk of 'putting all your eggs in one basket' geographically.", "topic": "", "sec": "", "src": "", "link": "", "qid": "5b08291bbf"}, {"q": "Zara's approach to retail differs from the traditional industry model in which of the following ways?", "options": ["Designers are rotated in teams to cross-pollinate experience rather than operating as individual stars.", "New styles are introduced once or twice a season to ensure product longevity.", "Customer demand and sales data dictate what is developed, rather than designs being pushed top-down by designers.", "The firm spends almost nothing on traditional advertising."], "rationales": ["Zara fosters innovation and prevents stagnation by rotating design teams, contrasting with the 'star designer' culture of traditional high fashion.", "This is the 'rival' model; Zara introduces new styles almost daily, going from idea to shelf in about 15 days.", "Zara's model is 'pull' (demand-driven) rather than the traditional 'push' model where designers decide what customers should wear months in advance.", "Zara relies on prime store locations and word-of-mouth rather than the massive advertising budgets typical of clothing giants like Gap."], "correct": 0, "hint": "Think about how Zara saves money on marketing and how they decide what to manufacture.", "topic": "", "sec": "", "src": "", "link": "", "qid": "5a6934ffea"}, {"q": "While many firms use contract manufacturing to lower costs, what is a specific 'downside' risk highlighted by the 2013 Rana Plaza disaster mentioned in the text?", "options": ["The inability to use RFID tags on garments produced by external third parties.", "Severe brand damage and legal action resulting from poor working conditions and building safety failures.", "The high cost of maintaining vertical integration in high-risk regions.", "Increased inventory turnover rates that lead to higher logistics costs."], "rationales": ["While RFID tagging is easier in-house, the primary 'ugly downside' mentioned for contract manufacturing is related to ethics, safety, and labor abuses.", "The text uses the Rana Plaza collapse to illustrate how outsourcing to low-cost third parties can lead to humanitarian disasters that ruin a firm's reputation and lead to lawsuits.", "Contract manufacturing is the opposite of vertical integration; the risk is in the lack of ownership and control over the production facility.", "Higher inventory turnover is generally a goal, not an 'ugly downside' associated with factory disasters."], "correct": 1, "hint": "Recall the ethical and humanitarian consequences of outsourcing to unregulated factories.", "topic": "", "sec": "", "src": "", "link": "", "qid": "5be9872430"}], "hasSheet": false, "parts": false, "secTitles": {}, "reserve": 0, "tags": false, "frq": [{"ask": "To maintain flexibility in its manufacturing process, Zara utilizes a large amount of ___ (or gray) goods, which are unfinished fabrics that can be dyed or customized late in the production cycle based on real-time manager feedback.", "rubric": [{"t": "The answer: greige", "judge": false, "k": ["greige goods", "gray goods", "grey goods"]}], "model": "greige\n\nGreige refers to unfinished fabrics that give the firm the agility to respond to color trends or style changes as they happen, rather than committing to colors months in advance."}, {"ask": "To ensure financial accountability, Zara's management emphasizes that technology investments should forecast a positive ___, which measures the amount earned relative to the expenditure.", "rubric": [{"t": "The answer: ROI", "judge": false, "k": ["return on investment"]}], "model": "ROI\n\nROI is the standard financial metric used to justify IT spending by ensuring the benefits (savings or earnings) outweigh the costs of implementation."}, {"ask": "A key component of Zara’s logistics is its use of ___ energy systems at logistics centers and biodiesel for its trucking fleet to maintain its status as a pioneer in going green.", "rubric": [{"t": "The answer: renewable", "judge": false, "k": ["renewable energy", "clean"]}], "model": "renewable\n\nThe text highlights renewable energy as part of Zara’s commitment to sustainability within its logistics and manufacturing operations."}], "notebook": "https://notebook.google.com/notebook/873a623f-584e-43aa-a1b5-4059031032cd", "root": "../index.html", "tab": "quiz", "sheet": ""}</script>
+<script>
+(function(){
+  if(window.lqSync) return;
+  const API = 'https://terp-plate.vercel.app/api/quiz-sync', MK = 'lqsync:meta';
+  const none = {first: Promise.resolve([]), now: async()=>[], listen(){}};
+  let key = '';
+  try{ key = localStorage.getItem('lq:key') || ''; }catch(e){}
+  const hm = /[#&]k=([A-Za-z0-9_-]{40,})/.exec(location.hash);
+  if(hm) key = hm[1];
+  if(!key || !window.crypto || !crypto.subtle){ window.lqSync = none; return; }
+
+  const skip = k => k.indexOf('lq:') !== 0 || k === 'lq:key' || k === 'lq:speech';
+  const rawSet = Storage.prototype.setItem;
+  let meta = {};
+  try{ meta = JSON.parse(localStorage.getItem(MK) || '{}') || {}; }catch(e){}
+  const putMeta = ()=>{ try{ rawSet.call(localStorage, MK, JSON.stringify(meta)); }catch(e){} };
+  const hash = t => { let h = 5381; for(let i=0;i<t.length;i++) h = ((h<<5) + h + t.charCodeAt(i)) | 0; return h; };
+  const isState = k => /^lq:[^:]+$/.test(k) && k !== 'lq:hub';
+  function weight(s){
+    return Object.keys(s.answers||{}).length + Object.keys(s.pass2||{}).length
+         + Object.keys(s.skipped||{}).length + Object.keys(s.starred||{}).length
+         + Object.keys(s.unsure||{}).length + 1000 * (s.history||[]).length + (s.done ? 500 : 0);
+  }
+  // '' = nothing worth sending
+  function sig(k, v){
+    if(isState(k)){
+      try{ const s = JSON.parse(v);
+        if(!s || typeof s !== 'object') return '';
+        if(!weight(s) && !s.only && !s.tagf) return '';
+        const c = Object.assign({}, s); delete c.ms; delete c.qms; delete c.meta; delete c.hintOpen;
+        return JSON.stringify(c);
+      }catch(e){ return ''; }
+    }
+    return (v && v !== '{}' && v !== '[]' && v !== '{"defs":[],"q":{}}') ? v : '';
+  }
+  let frozen = false, applying = false, timer = null, busy = false;
+  function mark(k, v){
+    if(skip(k)) return;
+    const g = sig(k, v), h = hash(g), m = meta[k] || (meta[k] = {t:0});
+    if(m.h === h) return;
+    m.h = h;
+    if(g){ m.t = Date.now(); m.d = 1; clearTimeout(timer); timer = setTimeout(run, 1500); }
+    putMeta();
+  }
+  Storage.prototype.setItem = function(k, v){
+    if(this === localStorage && frozen && String(k).indexOf('lq:') === 0) return;
+    rawSet.call(this, k, v);
+    if(this === localStorage && !applying){ try{ mark(String(k), String(v)); }catch(e){} }
+  };
+  // What was already here before sync existed: age unknown, so it is stamped low, and a real
+  // attempt outranks a thinner one by how much is in it.
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(skip(k) || meta[k]) continue;
+      const v = localStorage.getItem(k), g = sig(k, v);
+      meta[k] = {t: 0, h: hash(g)};
+      if(g){ let w = 1; if(isState(k)){ try{ w = 1 + weight(JSON.parse(v)); }catch(e){} }
+             meta[k].t = w; meta[k].d = 1; }
+    }
+    putMeta();
+  }catch(e){}
+
+  const enc = new TextEncoder(), dec = new TextDecoder();
+  const toB = s => { s = s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length % 4) s += '=';
+                     return Uint8Array.from(atob(s), c => c.charCodeAt(0)); };
+  const fromB = u => { let t = ''; for(let i=0;i<u.length;i+=8192) t += String.fromCharCode.apply(null, u.subarray(i, i+8192));
+                       return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+  const hex = b => Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,'0')).join('');
+  let ck = null, bucket = '';
+  const ready = (async()=>{
+    ck = await crypto.subtle.importKey('raw', toB(key), 'AES-GCM', false, ['encrypt','decrypt']);
+    bucket = hex(await crypto.subtle.digest('SHA-256', enc.encode('lq-sync:' + key))).slice(0, 32);
+  })();
+  const kid = async k => hex(await crypto.subtle.digest('SHA-256', enc.encode(bucket + '|' + k))).slice(0, 32);
+  async function seal(o){
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv}, ck, enc.encode(JSON.stringify(o)));
+    return fromB(iv) + '.' + fromB(new Uint8Array(ct));
+  }
+  async function unseal(t){
+    const p = t.split('.');
+    return JSON.parse(dec.decode(await crypto.subtle.decrypt({name:'AES-GCM', iv:toB(p[0])}, ck, toB(p[1]))));
+  }
+
+  function pageId(){
+    const el = document.getElementById('quiz-data');
+    if(!el) return null;
+    try{ return JSON.parse(el.textContent).id; }catch(e){ return null; }
+  }
+  async function run(){
+    if(busy || frozen) return [];
+    busy = true;
+    const changed = [];
+    try{
+      await ready;
+      const have = {}, puts = [], sent = {};
+      for(const k of Object.keys(meta)){
+        const m = meta[k];
+        if(!m.id) m.id = await kid(k);
+        have[m.id] = m.t || 0;
+        if(m.d){
+          const v = localStorage.getItem(k);
+          if(v === null){ m.d = 0; continue; }
+          puts.push({k: m.id, v: await seal({k, v}), ts: m.t});
+          sent[k] = m.t;
+        }
+      }
+      const r = await fetch(API, {method:'POST', headers:{'content-type':'text/plain'},
+                                  body: JSON.stringify({bucket, have, puts})});
+      if(!r.ok) throw new Error('sync ' + r.status);
+      const j = await r.json();
+      for(const k in sent) if(meta[k].t === sent[k]) meta[k].d = 0;
+      for(const row of j.rows || []){
+        let o; try{ o = await unseal(row.v); }catch(e){ continue; }
+        if(!o || skip(o.k)) continue;
+        const m = meta[o.k] || (meta[o.k] = {t:0});
+        if((m.t || 0) >= row.ts) continue;
+        applying = true;
+        try{ rawSet.call(localStorage, o.k, o.v); }catch(e){}
+        applying = false;
+        m.t = row.ts; m.d = 0; m.h = hash(sig(o.k, o.v)); m.id = row.k;
+        changed.push(o.k);
+      }
+      putMeta();
+    }catch(e){}
+    busy = false;
+    if(changed.length && window.lqSync.live){
+      const id = pageId();
+      const mine = id ? changed.some(k => k === 'lq:' + id || k.indexOf('lq:' + id + ':') === 0)
+                      : !!document.getElementById('manifest');
+      if(mine){ frozen = true; location.reload(); }
+    }
+    return changed;
+  }
+  function wake(){ if(document.visibilityState !== 'hidden') run(); }
+  function leave(){ if(document.visibilityState === 'hidden') run(); }
+  function listen(){
+    document.removeEventListener('visibilitychange', wake); document.addEventListener('visibilitychange', wake);
+    document.removeEventListener('visibilitychange', leave); document.addEventListener('visibilitychange', leave);
+    removeEventListener('focus', wake); addEventListener('focus', wake);
+  }
+  // `live` = this page should reload itself when its own quiz arrives newer. The locked shell
+  // turns it on only after it has drawn the page.
+  window.lqSync = {first: null, now: run, listen, live: true};
+  listen();
+  setInterval(wake, 20000);
+  window.lqSync.first = run();
+})();
+</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -998,10 +1174,44 @@ function save(){
    the sitting's subchapters into this one function is what makes a half-paper behave exactly
    like a whole one — one direction, one end card, one second pass — with no branch anywhere
    downstream. `only: null` (not chosen, or a page built without parts) filters nothing. */
+/* ---- TAGS (10-12, his ask) ------------------------------------------------------------
+   *"a text box at first, but it functions like a Notion tag property … once I press enter it
+   creates a tag and that tag stays for this exam and only for this exam."* Its own key, like
+   the research box, so a Retake and a rebuild keep them. `defs` is the order he made them in;
+   a tag no question carries any more is dropped from it. Off unless the page was built with
+   `tags`, so every page built before this is what it was. */
+const TKEY = KEY + ':tags';
+let T = (function(){
+  try{ const t = JSON.parse(localStorage.getItem(TKEY) || '{}') || {};
+       return {defs: t.defs || [], q: t.q || {}}; }
+  catch(e){ return {defs:[], q:{}}; } })();
+function tput(){ try{ localStorage.setItem(TKEY, JSON.stringify(T)); }catch(e){} }
+function tagsOf(i){ return T.q[qk(i)] || []; }
+function hasTag(i, name){ return tagsOf(i).indexOf(name) >= 0; }
+function tagAdd(i, raw){
+  const name = String(raw).trim().replace(/\s+/g, ' ');
+  if(!name) return;
+  const known = T.defs.find(d => d.toLowerCase() === name.toLowerCase()) || name;
+  if(T.defs.indexOf(known) < 0) T.defs.push(known);
+  const l = T.q[qk(i)] || (T.q[qk(i)] = []);
+  if(l.indexOf(known) < 0) l.push(known);
+  tput();
+}
+function tagDrop(i, name){
+  const id = qk(i);
+  T.q[id] = (T.q[id] || []).filter(x => x !== name);
+  if(!T.q[id].length) delete T.q[id];
+  if(!Object.keys(T.q).some(k => T.q[k].indexOf(name) >= 0)) T.defs = T.defs.filter(d => d !== name);
+  tput();
+}
+
 function active(s){
-  const only = D.parts ? (s.only || null) : null;
+  // A TAG RUN ("test only these") rides here for the same reason the section filter does.
+  const tf = D.tags ? (s.tagf || null) : null;
+  const only = (D.parts && !tf) ? (s.only || null) : null;
   return D.questions.map((_,i)=>i).filter(i => onPaper(s, i)
-    && (!only || only.indexOf(D.questions[i].sec) >= 0));
+    && (!only || only.indexOf(D.questions[i].sec) >= 0)
+    && (!tf || hasTag(i, tf)));
 }
 /* ---- THE RESERVES (08-16) ------------------------------------------------------------
    His ask: *"if 1 question is skipped, another one is replaced in that section about it… you
@@ -1562,7 +1772,7 @@ function draw(){
   // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
   // the rest of the sitting, so nothing about answering, going back or the second pass has
   // to know the picker exists.
-  if(sectioned() && !S.only) return picker();
+  if(sectioned() && !S.only && !S.tagf) return picker();
   const act = runList();
   if(!act.length) return end();
   if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
@@ -1571,6 +1781,61 @@ function draw(){
 
 /* Pure markup, no DOM writes and no state changes — so the same builder can render the
    question and be measured off-screen for the centring reserve. */
+/* The tag box above the question. Chips for what this question carries, then the box: type and
+   Enter makes the tag (or reuses one spelled the same), the ones he already made show under it
+   to click, Backspace on an empty box takes the last one off, Esc leaves. */
+function tagRowInner(i){
+  const mine = tagsOf(i);
+  let h = '';
+  mine.forEach((n,k)=>{ h += '<span class="tchip">' + esc(n) + '<button class="tx" data-drop="' + k
+                           + '" tabindex="-1" aria-label="Remove tag">×</button></span>'; });
+  return h + '<input id="tagin" class="tagin" type="text" autocomplete="off" spellcheck="false" '
+           + 'placeholder="' + (mine.length ? 'Add a tag' : 'Tag this question  ( l )') + '">'
+           + '<div class="tsug hide" id="tsug"></div>';
+}
+function paintSug(i){
+  const inp = $('#tagin'), box = $('#tsug');
+  if(!inp || !box) return;
+  const raw = inp.value.trim(), v = raw.toLowerCase(), mine = tagsOf(i);
+  let h = T.defs.map((d,n)=>({d,n}))
+    .filter(x => mine.indexOf(x.d) < 0 && (!v || x.d.toLowerCase().indexOf(v) >= 0))
+    .map(x => '<button class="tchip pick" data-n="' + x.n + '" tabindex="-1">' + esc(x.d) + '</button>')
+    .join('');
+  if(v && !T.defs.some(d => d.toLowerCase() === v))
+    h += '<span class="tnew">Enter makes “' + esc(raw) + '”</span>';
+  box.innerHTML = h;
+  box.classList.toggle('hide', !h || document.activeElement !== inp);
+  // mousedown, not click: the box must not blur (and hide these) before the pick lands
+  box.querySelectorAll('.pick').forEach(b => { b.onmousedown = e => {
+    e.preventDefault(); tagAdd(i, T.defs[+b.dataset.n]); redrawTags(i, true); }; });
+}
+function redrawTags(i, focus){
+  const row = $('#tagrow');
+  if(!row) return;
+  row.innerHTML = tagRowInner(i);
+  wireTags(i);
+  if(focus) $('#tagin').focus();
+}
+function wireTags(i){
+  const row = $('#tagrow'), inp = $('#tagin');
+  if(!row || !inp) return;
+  row.querySelectorAll('.tx').forEach(b => b.onclick = ()=>{
+    tagDrop(i, tagsOf(i)[+b.dataset.drop]); redrawTags(i, false); });
+  inp.onfocus = ()=> paintSug(i);
+  inp.oninput = ()=> paintSug(i);
+  inp.onblur = ()=> { const b = $('#tsug'); if(b) b.classList.add('hide'); };
+  inp.onkeydown = e => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      if(!inp.value.trim()){ inp.blur(); return; }
+      tagAdd(i, inp.value); redrawTags(i, true);
+    } else if(e.key === 'Escape'){ inp.value = ''; inp.blur(); }
+    else if(e.key === 'Backspace' && !inp.value && tagsOf(i).length){
+      tagDrop(i, tagsOf(i).slice(-1)[0]); redrawTags(i, true);
+    }
+  };
+}
+
 function buildQ(i, picked, fresh, en){
   const q = D.questions[i];
   const answered = picked !== undefined;
@@ -1582,10 +1847,12 @@ function buildQ(i, picked, fresh, en){
   // The counter sits top-left above the question, the way the notebook does it, rather than
   // up in the bar — it belongs with the thing it counts. On a second pass it counts the
   // second pass, so four wrong answers read as "1 / 4" and not as a broken 16.
-  let h = '<div class="qhead' + en + '"><div class="qcol">'
+  let h = (D.tags ? '<div class="tagrow no-read-aloud" id="tagrow">' + tagRowInner(i) + '</div>' : '')
+        + '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta no-read-aloud"><span class="num">' + (pos+1) + ' / '
         + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        + (D.tags && S.tagf ? '<span class="dot">·</span><span>only ' + esc(S.tagf) + '</span>' : '')
         // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
         // 10 reads as the paper having lost his place, which is how he read it.
         + (recycling && S.phase!==2
@@ -1781,6 +2048,7 @@ function question(fresh){
   $('#star').onclick = ()=> toggleStar(i);
   $('#qmark').onclick = ()=> toggleUnsure(i);
   $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
+  if(D.tags) wireTags(i);
 
   // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
   // touches it — and nothing above the options ever changes height.
@@ -2271,19 +2539,32 @@ function openMenu(){
   m.className = 'menu';
   // The clock's only other way in. `w` is not written anywhere else on the page, and a key
   // nothing announces is a key he has to remember he asked for.
-  m.innerHTML = '<button id="skipq">Skip this question</button>'
+  m.innerHTML = '<button id="skipq">Skip this question  ( x )</button>'
               // The reader's own two entries. Space and `v` are written nowhere else on the
               // page, and a key nothing announces is a key he has to remember he asked for.
               + '<button id="readtog">' + (sayOn ? 'Stop' : 'Start') + ' read-aloud  ( space )</button>'
               + '<button id="voiceset">Voice, speed and pauses…</button>'
-              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>';
+              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>'
+              // EVERY KEY, WRITTEN DOWN ONCE (10-12). He could not find Redo or remember its key.
+              + '<div class="keys"><kbd>x</kbd><span>Skip</span><kbd>u</kbd><span>Redo your answer</span>'
+              + '<kbd>h</kbd><span>Hint, when the question has one</span>'
+              + '<kbd>s</kbd><span>Star</span><kbd>/</kbd><span>No idea</span>'
+              + '<kbd>r</kbd><span>Research</span><kbd>f</kbd><span>Fix this question</span>'
+              + '<kbd>t</kbd><span>Reflection</span>'
+              + (D.tags ? '<kbd>l</kbd><span>Tag</span>' : '')
+              + '<kbd>↵</kbd><span>Next</span><kbd>←</kbd><span>Back</span></div>';
   host.appendChild(m);
   m.querySelector('#clocktog').onclick = ()=>{ toggleClock(); closeMenu(); };
   m.querySelector('#readtog').onclick = ()=>{ closeMenu(); sayOn ? sayOff() : sayToggle(); };
   m.querySelector('#voiceset').onclick = ()=>{ closeMenu(); openVset(); };
-  m.querySelector('#skipq').onclick = ()=>{
+  m.querySelector('#skipq').onclick = ()=>{ closeMenu(); skipQuestion(); };
+  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
+}
+/* One path for skipping, whether it came from the menu or from `x` (10-12, his ask: a key
+   *"rather than going into the top bar and then pressing skip"*). */
+function skipQuestion(){
     const list = runList(), pos = list.indexOf(S.i);
-    if(list.length <= 1) return closeMenu();        // never skip the last one standing
+    if(list.length <= 1) return;                    // never skip the last one standing
     const sec = bucketOf(S.i);
     S.skipped[qk(S.i)] = true;
     delete S.answers[qk(S.i)];
@@ -2297,7 +2578,6 @@ function openMenu(){
     // have handed him an end card with a question still owed.
     const filled = promoteReserve(sec) >= 0;
     const wasLast = !filled && pos === list.length - 1;
-    closeMenu();
     syncTabs();
     if(wasLast){ finish(); return; }
     // After the removal the list has shrunk, so the item now AT `pos` is the one that
@@ -2306,8 +2586,6 @@ function openMenu(){
     S.hintOpen = false;
     lastShown = -1;
     save(); question(); window.scrollTo(0,0);
-  };
-  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
 }
 function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(); }
 
@@ -2564,6 +2842,39 @@ function momentum(){
   return h + '</div>';
 }
 
+/* THE TAGS ON THE END CARD: how each group went, and a way to sit one group alone. A tag run
+   is a fresh attempt on only those questions (the finished one goes into history first, as a
+   Retake does); Retake, or "every question" here, goes back to the whole paper. Not offered
+   on a sectioned paper, whose picker already owns which questions a sitting holds. */
+function tagTable(){
+  if(!D.tags || !T.defs.length) return '';
+  const all = D.questions.map((_,i)=>i).filter(i => onPaper(S, i));
+  let h = '';
+  T.defs.forEach((d,n)=>{
+    const qs = all.filter(i => hasTag(i, d));
+    if(!qs.length) return;
+    const sat = qs.filter(i => ans(i) !== undefined || ans2(i) !== undefined);
+    const ok = sat.filter(i => finalRight(i)).length;
+    h += '<div class="tagline"><span class="tchip">' + esc(d) + '</span><span class="tn">'
+       + (sat.length ? ok + ' / ' + sat.length + ' right' : qs.length + ' question' + (qs.length>1?'s':''))
+       + '</span>' + (D.parts ? '' : '<button class="link" data-tagrun="' + n + '">Test only these</button>')
+       + '</div>';
+  });
+  if(!h && !S.tagf) return '';
+  if(S.tagf) h += '<p class="note">This run was only “' + esc(S.tagf) + '”. '
+                + '<button class="link" id="tagall">Back to every question</button></p>';
+  return '<div class="tagtable"><h3>By tag</h3>' + h + '</div>';
+}
+function startRun(tag){
+  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length, ms:S.ms,
+                             tag:S.tagf || undefined});
+  const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
+  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  if(tag) S.tagf = tag;
+  pickSel = null; lastShown = -1;
+  save(); syncTabs(); renderScore(); draw(); window.scrollTo(0,0);
+}
+
 function end(){
   timeOn(null);
   const act = active(S), n = score(S), t = act.length;
@@ -2645,6 +2956,7 @@ function end(){
             + 'every one is done; sitting one again replaces its score.</p>';
   }
 
+  h += tagTable();
   const nskip = Object.keys(S.skipped||{}).length;
   if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
               + '<button class="link" id="unskip">put them back</button></p>';
@@ -2655,6 +2967,10 @@ function end(){
   $('#quizview').innerHTML = h;
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  document.querySelectorAll('[data-tagrun]').forEach(b =>
+    b.onclick = ()=> startRun(T.defs[+b.dataset.tagrun]));
+  const tall = $('#tagall');
+  if(tall) tall.onclick = ()=> startRun(null);
   const ma = $('#momall');
   if(ma) ma.onclick = ()=>{ momAll = true; end(); };
   const m = $('#more');
@@ -2691,6 +3007,7 @@ function itemHTML(i, n){
   const q = D.questions[i], first = ans(i), second = ans2(i);
   let h = '<div class="item">';
   if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
+  if(D.tags) tagsOf(i).forEach(t => { h += '<span class="tchip sm">'+esc(t)+'</span>'; });
   h += '<p class="qq">'+(n===undefined?'':(n+1)+'. ')+esc(q.q)+'</p>'
      + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
   if(!firstRight(i)){
@@ -2707,12 +3024,26 @@ function itemHTML(i, n){
   return h + '</div>';
 }
 
+let revByTag = false;
 function review(){
   timeOn(null);
+  const act = active(S), canSort = D.tags && T.defs.length;
   let h = '<div class="rev"><h3>Every question</h3>';
-  active(S).forEach((i,n)=>{ h += itemHTML(i, n); });
+  if(canSort) h += '<p class="note" style="margin:0 0 6px"><button class="link" id="revsort">'
+                 + (revByTag ? 'Sort in order' : 'Sort by tag') + '</button></p>';
+  if(canSort && revByTag){
+    // a question with two tags is listed under both; the untagged ones come last
+    T.defs.concat(['']).forEach(d=>{
+      const qs = act.filter(i => d ? hasTag(i, d) : !tagsOf(i).length);
+      if(!qs.length) return;
+      h += '<h3 class="tgroup">' + (d ? esc(d) : 'No tag') + ' · ' + qs.length + '</h3>';
+      qs.forEach(i => { h += itemHTML(i, act.indexOf(i)); });
+    });
+  } else act.forEach((i,n)=>{ h += itemHTML(i, n); });
   h += '</div>';
   $('#quizview').innerHTML = h;
+  const rs = $('#revsort');
+  if(rs) rs.onclick = ()=>{ revByTag = !revByTag; review(); };
   $('#band').classList.add('off');
   showResearch(false);
   $('#footer').classList.remove('hide');
@@ -4019,6 +4350,10 @@ document.addEventListener('keydown', e=>{
   // `w` FOR WATCH — the clock in the bar, off by default. Past G like every other command
   // key here, so it can never be an option letter.
   if(e.key === 'w' || e.key === 'W'){ toggleClock(); return; }
+  // `x` SKIPS, `l` (label) PUTS THE CARET IN THE TAG BOX. Both past G, so never an option key.
+  if(e.key === 'x' || e.key === 'X'){ e.preventDefault(); skipQuestion(); return; }
+  if((e.key === 'l' || e.key === 'L') && D.tags){
+    const ti = $('#tagin'); if(ti){ e.preventDefault(); ti.focus(); } return; }
   if(e.key === '/' || e.key === '?'){ e.preventDefault(); toggleUnsure(S.i); return; }
   /* THE KEY NAMES A POSITION ON SCREEN, not an option. `2` and `B` mean the second card he
      can see, which is the only thing either of them could mean to him — after a Redo has

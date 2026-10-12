@@ -326,6 +326,32 @@ kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid
 .qmark:hover{background:var(--surface);color:var(--text)}
 .qmark.on{color:var(--text);border-color:var(--accent);background:var(--surface-hi)}
 
+/* ---- tags (10-12): his own labels on a question, kept per quiz ---- */
+.tagrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.tchip{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:.78rem;
+ color:var(--text);background:var(--surface-hi);border:1px solid var(--line);
+ border-radius:6px;padding:2px 8px;line-height:1.5}
+.tchip.sm{font-size:.7rem;margin:0 6px 9px 0}
+button.tchip{cursor:pointer}
+button.tchip:hover{border-color:var(--muted)}
+.tx{background:none;border:0;color:var(--muted);font:inherit;padding:0;cursor:pointer;line-height:1}
+.tx:hover{color:var(--text)}
+.tagin{flex:1 1 140px;min-width:120px;background:none;border:0;outline:0;color:var(--text);
+ font:inherit;font-size:.82rem;padding:3px 2px}
+.tagin::placeholder{color:var(--muted);opacity:.75}
+.tsug{flex:1 0 100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tnew{color:var(--muted);font-size:.76rem}
+.tagtable{margin:26px 0 0;text-align:left}
+.tagtable h3{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+ font-weight:500;margin:0 0 6px}
+.tagline{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line);
+ font-size:.88rem}
+.tagline .tn{flex:1;color:var(--muted);font-variant-numeric:tabular-nums}
+.tgroup{margin-top:30px}
+.menu .keys{border-top:1px solid var(--line);margin:5px 0 0;padding:8px 10px 4px;
+ display:grid;grid-template-columns:auto 1fr;gap:5px 10px;font-size:.78rem;color:var(--muted);
+ align-items:center}
+
 /* ---- the ⋮ menu ---- */
 .more{position:relative;flex:0 0 auto}
 .dots{background:none;border:0;color:var(--muted);font-size:1.15rem;line-height:1;
@@ -836,7 +862,157 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "bmgt340-chapter-5-module-exam-2026-09-26-150453", "title": "BMGT340 — Chapter 5 module exam", "subtitle": "7 multiple choice + 2 written · chapter 5 (Interest Rates) · from the slides", "book": "BMGT340", "hash": "4499d263065d9fb2", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "A business owner is comparing two credit lines. Zenith Bank offers an APR of 12\\% compounded monthly, while Meridian Bank offers an APR of 12.1\\% compounded semi-annually. As a borrower, which bank provides the lower effective cost, and what is its Effective Annual Rate (EAR)?", "options": ["Meridian Bank; EAR = 12.467\\%", "Zenith Bank; EAR = 12.000\\%", "Zenith Bank; EAR = 12.683\\%", "Meridian Bank; EAR = 12.100\\%"], "rationales": ["Meridian's EAR is calculated as (1 + 0.121/2)² - 1 = 12.467\\%, while Zenith's EAR is (1 + 0.12/12)¹² - 1 = 12.683\\%; the borrower chooses the lower EAR.", "This assumes the nominal rate is the same as the effective rate and ignores the monthly compounding frequency.", "While this correctly calculates Zenith's EAR, the borrower should prioritize the lower effective rate, which is offered by Meridian.", "This incorrectly assumes the APR is equal to the EAR, failing to account for the impact of semi-annual compounding."], "correct": 0, "hint": "Calculate the EAR for both banks using the formula EAR = (1 + fracAPRm)m - 1 to see which is cheaper for a borrower.", "topic": "", "sec": "", "src": "", "link": "", "qid": "7e0f8213c7"}, {"q": "An investment account advertises an Effective Annual Rate (EAR) of 10\\%. If the interest is compounded daily (assuming 365 days per year), what is the stated Annual Percentage Rate (APR)?", "options": ["10.000\\%", "9.538\\%", "9.531\\%", "10.517\\%"], "rationales": ["This value assumes that the APR and EAR are identical, which only occurs if interest is compounded once per year.", "This is a plausible result of using monthly compounding (12 months) in the reverse calculation instead of the required daily frequency (365 days).", "To find the APR, we solve 0.10 = (1 + fracr365)³⁶⁵ - 1 for r, which involves taking the 365th root of 1.10 and then multiplying the result by 365.", "This error occurs if you compound the 10\\% rate forward as if it were a periodic rate rather than solving backward from the EAR."], "correct": 2, "hint": "Set up the EAR formula and solve for the periodic rate r before multiplying by m.", "topic": "", "sec": "", "src": "", "link": "", "qid": "930e594618"}, {"q": "You are analyzing a financial instrument that pays \\1,500$ every 6 months for the next 5 years. A different security with identical risk has a yield of $8\\%$ APR compounded monthly. What is the fair price for the instrument you are analyzing?", "options": ["12,580.20", "12,311.47", "12,238.63", "10,065.12"], "rationales": ["This value is the result of using the monthly periodic rate (0.667\\%) but treating the 10 semi-annual payments as if they occurred every month.", "This result comes from incorrectly using a simple semi-annual rate of 4\\% (8\\%/2) instead of accounting for the monthly compounding of the benchmark rate.", "The periodic rate for a 6-month period must match the payment frequency; using the 8\\% monthly APR, the 6-month effective rate is (1 + 0.08/12)⁶ - 1 = 4.067\\%, which is then used to find the PV of the 10-payment annuity.", "This error occurs if the full 8\\% annual rate is used as the periodic rate in the annuity formula without adjusting for the semi-annual frequency."], "correct": 2, "hint": "The periodic rate used in the valuation must match the timing of the \\1,500$ payments.", "topic": "", "sec": "", "src": "", "link": "", "qid": "0a111d7ea2"}, {"q": "Consider a \\300,000$ mortgage with an APR of $6\\%$ and monthly compounding, scheduled for 360 months. The monthly payment is $\\1,798.65. After 180 months of payments, which of the following is the most accurate method to find the remaining balance?", "options": ["Divide the original principal by two since exactly half of the time has passed.", "Calculate the present value of the remaining 180 monthly payments using the monthly periodic rate.", "Subtract 180 payments from the original \\300,000$ principal.", "Multiply the monthly payment by 180 to find the total remaining cash flow."], "rationales": ["Loan balances do not decline linearly; because interest is higher when the balance is higher, the principal is paid down slower in the first half of the loan.", "According to the 'amortization trick,' the outstanding balance at any point is the present value of all future remaining payments.", "This ignores the fact that a significant portion of early payments goes toward interest rather than principal reduction.", "This calculates the total nominal amount of future payments but fails to discount them to account for the time value of money."], "correct": 1, "hint": "Consider the relationship between the current value of future obligations and the current debt level.", "topic": "", "sec": "", "src": "", "link": "", "qid": "0306a27251"}, {"q": "A borrower takes out a \\40,000$ auto loan with an APR of $9\\%$ and monthly compounding for 60 months. The monthly payment is $\\830.33. After 12 months, the outstanding balance is \\33,186.23$. How much of the 13th payment is applied toward the principal?", "options": ["248.90", "666.67", "581.43", "530.33"], "rationales": ["This is the interest portion of the 13th payment, not the principal portion.", "This would be the principal reduction if the loan were interest-free and paid off linearly over 60 months.", "First, calculate the interest portion: \\33,186.23 \\times (0.09/12) = 248.90. Then, subtract interest from the total payment: \\830.33 - $248.90 = $581.43$.", "This result stems from incorrectly using the full 9\\% APR as the periodic rate for one month's interest calculation."], "correct": 2, "hint": "Calculate the interest for that month first, based on the balance at the start of the 13th month.", "topic": "", "sec": "", "src": "", "link": "", "qid": "b3bb38458e"}, {"q": "Which of the following statements regarding a standard amortized loan with fixed monthly payments are true throughout the life of the loan?", "options": ["The total monthly payment amount remains constant.", "The periodic interest rate decreases as the loan matures.", "The principal portion of each successive payment increases.", "The interest portion of each successive payment decreases."], "rationales": ["Standard amortization involves fixed installments where the mix of interest and principal changes, but the total stays the same.", "The periodic interest rate (r) remains constant; it is the balance it is applied to that changes.", "Since the total payment is fixed and the interest portion decreases, the remaining amount available to pay down principal must increase.", "As the principal balance is paid down, there is less outstanding debt to accrue interest each month."], "correct": 3, "hint": "Reflect on how the breakdown of a fixed payment ($PMT = Interest + Principal$) shifts as the balance declines.", "topic": "", "sec": "", "src": "", "link": "", "qid": "6f05e13768"}, {"q": "Vanguard Ventures typically lends at a 12\\% APR with monthly compounding. A client proposes a loan that will be repaid in semi-annual installments of \\10,000$ over 5 years. What is the maximum amount Vanguard Ventures should lend for this proposal?", "options": ["77,217.35", "35,890.11", "72,947.59", "73,600.87"], "rationales": ["This results from using the EAR (12.68\\%) as the basis for the periodic rate calculation without correctly accounting for the 6-month payment interval.", "This is the result of using the 12\\% annual rate as the periodic rate for the semi-annual payments.", "First, find the 6-month effective rate from the 1\\% monthly rate: (1.01)⁶ - 1 = 6.152\\%. Then, calculate the PV of the 10-payment annuity: \\10,000 \\times [1 - (1.06152)^{-10}] / 0.06152$.", "This error occurs if you use a simple 6\\% semi-annual rate instead of adjusting for the monthly compounding specified in the lender's typical rate."], "correct": 2, "hint": "Determine the effective rate for a 6-month period based on the monthly compounding, then calculate the present value.", "topic": "", "sec": "", "src": "", "link": "", "qid": "75766ba2b9"}], "hasSheet": false, "parts": false, "secTitles": {}, "reserve": 0, "frq": [{"ask": "In a standard loan amortization schedule, the interest portion of a specific payment is calculated by multiplying the periodic interest rate by the ___ at the beginning of that period.", "rubric": [{"t": "The answer: loan balance", "judge": false, "k": ["outstanding balance", "principal balance", "beginning balance", "remaining balance"]}], "model": "loan balance\n\nThe interest portion is the cost of carrying the debt for that period, which is determined by applying the rate to the current amount owed."}, {"ask": "If a bank quotes a 12% interest rate compounded quarterly, the periodic rate ($r$) used in financial calculations is ___%.", "rubric": [{"t": "The answer: 3", "judge": false, "k": ["3%", "0.03"]}], "model": "3\n\nThe periodic rate is found by dividing the APR by the number of compounding periods per year ($m$); in this case, $12\\% / 4 = 3\\%$."}], "notebook": "https://notebook.google.com/notebook/5aaf743e-52c7-4229-a64d-4af011920c80", "root": "../index.html", "tab": "quiz", "sheet": ""}</script>
+<script id="quiz-data" type="application/json">{"id": "bmgt340-chapter-5-module-exam-2026-09-26-150453", "title": "BMGT340 — Chapter 5 module exam", "subtitle": "7 multiple choice + 2 written · chapter 5 (Interest Rates) · from the slides", "book": "BMGT340", "hash": "4499d263065d9fb2", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "A business owner is comparing two credit lines. Zenith Bank offers an APR of 12\\% compounded monthly, while Meridian Bank offers an APR of 12.1\\% compounded semi-annually. As a borrower, which bank provides the lower effective cost, and what is its Effective Annual Rate (EAR)?", "options": ["Meridian Bank; EAR = 12.467\\%", "Zenith Bank; EAR = 12.000\\%", "Zenith Bank; EAR = 12.683\\%", "Meridian Bank; EAR = 12.100\\%"], "rationales": ["Meridian's EAR is calculated as (1 + 0.121/2)² - 1 = 12.467\\%, while Zenith's EAR is (1 + 0.12/12)¹² - 1 = 12.683\\%; the borrower chooses the lower EAR.", "This assumes the nominal rate is the same as the effective rate and ignores the monthly compounding frequency.", "While this correctly calculates Zenith's EAR, the borrower should prioritize the lower effective rate, which is offered by Meridian.", "This incorrectly assumes the APR is equal to the EAR, failing to account for the impact of semi-annual compounding."], "correct": 0, "hint": "Calculate the EAR for both banks using the formula EAR = (1 + fracAPRm)m - 1 to see which is cheaper for a borrower.", "topic": "", "sec": "", "src": "", "link": "", "qid": "7e0f8213c7"}, {"q": "An investment account advertises an Effective Annual Rate (EAR) of 10\\%. If the interest is compounded daily (assuming 365 days per year), what is the stated Annual Percentage Rate (APR)?", "options": ["10.000\\%", "9.538\\%", "9.531\\%", "10.517\\%"], "rationales": ["This value assumes that the APR and EAR are identical, which only occurs if interest is compounded once per year.", "This is a plausible result of using monthly compounding (12 months) in the reverse calculation instead of the required daily frequency (365 days).", "To find the APR, we solve 0.10 = (1 + fracr365)³⁶⁵ - 1 for r, which involves taking the 365th root of 1.10 and then multiplying the result by 365.", "This error occurs if you compound the 10\\% rate forward as if it were a periodic rate rather than solving backward from the EAR."], "correct": 2, "hint": "Set up the EAR formula and solve for the periodic rate r before multiplying by m.", "topic": "", "sec": "", "src": "", "link": "", "qid": "930e594618"}, {"q": "You are analyzing a financial instrument that pays \\1,500$ every 6 months for the next 5 years. A different security with identical risk has a yield of $8\\%$ APR compounded monthly. What is the fair price for the instrument you are analyzing?", "options": ["12,580.20", "12,311.47", "12,238.63", "10,065.12"], "rationales": ["This value is the result of using the monthly periodic rate (0.667\\%) but treating the 10 semi-annual payments as if they occurred every month.", "This result comes from incorrectly using a simple semi-annual rate of 4\\% (8\\%/2) instead of accounting for the monthly compounding of the benchmark rate.", "The periodic rate for a 6-month period must match the payment frequency; using the 8\\% monthly APR, the 6-month effective rate is (1 + 0.08/12)⁶ - 1 = 4.067\\%, which is then used to find the PV of the 10-payment annuity.", "This error occurs if the full 8\\% annual rate is used as the periodic rate in the annuity formula without adjusting for the semi-annual frequency."], "correct": 2, "hint": "The periodic rate used in the valuation must match the timing of the \\1,500$ payments.", "topic": "", "sec": "", "src": "", "link": "", "qid": "0a111d7ea2"}, {"q": "Consider a \\300,000$ mortgage with an APR of $6\\%$ and monthly compounding, scheduled for 360 months. The monthly payment is $\\1,798.65. After 180 months of payments, which of the following is the most accurate method to find the remaining balance?", "options": ["Divide the original principal by two since exactly half of the time has passed.", "Calculate the present value of the remaining 180 monthly payments using the monthly periodic rate.", "Subtract 180 payments from the original \\300,000$ principal.", "Multiply the monthly payment by 180 to find the total remaining cash flow."], "rationales": ["Loan balances do not decline linearly; because interest is higher when the balance is higher, the principal is paid down slower in the first half of the loan.", "According to the 'amortization trick,' the outstanding balance at any point is the present value of all future remaining payments.", "This ignores the fact that a significant portion of early payments goes toward interest rather than principal reduction.", "This calculates the total nominal amount of future payments but fails to discount them to account for the time value of money."], "correct": 1, "hint": "Consider the relationship between the current value of future obligations and the current debt level.", "topic": "", "sec": "", "src": "", "link": "", "qid": "0306a27251"}, {"q": "A borrower takes out a \\40,000$ auto loan with an APR of $9\\%$ and monthly compounding for 60 months. The monthly payment is $\\830.33. After 12 months, the outstanding balance is \\33,186.23$. How much of the 13th payment is applied toward the principal?", "options": ["248.90", "666.67", "581.43", "530.33"], "rationales": ["This is the interest portion of the 13th payment, not the principal portion.", "This would be the principal reduction if the loan were interest-free and paid off linearly over 60 months.", "First, calculate the interest portion: \\33,186.23 \\times (0.09/12) = 248.90. Then, subtract interest from the total payment: \\830.33 - $248.90 = $581.43$.", "This result stems from incorrectly using the full 9\\% APR as the periodic rate for one month's interest calculation."], "correct": 2, "hint": "Calculate the interest for that month first, based on the balance at the start of the 13th month.", "topic": "", "sec": "", "src": "", "link": "", "qid": "b3bb38458e"}, {"q": "Which of the following statements regarding a standard amortized loan with fixed monthly payments are true throughout the life of the loan?", "options": ["The total monthly payment amount remains constant.", "The periodic interest rate decreases as the loan matures.", "The principal portion of each successive payment increases.", "The interest portion of each successive payment decreases."], "rationales": ["Standard amortization involves fixed installments where the mix of interest and principal changes, but the total stays the same.", "The periodic interest rate (r) remains constant; it is the balance it is applied to that changes.", "Since the total payment is fixed and the interest portion decreases, the remaining amount available to pay down principal must increase.", "As the principal balance is paid down, there is less outstanding debt to accrue interest each month."], "correct": 3, "hint": "Reflect on how the breakdown of a fixed payment ($PMT = Interest + Principal$) shifts as the balance declines.", "topic": "", "sec": "", "src": "", "link": "", "qid": "6f05e13768"}, {"q": "Vanguard Ventures typically lends at a 12\\% APR with monthly compounding. A client proposes a loan that will be repaid in semi-annual installments of \\10,000$ over 5 years. What is the maximum amount Vanguard Ventures should lend for this proposal?", "options": ["77,217.35", "35,890.11", "72,947.59", "73,600.87"], "rationales": ["This results from using the EAR (12.68\\%) as the basis for the periodic rate calculation without correctly accounting for the 6-month payment interval.", "This is the result of using the 12\\% annual rate as the periodic rate for the semi-annual payments.", "First, find the 6-month effective rate from the 1\\% monthly rate: (1.01)⁶ - 1 = 6.152\\%. Then, calculate the PV of the 10-payment annuity: \\10,000 \\times [1 - (1.06152)^{-10}] / 0.06152$.", "This error occurs if you use a simple 6\\% semi-annual rate instead of adjusting for the monthly compounding specified in the lender's typical rate."], "correct": 2, "hint": "Determine the effective rate for a 6-month period based on the monthly compounding, then calculate the present value.", "topic": "", "sec": "", "src": "", "link": "", "qid": "75766ba2b9"}], "hasSheet": false, "parts": false, "secTitles": {}, "reserve": 0, "tags": false, "frq": [{"ask": "In a standard loan amortization schedule, the interest portion of a specific payment is calculated by multiplying the periodic interest rate by the ___ at the beginning of that period.", "rubric": [{"t": "The answer: loan balance", "judge": false, "k": ["outstanding balance", "principal balance", "beginning balance", "remaining balance"]}], "model": "loan balance\n\nThe interest portion is the cost of carrying the debt for that period, which is determined by applying the rate to the current amount owed."}, {"ask": "If a bank quotes a 12% interest rate compounded quarterly, the periodic rate ($r$) used in financial calculations is ___%.", "rubric": [{"t": "The answer: 3", "judge": false, "k": ["3%", "0.03"]}], "model": "3\n\nThe periodic rate is found by dividing the APR by the number of compounding periods per year ($m$); in this case, $12\\% / 4 = 3\\%$."}], "notebook": "https://notebook.google.com/notebook/5aaf743e-52c7-4229-a64d-4af011920c80", "root": "../index.html", "tab": "quiz", "sheet": ""}</script>
+<script>
+(function(){
+  if(window.lqSync) return;
+  const API = 'https://terp-plate.vercel.app/api/quiz-sync', MK = 'lqsync:meta';
+  const none = {first: Promise.resolve([]), now: async()=>[], listen(){}};
+  let key = '';
+  try{ key = localStorage.getItem('lq:key') || ''; }catch(e){}
+  const hm = /[#&]k=([A-Za-z0-9_-]{40,})/.exec(location.hash);
+  if(hm) key = hm[1];
+  if(!key || !window.crypto || !crypto.subtle){ window.lqSync = none; return; }
+
+  const skip = k => k.indexOf('lq:') !== 0 || k === 'lq:key' || k === 'lq:speech';
+  const rawSet = Storage.prototype.setItem;
+  let meta = {};
+  try{ meta = JSON.parse(localStorage.getItem(MK) || '{}') || {}; }catch(e){}
+  const putMeta = ()=>{ try{ rawSet.call(localStorage, MK, JSON.stringify(meta)); }catch(e){} };
+  const hash = t => { let h = 5381; for(let i=0;i<t.length;i++) h = ((h<<5) + h + t.charCodeAt(i)) | 0; return h; };
+  const isState = k => /^lq:[^:]+$/.test(k) && k !== 'lq:hub';
+  function weight(s){
+    return Object.keys(s.answers||{}).length + Object.keys(s.pass2||{}).length
+         + Object.keys(s.skipped||{}).length + Object.keys(s.starred||{}).length
+         + Object.keys(s.unsure||{}).length + 1000 * (s.history||[]).length + (s.done ? 500 : 0);
+  }
+  // '' = nothing worth sending
+  function sig(k, v){
+    if(isState(k)){
+      try{ const s = JSON.parse(v);
+        if(!s || typeof s !== 'object') return '';
+        if(!weight(s) && !s.only && !s.tagf) return '';
+        const c = Object.assign({}, s); delete c.ms; delete c.qms; delete c.meta; delete c.hintOpen;
+        return JSON.stringify(c);
+      }catch(e){ return ''; }
+    }
+    return (v && v !== '{}' && v !== '[]' && v !== '{"defs":[],"q":{}}') ? v : '';
+  }
+  let frozen = false, applying = false, timer = null, busy = false;
+  function mark(k, v){
+    if(skip(k)) return;
+    const g = sig(k, v), h = hash(g), m = meta[k] || (meta[k] = {t:0});
+    if(m.h === h) return;
+    m.h = h;
+    if(g){ m.t = Date.now(); m.d = 1; clearTimeout(timer); timer = setTimeout(run, 1500); }
+    putMeta();
+  }
+  Storage.prototype.setItem = function(k, v){
+    if(this === localStorage && frozen && String(k).indexOf('lq:') === 0) return;
+    rawSet.call(this, k, v);
+    if(this === localStorage && !applying){ try{ mark(String(k), String(v)); }catch(e){} }
+  };
+  // What was already here before sync existed: age unknown, so it is stamped low, and a real
+  // attempt outranks a thinner one by how much is in it.
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(skip(k) || meta[k]) continue;
+      const v = localStorage.getItem(k), g = sig(k, v);
+      meta[k] = {t: 0, h: hash(g)};
+      if(g){ let w = 1; if(isState(k)){ try{ w = 1 + weight(JSON.parse(v)); }catch(e){} }
+             meta[k].t = w; meta[k].d = 1; }
+    }
+    putMeta();
+  }catch(e){}
+
+  const enc = new TextEncoder(), dec = new TextDecoder();
+  const toB = s => { s = s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length % 4) s += '=';
+                     return Uint8Array.from(atob(s), c => c.charCodeAt(0)); };
+  const fromB = u => { let t = ''; for(let i=0;i<u.length;i+=8192) t += String.fromCharCode.apply(null, u.subarray(i, i+8192));
+                       return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+  const hex = b => Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,'0')).join('');
+  let ck = null, bucket = '';
+  const ready = (async()=>{
+    ck = await crypto.subtle.importKey('raw', toB(key), 'AES-GCM', false, ['encrypt','decrypt']);
+    bucket = hex(await crypto.subtle.digest('SHA-256', enc.encode('lq-sync:' + key))).slice(0, 32);
+  })();
+  const kid = async k => hex(await crypto.subtle.digest('SHA-256', enc.encode(bucket + '|' + k))).slice(0, 32);
+  async function seal(o){
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv}, ck, enc.encode(JSON.stringify(o)));
+    return fromB(iv) + '.' + fromB(new Uint8Array(ct));
+  }
+  async function unseal(t){
+    const p = t.split('.');
+    return JSON.parse(dec.decode(await crypto.subtle.decrypt({name:'AES-GCM', iv:toB(p[0])}, ck, toB(p[1]))));
+  }
+
+  function pageId(){
+    const el = document.getElementById('quiz-data');
+    if(!el) return null;
+    try{ return JSON.parse(el.textContent).id; }catch(e){ return null; }
+  }
+  async function run(){
+    if(busy || frozen) return [];
+    busy = true;
+    const changed = [];
+    try{
+      await ready;
+      const have = {}, puts = [], sent = {};
+      for(const k of Object.keys(meta)){
+        const m = meta[k];
+        if(!m.id) m.id = await kid(k);
+        have[m.id] = m.t || 0;
+        if(m.d){
+          const v = localStorage.getItem(k);
+          if(v === null){ m.d = 0; continue; }
+          puts.push({k: m.id, v: await seal({k, v}), ts: m.t});
+          sent[k] = m.t;
+        }
+      }
+      const r = await fetch(API, {method:'POST', headers:{'content-type':'text/plain'},
+                                  body: JSON.stringify({bucket, have, puts})});
+      if(!r.ok) throw new Error('sync ' + r.status);
+      const j = await r.json();
+      for(const k in sent) if(meta[k].t === sent[k]) meta[k].d = 0;
+      for(const row of j.rows || []){
+        let o; try{ o = await unseal(row.v); }catch(e){ continue; }
+        if(!o || skip(o.k)) continue;
+        const m = meta[o.k] || (meta[o.k] = {t:0});
+        if((m.t || 0) >= row.ts) continue;
+        applying = true;
+        try{ rawSet.call(localStorage, o.k, o.v); }catch(e){}
+        applying = false;
+        m.t = row.ts; m.d = 0; m.h = hash(sig(o.k, o.v)); m.id = row.k;
+        changed.push(o.k);
+      }
+      putMeta();
+    }catch(e){}
+    busy = false;
+    if(changed.length && window.lqSync.live){
+      const id = pageId();
+      const mine = id ? changed.some(k => k === 'lq:' + id || k.indexOf('lq:' + id + ':') === 0)
+                      : !!document.getElementById('manifest');
+      if(mine){ frozen = true; location.reload(); }
+    }
+    return changed;
+  }
+  function wake(){ if(document.visibilityState !== 'hidden') run(); }
+  function leave(){ if(document.visibilityState === 'hidden') run(); }
+  function listen(){
+    document.removeEventListener('visibilitychange', wake); document.addEventListener('visibilitychange', wake);
+    document.removeEventListener('visibilitychange', leave); document.addEventListener('visibilitychange', leave);
+    removeEventListener('focus', wake); addEventListener('focus', wake);
+  }
+  // `live` = this page should reload itself when its own quiz arrives newer. The locked shell
+  // turns it on only after it has drawn the page.
+  window.lqSync = {first: null, now: run, listen, live: true};
+  listen();
+  setInterval(wake, 20000);
+  window.lqSync.first = run();
+})();
+</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -998,10 +1174,44 @@ function save(){
    the sitting's subchapters into this one function is what makes a half-paper behave exactly
    like a whole one — one direction, one end card, one second pass — with no branch anywhere
    downstream. `only: null` (not chosen, or a page built without parts) filters nothing. */
+/* ---- TAGS (10-12, his ask) ------------------------------------------------------------
+   *"a text box at first, but it functions like a Notion tag property … once I press enter it
+   creates a tag and that tag stays for this exam and only for this exam."* Its own key, like
+   the research box, so a Retake and a rebuild keep them. `defs` is the order he made them in;
+   a tag no question carries any more is dropped from it. Off unless the page was built with
+   `tags`, so every page built before this is what it was. */
+const TKEY = KEY + ':tags';
+let T = (function(){
+  try{ const t = JSON.parse(localStorage.getItem(TKEY) || '{}') || {};
+       return {defs: t.defs || [], q: t.q || {}}; }
+  catch(e){ return {defs:[], q:{}}; } })();
+function tput(){ try{ localStorage.setItem(TKEY, JSON.stringify(T)); }catch(e){} }
+function tagsOf(i){ return T.q[qk(i)] || []; }
+function hasTag(i, name){ return tagsOf(i).indexOf(name) >= 0; }
+function tagAdd(i, raw){
+  const name = String(raw).trim().replace(/\s+/g, ' ');
+  if(!name) return;
+  const known = T.defs.find(d => d.toLowerCase() === name.toLowerCase()) || name;
+  if(T.defs.indexOf(known) < 0) T.defs.push(known);
+  const l = T.q[qk(i)] || (T.q[qk(i)] = []);
+  if(l.indexOf(known) < 0) l.push(known);
+  tput();
+}
+function tagDrop(i, name){
+  const id = qk(i);
+  T.q[id] = (T.q[id] || []).filter(x => x !== name);
+  if(!T.q[id].length) delete T.q[id];
+  if(!Object.keys(T.q).some(k => T.q[k].indexOf(name) >= 0)) T.defs = T.defs.filter(d => d !== name);
+  tput();
+}
+
 function active(s){
-  const only = D.parts ? (s.only || null) : null;
+  // A TAG RUN ("test only these") rides here for the same reason the section filter does.
+  const tf = D.tags ? (s.tagf || null) : null;
+  const only = (D.parts && !tf) ? (s.only || null) : null;
   return D.questions.map((_,i)=>i).filter(i => onPaper(s, i)
-    && (!only || only.indexOf(D.questions[i].sec) >= 0));
+    && (!only || only.indexOf(D.questions[i].sec) >= 0)
+    && (!tf || hasTag(i, tf)));
 }
 /* ---- THE RESERVES (08-16) ------------------------------------------------------------
    His ask: *"if 1 question is skipped, another one is replaced in that section about it… you
@@ -1562,7 +1772,7 @@ function draw(){
   // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
   // the rest of the sitting, so nothing about answering, going back or the second pass has
   // to know the picker exists.
-  if(sectioned() && !S.only) return picker();
+  if(sectioned() && !S.only && !S.tagf) return picker();
   const act = runList();
   if(!act.length) return end();
   if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
@@ -1571,6 +1781,61 @@ function draw(){
 
 /* Pure markup, no DOM writes and no state changes — so the same builder can render the
    question and be measured off-screen for the centring reserve. */
+/* The tag box above the question. Chips for what this question carries, then the box: type and
+   Enter makes the tag (or reuses one spelled the same), the ones he already made show under it
+   to click, Backspace on an empty box takes the last one off, Esc leaves. */
+function tagRowInner(i){
+  const mine = tagsOf(i);
+  let h = '';
+  mine.forEach((n,k)=>{ h += '<span class="tchip">' + esc(n) + '<button class="tx" data-drop="' + k
+                           + '" tabindex="-1" aria-label="Remove tag">×</button></span>'; });
+  return h + '<input id="tagin" class="tagin" type="text" autocomplete="off" spellcheck="false" '
+           + 'placeholder="' + (mine.length ? 'Add a tag' : 'Tag this question  ( l )') + '">'
+           + '<div class="tsug hide" id="tsug"></div>';
+}
+function paintSug(i){
+  const inp = $('#tagin'), box = $('#tsug');
+  if(!inp || !box) return;
+  const raw = inp.value.trim(), v = raw.toLowerCase(), mine = tagsOf(i);
+  let h = T.defs.map((d,n)=>({d,n}))
+    .filter(x => mine.indexOf(x.d) < 0 && (!v || x.d.toLowerCase().indexOf(v) >= 0))
+    .map(x => '<button class="tchip pick" data-n="' + x.n + '" tabindex="-1">' + esc(x.d) + '</button>')
+    .join('');
+  if(v && !T.defs.some(d => d.toLowerCase() === v))
+    h += '<span class="tnew">Enter makes “' + esc(raw) + '”</span>';
+  box.innerHTML = h;
+  box.classList.toggle('hide', !h || document.activeElement !== inp);
+  // mousedown, not click: the box must not blur (and hide these) before the pick lands
+  box.querySelectorAll('.pick').forEach(b => { b.onmousedown = e => {
+    e.preventDefault(); tagAdd(i, T.defs[+b.dataset.n]); redrawTags(i, true); }; });
+}
+function redrawTags(i, focus){
+  const row = $('#tagrow');
+  if(!row) return;
+  row.innerHTML = tagRowInner(i);
+  wireTags(i);
+  if(focus) $('#tagin').focus();
+}
+function wireTags(i){
+  const row = $('#tagrow'), inp = $('#tagin');
+  if(!row || !inp) return;
+  row.querySelectorAll('.tx').forEach(b => b.onclick = ()=>{
+    tagDrop(i, tagsOf(i)[+b.dataset.drop]); redrawTags(i, false); });
+  inp.onfocus = ()=> paintSug(i);
+  inp.oninput = ()=> paintSug(i);
+  inp.onblur = ()=> { const b = $('#tsug'); if(b) b.classList.add('hide'); };
+  inp.onkeydown = e => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      if(!inp.value.trim()){ inp.blur(); return; }
+      tagAdd(i, inp.value); redrawTags(i, true);
+    } else if(e.key === 'Escape'){ inp.value = ''; inp.blur(); }
+    else if(e.key === 'Backspace' && !inp.value && tagsOf(i).length){
+      tagDrop(i, tagsOf(i).slice(-1)[0]); redrawTags(i, true);
+    }
+  };
+}
+
 function buildQ(i, picked, fresh, en){
   const q = D.questions[i];
   const answered = picked !== undefined;
@@ -1582,10 +1847,12 @@ function buildQ(i, picked, fresh, en){
   // The counter sits top-left above the question, the way the notebook does it, rather than
   // up in the bar — it belongs with the thing it counts. On a second pass it counts the
   // second pass, so four wrong answers read as "1 / 4" and not as a broken 16.
-  let h = '<div class="qhead' + en + '"><div class="qcol">'
+  let h = (D.tags ? '<div class="tagrow no-read-aloud" id="tagrow">' + tagRowInner(i) + '</div>' : '')
+        + '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta no-read-aloud"><span class="num">' + (pos+1) + ' / '
         + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        + (D.tags && S.tagf ? '<span class="dot">·</span><span>only ' + esc(S.tagf) + '</span>' : '')
         // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
         // 10 reads as the paper having lost his place, which is how he read it.
         + (recycling && S.phase!==2
@@ -1781,6 +2048,7 @@ function question(fresh){
   $('#star').onclick = ()=> toggleStar(i);
   $('#qmark').onclick = ()=> toggleUnsure(i);
   $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
+  if(D.tags) wireTags(i);
 
   // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
   // touches it — and nothing above the options ever changes height.
@@ -2271,19 +2539,32 @@ function openMenu(){
   m.className = 'menu';
   // The clock's only other way in. `w` is not written anywhere else on the page, and a key
   // nothing announces is a key he has to remember he asked for.
-  m.innerHTML = '<button id="skipq">Skip this question</button>'
+  m.innerHTML = '<button id="skipq">Skip this question  ( x )</button>'
               // The reader's own two entries. Space and `v` are written nowhere else on the
               // page, and a key nothing announces is a key he has to remember he asked for.
               + '<button id="readtog">' + (sayOn ? 'Stop' : 'Start') + ' read-aloud  ( space )</button>'
               + '<button id="voiceset">Voice, speed and pauses…</button>'
-              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>';
+              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>'
+              // EVERY KEY, WRITTEN DOWN ONCE (10-12). He could not find Redo or remember its key.
+              + '<div class="keys"><kbd>x</kbd><span>Skip</span><kbd>u</kbd><span>Redo your answer</span>'
+              + '<kbd>h</kbd><span>Hint, when the question has one</span>'
+              + '<kbd>s</kbd><span>Star</span><kbd>/</kbd><span>No idea</span>'
+              + '<kbd>r</kbd><span>Research</span><kbd>f</kbd><span>Fix this question</span>'
+              + '<kbd>t</kbd><span>Reflection</span>'
+              + (D.tags ? '<kbd>l</kbd><span>Tag</span>' : '')
+              + '<kbd>↵</kbd><span>Next</span><kbd>←</kbd><span>Back</span></div>';
   host.appendChild(m);
   m.querySelector('#clocktog').onclick = ()=>{ toggleClock(); closeMenu(); };
   m.querySelector('#readtog').onclick = ()=>{ closeMenu(); sayOn ? sayOff() : sayToggle(); };
   m.querySelector('#voiceset').onclick = ()=>{ closeMenu(); openVset(); };
-  m.querySelector('#skipq').onclick = ()=>{
+  m.querySelector('#skipq').onclick = ()=>{ closeMenu(); skipQuestion(); };
+  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
+}
+/* One path for skipping, whether it came from the menu or from `x` (10-12, his ask: a key
+   *"rather than going into the top bar and then pressing skip"*). */
+function skipQuestion(){
     const list = runList(), pos = list.indexOf(S.i);
-    if(list.length <= 1) return closeMenu();        // never skip the last one standing
+    if(list.length <= 1) return;                    // never skip the last one standing
     const sec = bucketOf(S.i);
     S.skipped[qk(S.i)] = true;
     delete S.answers[qk(S.i)];
@@ -2297,7 +2578,6 @@ function openMenu(){
     // have handed him an end card with a question still owed.
     const filled = promoteReserve(sec) >= 0;
     const wasLast = !filled && pos === list.length - 1;
-    closeMenu();
     syncTabs();
     if(wasLast){ finish(); return; }
     // After the removal the list has shrunk, so the item now AT `pos` is the one that
@@ -2306,8 +2586,6 @@ function openMenu(){
     S.hintOpen = false;
     lastShown = -1;
     save(); question(); window.scrollTo(0,0);
-  };
-  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
 }
 function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(); }
 
@@ -2564,6 +2842,39 @@ function momentum(){
   return h + '</div>';
 }
 
+/* THE TAGS ON THE END CARD: how each group went, and a way to sit one group alone. A tag run
+   is a fresh attempt on only those questions (the finished one goes into history first, as a
+   Retake does); Retake, or "every question" here, goes back to the whole paper. Not offered
+   on a sectioned paper, whose picker already owns which questions a sitting holds. */
+function tagTable(){
+  if(!D.tags || !T.defs.length) return '';
+  const all = D.questions.map((_,i)=>i).filter(i => onPaper(S, i));
+  let h = '';
+  T.defs.forEach((d,n)=>{
+    const qs = all.filter(i => hasTag(i, d));
+    if(!qs.length) return;
+    const sat = qs.filter(i => ans(i) !== undefined || ans2(i) !== undefined);
+    const ok = sat.filter(i => finalRight(i)).length;
+    h += '<div class="tagline"><span class="tchip">' + esc(d) + '</span><span class="tn">'
+       + (sat.length ? ok + ' / ' + sat.length + ' right' : qs.length + ' question' + (qs.length>1?'s':''))
+       + '</span>' + (D.parts ? '' : '<button class="link" data-tagrun="' + n + '">Test only these</button>')
+       + '</div>';
+  });
+  if(!h && !S.tagf) return '';
+  if(S.tagf) h += '<p class="note">This run was only “' + esc(S.tagf) + '”. '
+                + '<button class="link" id="tagall">Back to every question</button></p>';
+  return '<div class="tagtable"><h3>By tag</h3>' + h + '</div>';
+}
+function startRun(tag){
+  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length, ms:S.ms,
+                             tag:S.tagf || undefined});
+  const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
+  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  if(tag) S.tagf = tag;
+  pickSel = null; lastShown = -1;
+  save(); syncTabs(); renderScore(); draw(); window.scrollTo(0,0);
+}
+
 function end(){
   timeOn(null);
   const act = active(S), n = score(S), t = act.length;
@@ -2645,6 +2956,7 @@ function end(){
             + 'every one is done; sitting one again replaces its score.</p>';
   }
 
+  h += tagTable();
   const nskip = Object.keys(S.skipped||{}).length;
   if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
               + '<button class="link" id="unskip">put them back</button></p>';
@@ -2655,6 +2967,10 @@ function end(){
   $('#quizview').innerHTML = h;
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  document.querySelectorAll('[data-tagrun]').forEach(b =>
+    b.onclick = ()=> startRun(T.defs[+b.dataset.tagrun]));
+  const tall = $('#tagall');
+  if(tall) tall.onclick = ()=> startRun(null);
   const ma = $('#momall');
   if(ma) ma.onclick = ()=>{ momAll = true; end(); };
   const m = $('#more');
@@ -2691,6 +3007,7 @@ function itemHTML(i, n){
   const q = D.questions[i], first = ans(i), second = ans2(i);
   let h = '<div class="item">';
   if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
+  if(D.tags) tagsOf(i).forEach(t => { h += '<span class="tchip sm">'+esc(t)+'</span>'; });
   h += '<p class="qq">'+(n===undefined?'':(n+1)+'. ')+esc(q.q)+'</p>'
      + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
   if(!firstRight(i)){
@@ -2707,12 +3024,26 @@ function itemHTML(i, n){
   return h + '</div>';
 }
 
+let revByTag = false;
 function review(){
   timeOn(null);
+  const act = active(S), canSort = D.tags && T.defs.length;
   let h = '<div class="rev"><h3>Every question</h3>';
-  active(S).forEach((i,n)=>{ h += itemHTML(i, n); });
+  if(canSort) h += '<p class="note" style="margin:0 0 6px"><button class="link" id="revsort">'
+                 + (revByTag ? 'Sort in order' : 'Sort by tag') + '</button></p>';
+  if(canSort && revByTag){
+    // a question with two tags is listed under both; the untagged ones come last
+    T.defs.concat(['']).forEach(d=>{
+      const qs = act.filter(i => d ? hasTag(i, d) : !tagsOf(i).length);
+      if(!qs.length) return;
+      h += '<h3 class="tgroup">' + (d ? esc(d) : 'No tag') + ' · ' + qs.length + '</h3>';
+      qs.forEach(i => { h += itemHTML(i, act.indexOf(i)); });
+    });
+  } else act.forEach((i,n)=>{ h += itemHTML(i, n); });
   h += '</div>';
   $('#quizview').innerHTML = h;
+  const rs = $('#revsort');
+  if(rs) rs.onclick = ()=>{ revByTag = !revByTag; review(); };
   $('#band').classList.add('off');
   showResearch(false);
   $('#footer').classList.remove('hide');
@@ -4019,6 +4350,10 @@ document.addEventListener('keydown', e=>{
   // `w` FOR WATCH — the clock in the bar, off by default. Past G like every other command
   // key here, so it can never be an option letter.
   if(e.key === 'w' || e.key === 'W'){ toggleClock(); return; }
+  // `x` SKIPS, `l` (label) PUTS THE CARET IN THE TAG BOX. Both past G, so never an option key.
+  if(e.key === 'x' || e.key === 'X'){ e.preventDefault(); skipQuestion(); return; }
+  if((e.key === 'l' || e.key === 'L') && D.tags){
+    const ti = $('#tagin'); if(ti){ e.preventDefault(); ti.focus(); } return; }
   if(e.key === '/' || e.key === '?'){ e.preventDefault(); toggleUnsure(S.i); return; }
   /* THE KEY NAMES A POSITION ON SCREEN, not an option. `2` and `B` mean the second card he
      can see, which is the only thing either of them could mean to him — after a Redo has

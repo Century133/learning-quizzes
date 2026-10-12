@@ -326,6 +326,32 @@ kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid
 .qmark:hover{background:var(--surface);color:var(--text)}
 .qmark.on{color:var(--text);border-color:var(--accent);background:var(--surface-hi)}
 
+/* ---- tags (10-12): his own labels on a question, kept per quiz ---- */
+.tagrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.tchip{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:.78rem;
+ color:var(--text);background:var(--surface-hi);border:1px solid var(--line);
+ border-radius:6px;padding:2px 8px;line-height:1.5}
+.tchip.sm{font-size:.7rem;margin:0 6px 9px 0}
+button.tchip{cursor:pointer}
+button.tchip:hover{border-color:var(--muted)}
+.tx{background:none;border:0;color:var(--muted);font:inherit;padding:0;cursor:pointer;line-height:1}
+.tx:hover{color:var(--text)}
+.tagin{flex:1 1 140px;min-width:120px;background:none;border:0;outline:0;color:var(--text);
+ font:inherit;font-size:.82rem;padding:3px 2px}
+.tagin::placeholder{color:var(--muted);opacity:.75}
+.tsug{flex:1 0 100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tnew{color:var(--muted);font-size:.76rem}
+.tagtable{margin:26px 0 0;text-align:left}
+.tagtable h3{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+ font-weight:500;margin:0 0 6px}
+.tagline{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line);
+ font-size:.88rem}
+.tagline .tn{flex:1;color:var(--muted);font-variant-numeric:tabular-nums}
+.tgroup{margin-top:30px}
+.menu .keys{border-top:1px solid var(--line);margin:5px 0 0;padding:8px 10px 4px;
+ display:grid;grid-template-columns:auto 1fr;gap:5px 10px;font-size:.78rem;color:var(--muted);
+ align-items:center}
+
 /* ---- the ⋮ menu ---- */
 .more{position:relative;flex:0 0 auto}
 .dots{background:none;border:0;color:var(--muted);font-size:1.15rem;line-height:1;
@@ -972,7 +998,157 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "bmgt301-ch1-1-1-course-1-1_9-9-cour", "title": "Ch1 Exam · 1.1", "subtitle": "Setting the Stage- Technology and the Modern Enterprise", "book": "BMGT301", "hash": "e332c6d9876af3a8", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "A media researcher is reviewing the 2009 fiscal year and compares a specific digital firm to established giants like Disney and News Corp. The researcher observes that this firm has become the most profitable media entity globally by capturing advertising dollars previously spent on 'old media.' Based on the 1.1 text, which firm is the subject of this financial comparison?", "options": ["Microsoft", "Facebook", "Apple", "Google"], "rationales": ["Microsoft is a major tech player, but the text specifically highlights the flight of advertising dollars toward the search-driven model of Google.", "Although Facebook was growing rapidly and changed how organizations communicate, it was not yet the most profitable media company by 2009.", "While Apple became the most valuable tech firm, its primary profits in 2010 were driven by mobile device sales and music, not global advertising revenue.", "By the end of the 2000s, Google had transitioned from a startup to the world's most profitable media company by dominating digital advertising."], "correct": 3, "hint": "Consider which firm reshaped the industry by making internet advertising models highly profitable despite early skepticism.", "topic": "Google Revenue", "sec": "1.1", "src": "+", "link": "", "qid": "01d8f614cf"}, {"q": "Over the past decade, a shift has occurred where technology firms now dominate the Fortune 'Best Companies to Work For' list. Which underlying driver identified in the 1.1 text produced this specific outcome in workplace rankings?", "options": ["The restriction of high-powered computing utilities to large, elite corporations", "The mandate for managers to prioritize ethical service over technological adoption", "Radical changes in business landscapes driven by faster and cheaper computing", "A decline in the profitability of traditional media and manufacturing sectors"], "rationales": ["The text states the opposite: cloud computing has made high-powered tools available even to small businesses and nonprofits.", "Managers do face higher ethical bars, but this is a challenge to be managed rather than the primary driver of firm popularity on employee lists.", "Moore's Law and the pervasiveness of technology have created high-value firms that prioritize tech-centric skills and innovative work environments.", "While traditional firms are struggling, the presence on 'Best Companies' lists is a result of tech firms' growth and culture, not just others' decline."], "correct": 2, "hint": "Focus on how the acceleration of hardware and software capabilities has empowered a new class of industry leaders.", "topic": "Tech Workplace", "sec": "1.1", "src": "+", "link": "", "qid": "5e4ff624c2"}, {"q": "Firm A is a traditional brick-and-mortar retailer that uses technology only for basic bookkeeping. Firm B is an admired modern retailer that integrates data analytics into every marketing decision to predict consumer behavior. According to the concepts in 1.1, what principle explains why Firm B is more likely to sustain a competitive advantage?", "options": ["The open source revenue model", "Data-driven decision making", "The utility model of software", "Moore's Law"], "rationales": ["Open source software lowers costs for startups, but utilizing free code does not inherently provide the predictive marketing advantage described.", "Data analytics and business intelligence are driving discovery and innovation, allowing firms to redefine marketing and stay ahead of competitors.", "While SaaS makes computing accessible, the specific advantage of Firm B comes from how they apply information to strategy, not just their tool access.", "Moore's Law makes the hardware possible, but the strategic advantage lies in the application of analytics rather than the raw speed of the chips."], "correct": 1, "hint": "Look for the specific term that describes using information to guide discovery and redefine modern marketing efforts.", "topic": "Tech Advantage", "sec": "1.1", "src": "+", "link": "", "qid": "3eaeef4bbe"}, {"q": "A manager at a retail firm discovers that a video of a minor customer service dispute has been uploaded to YouTube and tagged on Twitter. Based on the description of the 'permanent record' of the internet in section 1.1, how does this social media visibility impact the manager's responsibilities?", "options": ["It lowers the need for proactive reputation management", "It reduces the importance of digital skills for managers", "It eliminates the risk of ethical lapses", "It raises the bar for service and ethics"], "rationales": ["Social media makes reputation more fragile, necessitating more proactive rather than less proactive management.", "The text argues that tech must be at the center of the managerial playbook, making these skills more important than ever.", "Technology documents lapses but does not prevent them; the risk remains and the consequences are simply amplified.", "The ubiquity of mobile cameras and social media means every lapse can be permanently recorded, demanding higher managerial standards."], "correct": 3, "hint": "Reflect on how constant, public documentation of corporate behavior affects the standards to which managers are held.", "topic": "Social Media Peril", "sec": "1.1", "src": "+", "link": "", "qid": "442d983d63"}, {"q": "The software industry has shifted so that sophisticated, high-powered computing is now delivered as a ______________, which allows even the smallest nonprofits to access tools once reserved for elite firms.", "options": ["utility", "security threat", "capital expense", "proprietary asset"], "rationales": ["Cloud computing and SaaS turn computing into a utility, similar to electricity or water, accessible based on need rather than infrastructure.", "While security threats are pervasive, they are a byproduct of computing's growth, not the delivery mechanism for software to nonprofits.", "Turning computing into a utility moves it away from a heavy upfront capital expense toward an operational expense model.", "A proprietary asset would be something a firm owns and keeps exclusive, whereas the utility model emphasizes shared access and service."], "correct": 0, "hint": "Think of a term describing a service like electricity that is available on-demand to all users.", "topic": "Cloud Computing", "sec": "1.1", "src": "+", "link": "", "qid": "59ba2e7ce0"}, {"q": "A startup developer chooses to build their entire web platform using code that is collectively maintained by thousands of programmers and given away for free. According to the text, which firms are among those that actually pay the programmers to create this free software?", "options": ["IBM, HP, and Oracle", "Google, Facebook, and Baidu", "Alibaba and Tencent", "Exxon Mobil and Wal-Mart"], "rationales": ["The text explicitly names these firms as entities that pay programmers to write code that is then distributed via the open source model.", "These firms use and benefit from open source, but the text specifically highlights the 'old guard' like IBM and HP paying for the code development.", "These are publicly traded Chinese internet firms, but the text uses IBM, HP, and Oracle to illustrate the shift in the software industry.", "These are listed in the text as highly valuable traditional firms, but they are not the primary examples of firms funding open source code."], "correct": 0, "hint": "Identify the legacy tech giants mentioned as key contributors to the free software movement.", "topic": "Open Source Software", "sec": "1.1", "src": "+", "link": "", "qid": "673d00d297"}, {"q": "A startup in 2026 can launch a complex, data-heavy application with almost zero investment in physical server hardware. According to section 1.1, which technological shift primarily enables this reduction in startup costs?", "options": ["The expansion of home broadband access", "The rise of cloud computing and SaaS", "The growth of social media platforms", "The dominance of search engine optimization"], "rationales": ["Broadband access helps consumers reach the startup, but the startup's own infrastructure costs are solved by the delivery of computing as a service.", "Cloud computing provides high-powered computing as a utility, allowing startups to scale without purchasing their own physical servers.", "Social media provides communication and advertising channels but is not the mechanism for reducing server hardware investment.", "SEO is a marketing strategy to attract users, but it does not address the underlying hardware costs or computing infrastructure."], "correct": 1, "hint": "Consider the model where computing power is rented as a service rather than owned as equipment.", "topic": "Cloud Computing", "sec": "1.1", "src": "+", "link": "", "qid": "6e21a80cc7"}, {"q": "Country A has the highest total number of internet users in the world and several billion-dollar publicly traded internet firms. Country B is a global leader in technology innovation but is ranked fifteenth in home broadband access. According to the 1.1 text, which pair correctly identifies these countries?", "options": ["Country A is China; Country B is the United States", "Country A is China; Country B is Japan", "Country A is the United States; Country B is India", "Country A is India; Country B is China"], "rationales": ["The text notes China has the most users and firms like Baidu, while the US is ranked 15th in broadband access as of the 2010 report.", "The comparison in the text is specifically aimed at correcting misconceptions about the US ranking in infrastructure.", "The US does not have the most internet users, and the text specifically highlights the US broadband ranking as lower than many expect.", "While India is large, China is specifically cited as having the most users and more valuable internet firms like China Mobile."], "correct": 0, "hint": "Recall the specific statistics mentioned regarding internet user totals and broadband infrastructure rankings.", "topic": "Globalization", "sec": "1.1", "src": "+", "link": "", "qid": "df59af8552"}, {"q": "A company uses a system that analyzes millions of customer transactions to discover that people who buy product X are also likely to buy product Y. This discovery allows them to innovate their marketing strategy. Based on the 1.1 text, what is a potential 'knife-edge' risk associated with this technological practice?", "options": ["Redefining skills for social media management", "Empowering the poor through mobile phones", "Increasing computing costs for startups", "Shredding corporate reputation through privacy concerns"], "rationales": ["While skills are changing, the text specifically links 'shredding corporate reputations' to the privacy concerns of analytics.", "Mobile empowerment is mentioned as a positive outcome of Moore's Law, not a risk associated with marketing analytics.", "The text notes that technology shifts, including open source, actually lower computing costs for startups.", "Data analytics creates a shifting 'knife-edge' of privacy concerns that can damage a company if the data is mishandled."], "correct": 3, "hint": "Think about the sensitive balance between using consumer information for profit and protecting individual rights.", "topic": "Data Analytics", "sec": "1.1", "src": "+", "link": "", "qid": "e1674fbe90"}, {"q": "Social media has grown so rapidly that by 2010, ______________ had a user base larger than any nation on Earth except for China and India.", "options": ["Google", "Facebook", "YouTube", "Twitter"], "rationales": ["While Google has many users, the text specifically uses the 'nation' comparison for Facebook's social media community.", "The text uses this specific comparison to illustrate the massive scale and influence of Facebook's global user base.", "YouTube is cited in the context of mobile cameras and ethical lapses, but not as the primary example of a 'nation-sized' user base.", "Twitter is mentioned as a platform for capturing service flaws, but its scale is not compared to the population of China and India in this section."], "correct": 1, "hint": "Identify the social network that reached a billion-scale population ranking.", "topic": "Social Media Size", "sec": "1.1", "src": "+", "link": "", "qid": "c70c4bec8e"}, {"q": "Traditional Firm X invests heavily in purchasing apartments to rent out to travelers. Marketplace Platform Y owns no properties but connects travelers with residents who have spare rooms. Compared to Firm X, how does Platform Y's business model handle asset investment and inventory risk?", "options": ["Lower asset investment and lower inventory risk", "Higher asset investment and lower inventory risk", "Lower asset investment and higher inventory risk", "Higher asset investment and higher inventory risk"], "rationales": ["Marketplaces like Airbnb or Alibaba avoid the costs of owning inventory or properties, allowing them to grow with less capital risk.", "A marketplace platform specifically avoids high asset investment; this is the core of their 'new' business model.", "Since the platform doesn't own the rooms, they don't carry the risk of 'unsold' rooms in the same way a property owner does.", "This describes a traditional, high-stakes business model which the digital transformation is actively disrupting."], "correct": 0, "hint": "Consider the financial advantage of acting as a bridge between buyers and sellers without owning the goods.", "topic": "Business Models", "sec": "1.1", "src": "+", "link": "", "qid": "512874725a"}, {"q": "In the early 2000s, Apple was widely viewed as a 'has-been' in the tech industry. By 2010, it had become the most valuable tech firm in the United States. According to the text, which product and profit source were central to this reversal?", "options": ["The Macintosh and desktop software", "Open source software and SaaS", "The iPod and mobile device profits", "Search advertising and data analytics"], "rationales": ["The Mac was Apple's traditional product, but the 'reversal' was driven by new mobile technologies, not just the older desktop line.", "Apple's model is largely proprietary; the text attributes their success to hardware sales and the mobile ecosystem.", "The text identifies the iPod as a non-existent product a decade prior that fueled Apple's rise through music and mobile sales.", "Search advertising was Google's primary profit driver, whereas Apple focused on premium hardware and digital music."], "correct": 2, "hint": "Focus on the handheld device that transformed the music industry and preceded the iPhone's dominance.", "topic": "Apple Transformation", "sec": "1.1", "src": "+", "link": "", "qid": "0f4527cb9b"}, {"q": "Firm A is a traditional clothing manufacturer that holds millions of dollars in fabric and finished goods in its own warehouses. Firm B is a company like Alibaba that facilitates massive global trade. Based on the notes and text, which principle accounts for the difference in their financial structures?", "options": ["Cloud utility", "Broadband access", "Inventory ownership", "Moore's Law"], "rationales": ["Cloud computing might host their sites, but 'inventory ownership' is the specific concept that separates a middleman platform from a manufacturer.", "While broadband is necessary to access the site, it is not the structural business principle that defines the difference in their capital models.", "Newer digital models like Alibaba thrive by facilitating transactions without the overhead or risk of holding physical inventory.", "Moore's Law explains why the computing is cheap enough to run the platform, but the strategic choice is about asset management."], "correct": 2, "hint": "Look for the factor involving whether a company physically possesses the products it helps sell.", "topic": "Alibaba vs Inventory", "sec": "1.1", "src": "+", "link": "", "qid": "73812277fd"}, {"q": "Modern managers face a world where every ethical lapse can be 'graffiti-tagged' on the permanent record of the internet. This visibility results from the intersection of which two technological factors?", "options": ["Social media speed and secure data encryption", "High broadband costs and secure data encryption", "Ubiquitous mobile cameras and high broadband costs", "Ubiquitous mobile cameras and social media speed"], "rationales": ["Encryption protects privacy, which is the opposite of the 'graffiti-tagged' public exposure the text describes.", "Both of these factors would decrease the public visibility of ethical lapses rather than increasing it.", "High broadband costs would actually hinder the spread of such videos; the text emphasizes pervasive and cheap telecommunications.", "The combination of cameras in every pocket and the immediate reach of YouTube/Twitter creates a permanent and public record of behavior."], "correct": 3, "hint": "Combine the tool used to record a situation with the platform used to broadcast it instantly to the world.", "topic": "Managerial Ethics", "sec": "1.1", "src": "+", "link": "", "qid": "ebd504b16d"}, {"q": "At the start of the 2000s, well-known strategists like ______________ dismissed Internet advertising models, yet by the decade's end, Google became the most profitable media company on Earth.", "options": ["Moore", "Dr. Bharti Motwani", "Alibaba", "Michael Porter"], "rationales": ["Moore is associated with the 'Law' regarding computing speed and cost, not the dismissal of internet business models.", "Dr. Bharti is the instructor mentioned in the learner's notes, not the historical strategist cited in the textbook regarding 2001.", "Alibaba is a firm mentioned as a success of the decade, not a strategist who questioned the internet's potential.", "The text specifically references Porter (2001) as a strategist who dismissed the internet advertising model early on."], "correct": 3, "hint": "Identify the Harvard professor and strategist who famously questioned the internet's impact on competitive strategy.", "topic": "Google/Porter Strategy", "sec": "1.1", "src": "+", "link": "", "qid": "8b65d19c15"}, {"q": "A multinational corporation discovers that its internal design documents have been accessed by a foreign entity without authorization. According to the 1.1 text, this event illustrates which specific outcome of the pervasiveness of computing?", "options": ["The radical change in software revenue models", "The empowerment of the poor through globalization", "The shifting knife-edge of privacy concerns", "Espionage threats unimaginable to the prior generation"], "rationales": ["Revenue models deal with how firms make money (like open source or SaaS), not the security risks of digital infrastructure.", "While globalization is a theme, the specific context of unauthorized access to sensitive documents is a security threat.", "Privacy concerns usually refer to how a firm handles customer data, whereas 'espionage' refers to theft of corporate or state secrets.", "The text states that the pervasiveness of computing has created security and espionage threats that previous generations could not have imagined."], "correct": 3, "hint": "Look for the term that describes secret information gathering in the digital age.", "topic": "Security Threats", "sec": "1.1", "src": "+", "link": "", "qid": "2fd7c6fb92"}, {"q": "Dr. Bharti notes that launching a product without using data is like 'driving with closed eyes.' If a manager ignores analytics and the product fails, what is the most direct cause of this failure according to the managerial playbook described in 1.1?", "options": ["A global ranking of fifteenth in broadband access", "The high cost of open source software development", "Failure to place tech at the center of the strategy", "The lack of available cloud computing utilities"], "rationales": ["National infrastructure rankings are a contextual factor, but the manager's failure is an internal strategic error regarding data use.", "Open source software actually lowers costs; therefore, high costs in this area would not be the cause of a data-blind failure.", "The text concludes that disruptions will accelerate and managers must place technology at the center of their playbook to succeed.", "The text states these utilities are widely available even to small businesses, so the failure is in usage, not availability."], "correct": 2, "hint": "Think about where the text suggests technology should be positioned within an organization's planning process.", "topic": "Data-Driven Strategy", "sec": "1.1", "src": "+", "link": "", "qid": "b0e42c7138"}, {"q": "A student is deciding between learning traditional Python for data cleaning and exploring 'Agentic AI' for business problem-solving. Case A focuses on manual coding of algorithms, while Case B focuses on AI systems that can understand and execute tasks. Based on the class notes and 1.1 trends, which case aligns with the 'tectonic shift' in business?", "options": ["Case B because it lowers the service and ethics bar", "Case A because manual coding is more secure", "Case B because it represents the shift toward agentic tools", "Case A because it avoids the privacy knife-edge"], "rationales": ["Technology actually raises the service and ethics bar for managers; it does not lower it.", "While manual coding has its place, the 'tectonic shift' refers to the radical disruption and automation that AI tools bring to the landscape.", "The learner's notes suggest that 'agentic AI is the way to go' because it represents a move toward systems that understand and act on their own.", "All data handling involves privacy risks; manual coding does not inherently 'avoid' the concerns raised by data analytics."], "correct": 2, "hint": "Consider which approach leverages the most modern, disruptive capability mentioned in the learner's notes.", "topic": "Agentic AI", "sec": "1.1", "src": "+", "link": "", "qid": "43439deae8"}], "hasSheet": true, "parts": true, "secTitles": {"1.1": "Tech's Tectonic Shift- Radically Changing Business Landscapes"}, "reserve": 2, "frq": [], "notebook": "https://notebooklm.google.com/notebook/873a623f-584e-43aa-a1b5-4059031032cd/artifact/cf360970-942e-46b1-9baa-b817068e92ff", "root": "../index.html", "tab": "quiz", "sheet": "## Google Revenue\nRadical migration of advertising revenue from traditional media to digital platforms and internet-based advertising models.\n\n### Key terms\n1. **Internet advertising models** Digital revenue strategies once dismissed by traditionalists but now dominating global industry spend.\n\n### Names and studies\n1. **Google** Earned more advertising revenue than any firm, online or off, to become planet's most profitable media company.\n\n## Tech Workplace\nFundamental shift in managerial playbook requiring leadership to place technology at center of organizational strategy.\n\n### Key terms\n1. **Tech-centric management** Leadership approach prioritizing technological proficiency to reach modern consumers and navigate reshaped industries.\n\n## Tech Advantage\nAcceleration of faster, cheaper technology impacting global socioeconomics and environmental health.\n\n### Key terms\n1. **Moore’s Law** Principle driving continuous increase in computing power at diminishing costs.\n   1.1 Example: Empowering poor through accessible computing while poisoning planet with e-waste.\n\n## Social Media Peril\nInstant digital documentation of corporate actions creating high risk for ethical lapses and public scrutiny.\n\n### Key terms\n1. **Permanent record** Digital archive where mobile-captured photos and videos remain indefinitely searchable for the public.\n   1.1 Examples: YouTube, Flickr, or Twitter.\n\n## Cloud Computing\nHigh-powered computing resources evolving from expensive local infrastructure to internet-delivered utility services.\n\n### Key terms\n1. **Software as a Service (SaaS)** Delivery model providing sophisticated software over internet as a utility for businesses of all sizes.\n\n## Open Source Software\nIndustry-wide shift toward collaborative development of free code powering most modern websites.\n\n### Key terms\n1. **Open source software** Free, collaboratively written code that rewrites industry revenue models and lowers startup costs.\n\n### Names and studies\n1. **IBM, HP, and Oracle** Collectively paid thousands of programmers to write code given away for free to restructure industry economics.\n\n## Globalization\nRise of international tech powers and shift in global infrastructure leadership rankings.\n\n### Key terms\n1. **Home broadband access** Residential high-speed internet availability and performance rankings.\n   1.1 Example: United States ranking 15th globally in home broadband access.\n\n### Names and studies\n1. **China Mobile** Valued in 2009 higher than any U.S. firm except Exxon Mobil and Wal-Mart.\n\n## Data Analytics\nRole of business intelligence in driving discovery while managing sensitive privacy boundaries that impact reputations.\n\n### Key terms\n1. **Business intelligence** Data-driven discovery and marketing that can shred corporate reputations if privacy is mishandled.\n\n## Social Media Size\nDigital platforms reaching global scale exceeding populations of largest sovereign nations.\n\n### Names and studies\n1. **Facebook** Established user base larger than any nation on earth except for China and India.\n\n## Business Models\nPlatform-based mechanics bridging wants and needs without requiring major investment in physical assets.\n\n### Key terms\n1. **Marketplace model** High-margin platform business requiring no inventory or property ownership.\n   1.1 Examples: Airbnb and Uber.\n\n### Names and studies\n1. **Dr. Bharti Motwani** Served as marketplace consultant describing model where platform takes commission on every transaction between buyers and sellers.\n\n## Apple Transformation\nEvolution from struggling tech \"has-been\" to dominant global leader through integrated ecosystems.\n\n### Key terms\n1. **Ecosystem** Cohesive environment of interconnected devices and services creating high value and user security.\n   1.1 Example: Apple Watch sales exceeding entire Swiss watch industry.\n\n### Names and studies\n1. **Apple** Surpassed all US tech firms in value by 2010 by leading world in music sales and mobile profits.\n\n## Alibaba vs Inventory\nRetail strategy emphasizing transaction and content facilitation over traditional physical stock maintenance.\n\n### Key terms\n1. **Zero-inventory model** Strategy focusing on facilitating transactions and content rather than stocking physical goods.\n   1.1 Examples: Alibaba, Shopify, or Temu.\n\n## Managerial Ethics\nHeightened standards for professional conduct due to risk of instant public exposure in connected world.\n\n### Key terms\n1. **Service and ethics bar** Elevated performance and transparency requirement for managers due to pervasive digital recording.\n\n## Google/Porter Strategy\nConflict between traditional strategic frameworks and emergent internet realities regarding advertising viability.\n\n### Names and studies\n1. **Michael Porter (2001)** Well-known strategist who dismissed Internet advertising models just as Google began radical ascent.\n\n## Security Threats\nInimical digital threats and surveillance of corporate and national assets via pervasive computing.\n\n### Key terms\n1. **Cyber-espionage** Modern digital security threats largely unimaginable to prior generations of business leaders.\n\n## Data-Driven Strategy\nNecessity of rigorous analytics in digital transformation to avoid high industry failure rates.\n\n### Key terms\n1. **Digital transformation** Integration of technology into all business areas, currently facing high risk of failure if not data-driven.\n\n### Names and studies\n1. **Dr. Bharti Motwani** Defined launching products without data as equivalent to \"driving with closed eyes.\"\n2. **Forbes** Reported 72% of firms currently fail in digital transformation efforts.\n\n## Agentic AI\nEvolution of artificial intelligence toward autonomous systems with superior capacity for understanding.\n\n### Key terms\n1. **Agentic AI** Autonomous digital agents representing next evolutionary stage beyond traditional machine learning.\n\n### Names and studies\n1. **Dr. Bharti Motwani** Asserted no reason to do machine learning because agentic AI is preferred path forward."}</script>
+<script id="quiz-data" type="application/json">{"id": "bmgt301-ch1-1-1-course-1-1_9-9-cour", "title": "Ch1 Exam · 1.1", "subtitle": "Setting the Stage- Technology and the Modern Enterprise", "book": "BMGT301", "hash": "e332c6d9876af3a8", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "A media researcher is reviewing the 2009 fiscal year and compares a specific digital firm to established giants like Disney and News Corp. The researcher observes that this firm has become the most profitable media entity globally by capturing advertising dollars previously spent on 'old media.' Based on the 1.1 text, which firm is the subject of this financial comparison?", "options": ["Microsoft", "Facebook", "Apple", "Google"], "rationales": ["Microsoft is a major tech player, but the text specifically highlights the flight of advertising dollars toward the search-driven model of Google.", "Although Facebook was growing rapidly and changed how organizations communicate, it was not yet the most profitable media company by 2009.", "While Apple became the most valuable tech firm, its primary profits in 2010 were driven by mobile device sales and music, not global advertising revenue.", "By the end of the 2000s, Google had transitioned from a startup to the world's most profitable media company by dominating digital advertising."], "correct": 3, "hint": "Consider which firm reshaped the industry by making internet advertising models highly profitable despite early skepticism.", "topic": "Google Revenue", "sec": "1.1", "src": "+", "link": "", "qid": "01d8f614cf"}, {"q": "Over the past decade, a shift has occurred where technology firms now dominate the Fortune 'Best Companies to Work For' list. Which underlying driver identified in the 1.1 text produced this specific outcome in workplace rankings?", "options": ["The restriction of high-powered computing utilities to large, elite corporations", "The mandate for managers to prioritize ethical service over technological adoption", "Radical changes in business landscapes driven by faster and cheaper computing", "A decline in the profitability of traditional media and manufacturing sectors"], "rationales": ["The text states the opposite: cloud computing has made high-powered tools available even to small businesses and nonprofits.", "Managers do face higher ethical bars, but this is a challenge to be managed rather than the primary driver of firm popularity on employee lists.", "Moore's Law and the pervasiveness of technology have created high-value firms that prioritize tech-centric skills and innovative work environments.", "While traditional firms are struggling, the presence on 'Best Companies' lists is a result of tech firms' growth and culture, not just others' decline."], "correct": 2, "hint": "Focus on how the acceleration of hardware and software capabilities has empowered a new class of industry leaders.", "topic": "Tech Workplace", "sec": "1.1", "src": "+", "link": "", "qid": "5e4ff624c2"}, {"q": "Firm A is a traditional brick-and-mortar retailer that uses technology only for basic bookkeeping. Firm B is an admired modern retailer that integrates data analytics into every marketing decision to predict consumer behavior. According to the concepts in 1.1, what principle explains why Firm B is more likely to sustain a competitive advantage?", "options": ["The open source revenue model", "Data-driven decision making", "The utility model of software", "Moore's Law"], "rationales": ["Open source software lowers costs for startups, but utilizing free code does not inherently provide the predictive marketing advantage described.", "Data analytics and business intelligence are driving discovery and innovation, allowing firms to redefine marketing and stay ahead of competitors.", "While SaaS makes computing accessible, the specific advantage of Firm B comes from how they apply information to strategy, not just their tool access.", "Moore's Law makes the hardware possible, but the strategic advantage lies in the application of analytics rather than the raw speed of the chips."], "correct": 1, "hint": "Look for the specific term that describes using information to guide discovery and redefine modern marketing efforts.", "topic": "Tech Advantage", "sec": "1.1", "src": "+", "link": "", "qid": "3eaeef4bbe"}, {"q": "A manager at a retail firm discovers that a video of a minor customer service dispute has been uploaded to YouTube and tagged on Twitter. Based on the description of the 'permanent record' of the internet in section 1.1, how does this social media visibility impact the manager's responsibilities?", "options": ["It lowers the need for proactive reputation management", "It reduces the importance of digital skills for managers", "It eliminates the risk of ethical lapses", "It raises the bar for service and ethics"], "rationales": ["Social media makes reputation more fragile, necessitating more proactive rather than less proactive management.", "The text argues that tech must be at the center of the managerial playbook, making these skills more important than ever.", "Technology documents lapses but does not prevent them; the risk remains and the consequences are simply amplified.", "The ubiquity of mobile cameras and social media means every lapse can be permanently recorded, demanding higher managerial standards."], "correct": 3, "hint": "Reflect on how constant, public documentation of corporate behavior affects the standards to which managers are held.", "topic": "Social Media Peril", "sec": "1.1", "src": "+", "link": "", "qid": "442d983d63"}, {"q": "The software industry has shifted so that sophisticated, high-powered computing is now delivered as a ______________, which allows even the smallest nonprofits to access tools once reserved for elite firms.", "options": ["utility", "security threat", "capital expense", "proprietary asset"], "rationales": ["Cloud computing and SaaS turn computing into a utility, similar to electricity or water, accessible based on need rather than infrastructure.", "While security threats are pervasive, they are a byproduct of computing's growth, not the delivery mechanism for software to nonprofits.", "Turning computing into a utility moves it away from a heavy upfront capital expense toward an operational expense model.", "A proprietary asset would be something a firm owns and keeps exclusive, whereas the utility model emphasizes shared access and service."], "correct": 0, "hint": "Think of a term describing a service like electricity that is available on-demand to all users.", "topic": "Cloud Computing", "sec": "1.1", "src": "+", "link": "", "qid": "59ba2e7ce0"}, {"q": "A startup developer chooses to build their entire web platform using code that is collectively maintained by thousands of programmers and given away for free. According to the text, which firms are among those that actually pay the programmers to create this free software?", "options": ["IBM, HP, and Oracle", "Google, Facebook, and Baidu", "Alibaba and Tencent", "Exxon Mobil and Wal-Mart"], "rationales": ["The text explicitly names these firms as entities that pay programmers to write code that is then distributed via the open source model.", "These firms use and benefit from open source, but the text specifically highlights the 'old guard' like IBM and HP paying for the code development.", "These are publicly traded Chinese internet firms, but the text uses IBM, HP, and Oracle to illustrate the shift in the software industry.", "These are listed in the text as highly valuable traditional firms, but they are not the primary examples of firms funding open source code."], "correct": 0, "hint": "Identify the legacy tech giants mentioned as key contributors to the free software movement.", "topic": "Open Source Software", "sec": "1.1", "src": "+", "link": "", "qid": "673d00d297"}, {"q": "A startup in 2026 can launch a complex, data-heavy application with almost zero investment in physical server hardware. According to section 1.1, which technological shift primarily enables this reduction in startup costs?", "options": ["The expansion of home broadband access", "The rise of cloud computing and SaaS", "The growth of social media platforms", "The dominance of search engine optimization"], "rationales": ["Broadband access helps consumers reach the startup, but the startup's own infrastructure costs are solved by the delivery of computing as a service.", "Cloud computing provides high-powered computing as a utility, allowing startups to scale without purchasing their own physical servers.", "Social media provides communication and advertising channels but is not the mechanism for reducing server hardware investment.", "SEO is a marketing strategy to attract users, but it does not address the underlying hardware costs or computing infrastructure."], "correct": 1, "hint": "Consider the model where computing power is rented as a service rather than owned as equipment.", "topic": "Cloud Computing", "sec": "1.1", "src": "+", "link": "", "qid": "6e21a80cc7"}, {"q": "Country A has the highest total number of internet users in the world and several billion-dollar publicly traded internet firms. Country B is a global leader in technology innovation but is ranked fifteenth in home broadband access. According to the 1.1 text, which pair correctly identifies these countries?", "options": ["Country A is China; Country B is the United States", "Country A is China; Country B is Japan", "Country A is the United States; Country B is India", "Country A is India; Country B is China"], "rationales": ["The text notes China has the most users and firms like Baidu, while the US is ranked 15th in broadband access as of the 2010 report.", "The comparison in the text is specifically aimed at correcting misconceptions about the US ranking in infrastructure.", "The US does not have the most internet users, and the text specifically highlights the US broadband ranking as lower than many expect.", "While India is large, China is specifically cited as having the most users and more valuable internet firms like China Mobile."], "correct": 0, "hint": "Recall the specific statistics mentioned regarding internet user totals and broadband infrastructure rankings.", "topic": "Globalization", "sec": "1.1", "src": "+", "link": "", "qid": "df59af8552"}, {"q": "A company uses a system that analyzes millions of customer transactions to discover that people who buy product X are also likely to buy product Y. This discovery allows them to innovate their marketing strategy. Based on the 1.1 text, what is a potential 'knife-edge' risk associated with this technological practice?", "options": ["Redefining skills for social media management", "Empowering the poor through mobile phones", "Increasing computing costs for startups", "Shredding corporate reputation through privacy concerns"], "rationales": ["While skills are changing, the text specifically links 'shredding corporate reputations' to the privacy concerns of analytics.", "Mobile empowerment is mentioned as a positive outcome of Moore's Law, not a risk associated with marketing analytics.", "The text notes that technology shifts, including open source, actually lower computing costs for startups.", "Data analytics creates a shifting 'knife-edge' of privacy concerns that can damage a company if the data is mishandled."], "correct": 3, "hint": "Think about the sensitive balance between using consumer information for profit and protecting individual rights.", "topic": "Data Analytics", "sec": "1.1", "src": "+", "link": "", "qid": "e1674fbe90"}, {"q": "Social media has grown so rapidly that by 2010, ______________ had a user base larger than any nation on Earth except for China and India.", "options": ["Google", "Facebook", "YouTube", "Twitter"], "rationales": ["While Google has many users, the text specifically uses the 'nation' comparison for Facebook's social media community.", "The text uses this specific comparison to illustrate the massive scale and influence of Facebook's global user base.", "YouTube is cited in the context of mobile cameras and ethical lapses, but not as the primary example of a 'nation-sized' user base.", "Twitter is mentioned as a platform for capturing service flaws, but its scale is not compared to the population of China and India in this section."], "correct": 1, "hint": "Identify the social network that reached a billion-scale population ranking.", "topic": "Social Media Size", "sec": "1.1", "src": "+", "link": "", "qid": "c70c4bec8e"}, {"q": "Traditional Firm X invests heavily in purchasing apartments to rent out to travelers. Marketplace Platform Y owns no properties but connects travelers with residents who have spare rooms. Compared to Firm X, how does Platform Y's business model handle asset investment and inventory risk?", "options": ["Lower asset investment and lower inventory risk", "Higher asset investment and lower inventory risk", "Lower asset investment and higher inventory risk", "Higher asset investment and higher inventory risk"], "rationales": ["Marketplaces like Airbnb or Alibaba avoid the costs of owning inventory or properties, allowing them to grow with less capital risk.", "A marketplace platform specifically avoids high asset investment; this is the core of their 'new' business model.", "Since the platform doesn't own the rooms, they don't carry the risk of 'unsold' rooms in the same way a property owner does.", "This describes a traditional, high-stakes business model which the digital transformation is actively disrupting."], "correct": 0, "hint": "Consider the financial advantage of acting as a bridge between buyers and sellers without owning the goods.", "topic": "Business Models", "sec": "1.1", "src": "+", "link": "", "qid": "512874725a"}, {"q": "In the early 2000s, Apple was widely viewed as a 'has-been' in the tech industry. By 2010, it had become the most valuable tech firm in the United States. According to the text, which product and profit source were central to this reversal?", "options": ["The Macintosh and desktop software", "Open source software and SaaS", "The iPod and mobile device profits", "Search advertising and data analytics"], "rationales": ["The Mac was Apple's traditional product, but the 'reversal' was driven by new mobile technologies, not just the older desktop line.", "Apple's model is largely proprietary; the text attributes their success to hardware sales and the mobile ecosystem.", "The text identifies the iPod as a non-existent product a decade prior that fueled Apple's rise through music and mobile sales.", "Search advertising was Google's primary profit driver, whereas Apple focused on premium hardware and digital music."], "correct": 2, "hint": "Focus on the handheld device that transformed the music industry and preceded the iPhone's dominance.", "topic": "Apple Transformation", "sec": "1.1", "src": "+", "link": "", "qid": "0f4527cb9b"}, {"q": "Firm A is a traditional clothing manufacturer that holds millions of dollars in fabric and finished goods in its own warehouses. Firm B is a company like Alibaba that facilitates massive global trade. Based on the notes and text, which principle accounts for the difference in their financial structures?", "options": ["Cloud utility", "Broadband access", "Inventory ownership", "Moore's Law"], "rationales": ["Cloud computing might host their sites, but 'inventory ownership' is the specific concept that separates a middleman platform from a manufacturer.", "While broadband is necessary to access the site, it is not the structural business principle that defines the difference in their capital models.", "Newer digital models like Alibaba thrive by facilitating transactions without the overhead or risk of holding physical inventory.", "Moore's Law explains why the computing is cheap enough to run the platform, but the strategic choice is about asset management."], "correct": 2, "hint": "Look for the factor involving whether a company physically possesses the products it helps sell.", "topic": "Alibaba vs Inventory", "sec": "1.1", "src": "+", "link": "", "qid": "73812277fd"}, {"q": "Modern managers face a world where every ethical lapse can be 'graffiti-tagged' on the permanent record of the internet. This visibility results from the intersection of which two technological factors?", "options": ["Social media speed and secure data encryption", "High broadband costs and secure data encryption", "Ubiquitous mobile cameras and high broadband costs", "Ubiquitous mobile cameras and social media speed"], "rationales": ["Encryption protects privacy, which is the opposite of the 'graffiti-tagged' public exposure the text describes.", "Both of these factors would decrease the public visibility of ethical lapses rather than increasing it.", "High broadband costs would actually hinder the spread of such videos; the text emphasizes pervasive and cheap telecommunications.", "The combination of cameras in every pocket and the immediate reach of YouTube/Twitter creates a permanent and public record of behavior."], "correct": 3, "hint": "Combine the tool used to record a situation with the platform used to broadcast it instantly to the world.", "topic": "Managerial Ethics", "sec": "1.1", "src": "+", "link": "", "qid": "ebd504b16d"}, {"q": "At the start of the 2000s, well-known strategists like ______________ dismissed Internet advertising models, yet by the decade's end, Google became the most profitable media company on Earth.", "options": ["Moore", "Dr. Bharti Motwani", "Alibaba", "Michael Porter"], "rationales": ["Moore is associated with the 'Law' regarding computing speed and cost, not the dismissal of internet business models.", "Dr. Bharti is the instructor mentioned in the learner's notes, not the historical strategist cited in the textbook regarding 2001.", "Alibaba is a firm mentioned as a success of the decade, not a strategist who questioned the internet's potential.", "The text specifically references Porter (2001) as a strategist who dismissed the internet advertising model early on."], "correct": 3, "hint": "Identify the Harvard professor and strategist who famously questioned the internet's impact on competitive strategy.", "topic": "Google/Porter Strategy", "sec": "1.1", "src": "+", "link": "", "qid": "8b65d19c15"}, {"q": "A multinational corporation discovers that its internal design documents have been accessed by a foreign entity without authorization. According to the 1.1 text, this event illustrates which specific outcome of the pervasiveness of computing?", "options": ["The radical change in software revenue models", "The empowerment of the poor through globalization", "The shifting knife-edge of privacy concerns", "Espionage threats unimaginable to the prior generation"], "rationales": ["Revenue models deal with how firms make money (like open source or SaaS), not the security risks of digital infrastructure.", "While globalization is a theme, the specific context of unauthorized access to sensitive documents is a security threat.", "Privacy concerns usually refer to how a firm handles customer data, whereas 'espionage' refers to theft of corporate or state secrets.", "The text states that the pervasiveness of computing has created security and espionage threats that previous generations could not have imagined."], "correct": 3, "hint": "Look for the term that describes secret information gathering in the digital age.", "topic": "Security Threats", "sec": "1.1", "src": "+", "link": "", "qid": "2fd7c6fb92"}, {"q": "Dr. Bharti notes that launching a product without using data is like 'driving with closed eyes.' If a manager ignores analytics and the product fails, what is the most direct cause of this failure according to the managerial playbook described in 1.1?", "options": ["A global ranking of fifteenth in broadband access", "The high cost of open source software development", "Failure to place tech at the center of the strategy", "The lack of available cloud computing utilities"], "rationales": ["National infrastructure rankings are a contextual factor, but the manager's failure is an internal strategic error regarding data use.", "Open source software actually lowers costs; therefore, high costs in this area would not be the cause of a data-blind failure.", "The text concludes that disruptions will accelerate and managers must place technology at the center of their playbook to succeed.", "The text states these utilities are widely available even to small businesses, so the failure is in usage, not availability."], "correct": 2, "hint": "Think about where the text suggests technology should be positioned within an organization's planning process.", "topic": "Data-Driven Strategy", "sec": "1.1", "src": "+", "link": "", "qid": "b0e42c7138"}, {"q": "A student is deciding between learning traditional Python for data cleaning and exploring 'Agentic AI' for business problem-solving. Case A focuses on manual coding of algorithms, while Case B focuses on AI systems that can understand and execute tasks. Based on the class notes and 1.1 trends, which case aligns with the 'tectonic shift' in business?", "options": ["Case B because it lowers the service and ethics bar", "Case A because manual coding is more secure", "Case B because it represents the shift toward agentic tools", "Case A because it avoids the privacy knife-edge"], "rationales": ["Technology actually raises the service and ethics bar for managers; it does not lower it.", "While manual coding has its place, the 'tectonic shift' refers to the radical disruption and automation that AI tools bring to the landscape.", "The learner's notes suggest that 'agentic AI is the way to go' because it represents a move toward systems that understand and act on their own.", "All data handling involves privacy risks; manual coding does not inherently 'avoid' the concerns raised by data analytics."], "correct": 2, "hint": "Consider which approach leverages the most modern, disruptive capability mentioned in the learner's notes.", "topic": "Agentic AI", "sec": "1.1", "src": "+", "link": "", "qid": "43439deae8"}], "hasSheet": true, "parts": true, "secTitles": {"1.1": "Tech's Tectonic Shift- Radically Changing Business Landscapes"}, "reserve": 2, "tags": false, "frq": [], "notebook": "https://notebooklm.google.com/notebook/873a623f-584e-43aa-a1b5-4059031032cd/artifact/cf360970-942e-46b1-9baa-b817068e92ff", "root": "../index.html", "tab": "quiz", "sheet": "## Google Revenue\nRadical migration of advertising revenue from traditional media to digital platforms and internet-based advertising models.\n\n### Key terms\n1. **Internet advertising models** Digital revenue strategies once dismissed by traditionalists but now dominating global industry spend.\n\n### Names and studies\n1. **Google** Earned more advertising revenue than any firm, online or off, to become planet's most profitable media company.\n\n## Tech Workplace\nFundamental shift in managerial playbook requiring leadership to place technology at center of organizational strategy.\n\n### Key terms\n1. **Tech-centric management** Leadership approach prioritizing technological proficiency to reach modern consumers and navigate reshaped industries.\n\n## Tech Advantage\nAcceleration of faster, cheaper technology impacting global socioeconomics and environmental health.\n\n### Key terms\n1. **Moore’s Law** Principle driving continuous increase in computing power at diminishing costs.\n   1.1 Example: Empowering poor through accessible computing while poisoning planet with e-waste.\n\n## Social Media Peril\nInstant digital documentation of corporate actions creating high risk for ethical lapses and public scrutiny.\n\n### Key terms\n1. **Permanent record** Digital archive where mobile-captured photos and videos remain indefinitely searchable for the public.\n   1.1 Examples: YouTube, Flickr, or Twitter.\n\n## Cloud Computing\nHigh-powered computing resources evolving from expensive local infrastructure to internet-delivered utility services.\n\n### Key terms\n1. **Software as a Service (SaaS)** Delivery model providing sophisticated software over internet as a utility for businesses of all sizes.\n\n## Open Source Software\nIndustry-wide shift toward collaborative development of free code powering most modern websites.\n\n### Key terms\n1. **Open source software** Free, collaboratively written code that rewrites industry revenue models and lowers startup costs.\n\n### Names and studies\n1. **IBM, HP, and Oracle** Collectively paid thousands of programmers to write code given away for free to restructure industry economics.\n\n## Globalization\nRise of international tech powers and shift in global infrastructure leadership rankings.\n\n### Key terms\n1. **Home broadband access** Residential high-speed internet availability and performance rankings.\n   1.1 Example: United States ranking 15th globally in home broadband access.\n\n### Names and studies\n1. **China Mobile** Valued in 2009 higher than any U.S. firm except Exxon Mobil and Wal-Mart.\n\n## Data Analytics\nRole of business intelligence in driving discovery while managing sensitive privacy boundaries that impact reputations.\n\n### Key terms\n1. **Business intelligence** Data-driven discovery and marketing that can shred corporate reputations if privacy is mishandled.\n\n## Social Media Size\nDigital platforms reaching global scale exceeding populations of largest sovereign nations.\n\n### Names and studies\n1. **Facebook** Established user base larger than any nation on earth except for China and India.\n\n## Business Models\nPlatform-based mechanics bridging wants and needs without requiring major investment in physical assets.\n\n### Key terms\n1. **Marketplace model** High-margin platform business requiring no inventory or property ownership.\n   1.1 Examples: Airbnb and Uber.\n\n### Names and studies\n1. **Dr. Bharti Motwani** Served as marketplace consultant describing model where platform takes commission on every transaction between buyers and sellers.\n\n## Apple Transformation\nEvolution from struggling tech \"has-been\" to dominant global leader through integrated ecosystems.\n\n### Key terms\n1. **Ecosystem** Cohesive environment of interconnected devices and services creating high value and user security.\n   1.1 Example: Apple Watch sales exceeding entire Swiss watch industry.\n\n### Names and studies\n1. **Apple** Surpassed all US tech firms in value by 2010 by leading world in music sales and mobile profits.\n\n## Alibaba vs Inventory\nRetail strategy emphasizing transaction and content facilitation over traditional physical stock maintenance.\n\n### Key terms\n1. **Zero-inventory model** Strategy focusing on facilitating transactions and content rather than stocking physical goods.\n   1.1 Examples: Alibaba, Shopify, or Temu.\n\n## Managerial Ethics\nHeightened standards for professional conduct due to risk of instant public exposure in connected world.\n\n### Key terms\n1. **Service and ethics bar** Elevated performance and transparency requirement for managers due to pervasive digital recording.\n\n## Google/Porter Strategy\nConflict between traditional strategic frameworks and emergent internet realities regarding advertising viability.\n\n### Names and studies\n1. **Michael Porter (2001)** Well-known strategist who dismissed Internet advertising models just as Google began radical ascent.\n\n## Security Threats\nInimical digital threats and surveillance of corporate and national assets via pervasive computing.\n\n### Key terms\n1. **Cyber-espionage** Modern digital security threats largely unimaginable to prior generations of business leaders.\n\n## Data-Driven Strategy\nNecessity of rigorous analytics in digital transformation to avoid high industry failure rates.\n\n### Key terms\n1. **Digital transformation** Integration of technology into all business areas, currently facing high risk of failure if not data-driven.\n\n### Names and studies\n1. **Dr. Bharti Motwani** Defined launching products without data as equivalent to \"driving with closed eyes.\"\n2. **Forbes** Reported 72% of firms currently fail in digital transformation efforts.\n\n## Agentic AI\nEvolution of artificial intelligence toward autonomous systems with superior capacity for understanding.\n\n### Key terms\n1. **Agentic AI** Autonomous digital agents representing next evolutionary stage beyond traditional machine learning.\n\n### Names and studies\n1. **Dr. Bharti Motwani** Asserted no reason to do machine learning because agentic AI is preferred path forward."}</script>
+<script>
+(function(){
+  if(window.lqSync) return;
+  const API = 'https://terp-plate.vercel.app/api/quiz-sync', MK = 'lqsync:meta';
+  const none = {first: Promise.resolve([]), now: async()=>[], listen(){}};
+  let key = '';
+  try{ key = localStorage.getItem('lq:key') || ''; }catch(e){}
+  const hm = /[#&]k=([A-Za-z0-9_-]{40,})/.exec(location.hash);
+  if(hm) key = hm[1];
+  if(!key || !window.crypto || !crypto.subtle){ window.lqSync = none; return; }
+
+  const skip = k => k.indexOf('lq:') !== 0 || k === 'lq:key' || k === 'lq:speech';
+  const rawSet = Storage.prototype.setItem;
+  let meta = {};
+  try{ meta = JSON.parse(localStorage.getItem(MK) || '{}') || {}; }catch(e){}
+  const putMeta = ()=>{ try{ rawSet.call(localStorage, MK, JSON.stringify(meta)); }catch(e){} };
+  const hash = t => { let h = 5381; for(let i=0;i<t.length;i++) h = ((h<<5) + h + t.charCodeAt(i)) | 0; return h; };
+  const isState = k => /^lq:[^:]+$/.test(k) && k !== 'lq:hub';
+  function weight(s){
+    return Object.keys(s.answers||{}).length + Object.keys(s.pass2||{}).length
+         + Object.keys(s.skipped||{}).length + Object.keys(s.starred||{}).length
+         + Object.keys(s.unsure||{}).length + 1000 * (s.history||[]).length + (s.done ? 500 : 0);
+  }
+  // '' = nothing worth sending
+  function sig(k, v){
+    if(isState(k)){
+      try{ const s = JSON.parse(v);
+        if(!s || typeof s !== 'object') return '';
+        if(!weight(s) && !s.only && !s.tagf) return '';
+        const c = Object.assign({}, s); delete c.ms; delete c.qms; delete c.meta; delete c.hintOpen;
+        return JSON.stringify(c);
+      }catch(e){ return ''; }
+    }
+    return (v && v !== '{}' && v !== '[]' && v !== '{"defs":[],"q":{}}') ? v : '';
+  }
+  let frozen = false, applying = false, timer = null, busy = false;
+  function mark(k, v){
+    if(skip(k)) return;
+    const g = sig(k, v), h = hash(g), m = meta[k] || (meta[k] = {t:0});
+    if(m.h === h) return;
+    m.h = h;
+    if(g){ m.t = Date.now(); m.d = 1; clearTimeout(timer); timer = setTimeout(run, 1500); }
+    putMeta();
+  }
+  Storage.prototype.setItem = function(k, v){
+    if(this === localStorage && frozen && String(k).indexOf('lq:') === 0) return;
+    rawSet.call(this, k, v);
+    if(this === localStorage && !applying){ try{ mark(String(k), String(v)); }catch(e){} }
+  };
+  // What was already here before sync existed: age unknown, so it is stamped low, and a real
+  // attempt outranks a thinner one by how much is in it.
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(skip(k) || meta[k]) continue;
+      const v = localStorage.getItem(k), g = sig(k, v);
+      meta[k] = {t: 0, h: hash(g)};
+      if(g){ let w = 1; if(isState(k)){ try{ w = 1 + weight(JSON.parse(v)); }catch(e){} }
+             meta[k].t = w; meta[k].d = 1; }
+    }
+    putMeta();
+  }catch(e){}
+
+  const enc = new TextEncoder(), dec = new TextDecoder();
+  const toB = s => { s = s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length % 4) s += '=';
+                     return Uint8Array.from(atob(s), c => c.charCodeAt(0)); };
+  const fromB = u => { let t = ''; for(let i=0;i<u.length;i+=8192) t += String.fromCharCode.apply(null, u.subarray(i, i+8192));
+                       return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+  const hex = b => Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,'0')).join('');
+  let ck = null, bucket = '';
+  const ready = (async()=>{
+    ck = await crypto.subtle.importKey('raw', toB(key), 'AES-GCM', false, ['encrypt','decrypt']);
+    bucket = hex(await crypto.subtle.digest('SHA-256', enc.encode('lq-sync:' + key))).slice(0, 32);
+  })();
+  const kid = async k => hex(await crypto.subtle.digest('SHA-256', enc.encode(bucket + '|' + k))).slice(0, 32);
+  async function seal(o){
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv}, ck, enc.encode(JSON.stringify(o)));
+    return fromB(iv) + '.' + fromB(new Uint8Array(ct));
+  }
+  async function unseal(t){
+    const p = t.split('.');
+    return JSON.parse(dec.decode(await crypto.subtle.decrypt({name:'AES-GCM', iv:toB(p[0])}, ck, toB(p[1]))));
+  }
+
+  function pageId(){
+    const el = document.getElementById('quiz-data');
+    if(!el) return null;
+    try{ return JSON.parse(el.textContent).id; }catch(e){ return null; }
+  }
+  async function run(){
+    if(busy || frozen) return [];
+    busy = true;
+    const changed = [];
+    try{
+      await ready;
+      const have = {}, puts = [], sent = {};
+      for(const k of Object.keys(meta)){
+        const m = meta[k];
+        if(!m.id) m.id = await kid(k);
+        have[m.id] = m.t || 0;
+        if(m.d){
+          const v = localStorage.getItem(k);
+          if(v === null){ m.d = 0; continue; }
+          puts.push({k: m.id, v: await seal({k, v}), ts: m.t});
+          sent[k] = m.t;
+        }
+      }
+      const r = await fetch(API, {method:'POST', headers:{'content-type':'text/plain'},
+                                  body: JSON.stringify({bucket, have, puts})});
+      if(!r.ok) throw new Error('sync ' + r.status);
+      const j = await r.json();
+      for(const k in sent) if(meta[k].t === sent[k]) meta[k].d = 0;
+      for(const row of j.rows || []){
+        let o; try{ o = await unseal(row.v); }catch(e){ continue; }
+        if(!o || skip(o.k)) continue;
+        const m = meta[o.k] || (meta[o.k] = {t:0});
+        if((m.t || 0) >= row.ts) continue;
+        applying = true;
+        try{ rawSet.call(localStorage, o.k, o.v); }catch(e){}
+        applying = false;
+        m.t = row.ts; m.d = 0; m.h = hash(sig(o.k, o.v)); m.id = row.k;
+        changed.push(o.k);
+      }
+      putMeta();
+    }catch(e){}
+    busy = false;
+    if(changed.length && window.lqSync.live){
+      const id = pageId();
+      const mine = id ? changed.some(k => k === 'lq:' + id || k.indexOf('lq:' + id + ':') === 0)
+                      : !!document.getElementById('manifest');
+      if(mine){ frozen = true; location.reload(); }
+    }
+    return changed;
+  }
+  function wake(){ if(document.visibilityState !== 'hidden') run(); }
+  function leave(){ if(document.visibilityState === 'hidden') run(); }
+  function listen(){
+    document.removeEventListener('visibilitychange', wake); document.addEventListener('visibilitychange', wake);
+    document.removeEventListener('visibilitychange', leave); document.addEventListener('visibilitychange', leave);
+    removeEventListener('focus', wake); addEventListener('focus', wake);
+  }
+  // `live` = this page should reload itself when its own quiz arrives newer. The locked shell
+  // turns it on only after it has drawn the page.
+  window.lqSync = {first: null, now: run, listen, live: true};
+  listen();
+  setInterval(wake, 20000);
+  window.lqSync.first = run();
+})();
+</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -1134,10 +1310,44 @@ function save(){
    the sitting's subchapters into this one function is what makes a half-paper behave exactly
    like a whole one — one direction, one end card, one second pass — with no branch anywhere
    downstream. `only: null` (not chosen, or a page built without parts) filters nothing. */
+/* ---- TAGS (10-12, his ask) ------------------------------------------------------------
+   *"a text box at first, but it functions like a Notion tag property … once I press enter it
+   creates a tag and that tag stays for this exam and only for this exam."* Its own key, like
+   the research box, so a Retake and a rebuild keep them. `defs` is the order he made them in;
+   a tag no question carries any more is dropped from it. Off unless the page was built with
+   `tags`, so every page built before this is what it was. */
+const TKEY = KEY + ':tags';
+let T = (function(){
+  try{ const t = JSON.parse(localStorage.getItem(TKEY) || '{}') || {};
+       return {defs: t.defs || [], q: t.q || {}}; }
+  catch(e){ return {defs:[], q:{}}; } })();
+function tput(){ try{ localStorage.setItem(TKEY, JSON.stringify(T)); }catch(e){} }
+function tagsOf(i){ return T.q[qk(i)] || []; }
+function hasTag(i, name){ return tagsOf(i).indexOf(name) >= 0; }
+function tagAdd(i, raw){
+  const name = String(raw).trim().replace(/\s+/g, ' ');
+  if(!name) return;
+  const known = T.defs.find(d => d.toLowerCase() === name.toLowerCase()) || name;
+  if(T.defs.indexOf(known) < 0) T.defs.push(known);
+  const l = T.q[qk(i)] || (T.q[qk(i)] = []);
+  if(l.indexOf(known) < 0) l.push(known);
+  tput();
+}
+function tagDrop(i, name){
+  const id = qk(i);
+  T.q[id] = (T.q[id] || []).filter(x => x !== name);
+  if(!T.q[id].length) delete T.q[id];
+  if(!Object.keys(T.q).some(k => T.q[k].indexOf(name) >= 0)) T.defs = T.defs.filter(d => d !== name);
+  tput();
+}
+
 function active(s){
-  const only = D.parts ? (s.only || null) : null;
+  // A TAG RUN ("test only these") rides here for the same reason the section filter does.
+  const tf = D.tags ? (s.tagf || null) : null;
+  const only = (D.parts && !tf) ? (s.only || null) : null;
   return D.questions.map((_,i)=>i).filter(i => onPaper(s, i)
-    && (!only || only.indexOf(D.questions[i].sec) >= 0));
+    && (!only || only.indexOf(D.questions[i].sec) >= 0)
+    && (!tf || hasTag(i, tf)));
 }
 /* ---- THE RESERVES (08-16) ------------------------------------------------------------
    His ask: *"if 1 question is skipped, another one is replaced in that section about it… you
@@ -1405,7 +1615,9 @@ function flushFrq(){
 function drawFrq(){
   const box = $('#frqview');
   if(!box || !(D.frq||[]).length) return;
-  let h = '<p class="say">Three written answers, from the same sources as the paper. Write '
+  const NW = D.frq.length, WORDS = ['No','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'];
+  let h = '<p class="say">' + (WORDS[NW] || NW) + ' written answer' + (NW === 1 ? '' : 's')
+        + ', from the same sources as the paper. Write '
         + 'one, then mark it: every point that can be settled by what you wrote is checked '
         + 'for you, and the ones that need judgement are handed back. Click any row to '
         + 'overrule it.</p>';
@@ -1696,7 +1908,7 @@ function draw(){
   // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
   // the rest of the sitting, so nothing about answering, going back or the second pass has
   // to know the picker exists.
-  if(sectioned() && !S.only) return picker();
+  if(sectioned() && !S.only && !S.tagf) return picker();
   const act = runList();
   if(!act.length) return end();
   if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
@@ -1705,6 +1917,61 @@ function draw(){
 
 /* Pure markup, no DOM writes and no state changes — so the same builder can render the
    question and be measured off-screen for the centring reserve. */
+/* The tag box above the question. Chips for what this question carries, then the box: type and
+   Enter makes the tag (or reuses one spelled the same), the ones he already made show under it
+   to click, Backspace on an empty box takes the last one off, Esc leaves. */
+function tagRowInner(i){
+  const mine = tagsOf(i);
+  let h = '';
+  mine.forEach((n,k)=>{ h += '<span class="tchip">' + esc(n) + '<button class="tx" data-drop="' + k
+                           + '" tabindex="-1" aria-label="Remove tag">×</button></span>'; });
+  return h + '<input id="tagin" class="tagin" type="text" autocomplete="off" spellcheck="false" '
+           + 'placeholder="' + (mine.length ? 'Add a tag' : 'Tag this question  ( l )') + '">'
+           + '<div class="tsug hide" id="tsug"></div>';
+}
+function paintSug(i){
+  const inp = $('#tagin'), box = $('#tsug');
+  if(!inp || !box) return;
+  const raw = inp.value.trim(), v = raw.toLowerCase(), mine = tagsOf(i);
+  let h = T.defs.map((d,n)=>({d,n}))
+    .filter(x => mine.indexOf(x.d) < 0 && (!v || x.d.toLowerCase().indexOf(v) >= 0))
+    .map(x => '<button class="tchip pick" data-n="' + x.n + '" tabindex="-1">' + esc(x.d) + '</button>')
+    .join('');
+  if(v && !T.defs.some(d => d.toLowerCase() === v))
+    h += '<span class="tnew">Enter makes “' + esc(raw) + '”</span>';
+  box.innerHTML = h;
+  box.classList.toggle('hide', !h || document.activeElement !== inp);
+  // mousedown, not click: the box must not blur (and hide these) before the pick lands
+  box.querySelectorAll('.pick').forEach(b => { b.onmousedown = e => {
+    e.preventDefault(); tagAdd(i, T.defs[+b.dataset.n]); redrawTags(i, true); }; });
+}
+function redrawTags(i, focus){
+  const row = $('#tagrow');
+  if(!row) return;
+  row.innerHTML = tagRowInner(i);
+  wireTags(i);
+  if(focus) $('#tagin').focus();
+}
+function wireTags(i){
+  const row = $('#tagrow'), inp = $('#tagin');
+  if(!row || !inp) return;
+  row.querySelectorAll('.tx').forEach(b => b.onclick = ()=>{
+    tagDrop(i, tagsOf(i)[+b.dataset.drop]); redrawTags(i, false); });
+  inp.onfocus = ()=> paintSug(i);
+  inp.oninput = ()=> paintSug(i);
+  inp.onblur = ()=> { const b = $('#tsug'); if(b) b.classList.add('hide'); };
+  inp.onkeydown = e => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      if(!inp.value.trim()){ inp.blur(); return; }
+      tagAdd(i, inp.value); redrawTags(i, true);
+    } else if(e.key === 'Escape'){ inp.value = ''; inp.blur(); }
+    else if(e.key === 'Backspace' && !inp.value && tagsOf(i).length){
+      tagDrop(i, tagsOf(i).slice(-1)[0]); redrawTags(i, true);
+    }
+  };
+}
+
 function buildQ(i, picked, fresh, en){
   const q = D.questions[i];
   const answered = picked !== undefined;
@@ -1716,10 +1983,12 @@ function buildQ(i, picked, fresh, en){
   // The counter sits top-left above the question, the way the notebook does it, rather than
   // up in the bar — it belongs with the thing it counts. On a second pass it counts the
   // second pass, so four wrong answers read as "1 / 4" and not as a broken 16.
-  let h = '<div class="qhead' + en + '"><div class="qcol">'
+  let h = (D.tags ? '<div class="tagrow no-read-aloud" id="tagrow">' + tagRowInner(i) + '</div>' : '')
+        + '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta no-read-aloud"><span class="num">' + (pos+1) + ' / '
         + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        + (D.tags && S.tagf ? '<span class="dot">·</span><span>only ' + esc(S.tagf) + '</span>' : '')
         // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
         // 10 reads as the paper having lost his place, which is how he read it.
         + (recycling && S.phase!==2
@@ -1915,6 +2184,7 @@ function question(fresh){
   $('#star').onclick = ()=> toggleStar(i);
   $('#qmark').onclick = ()=> toggleUnsure(i);
   $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
+  if(D.tags) wireTags(i);
 
   // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
   // touches it — and nothing above the options ever changes height.
@@ -2405,19 +2675,32 @@ function openMenu(){
   m.className = 'menu';
   // The clock's only other way in. `w` is not written anywhere else on the page, and a key
   // nothing announces is a key he has to remember he asked for.
-  m.innerHTML = '<button id="skipq">Skip this question</button>'
+  m.innerHTML = '<button id="skipq">Skip this question  ( x )</button>'
               // The reader's own two entries. Space and `v` are written nowhere else on the
               // page, and a key nothing announces is a key he has to remember he asked for.
               + '<button id="readtog">' + (sayOn ? 'Stop' : 'Start') + ' read-aloud  ( space )</button>'
               + '<button id="voiceset">Voice, speed and pauses…</button>'
-              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>';
+              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>'
+              // EVERY KEY, WRITTEN DOWN ONCE (10-12). He could not find Redo or remember its key.
+              + '<div class="keys"><kbd>x</kbd><span>Skip</span><kbd>u</kbd><span>Redo your answer</span>'
+              + '<kbd>h</kbd><span>Hint, when the question has one</span>'
+              + '<kbd>s</kbd><span>Star</span><kbd>/</kbd><span>No idea</span>'
+              + '<kbd>r</kbd><span>Research</span><kbd>f</kbd><span>Fix this question</span>'
+              + '<kbd>t</kbd><span>Reflection</span>'
+              + (D.tags ? '<kbd>l</kbd><span>Tag</span>' : '')
+              + '<kbd>↵</kbd><span>Next</span><kbd>←</kbd><span>Back</span></div>';
   host.appendChild(m);
   m.querySelector('#clocktog').onclick = ()=>{ toggleClock(); closeMenu(); };
   m.querySelector('#readtog').onclick = ()=>{ closeMenu(); sayOn ? sayOff() : sayToggle(); };
   m.querySelector('#voiceset').onclick = ()=>{ closeMenu(); openVset(); };
-  m.querySelector('#skipq').onclick = ()=>{
+  m.querySelector('#skipq').onclick = ()=>{ closeMenu(); skipQuestion(); };
+  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
+}
+/* One path for skipping, whether it came from the menu or from `x` (10-12, his ask: a key
+   *"rather than going into the top bar and then pressing skip"*). */
+function skipQuestion(){
     const list = runList(), pos = list.indexOf(S.i);
-    if(list.length <= 1) return closeMenu();        // never skip the last one standing
+    if(list.length <= 1) return;                    // never skip the last one standing
     const sec = bucketOf(S.i);
     S.skipped[qk(S.i)] = true;
     delete S.answers[qk(S.i)];
@@ -2431,7 +2714,6 @@ function openMenu(){
     // have handed him an end card with a question still owed.
     const filled = promoteReserve(sec) >= 0;
     const wasLast = !filled && pos === list.length - 1;
-    closeMenu();
     syncTabs();
     if(wasLast){ finish(); return; }
     // After the removal the list has shrunk, so the item now AT `pos` is the one that
@@ -2440,8 +2722,6 @@ function openMenu(){
     S.hintOpen = false;
     lastShown = -1;
     save(); question(); window.scrollTo(0,0);
-  };
-  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
 }
 function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(); }
 
@@ -2698,6 +2978,39 @@ function momentum(){
   return h + '</div>';
 }
 
+/* THE TAGS ON THE END CARD: how each group went, and a way to sit one group alone. A tag run
+   is a fresh attempt on only those questions (the finished one goes into history first, as a
+   Retake does); Retake, or "every question" here, goes back to the whole paper. Not offered
+   on a sectioned paper, whose picker already owns which questions a sitting holds. */
+function tagTable(){
+  if(!D.tags || !T.defs.length) return '';
+  const all = D.questions.map((_,i)=>i).filter(i => onPaper(S, i));
+  let h = '';
+  T.defs.forEach((d,n)=>{
+    const qs = all.filter(i => hasTag(i, d));
+    if(!qs.length) return;
+    const sat = qs.filter(i => ans(i) !== undefined || ans2(i) !== undefined);
+    const ok = sat.filter(i => finalRight(i)).length;
+    h += '<div class="tagline"><span class="tchip">' + esc(d) + '</span><span class="tn">'
+       + (sat.length ? ok + ' / ' + sat.length + ' right' : qs.length + ' question' + (qs.length>1?'s':''))
+       + '</span>' + (D.parts ? '' : '<button class="link" data-tagrun="' + n + '">Test only these</button>')
+       + '</div>';
+  });
+  if(!h && !S.tagf) return '';
+  if(S.tagf) h += '<p class="note">This run was only “' + esc(S.tagf) + '”. '
+                + '<button class="link" id="tagall">Back to every question</button></p>';
+  return '<div class="tagtable"><h3>By tag</h3>' + h + '</div>';
+}
+function startRun(tag){
+  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length, ms:S.ms,
+                             tag:S.tagf || undefined});
+  const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
+  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  if(tag) S.tagf = tag;
+  pickSel = null; lastShown = -1;
+  save(); syncTabs(); renderScore(); draw(); window.scrollTo(0,0);
+}
+
 function end(){
   timeOn(null);
   const act = active(S), n = score(S), t = act.length;
@@ -2779,6 +3092,7 @@ function end(){
             + 'every one is done; sitting one again replaces its score.</p>';
   }
 
+  h += tagTable();
   const nskip = Object.keys(S.skipped||{}).length;
   if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
               + '<button class="link" id="unskip">put them back</button></p>';
@@ -2789,6 +3103,10 @@ function end(){
   $('#quizview').innerHTML = h;
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  document.querySelectorAll('[data-tagrun]').forEach(b =>
+    b.onclick = ()=> startRun(T.defs[+b.dataset.tagrun]));
+  const tall = $('#tagall');
+  if(tall) tall.onclick = ()=> startRun(null);
   const ma = $('#momall');
   if(ma) ma.onclick = ()=>{ momAll = true; end(); };
   const m = $('#more');
@@ -2825,6 +3143,7 @@ function itemHTML(i, n){
   const q = D.questions[i], first = ans(i), second = ans2(i);
   let h = '<div class="item">';
   if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
+  if(D.tags) tagsOf(i).forEach(t => { h += '<span class="tchip sm">'+esc(t)+'</span>'; });
   h += '<p class="qq">'+(n===undefined?'':(n+1)+'. ')+esc(q.q)+'</p>'
      + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
   if(!firstRight(i)){
@@ -2841,12 +3160,26 @@ function itemHTML(i, n){
   return h + '</div>';
 }
 
+let revByTag = false;
 function review(){
   timeOn(null);
+  const act = active(S), canSort = D.tags && T.defs.length;
   let h = '<div class="rev"><h3>Every question</h3>';
-  active(S).forEach((i,n)=>{ h += itemHTML(i, n); });
+  if(canSort) h += '<p class="note" style="margin:0 0 6px"><button class="link" id="revsort">'
+                 + (revByTag ? 'Sort in order' : 'Sort by tag') + '</button></p>';
+  if(canSort && revByTag){
+    // a question with two tags is listed under both; the untagged ones come last
+    T.defs.concat(['']).forEach(d=>{
+      const qs = act.filter(i => d ? hasTag(i, d) : !tagsOf(i).length);
+      if(!qs.length) return;
+      h += '<h3 class="tgroup">' + (d ? esc(d) : 'No tag') + ' · ' + qs.length + '</h3>';
+      qs.forEach(i => { h += itemHTML(i, act.indexOf(i)); });
+    });
+  } else act.forEach((i,n)=>{ h += itemHTML(i, n); });
   h += '</div>';
   $('#quizview').innerHTML = h;
+  const rs = $('#revsort');
+  if(rs) rs.onclick = ()=>{ revByTag = !revByTag; review(); };
   $('#band').classList.add('off');
   showResearch(false);
   $('#footer').classList.remove('hide');
@@ -4153,6 +4486,10 @@ document.addEventListener('keydown', e=>{
   // `w` FOR WATCH — the clock in the bar, off by default. Past G like every other command
   // key here, so it can never be an option letter.
   if(e.key === 'w' || e.key === 'W'){ toggleClock(); return; }
+  // `x` SKIPS, `l` (label) PUTS THE CARET IN THE TAG BOX. Both past G, so never an option key.
+  if(e.key === 'x' || e.key === 'X'){ e.preventDefault(); skipQuestion(); return; }
+  if((e.key === 'l' || e.key === 'L') && D.tags){
+    const ti = $('#tagin'); if(ti){ e.preventDefault(); ti.focus(); } return; }
   if(e.key === '/' || e.key === '?'){ e.preventDefault(); toggleUnsure(S.i); return; }
   /* THE KEY NAMES A POSITION ON SCREEN, not an option. `2` and `B` mean the second card he
      can see, which is the only thing either of them could mean to him — after a Redo has

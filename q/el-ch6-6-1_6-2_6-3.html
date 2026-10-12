@@ -326,6 +326,32 @@ kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid
 .qmark:hover{background:var(--surface);color:var(--text)}
 .qmark.on{color:var(--text);border-color:var(--accent);background:var(--surface-hi)}
 
+/* ---- tags (10-12): his own labels on a question, kept per quiz ---- */
+.tagrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.tchip{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:.78rem;
+ color:var(--text);background:var(--surface-hi);border:1px solid var(--line);
+ border-radius:6px;padding:2px 8px;line-height:1.5}
+.tchip.sm{font-size:.7rem;margin:0 6px 9px 0}
+button.tchip{cursor:pointer}
+button.tchip:hover{border-color:var(--muted)}
+.tx{background:none;border:0;color:var(--muted);font:inherit;padding:0;cursor:pointer;line-height:1}
+.tx:hover{color:var(--text)}
+.tagin{flex:1 1 140px;min-width:120px;background:none;border:0;outline:0;color:var(--text);
+ font:inherit;font-size:.82rem;padding:3px 2px}
+.tagin::placeholder{color:var(--muted);opacity:.75}
+.tsug{flex:1 0 100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tnew{color:var(--muted);font-size:.76rem}
+.tagtable{margin:26px 0 0;text-align:left}
+.tagtable h3{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+ font-weight:500;margin:0 0 6px}
+.tagline{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line);
+ font-size:.88rem}
+.tagline .tn{flex:1;color:var(--muted);font-variant-numeric:tabular-nums}
+.tgroup{margin-top:30px}
+.menu .keys{border-top:1px solid var(--line);margin:5px 0 0;padding:8px 10px 4px;
+ display:grid;grid-template-columns:auto 1fr;gap:5px 10px;font-size:.78rem;color:var(--muted);
+ align-items:center}
+
 /* ---- the ⋮ menu ---- */
 .more{position:relative;flex:0 0 auto}
 .dots{background:none;border:0;color:var(--muted);font-size:1.15rem;line-height:1;
@@ -452,6 +478,44 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .ptotal{margin:14px 0 0;color:var(--muted);font-size:.88rem}
 .ptotal b{color:var(--text);font-variant-numeric:tabular-nums;font-size:1.05rem;
  font-weight:600;margin-right:8px}
+
+/* ---- MOMENTUM (08-21) ----
+   Same furniture as every other end-card table — same heading, same hairline rows, same
+   rails — because it is one more breakdown of the same sitting and must not read as a
+   dashboard bolted on. The only new shape is the strip, and it is deliberately small: it is
+   there to be glanced at, not measured off.
+
+   IT READS IN GRAYSCALE. A wrong bar is HATCHED as well as coloured, exactly like the wrong
+   half of the score chart above it, so the split survives a screenshot with the colour gone
+   and survives him printing it. */
+.mom .strip{display:flex;align-items:flex-end;gap:2px;height:56px;position:relative;
+ margin:0 0 5px;padding-top:2px}
+.mom .strip .sb{flex:1 1 0;min-width:2px;border-radius:2px 2px 0 0;background:var(--text)}
+.mom .strip .sb.r{background:var(--right)}
+.mom .strip .sb.w{background:var(--wrong);
+ background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,
+ rgba(0,0,0,.45) 3px,rgba(0,0,0,.45) 6px)}
+/* The median, drawn across the strip rather than written under it — the whole question the
+   strip answers is "which of these are the long ones", and a line answers it at a glance. */
+.mom .strip .med{position:absolute;left:0;right:0;height:0;border-top:1px dashed var(--muted);
+ opacity:.55;pointer-events:none}
+.momax{display:flex;justify-content:space-between;color:var(--muted);font-size:.72rem;
+ letter-spacing:.04em;margin:0 0 16px}
+.mline{color:var(--muted);font-size:.88rem;margin:0 0 18px}
+.mline b{color:var(--text);font-variant-numeric:tabular-nums;font-weight:500}
+.mrow{display:grid;grid-template-columns:1.1em 1.7em 1fr auto;gap:5px 10px;align-items:center;
+ padding:8px 0;border-top:1px solid var(--line);font-size:.9rem}
+.mrow .mg{color:var(--muted);font-size:.85rem;user-select:none;-webkit-user-select:none}
+.mrow .mn{color:var(--muted);font-size:.8rem;font-variant-numeric:tabular-nums;text-align:right}
+.mrow .mlab{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mrow .mt{color:var(--muted);font-size:.86rem;font-variant-numeric:tabular-nums}
+/* The rail is `.tbar`, borrowed whole from the tables above. `i.w` is the only addition:
+   time on a question he got wrong gets the same hatch as everything else wrong on the page. */
+.mrow .tbar i.w{background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,
+ rgba(0,0,0,.45) 3px,rgba(0,0,0,.45) 6px)}
+.mmore{margin:12px 0 0;font-size:.85rem}
+.mgoal{margin:16px 0 0;color:var(--muted);font-size:.88rem;max-width:52ch}
+.mgoal b{color:var(--text);font-variant-numeric:tabular-nums;font-weight:500}
 
 /* ---- THE SUBCHAPTER PICKER (08-16) ----
    Deliberately the same furniture as the end card — same heading treatment, same rails, same
@@ -1021,7 +1085,157 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "el-ch6-6-1_6-2_6-3", "title": "Ch6 Exam · 6.1–6.3", "subtitle": "Syntax", "book": "EL", "hash": "21115f7216c9f628", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "In the phrase 'the latest updates on the project,' which word determines whether you should follow it with a singular or plural verb form?", "options": ["project", "the", "latest", "updates"], "rationales": ["While 'project' is a noun, it is inside a prepositional phrase modifying the main noun and does not control the verb agreement for the whole subject.", "Determiners signal the start of a noun phrase but do not carry the specific plural or singular features that the verb must match.", "Adjectives like 'latest' provide descriptive information but do not function as the structural head that determines the phrase's category or agreement.", "The head of a noun phrase determines the grammatical properties like number, which dictates agreement with the verb."], "correct": 3, "hint": "Identify the core noun that the entire phrase is actually about.", "topic": "Head of phrase", "sec": "6.1", "src": "☆", "link": "", "qid": "3f5fcc7d40"}, {"q": "You hear a coworker say 'I might could finish that by Friday.' While you wouldn't say it yourself, you recognize it as a natural pattern for them. What are you observing?", "options": ["Semantic oddity", "Generativity", "Prescriptive error", "Syntactic variation"], "rationales": ["The meaning of the sentence is perfectly clear; the 'oddness' lies in the structural arrangement of the verbs.", "Generativity refers to the ability to create brand-new sentences, not the differences in rules between two speakers.", "Linguistics focuses on the speaker's internal system rather than measuring speech against school-taught style guides.", "Disagreements or differences in what speakers find 'natural' indicate that different users have slightly different internal grammars."], "correct": 3, "hint": "Consider why two native speakers might disagree on what sounds 'correct' in a local dialect.", "topic": "Grammaticality judgement", "sec": "6.1", "src": "☆", "link": "", "qid": "899a11a232"}, {"q": "Without checking a grammar book, you instantly know that 'The red bright truck' sounds slightly off compared to 'The bright red truck.' What mental system is providing this answer?", "options": ["Internal grammar", "Linear processing", "The dictionary", "Prescriptive grammar"], "rationales": ["Internal grammar is the subconscious mental system that allows users to recognize and generate patterns without formal instruction.", "Syntax is hierarchical rather than linear, meaning we process word groups rather than just strings of individual words.", "Dictionaries provide definitions and spellings for individual words rather than rules for how to group them into phrases.", "Prescriptive rules are explicitly taught in school, but word-order intuition for adjectives is usually acquired subconsciously."], "correct": 0, "hint": "Reflect on the subconscious 'shape' of language you've known since childhood.", "topic": "Internal grammar", "sec": "6.1", "src": "☆", "link": "", "qid": "5cd1350957"}, {"q": "You read the sentence: 'The invisible sandwich is filing its taxes in the bathtub.' Even though this describes an impossible situation, you recognize it as a valid English sentence. Why?", "options": ["It follows prescriptive logic", "The sentence is semantically odd", "Language is generative", "The vocabulary is familiar"], "rationales": ["Valid structure in linguistics refers to matching the patterns of the speaker's internal system, not formal school rules.", "While the sentence is semantically odd, this describes the meaning, not the structural principle that allowed you to process it.", "Generativity allows the internal grammar to apply known rules to brand-new combinations of words it has never encountered before.", "Knowing the words is necessary, but the ability to recognize a valid structure for a new scenario is a separate structural capacity."], "correct": 2, "hint": "Think about how you can understand a sentence you have never heard in your life.", "topic": "Generativity", "sec": "6.1", "src": "✕", "link": "", "qid": "b145895416"}, {"q": "In a linguistic study, what does it mean to call a sentence 'grammatical'?", "options": ["It follows the rules for formal writing found in professional style guides.", "It is factually accurate and describes a real-world possibility.", "It is polite and uses vocabulary appropriate for the intended audience.", "It matches the structural patterns of the speaker's internal mental system."], "rationales": ["Linguistics distinguishes between natural speech patterns and the formal 'prescriptive' rules taught in educational settings.", "A sentence can be grammatically perfect while describing total nonsense, such as 'The moon ate a grape.'", "Grammaticality refers to the mechanical 'shape' or structure of the sentence, not social etiquette or register.", "Linguistic grammaticality is a descriptive term for structures that fit a user's natural, subconscious system."], "correct": 3, "hint": "Distinguish between 'school rules' and the 'subconscious rules' used in everyday speech.", "topic": "Meaning of Grammatical", "sec": "6.1", "src": "✕", "link": "", "qid": "848135cc47"}, {"q": "When a speaker from Pittsburgh says 'The car needs washed' and a speaker from London says 'The car needs washing,' how should a linguist view this difference?", "options": ["As data showing syntactic variation within English", "As an error on the part of the Pittsburgh speaker", "As a failure of the London speaker to be concise", "As a semantic misunderstanding of the verb 'need'"], "rationales": ["Variations in structure between dialects provide evidence for the different internal rules that speakers use.", "If a whole community naturally uses a structure, it is considered a valid pattern in their dialect's grammar.", "Conciseness is a stylistic preference, whereas the difference here is a structural pattern of the dialects.", "Both speakers agree on what 'need' means; they only disagree on the grammatical category that must follow it."], "correct": 0, "hint": "Look at this as a researcher collecting evidence rather than a teacher correcting a paper.", "topic": "Syntactic variation", "sec": "6.1", "src": "?", "link": "", "qid": "b8d7618b36"}, {"q": "If you want to mark the sentence 'The blue clouds whispered to the sleeping mountains' to show that the structure is perfect but the meaning is nonsensical, which symbol should you use?", "options": ["?", "$", "#", "*"], "rationales": ["While sometimes used to show uncertainty, it is not the standard marker for semantic nonsense in the source text.", "This symbol is not a standard linguistic marker for grammaticality or semantic status.", "The hashmark is used specifically to indicate that a sentence is 'semantically odd' despite having a grammatical structure.", "The asterisk (or star) is reserved for sentences that are syntactically ungrammatical, meaning their structure is broken."], "correct": 2, "hint": "Recall the difference between structural 'brokenness' and meaningful 'nonsense'.", "topic": "Linguistic symbols", "sec": "6.1", "src": "R", "link": "", "qid": "f1d127d913"}, {"q": "Why is it technically incorrect to provide a single grammaticality judgement for 'the English language' as a whole?", "options": ["Syntactic variation is too rare to matter for large-scale judgements.", "Judgements belong to individual users and their specific internal systems.", "Standard English is the only version that allows for official judgements.", "English has too many words for any one person to judge them all."], "rationales": ["Syntactic variation is common and is actually one of the primary things judgements help reveal.", "Grammaticality is tested through individuals; describing 'English' as a whole is just a shorthand for broad agreement among many users.", "Every speaker of every dialect has an internal grammar that can be tested through judgements.", "The issue is about the source of the rules (the individual's mind), not the size of the vocabulary."], "correct": 1, "hint": "Think about who actually 'holds' the rules of a language.", "topic": "Variation as Data", "sec": "6.1", "src": "R", "link": "", "qid": "ca5f3d7ff0"}, {"q": "If you follow a 'descriptive' approach to syntax, which of the following sentences would you likely mark as grammatical if most speakers actually say it?", "options": ["To whom did you speak?", "Call did who you?", "Who did you call?", "You called who?"], "rationales": ["This is often a prescriptive preference that many speakers find unnatural in casual conversation.", "This fails even descriptive tests because no natural speaker of standard English dialects uses this word order.", "Descriptive linguistics documents what speakers naturally do, even if it contradicts prescriptive rules about 'whom'.", "While possible in some contexts, the question tests the contrast between 'natural speech' and 'prescriptive school rules'."], "correct": 2, "hint": "Focus on how people actually speak rather than how they are told to speak.", "topic": "Descriptive vs Prescriptive", "sec": "6.1", "src": "R", "link": "", "qid": "b9b5f7afce"}, {"q": "Which test results would prove that 'in the drawer' is a single constituent in the sentence 'I left the keys in the drawer'?", "options": ["The phrase contains exactly three words.", "It can be replaced by 'there' and serve as the answer to 'Where?'", "The words appear next to each other in the linear string.", "Each word has a different part of speech (preposition, determiner, noun)."], "rationales": ["Word count is irrelevant to constituency; a constituent can be one word or twenty words.", "The ability to be replaced by a single word (substitution) and stand alone as an answer are key diagnostic tests for constituency.", "Being adjacent does not make a group of words a constituent; they must act together as a structural unit.", "Constituents are defined by their structural behavior as a unit, not by the diversity of their parts of speech."], "correct": 1, "hint": "Apply the 'movement', 'substitution', and 'stand-alone' checks.", "topic": "Constituency tests", "sec": "6.1", "src": "R", "link": "", "qid": "8be24ccc9f"}, {"q": "Why does the sentence 'The client contacted the lawyer' lose its original meaning if you swap the positions of the two noun phrases?", "options": ["The verb 'contacted' is intransitive and cannot take an object.", "The words 'client' and 'lawyer' are synonyms in legal contexts.", "English uses case endings on nouns to show who is acting.", "English has a fixed word order where position determines the subject and object."], "rationales": ["If 'contacted' were intransitive, the original sentence would have been ungrammatical.", "The roles are distinct; changing their position changes the proposition being stated.", "English lost most of its case endings on nouns, which is exactly why it relies so heavily on word order.", "In SVO languages like English, the noun before the verb is interpreted as the performer (subject) and the noun after as the receiver (object)."], "correct": 3, "hint": "Think about how we know 'who did what to whom' in English.", "topic": "Fixed word order", "sec": "6.2", "src": "☆", "link": "", "qid": "0582e992b2"}, {"q": "Which of these sentences is classified as 'complex' because it contains a subordinate embedded clause?", "options": ["Did the researcher realize the data was flawed?", "The researcher realized that the data was flawed.", "The researcher found the error and the team celebrated.", "The researcher found the flawed data in the laboratory."], "rationales": ["While it contains an embedded clause, the question asks to distinguish structural 'complexity' from 'interrogative' function.", "A complex sentence contains a clause ('that the data was flawed') nested inside a main clause.", "This is a compound sentence because it links two independent clauses with a conjunction.", "This is a simple sentence because it contains only one clause, even if that clause has long phrases."], "correct": 1, "hint": "Look for one complete statement 'inside' another statement.", "topic": "Complex sentences", "sec": "6.2", "src": "☆", "link": "", "qid": "c8644216b2"}, {"q": "If you are writing a user manual and want to give a direct command, which sentence type should you use?", "options": ["Imperative", "Declarative", "Complex", "Interrogative"], "rationales": ["Imperative clauses are specifically designed to express requests, instructions, or commands.", "Declarative clauses are used to make statements of fact that can be true or false.", "Complex refers to the structure of the sentence (nested clauses) rather than its communicative function.", "Interrogative clauses are used to ask questions, not to give instructions."], "correct": 0, "hint": "Choose the form used for 'doing' rather than 'questioning' or 'stating'.", "topic": "Sentence functions", "sec": "6.2", "src": "☆", "link": "", "qid": "c859a15ec0"}, {"q": "What is the key difference between the string 'The fast blue cars' and the sentence 'The cars are blue'?", "options": ["The second uses an intransitive verb while the first uses a transitive one.", "The second expresses a complete proposition that can be true or false.", "The first is longer and therefore contains more arguments.", "The first follows SVO order while the second does not."], "rationales": ["The first string contains no verbs, so it has no transitivity to classify.", "A sentence functions as a complete statement (a proposition) about a subject, whereas a phrase is just a group of words.", "Word length does not determine if something is a sentence; 'They bark' is a sentence, but 'The very old red barn' is a phrase.", "The first is a noun phrase and doesn't have a verb at all, so it cannot be analyzed in terms of Subject-Verb-Object order."], "correct": 1, "hint": "Consider which one 'makes a claim' about the world.", "topic": "Propositional content", "sec": "6.2", "src": "✕", "link": "", "qid": "64520d2bb8"}, {"q": "In the sentence 'The company offered the candidate a higher salary,' how many arguments are associated with the predicate?", "options": ["Three", "Two", "Four", "One"], "rationales": ["This is a ditransitive structure requiring a subject (company), a direct object (salary), and an indirect object (candidate).", "This would miss the 'candidate,' who is an essential participant in the act of 'offering' in this sentence.", "The arguments are the phrases referring to participants; there are only three such participants in this event.", "An intransitive verb takes only one argument (the subject), but 'offered' here involves three separate entities."], "correct": 0, "hint": "Count every person or thing that is a necessary part of the action.", "topic": "Argument count", "sec": "6.2", "src": "?", "link": "", "qid": "c65dc900b3"}, {"q": "A thousand years ago, Old English allowed more freedom in word order. Why is the order 'The report the manager sent' almost impossible for modern English speakers to understand today?", "options": ["English lost the case endings that used to signal who was the subject and who was the object.", "Modern verbs have higher transitivity requirements than Old English verbs.", "The sentence contains too many nouns for a modern brain to process linearly.", "Old English was a head-final language while Modern English is head-initial."], "rationales": ["When morphological markers (case) disappeared, the language became more 'fixed' because word order had to take over the job of showing grammatical roles.", "The number of arguments required by a verb (like 'sent') hasn't fundamentally changed, only how those roles are marked.", "Modern speakers process complex nested clauses easily; the issue is that the roles are not marked by either case or order here.", "English has been largely head-initial for a long time; the change was in the flexibility of major sentence components."], "correct": 0, "hint": "Consider what 'job' word order is doing in a language without markers on nouns.", "topic": "Word order evolution", "sec": "6.2", "src": "R", "link": "", "qid": "9c0634a151"}, {"q": "In the sentence 'The mentor showed the student the new software,' which noun phrase represents the recipient (the indirect object)?", "options": ["the student", "the software", "showed", "The mentor"], "rationales": ["In a ditransitive English sentence, the indirect object usually appears between the verb and the direct object and represents the recipient.", "This is the direct object—the thing that is being shown or moved.", "This is the predicate (the verb), not an argument or a noun phrase.", "This is the subject—the person performing the action of showing."], "correct": 0, "hint": "Identify the person who 'ends up with' the information or object.", "topic": "Ditransitives", "sec": "6.2", "src": "R", "link": "", "qid": "ac4d4a7a3d"}, {"q": "You are editing a sentence: 'The system notifies every Tuesday.' Why does this sentence feel incomplete to a native speaker?", "options": ["The verb 'notifies' selects for an object (the person being notified).", "English requires all sentences to have at least two verbs.", "The sentence lacks a predicate to explain the action.", "The word 'Tuesday' is functioning as a subject incorrectly."], "rationales": ["Many transitive verbs require a direct object to be provided; 'notifies' feels incomplete because we don't know who is receiving the notification.", "Most English sentences have only one main verb; the issue here is the missing argument for that verb.", "The sentence has a predicate ('notifies'); it just lacks one of the arguments that the predicate demands.", "Tuesday is functioning as an adverbial modifier (telling us when), not a subject."], "correct": 0, "hint": "Think about what the verb is 'demanding' that you haven't given it.", "topic": "Transitivity in editing", "sec": "6.2", "src": "R", "link": "", "qid": "14f7437763"}, {"q": "In the sentence 'That specific report, I have already finished,' what has the speaker done to change the focus?", "options": ["They changed the sentence from a statement to a command.", "They moved the object to the front of the sentence.", "They switched from SVO order to SOV order.", "They converted a simple sentence into a complex one."], "rationales": ["The sentence is still a declarative statement of fact, not an imperative command.", "Fronting (moving a constituent to the beginning) is a common way to highlight a topic or provide emphasis in English.", "While the object is first, the verb still follows the subject ('I have finished'), so it is not SOV.", "The sentence still contains only one clause; moving a piece around doesn't add a subordinate clause."], "correct": 1, "hint": "Look at the word 'report' and where it would normally sit in the sentence.", "topic": "Fronting/Emphasis", "sec": "6.2", "src": "R", "link": "", "qid": "e3fc9753f6"}, {"q": "English is described as 'head-initial.' In terms of basic word order (SVO), how does this property manifest in a typical sentence?", "options": ["The object must follow the subject but precede the verb.", "The sentence must have exactly one head for every three words.", "The subject (head) always appears at the very beginning of the string.", "The verb (head) appears before the object (complement)."], "rationales": ["If the object preceded the verb, the head (verb) would be following its complement, making the language head-final.", "Head-initiality refers to the ordering of elements, not a mathematical ratio of word types.", "The 'head' refers to the core of a phrase (like a verb), not the first word of the entire sentence (the subject).", "Head-initiality means the central word of a phrase comes before the elements it selects, like a verb coming before its object."], "correct": 3, "hint": "Connect the 'head' of a verb phrase to its position relative to the object.", "topic": "Information structure", "sec": "6.2", "src": "$", "link": "6.3", "qid": "e428f7aefa"}, {"q": "In the sentence 'The director of the small non-profit resigned,' which single word can replace the entire underlined group while keeping the sentence grammatical?", "options": ["Non-profit", "Small", "She", "Of"], "rationales": ["While it is a noun, 'Non-profit resigned' changes the meaning because it was the director who resigned, not the organization.", "An adjective cannot substitute for a whole noun phrase; 'Small resigned' is ungrammatical.", "A whole noun phrase constituent, no matter how long, can be replaced by a single pronoun (substitution test).", "A preposition cannot stand in for a noun phrase; 'Of resigned' is ungrammatical."], "correct": 2, "hint": "Try to find one word that can 'act' as the entire group of words.", "topic": "Substitution test", "sec": "6.3", "src": "☆", "link": "", "qid": "62ff7d6678"}, {"q": "Why can 'the very tall building' and 'the building' usually be used in exactly the same positions in a sentence?", "options": ["They have the same number of words that convey meaning.", "English word order is flexible enough to allow any noun anywhere.", "The word 'the' is the most important word in both groups.", "They are both noun phrases defined by the same head noun."], "rationales": ["Word count is irrelevant; the first phrase has five words and the second has two, but they share the same syntactic category.", "English word order is actually quite fixed; these two phrases are interchangeable because they are both Noun Phrases.", "The noun 'building' is the head; 'the' is a determiner that modifies the head.", "The head of a phrase (building) determines the category of the whole group, meaning the modifiers don't change where it can go."], "correct": 3, "hint": "Look for the 'essential' word that dictates the category of the group.", "topic": "Headedness", "sec": "6.3", "src": "☆", "link": "", "qid": "5b54d718c3"}, {"q": "Which of the following phrases is an example of recursion?", "options": ["quickly running to the store", "I think you are right", "the cousin of the friend of the neighbor", "the big red shiny apple"], "rationales": ["This contains a prepositional phrase inside a verb phrase, which are different types of structures.", "While it contains a clause, the most distinct example of recursion is the nesting of identical phrase types.", "Recursion occurs when a structure (a noun phrase) contains another structure of the same type inside it.", "This is a list of modifiers for a single head noun, not a noun phrase nested inside another noun phrase."], "correct": 2, "hint": "Find the phrase that is like a 'Russian Nesting Doll' of the same type of unit.", "topic": "Recursion", "sec": "6.3", "src": "☆", "link": "", "qid": "518f71c7e3"}, {"q": "Consider the phrases 'a box of chocolates' and 'boxes of chocolate.' Which word acts as the 'head' that tells the verb whether to be 'is' or 'are'?", "options": ["box / boxes", "a / of", "chocolates / chocolate", "The entire phrase acts as a head"], "rationales": ["The head of the noun phrase (box/boxes) determines the number features that the verb must agree with.", "Determiners and prepositions provide structural links but do not function as the category-defining head for a noun phrase.", "These are inside a prepositional phrase modifying the head; they don't control the agreement for the whole unit.", "A phrase cannot be a head; a head is the single core word within the phrase that dictates its properties."], "correct": 0, "hint": "If you said 'I dropped it,' which word are you referring to?", "topic": "Head and Agreement", "sec": "6.3", "src": "✕", "link": "", "qid": "42e5f73bc9"}, {"q": "If you were translating 'to the office' into a head-final language like Japanese, what word order would you expect to see?", "options": ["to office the", "office the to", "the office to", "office to"], "rationales": ["This would mean the head is first but the internal parts of the complement are rearranged, which is not head-final.", "While the head 'to' is at the end, the internal order of 'the office' would likely remain consistent with the language's other rules.", "In head-final languages, the head (the preposition/postposition) comes at the end, following its complement (the noun phrase).", "This omits the determiner 'the,' which is a vocabulary change rather than just a word order change."], "correct": 2, "hint": "Put the 'leader' of the phrase at the very end.", "topic": "Head directionality", "sec": "6.3", "src": "✕", "link": "", "qid": "7d1c8cb09b"}, {"q": "Why does the phrase 'The manager placed' feel incomplete to a speaker of English?", "options": ["The word 'placed' is an adjective in this context.", "The verb 'placed' selects for both a direct object and a location.", "The subject 'The manager' is not descriptive enough.", "English verbs cannot end a sentence if they have more than two syllables."], "rationales": ["In this sentence, 'placed' is functioning as the main verb (predicate), not as a modifier.", "Selection means a head demands specific complements; 'place' requires you to say what was placed and where it went.", "The subject is grammatically fine; the issue is with the verb phrase's internal requirements.", "Syllable count has no effect on grammaticality; 'The manager resigned' is perfectly fine."], "correct": 1, "hint": "Think about what information you are still waiting for after someone says 'I placed...'", "topic": "Selection", "sec": "6.3", "src": "?", "link": "", "qid": "030870030f"}, {"q": "If you are trying to cut words from a sentence, which words are you usually safe to remove without breaking the basic phrase category?", "options": ["Modifiers (adjuncts)", "Required complements", "The head", "The subject"], "rationales": ["Modifiers are optional additions; the head remains the head and the phrase keeps its category even if they are removed.", "If a verb selects for a complement (like 'devour' needs an object), removing it makes the sentence ungrammatical.", "The head defines the phrase; removing it destroys the structure (e.g., removing 'desk' from 'the old desk').", "English clauses require subjects to be grammatical; you cannot simply drop them for length."], "correct": 0, "hint": "Think about which words are 'decoration' and which ones are 'structure'.", "topic": "Head vs Modifier", "sec": "6.3", "src": "R", "link": "", "qid": "a5c763f8dd"}, {"q": "Compare the verbs 'devour' and 'dine.' Why can you say 'I dined' but not 'I devoured'?", "options": ["'Devour' selects for an object complement, while 'dine' does not.", "'Dine' is a head-final verb while 'devour' is head-initial.", "One is a noun phrase and the other is a verb phrase.", "'Devour' is more formal and requires a longer sentence."], "rationales": ["Individual heads have specific requirements; 'devour' is transitive and demands an object, while 'dine' is intransitive.", "Both are English verbs and follow the same head-initial pattern; the difference is their transitivity (selection).", "Both function as verbs in these sentences; the difference lies in their internal argument requirements.", "Formal status does not dictate the structural rules of transitivity."], "correct": 0, "hint": "Consider which verb 'demands' a partner to finish its meaning.", "topic": "Verbal selection", "sec": "6.3", "src": "R", "link": "", "qid": "122f2e9cc4"}, {"q": "In the sentence 'I want the small blue one,' why does the use of the word 'one' prove that 'small blue mug' (if 'mug' was the original word) is a constituent?", "options": ["It proves that English is a head-final language.", "The word 'one' acts as the head of the entire sentence.", "The word 'one' can substitute for a multi-word noun group.", "It shows that 'small' and 'blue' are required complements."], "rationales": ["The order 'small blue one' (modifier-modifier-head) doesn't change the fact that English is primarily head-initial.", "The verb 'want' is the head of the predicate; 'one' is just a pronoun standing in for a noun group.", "Substitution tests prove constituency; if one word ('one') can replace a whole group, that group acts as a unit.", "Adjectives are modifiers, not complements; 'one' replaces the whole group regardless of whether the parts are optional."], "correct": 2, "hint": "Think about what the word 'one' is 'covering for' in that sentence.", "topic": "Substitution with 'one'", "sec": "6.3", "src": "R", "link": "", "qid": "d1ac22753e"}, {"q": "Some speakers say 'He don't like it.' Why might a linguist use the concept of 'selection' to explain why this sounds ungrammatical to other speakers?", "options": ["The word 'don't' is a constituent that cannot be moved to the front.", "The helping verb 'does' selects for a subject with matching features like 'third-person singular'.", "English word order requires the object to come before the verb in negative sentences.", "The subject 'He' is the head of the entire verb phrase."], "rationales": ["You can move it in questions ('Don't he like it?'), so movement is not the primary issue here.", "Grammaticality often depends on whether the requirements (selection) of one word—like a verb matching its subject—are met.", "English maintains SVO order even in negatives ('He doesn't like it'), so the object position is not the problem.", "Subjects are separate phrases; the verb is the head of the verb phrase."], "correct": 1, "hint": "Think about the 'demands' a verb makes on the person doing the action.", "topic": "Selection/Judgement", "sec": "6.3", "src": "$", "link": "6.1", "qid": "993035b3bd"}], "hasSheet": true, "parts": false, "secTitles": {}, "reserve": 0, "frq": [{"tag": "Verb selection and arguments", "secs": "6.2 and 6.3", "prompt": "In professional correspondence, a team member writes: \"The software updates.\" This remains a fragment because the action requires specific participants to be complete.", "ask": "Provide a grammatical repair of the sentence. Then, account for why the original felt \"unfinished\" by using the concepts of transitivity and selection to justify your answer.", "words": "120", "rubric": [{"t": "participant count", "judge": false, "k": ["valency", "arguments", "complements", "transitive", "ditransitive"]}, {"t": "essential components", "judge": false, "k": ["gap", "requirements", "units", "missing", "items"]}, {"t": "lexical demands", "judge": false, "k": ["dictates", "controls", "governs", "orders", "needs"]}, {"t": "Is the suggested fix a natural, professional business sentence?", "judge": true, "k": []}, {"t": "Does the explanation connect the verb’s inherent \"opinion\" to the sentence’s failure?", "judge": true, "k": []}], "model": "To correct the error, one could write: \"The software updates the client records automatically.\" The original phrase feels unfinished because the verb \"update\" acts as a transitive head. In syntax, every head possesses a specific \"opinion\" regarding what must surround it to form a complete unit, a process known as selection. A transitive verb specifically demands two arguments: a subject (the entity performing the action) and a direct object (the entity receiving the action). \n\nWhile the subject was provided, the lack of a direct object left the verb’s structural requirements unfulfilled. This creates a \"gap\" in the speaker's internal linguistic system. By adding \"the client records,\" we satisfy the valency requirements of the head. This transforms a fragmented string into a complete declarative clause. As a communication coach, I note that satisfying these requirements is not just about rules; it is about providing the reader with the necessary participants to form a complete mental proposition, thereby ensuring the message is processed without confusion or cognitive strain."}, {"tag": "Grammaticality vs. Semantic Sense", "secs": "6.1", "prompt": "Evaluate these two strings of words:", "ask": "Assign the appropriate linguistic symbol (* or #) to each string. Explain why our mental patterns accept the \"shape\" of the first string while rejecting the second, regardless of whether the words describe a realistic event.", "words": "120", "rubric": [{"t": "cognitive faculty", "judge": false, "k": ["internal", "grammar", "intuition", "processing", "mental"]}, {"t": "star/asterisk", "judge": false, "k": ["*", "ungrammaticality", "structural", "violation"]}, {"t": "hash/pound", "judge": false, "k": ["#", "semantic", "anomaly", "oddity", "meaningfulness"]}, {"t": "generative capacity", "judge": false, "k": ["productivity", "novelty", "infinite", "create*"]}, {"t": "syntactic rule*", "judge": false, "k": ["pattern*", "system", "arrangement", "organization"]}, {"t": "Does the explanation effectively distinguish between structural validity and literal logic?", "judge": true, "k": []}], "model": "The first string should be marked with a hashmark (#), as it is syntactically valid but semantically odd. The second string requires an asterisk (*) because it violates English word order. This distinction highlights that our internal grammar is a generative mental system focused on the hierarchical organization of phrases, independent of dictionary definitions. \n\nString (1) follows the standard \"shape\" of an English declarative sentence, placing the subject, verb, and prepositional phrase in the correct positions. Because our language faculty is generative, we can recognize the validity of this structure even if we have never encountered a \"dancing stapler.\" We accept the pattern while acknowledging the meaning is nonsensical. String (2), however, is rejected because it fails the required patterns of English syntax. It ignores the linear and hierarchical rules governing how heads and modifiers are grouped. Ultimately, grammaticality is an evaluation of whether a string matches the structural system of the language user. Even in professional writing, a sentence can be perfectly \"legal\" in its structure while failing to convey a sensible idea."}, {"tag": "Phrase heads and agreement", "secs": "6.3", "prompt": "An employee drafts a memo stating: \"The collection of confidential files are on the desk.\"", "ask": "Identify the core element of the subject phrase and fix the matching error between the subject and verb. Explain why this mistake occurs, focusing on how a \"distractor\" noun obscures the relationship between the actual primary word and the action.", "words": "120", "rubric": [{"t": "syntactic head", "judge": false, "k": ["central", "anchor", "focal", "essential", "main", "primary"]}, {"t": "noun category", "judge": false, "k": ["NP", "distribution", "constituent", "group", "unit"]}, {"t": "singular/plural inflection", "judge": false, "k": ["agreement", "person", "number", "verb"]}, {"t": "modifier/adjunct", "judge": false, "k": ["optional", "descriptive", "decoration", "attachment", "prepositional"]}, {"t": "Does the explanation of the \"cost\" of the error (cognitive fatigue or loss of authority) meet professional coaching standards?", "judge": true, "k": []}], "model": "The corrected sentence is: \"The collection of confidential files is on the desk.\" In this sentence, the subject is a noun phrase where the syntactic head is \"collection.\" This head is the essential anchor of the phrase; it determines the category of the entire unit and dictates how it interacts with the verb. \n\nThe error \"are\" occurs because the plural \"distractor\" noun, \"files,\" sits closer to the verb. However, \"files\" is merely part of a prepositional phrase acting as a modifier. Because \"collection\" is singular, the verb must show singular agreement inflection (\"is\"). When writers focus on linear word order rather than hierarchical structure, they mistakenly match the verb to the nearest noun. From a professional coaching perspective, the \"cost\" here is significant: it forces the reader to \"re-parse\" the sentence, leading to cognitive fatigue. Such errors undermine the writer’s credibility and professional authority, as they signal a failure to track the primary subject, potentially causing the reader to focus on the \"files\" rather than the \"collection\" itself."}], "notebook": "https://notebooklm.google.com/notebook/9c3efebf-1b56-4efd-a0e8-f4f236a20e42/artifact/d00db2c0-16a4-40f1-b7ef-51515c94b655", "root": "../index.html", "tab": "quiz", "sheet": "## Head of phrase\nThe syntactic head serves as the central core component that determines the essential category and grammatical distribution of the entire phrase.\n\n### Key terms\n1. **Head** or **Syntactic Head** — the essential core element of a phrase that determines its category and primary meaning.\n   1. coffee — the head of the noun phrase \"extremely delicious coffee.\"\n\n## Grammaticality judgement\nA grammaticality judgement is an individual language user’s subconscious evaluation of whether a sentence matches the structural patterns of their internal linguistic system.\n\n### Key terms\n1. **Grammaticality judgement** — an individual's evaluation used as a diagnostic tool to investigate the specific properties of their internal linguistic system.\n\n## Internal grammar\nThe internal grammar is the subconscious mental system that allows language users to recognize structural patterns and generate or understand an infinite variety of novel sentences.\n\n### Key terms\n1. **Internal grammar** — the generative mental system allowing users to identify patterns, recognize valid sentence shapes, and process expressions never previously encountered.\n\n## Generativity\nGenerativity refers to the fundamental property of natural language grammars to generalize rules to brand-new cases and combinations.\n\n### Key terms\n1. **Generativity** — the capacity of a grammar to produce and interpret an infinite variety of sentences that have never been previously encountered.\n\n## Meaning of Grammatical\nIn theoretical linguistics, the term \"grammatical\" describes a sentence that is consistent with the structural patterns of a user's internal grammar regardless of prescriptive school rules.\n\n### Key terms\n1. **Grammatical** — a status where a sentence matches the internal structural patterns and system of a specific language user.\n\n## Syntactic variation\nSyntactic variation occurs when language users disagree on the status of a specific example, providing evidence of distinct internal grammatical rules between speakers.\n\n### Key terms\n1. **Syntactic variation** — differences in the perceived status of linguistic examples between users, indicating the existence of distinct internal systems.\n\n## Linguistic symbols\nLinguists utilize specific notation symbols at the beginning of examples to indicate whether a sentence is syntactically well-formed or semantically coherent.\n\n### Key terms\n1. **Asterisk/Star (*)** — the notation marking a sentence as syntactically ungrammatical or inconsistent with a user's internal system.\n2. **Hashmark (#)** — the notation marking a sentence as semantically odd or nonsensical despite having a correct structural shape.\n\n## Variation as Data\nDisagreements between speakers regarding grammaticality are treated as scientific data used to test and refine models of linguistic theory.\n\n### Key terms\n1. **Data** — the recorded acceptances or rejections of sentence structures by speakers, used to investigate linguistic limits and test theoretical models.\n\n## Descriptive vs Prescriptive\nLinguistic theory prioritizes the descriptive analysis of how speakers actually produce language over the prescriptive rules found in style guides or textbooks.\n\n### Key terms\n1. **Descriptive** — the scientific study of the structural patterns that native speakers actually produce in natural use.\n2. **Prescriptive** — the formal, often arbitrary rules for \"correct\" grammar taught in educational or professional settings.\n\n## Constituency tests\nConstituency tests are diagnostic methods used to determine if a specific group of words functions together as a single structural unit.\n\n### Key terms\n1. **Constituency tests** — diagnostic procedures, such as movement, substitution, and standing alone, used to verify if word groups function as a unit.\n\n## Fixed word order\nFixed word order characterizes languages where the sequence of elements is relatively rigid and directly determines the meaning or grammaticality of the sentence.\n\n### Key terms\n1. **Fixed word order** — a linguistic property where altering the word sequence results in ungrammaticality or a fundamental shift in meaning.\n   1. English — a language with relatively fixed order where position determines grammatical function.\n   2. French — a fixed-order language where the verb position is strictly regulated.\n   3. Chatino — an indigenous language of Mexico exhibiting fixed word order patterns.\n   4. Choktaw — a language where fixed word order serves as a primary indicator of grammatical roles.\n\n## Complex sentences\nComplex sentences are defined by a hierarchical organization in which at least one subordinate clause is embedded within another clause.\n\n### Key terms\n1. **Complex sentence** — a sentence containing at least one subordinate embedded clause, effectively demonstrating the property of recursion.\n\n## Sentence functions\nSentences are categorized by their function, which describes the communicative intent of the speaker within a conversational context.\n\n### Key terms\n1. **Declarative** — a clause used to make a statement that can be evaluated as true or false.\n2. **Interrogative** — a clause used to ask questions to elicit information or confirmation.\n   1. Yes-No questions — questions designed to elicit a simple affirmative or negative response.\n   2. Content questions — questions used to seek specific information, often initiated by \"wh-\" words in English.\n3. **Imperative** — a clause used to express a request, instruction, or direct command.\n\n## Propositional content\nPropositional content refers to the essential meaning or statement expressed by a declarative sentence that can be evaluated for truth or falsity.\n\n### Key terms\n1. **Proposition** — the complete statement or meaning expressed by a sentence that possesses a truth value.\n\n## Argument count\nThe argument count, or valency, classifies predicates according to the specific number of participants required to satisfy their structural and semantic needs.\n\n### Key terms\n1. **Transitivity** (or **Valency**) — the total number of arguments, including subjects and objects, that a predicate requires.\n2. **Intransitive** — a predicate requiring only one argument, which functions as the subject.\n3. **Transitive** — a predicate requiring two arguments: typically a subject and a direct object.\n\n## Word order evolution\nEnglish underwent a historical evolution from a freer word order to a rigid system as it lost the morphological case endings that previously marked grammatical roles.\n\n### Key terms\n1. **Case endings** — morphological markers on words that previously allowed for freer word order in Old English by explicitly indicating grammatical functions.\n\n## Ditransitives\nDitransitive predicates are structures that require three distinct arguments to fulfill the complex action described by the verb.\n\n### Key terms\n1. **Ditransitive** — a predicate taking three arguments: a subject, a direct object, and an indirect object.\n2. **Indirect object** — the argument in a ditransitive construction that typically represents the recipient of the action.\n\n## Transitivity in editing\nIn applied linguistics and editing, transitivity rules help identify \"selectional failures\" where a sentence feels incomplete because a head is missing a required partner.\n\n### Key terms\n1. **Selectional failure** — an error occurring when a head, such as a verb, lacks a complement or argument required by its internal lexical rules.\n\n## Fronting/Emphasis\nFronting is a rhetorical transformation that moves a phrase to the beginning of a sentence to create emphasis, resulting in what linguists call a \"marked\" structure.\n\n### Key terms\n1. **Fronting** — the movement of a phrase to the sentence-initial position for emphasis, which incurs a rhetorical \"cost\" in terms of information processing.\n\n## Information structure\nInformation structure describes how flexible-order languages organize sentences based on the conversational prominence of the topic and the focus of the message.\n\n### Key terms\n1. **Information structure** — the organization of a sentence based on the status of information (topic and focus) rather than fixed grammatical slots.\n2. **Topic** — the entity or concept that the sentence is about.\n3. **Focus** — the specific element within the sentence that the speaker intends to emphasize or highlight.\n   1. Latin — a language where flexible word order is used to manage information structure.\n   2. Anishinaabemowin — an Algonquian language that employs flexible order to indicate focus.\n   3. Kanien’kéha (Mohawk) — a language using word order to express subtle shades of meaning.\n   4. ASL — a visual language that utilizes flexible order for information prominence.\n\n### Names and studies\n1. **Dr. Kanatawakhon-Maracle** — demonstrated that Mohawk (Kanien’kéha) uses flexible word order to convey specific shades of meaning that are difficult to translate directly into English.\n\n## Substitution test\nThe substitution test is a constituency diagnostic where a group of words is replaced by a single pro-form to verify that they function as a unit.\n\n### Key terms\n1. **Substitution** — the diagnostic process of replacing a group of words with a single pro-form (such as \"it\" or \"there\") to confirm constituency.\n\n## Headedness\nHeadedness is the fundamental principle stating that the properties of a phrase are derived from its central head, which determines category and distribution.\n\n### Key terms\n1. **Headedness** — the principle where the category and internal requirements of a phrase are dictated by its central head.\n\n## Recursion\nRecursion is the capacity of human language to achieve infinite complexity by nesting one structural unit inside another unit of the same category.\n\n### Key terms\n1. **Recursion** — the capacity for a structural unit, such as a clause or noun phrase, to be embedded within another of the same type.\n\n## Head and Agreement\nThe head of a phrase dictates the morphological agreement requirements, such as number and person, that must be reflected on associated words.\n\n### Key terms\n1. **Subject agreement** — the process by which the head noun of the subject determines the specific inflectional form of the verb.\n\n## Head directionality\nHead directionality is a language-specific parameter that determines whether a head typically precedes or follows its complement within a syntactic phrase.\n\n### Key terms\n1. **Head directionality** — the property defining the relative linear order of a head and its selected complement.\n2. **Head initial** — a parameter where the head appears before its complement, as seen in English and Romance languages.\n3. **Head final** — a parameter where the head follows its complement, as seen in Japanese and Korean.\n4. **Adpositions** — a cross-linguistic term covering both prepositions and postpositions.\n5. **Postpositions** — heads of adpositional phrases that appear after their noun phrase complements in head-final languages.\n\n### Names and studies\n1. **Matthew S. Dryer (2013)** — analyzed the World Atlas of Language Structures to demonstrate that SOV (41%) and SVO (35.5%) are the most common word orders in human languages.\n\n## Selection\nSelection is the technical process by which a head dictates the presence and the specific grammatical category of its required complements.\n\n### Key terms\n1. **Selection** — the process by which a head determines the presence and syntactic category of its internal complements.\n2. **Complement** — a required phrase or object selected by a head to satisfy its semantic and structural requirements.\n\n## Head vs Modifier\nSyntactic theory distinguishes between the head, which is the mandatory core of a phrase, and modifiers, which are optional structural additions.\n\n### Key terms\n1. **Modifier** (or adjunct) — an optional element that can be removed from a phrase without resulting in ungrammaticality.\n\n## Verbal selection\nVerbal selection, or subcategorization, refers to the unique and specific requirements individual verbs impose on the phrases that must accompany them.\n\n### Key terms\n1. **Subcategorization** — the specific demand a verb makes for certain types of objects or locational complements.\n   1. put — a verb that selects for both a direct object (NP) and a locational complement (PP).\n\n## Substitution with 'one'\nOne-substitution is a specialized constituency test used to identify a word group consisting of a noun plus its modifiers.\n\n### Key terms\n1. **One-substitution** — a diagnostic test where the word \"one\" replaces a noun plus its modifiers to confirm they function together as a constituent.\n\n## Selection/Judgement\nA language user perceives a sentence as ungrammatical or \"incomplete\" when the specific selectional requirements of a syntactic head are left unsatisfied.\n\n### Key terms\n1. **Incompleteness** — the specific feeling of ungrammaticality triggered when a head does not receive its required selected complement."}</script>
+<script id="quiz-data" type="application/json">{"id": "el-ch6-6-1_6-2_6-3", "title": "Ch6 Exam · 6.1–6.3", "subtitle": "Syntax", "book": "EL", "hash": "21115f7216c9f628", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "In the phrase 'the latest updates on the project,' which word determines whether you should follow it with a singular or plural verb form?", "options": ["project", "the", "latest", "updates"], "rationales": ["While 'project' is a noun, it is inside a prepositional phrase modifying the main noun and does not control the verb agreement for the whole subject.", "Determiners signal the start of a noun phrase but do not carry the specific plural or singular features that the verb must match.", "Adjectives like 'latest' provide descriptive information but do not function as the structural head that determines the phrase's category or agreement.", "The head of a noun phrase determines the grammatical properties like number, which dictates agreement with the verb."], "correct": 3, "hint": "Identify the core noun that the entire phrase is actually about.", "topic": "Head of phrase", "sec": "6.1", "src": "☆", "link": "", "qid": "3f5fcc7d40"}, {"q": "You hear a coworker say 'I might could finish that by Friday.' While you wouldn't say it yourself, you recognize it as a natural pattern for them. What are you observing?", "options": ["Semantic oddity", "Generativity", "Prescriptive error", "Syntactic variation"], "rationales": ["The meaning of the sentence is perfectly clear; the 'oddness' lies in the structural arrangement of the verbs.", "Generativity refers to the ability to create brand-new sentences, not the differences in rules between two speakers.", "Linguistics focuses on the speaker's internal system rather than measuring speech against school-taught style guides.", "Disagreements or differences in what speakers find 'natural' indicate that different users have slightly different internal grammars."], "correct": 3, "hint": "Consider why two native speakers might disagree on what sounds 'correct' in a local dialect.", "topic": "Grammaticality judgement", "sec": "6.1", "src": "☆", "link": "", "qid": "899a11a232"}, {"q": "Without checking a grammar book, you instantly know that 'The red bright truck' sounds slightly off compared to 'The bright red truck.' What mental system is providing this answer?", "options": ["Internal grammar", "Linear processing", "The dictionary", "Prescriptive grammar"], "rationales": ["Internal grammar is the subconscious mental system that allows users to recognize and generate patterns without formal instruction.", "Syntax is hierarchical rather than linear, meaning we process word groups rather than just strings of individual words.", "Dictionaries provide definitions and spellings for individual words rather than rules for how to group them into phrases.", "Prescriptive rules are explicitly taught in school, but word-order intuition for adjectives is usually acquired subconsciously."], "correct": 0, "hint": "Reflect on the subconscious 'shape' of language you've known since childhood.", "topic": "Internal grammar", "sec": "6.1", "src": "☆", "link": "", "qid": "5cd1350957"}, {"q": "You read the sentence: 'The invisible sandwich is filing its taxes in the bathtub.' Even though this describes an impossible situation, you recognize it as a valid English sentence. Why?", "options": ["It follows prescriptive logic", "The sentence is semantically odd", "Language is generative", "The vocabulary is familiar"], "rationales": ["Valid structure in linguistics refers to matching the patterns of the speaker's internal system, not formal school rules.", "While the sentence is semantically odd, this describes the meaning, not the structural principle that allowed you to process it.", "Generativity allows the internal grammar to apply known rules to brand-new combinations of words it has never encountered before.", "Knowing the words is necessary, but the ability to recognize a valid structure for a new scenario is a separate structural capacity."], "correct": 2, "hint": "Think about how you can understand a sentence you have never heard in your life.", "topic": "Generativity", "sec": "6.1", "src": "✕", "link": "", "qid": "b145895416"}, {"q": "In a linguistic study, what does it mean to call a sentence 'grammatical'?", "options": ["It follows the rules for formal writing found in professional style guides.", "It is factually accurate and describes a real-world possibility.", "It is polite and uses vocabulary appropriate for the intended audience.", "It matches the structural patterns of the speaker's internal mental system."], "rationales": ["Linguistics distinguishes between natural speech patterns and the formal 'prescriptive' rules taught in educational settings.", "A sentence can be grammatically perfect while describing total nonsense, such as 'The moon ate a grape.'", "Grammaticality refers to the mechanical 'shape' or structure of the sentence, not social etiquette or register.", "Linguistic grammaticality is a descriptive term for structures that fit a user's natural, subconscious system."], "correct": 3, "hint": "Distinguish between 'school rules' and the 'subconscious rules' used in everyday speech.", "topic": "Meaning of Grammatical", "sec": "6.1", "src": "✕", "link": "", "qid": "848135cc47"}, {"q": "When a speaker from Pittsburgh says 'The car needs washed' and a speaker from London says 'The car needs washing,' how should a linguist view this difference?", "options": ["As data showing syntactic variation within English", "As an error on the part of the Pittsburgh speaker", "As a failure of the London speaker to be concise", "As a semantic misunderstanding of the verb 'need'"], "rationales": ["Variations in structure between dialects provide evidence for the different internal rules that speakers use.", "If a whole community naturally uses a structure, it is considered a valid pattern in their dialect's grammar.", "Conciseness is a stylistic preference, whereas the difference here is a structural pattern of the dialects.", "Both speakers agree on what 'need' means; they only disagree on the grammatical category that must follow it."], "correct": 0, "hint": "Look at this as a researcher collecting evidence rather than a teacher correcting a paper.", "topic": "Syntactic variation", "sec": "6.1", "src": "?", "link": "", "qid": "b8d7618b36"}, {"q": "If you want to mark the sentence 'The blue clouds whispered to the sleeping mountains' to show that the structure is perfect but the meaning is nonsensical, which symbol should you use?", "options": ["?", "$", "#", "*"], "rationales": ["While sometimes used to show uncertainty, it is not the standard marker for semantic nonsense in the source text.", "This symbol is not a standard linguistic marker for grammaticality or semantic status.", "The hashmark is used specifically to indicate that a sentence is 'semantically odd' despite having a grammatical structure.", "The asterisk (or star) is reserved for sentences that are syntactically ungrammatical, meaning their structure is broken."], "correct": 2, "hint": "Recall the difference between structural 'brokenness' and meaningful 'nonsense'.", "topic": "Linguistic symbols", "sec": "6.1", "src": "R", "link": "", "qid": "f1d127d913"}, {"q": "Why is it technically incorrect to provide a single grammaticality judgement for 'the English language' as a whole?", "options": ["Syntactic variation is too rare to matter for large-scale judgements.", "Judgements belong to individual users and their specific internal systems.", "Standard English is the only version that allows for official judgements.", "English has too many words for any one person to judge them all."], "rationales": ["Syntactic variation is common and is actually one of the primary things judgements help reveal.", "Grammaticality is tested through individuals; describing 'English' as a whole is just a shorthand for broad agreement among many users.", "Every speaker of every dialect has an internal grammar that can be tested through judgements.", "The issue is about the source of the rules (the individual's mind), not the size of the vocabulary."], "correct": 1, "hint": "Think about who actually 'holds' the rules of a language.", "topic": "Variation as Data", "sec": "6.1", "src": "R", "link": "", "qid": "ca5f3d7ff0"}, {"q": "If you follow a 'descriptive' approach to syntax, which of the following sentences would you likely mark as grammatical if most speakers actually say it?", "options": ["To whom did you speak?", "Call did who you?", "Who did you call?", "You called who?"], "rationales": ["This is often a prescriptive preference that many speakers find unnatural in casual conversation.", "This fails even descriptive tests because no natural speaker of standard English dialects uses this word order.", "Descriptive linguistics documents what speakers naturally do, even if it contradicts prescriptive rules about 'whom'.", "While possible in some contexts, the question tests the contrast between 'natural speech' and 'prescriptive school rules'."], "correct": 2, "hint": "Focus on how people actually speak rather than how they are told to speak.", "topic": "Descriptive vs Prescriptive", "sec": "6.1", "src": "R", "link": "", "qid": "b9b5f7afce"}, {"q": "Which test results would prove that 'in the drawer' is a single constituent in the sentence 'I left the keys in the drawer'?", "options": ["The phrase contains exactly three words.", "It can be replaced by 'there' and serve as the answer to 'Where?'", "The words appear next to each other in the linear string.", "Each word has a different part of speech (preposition, determiner, noun)."], "rationales": ["Word count is irrelevant to constituency; a constituent can be one word or twenty words.", "The ability to be replaced by a single word (substitution) and stand alone as an answer are key diagnostic tests for constituency.", "Being adjacent does not make a group of words a constituent; they must act together as a structural unit.", "Constituents are defined by their structural behavior as a unit, not by the diversity of their parts of speech."], "correct": 1, "hint": "Apply the 'movement', 'substitution', and 'stand-alone' checks.", "topic": "Constituency tests", "sec": "6.1", "src": "R", "link": "", "qid": "8be24ccc9f"}, {"q": "Why does the sentence 'The client contacted the lawyer' lose its original meaning if you swap the positions of the two noun phrases?", "options": ["The verb 'contacted' is intransitive and cannot take an object.", "The words 'client' and 'lawyer' are synonyms in legal contexts.", "English uses case endings on nouns to show who is acting.", "English has a fixed word order where position determines the subject and object."], "rationales": ["If 'contacted' were intransitive, the original sentence would have been ungrammatical.", "The roles are distinct; changing their position changes the proposition being stated.", "English lost most of its case endings on nouns, which is exactly why it relies so heavily on word order.", "In SVO languages like English, the noun before the verb is interpreted as the performer (subject) and the noun after as the receiver (object)."], "correct": 3, "hint": "Think about how we know 'who did what to whom' in English.", "topic": "Fixed word order", "sec": "6.2", "src": "☆", "link": "", "qid": "0582e992b2"}, {"q": "Which of these sentences is classified as 'complex' because it contains a subordinate embedded clause?", "options": ["Did the researcher realize the data was flawed?", "The researcher realized that the data was flawed.", "The researcher found the error and the team celebrated.", "The researcher found the flawed data in the laboratory."], "rationales": ["While it contains an embedded clause, the question asks to distinguish structural 'complexity' from 'interrogative' function.", "A complex sentence contains a clause ('that the data was flawed') nested inside a main clause.", "This is a compound sentence because it links two independent clauses with a conjunction.", "This is a simple sentence because it contains only one clause, even if that clause has long phrases."], "correct": 1, "hint": "Look for one complete statement 'inside' another statement.", "topic": "Complex sentences", "sec": "6.2", "src": "☆", "link": "", "qid": "c8644216b2"}, {"q": "If you are writing a user manual and want to give a direct command, which sentence type should you use?", "options": ["Imperative", "Declarative", "Complex", "Interrogative"], "rationales": ["Imperative clauses are specifically designed to express requests, instructions, or commands.", "Declarative clauses are used to make statements of fact that can be true or false.", "Complex refers to the structure of the sentence (nested clauses) rather than its communicative function.", "Interrogative clauses are used to ask questions, not to give instructions."], "correct": 0, "hint": "Choose the form used for 'doing' rather than 'questioning' or 'stating'.", "topic": "Sentence functions", "sec": "6.2", "src": "☆", "link": "", "qid": "c859a15ec0"}, {"q": "What is the key difference between the string 'The fast blue cars' and the sentence 'The cars are blue'?", "options": ["The second uses an intransitive verb while the first uses a transitive one.", "The second expresses a complete proposition that can be true or false.", "The first is longer and therefore contains more arguments.", "The first follows SVO order while the second does not."], "rationales": ["The first string contains no verbs, so it has no transitivity to classify.", "A sentence functions as a complete statement (a proposition) about a subject, whereas a phrase is just a group of words.", "Word length does not determine if something is a sentence; 'They bark' is a sentence, but 'The very old red barn' is a phrase.", "The first is a noun phrase and doesn't have a verb at all, so it cannot be analyzed in terms of Subject-Verb-Object order."], "correct": 1, "hint": "Consider which one 'makes a claim' about the world.", "topic": "Propositional content", "sec": "6.2", "src": "✕", "link": "", "qid": "64520d2bb8"}, {"q": "In the sentence 'The company offered the candidate a higher salary,' how many arguments are associated with the predicate?", "options": ["Three", "Two", "Four", "One"], "rationales": ["This is a ditransitive structure requiring a subject (company), a direct object (salary), and an indirect object (candidate).", "This would miss the 'candidate,' who is an essential participant in the act of 'offering' in this sentence.", "The arguments are the phrases referring to participants; there are only three such participants in this event.", "An intransitive verb takes only one argument (the subject), but 'offered' here involves three separate entities."], "correct": 0, "hint": "Count every person or thing that is a necessary part of the action.", "topic": "Argument count", "sec": "6.2", "src": "?", "link": "", "qid": "c65dc900b3"}, {"q": "A thousand years ago, Old English allowed more freedom in word order. Why is the order 'The report the manager sent' almost impossible for modern English speakers to understand today?", "options": ["English lost the case endings that used to signal who was the subject and who was the object.", "Modern verbs have higher transitivity requirements than Old English verbs.", "The sentence contains too many nouns for a modern brain to process linearly.", "Old English was a head-final language while Modern English is head-initial."], "rationales": ["When morphological markers (case) disappeared, the language became more 'fixed' because word order had to take over the job of showing grammatical roles.", "The number of arguments required by a verb (like 'sent') hasn't fundamentally changed, only how those roles are marked.", "Modern speakers process complex nested clauses easily; the issue is that the roles are not marked by either case or order here.", "English has been largely head-initial for a long time; the change was in the flexibility of major sentence components."], "correct": 0, "hint": "Consider what 'job' word order is doing in a language without markers on nouns.", "topic": "Word order evolution", "sec": "6.2", "src": "R", "link": "", "qid": "9c0634a151"}, {"q": "In the sentence 'The mentor showed the student the new software,' which noun phrase represents the recipient (the indirect object)?", "options": ["the student", "the software", "showed", "The mentor"], "rationales": ["In a ditransitive English sentence, the indirect object usually appears between the verb and the direct object and represents the recipient.", "This is the direct object—the thing that is being shown or moved.", "This is the predicate (the verb), not an argument or a noun phrase.", "This is the subject—the person performing the action of showing."], "correct": 0, "hint": "Identify the person who 'ends up with' the information or object.", "topic": "Ditransitives", "sec": "6.2", "src": "R", "link": "", "qid": "ac4d4a7a3d"}, {"q": "You are editing a sentence: 'The system notifies every Tuesday.' Why does this sentence feel incomplete to a native speaker?", "options": ["The verb 'notifies' selects for an object (the person being notified).", "English requires all sentences to have at least two verbs.", "The sentence lacks a predicate to explain the action.", "The word 'Tuesday' is functioning as a subject incorrectly."], "rationales": ["Many transitive verbs require a direct object to be provided; 'notifies' feels incomplete because we don't know who is receiving the notification.", "Most English sentences have only one main verb; the issue here is the missing argument for that verb.", "The sentence has a predicate ('notifies'); it just lacks one of the arguments that the predicate demands.", "Tuesday is functioning as an adverbial modifier (telling us when), not a subject."], "correct": 0, "hint": "Think about what the verb is 'demanding' that you haven't given it.", "topic": "Transitivity in editing", "sec": "6.2", "src": "R", "link": "", "qid": "14f7437763"}, {"q": "In the sentence 'That specific report, I have already finished,' what has the speaker done to change the focus?", "options": ["They changed the sentence from a statement to a command.", "They moved the object to the front of the sentence.", "They switched from SVO order to SOV order.", "They converted a simple sentence into a complex one."], "rationales": ["The sentence is still a declarative statement of fact, not an imperative command.", "Fronting (moving a constituent to the beginning) is a common way to highlight a topic or provide emphasis in English.", "While the object is first, the verb still follows the subject ('I have finished'), so it is not SOV.", "The sentence still contains only one clause; moving a piece around doesn't add a subordinate clause."], "correct": 1, "hint": "Look at the word 'report' and where it would normally sit in the sentence.", "topic": "Fronting/Emphasis", "sec": "6.2", "src": "R", "link": "", "qid": "e3fc9753f6"}, {"q": "English is described as 'head-initial.' In terms of basic word order (SVO), how does this property manifest in a typical sentence?", "options": ["The object must follow the subject but precede the verb.", "The sentence must have exactly one head for every three words.", "The subject (head) always appears at the very beginning of the string.", "The verb (head) appears before the object (complement)."], "rationales": ["If the object preceded the verb, the head (verb) would be following its complement, making the language head-final.", "Head-initiality refers to the ordering of elements, not a mathematical ratio of word types.", "The 'head' refers to the core of a phrase (like a verb), not the first word of the entire sentence (the subject).", "Head-initiality means the central word of a phrase comes before the elements it selects, like a verb coming before its object."], "correct": 3, "hint": "Connect the 'head' of a verb phrase to its position relative to the object.", "topic": "Information structure", "sec": "6.2", "src": "$", "link": "6.3", "qid": "e428f7aefa"}, {"q": "In the sentence 'The director of the small non-profit resigned,' which single word can replace the entire underlined group while keeping the sentence grammatical?", "options": ["Non-profit", "Small", "She", "Of"], "rationales": ["While it is a noun, 'Non-profit resigned' changes the meaning because it was the director who resigned, not the organization.", "An adjective cannot substitute for a whole noun phrase; 'Small resigned' is ungrammatical.", "A whole noun phrase constituent, no matter how long, can be replaced by a single pronoun (substitution test).", "A preposition cannot stand in for a noun phrase; 'Of resigned' is ungrammatical."], "correct": 2, "hint": "Try to find one word that can 'act' as the entire group of words.", "topic": "Substitution test", "sec": "6.3", "src": "☆", "link": "", "qid": "62ff7d6678"}, {"q": "Why can 'the very tall building' and 'the building' usually be used in exactly the same positions in a sentence?", "options": ["They have the same number of words that convey meaning.", "English word order is flexible enough to allow any noun anywhere.", "The word 'the' is the most important word in both groups.", "They are both noun phrases defined by the same head noun."], "rationales": ["Word count is irrelevant; the first phrase has five words and the second has two, but they share the same syntactic category.", "English word order is actually quite fixed; these two phrases are interchangeable because they are both Noun Phrases.", "The noun 'building' is the head; 'the' is a determiner that modifies the head.", "The head of a phrase (building) determines the category of the whole group, meaning the modifiers don't change where it can go."], "correct": 3, "hint": "Look for the 'essential' word that dictates the category of the group.", "topic": "Headedness", "sec": "6.3", "src": "☆", "link": "", "qid": "5b54d718c3"}, {"q": "Which of the following phrases is an example of recursion?", "options": ["quickly running to the store", "I think you are right", "the cousin of the friend of the neighbor", "the big red shiny apple"], "rationales": ["This contains a prepositional phrase inside a verb phrase, which are different types of structures.", "While it contains a clause, the most distinct example of recursion is the nesting of identical phrase types.", "Recursion occurs when a structure (a noun phrase) contains another structure of the same type inside it.", "This is a list of modifiers for a single head noun, not a noun phrase nested inside another noun phrase."], "correct": 2, "hint": "Find the phrase that is like a 'Russian Nesting Doll' of the same type of unit.", "topic": "Recursion", "sec": "6.3", "src": "☆", "link": "", "qid": "518f71c7e3"}, {"q": "Consider the phrases 'a box of chocolates' and 'boxes of chocolate.' Which word acts as the 'head' that tells the verb whether to be 'is' or 'are'?", "options": ["box / boxes", "a / of", "chocolates / chocolate", "The entire phrase acts as a head"], "rationales": ["The head of the noun phrase (box/boxes) determines the number features that the verb must agree with.", "Determiners and prepositions provide structural links but do not function as the category-defining head for a noun phrase.", "These are inside a prepositional phrase modifying the head; they don't control the agreement for the whole unit.", "A phrase cannot be a head; a head is the single core word within the phrase that dictates its properties."], "correct": 0, "hint": "If you said 'I dropped it,' which word are you referring to?", "topic": "Head and Agreement", "sec": "6.3", "src": "✕", "link": "", "qid": "42e5f73bc9"}, {"q": "If you were translating 'to the office' into a head-final language like Japanese, what word order would you expect to see?", "options": ["to office the", "office the to", "the office to", "office to"], "rationales": ["This would mean the head is first but the internal parts of the complement are rearranged, which is not head-final.", "While the head 'to' is at the end, the internal order of 'the office' would likely remain consistent with the language's other rules.", "In head-final languages, the head (the preposition/postposition) comes at the end, following its complement (the noun phrase).", "This omits the determiner 'the,' which is a vocabulary change rather than just a word order change."], "correct": 2, "hint": "Put the 'leader' of the phrase at the very end.", "topic": "Head directionality", "sec": "6.3", "src": "✕", "link": "", "qid": "7d1c8cb09b"}, {"q": "Why does the phrase 'The manager placed' feel incomplete to a speaker of English?", "options": ["The word 'placed' is an adjective in this context.", "The verb 'placed' selects for both a direct object and a location.", "The subject 'The manager' is not descriptive enough.", "English verbs cannot end a sentence if they have more than two syllables."], "rationales": ["In this sentence, 'placed' is functioning as the main verb (predicate), not as a modifier.", "Selection means a head demands specific complements; 'place' requires you to say what was placed and where it went.", "The subject is grammatically fine; the issue is with the verb phrase's internal requirements.", "Syllable count has no effect on grammaticality; 'The manager resigned' is perfectly fine."], "correct": 1, "hint": "Think about what information you are still waiting for after someone says 'I placed...'", "topic": "Selection", "sec": "6.3", "src": "?", "link": "", "qid": "030870030f"}, {"q": "If you are trying to cut words from a sentence, which words are you usually safe to remove without breaking the basic phrase category?", "options": ["Modifiers (adjuncts)", "Required complements", "The head", "The subject"], "rationales": ["Modifiers are optional additions; the head remains the head and the phrase keeps its category even if they are removed.", "If a verb selects for a complement (like 'devour' needs an object), removing it makes the sentence ungrammatical.", "The head defines the phrase; removing it destroys the structure (e.g., removing 'desk' from 'the old desk').", "English clauses require subjects to be grammatical; you cannot simply drop them for length."], "correct": 0, "hint": "Think about which words are 'decoration' and which ones are 'structure'.", "topic": "Head vs Modifier", "sec": "6.3", "src": "R", "link": "", "qid": "a5c763f8dd"}, {"q": "Compare the verbs 'devour' and 'dine.' Why can you say 'I dined' but not 'I devoured'?", "options": ["'Devour' selects for an object complement, while 'dine' does not.", "'Dine' is a head-final verb while 'devour' is head-initial.", "One is a noun phrase and the other is a verb phrase.", "'Devour' is more formal and requires a longer sentence."], "rationales": ["Individual heads have specific requirements; 'devour' is transitive and demands an object, while 'dine' is intransitive.", "Both are English verbs and follow the same head-initial pattern; the difference is their transitivity (selection).", "Both function as verbs in these sentences; the difference lies in their internal argument requirements.", "Formal status does not dictate the structural rules of transitivity."], "correct": 0, "hint": "Consider which verb 'demands' a partner to finish its meaning.", "topic": "Verbal selection", "sec": "6.3", "src": "R", "link": "", "qid": "122f2e9cc4"}, {"q": "In the sentence 'I want the small blue one,' why does the use of the word 'one' prove that 'small blue mug' (if 'mug' was the original word) is a constituent?", "options": ["It proves that English is a head-final language.", "The word 'one' acts as the head of the entire sentence.", "The word 'one' can substitute for a multi-word noun group.", "It shows that 'small' and 'blue' are required complements."], "rationales": ["The order 'small blue one' (modifier-modifier-head) doesn't change the fact that English is primarily head-initial.", "The verb 'want' is the head of the predicate; 'one' is just a pronoun standing in for a noun group.", "Substitution tests prove constituency; if one word ('one') can replace a whole group, that group acts as a unit.", "Adjectives are modifiers, not complements; 'one' replaces the whole group regardless of whether the parts are optional."], "correct": 2, "hint": "Think about what the word 'one' is 'covering for' in that sentence.", "topic": "Substitution with 'one'", "sec": "6.3", "src": "R", "link": "", "qid": "d1ac22753e"}, {"q": "Some speakers say 'He don't like it.' Why might a linguist use the concept of 'selection' to explain why this sounds ungrammatical to other speakers?", "options": ["The word 'don't' is a constituent that cannot be moved to the front.", "The helping verb 'does' selects for a subject with matching features like 'third-person singular'.", "English word order requires the object to come before the verb in negative sentences.", "The subject 'He' is the head of the entire verb phrase."], "rationales": ["You can move it in questions ('Don't he like it?'), so movement is not the primary issue here.", "Grammaticality often depends on whether the requirements (selection) of one word—like a verb matching its subject—are met.", "English maintains SVO order even in negatives ('He doesn't like it'), so the object position is not the problem.", "Subjects are separate phrases; the verb is the head of the verb phrase."], "correct": 1, "hint": "Think about the 'demands' a verb makes on the person doing the action.", "topic": "Selection/Judgement", "sec": "6.3", "src": "$", "link": "6.1", "qid": "993035b3bd"}], "hasSheet": true, "parts": false, "secTitles": {}, "reserve": 0, "tags": false, "frq": [{"tag": "Verb selection and arguments", "secs": "6.2 and 6.3", "prompt": "In professional correspondence, a team member writes: \"The software updates.\" This remains a fragment because the action requires specific participants to be complete.", "ask": "Provide a grammatical repair of the sentence. Then, account for why the original felt \"unfinished\" by using the concepts of transitivity and selection to justify your answer.", "words": "120", "rubric": [{"t": "participant count", "judge": false, "k": ["valency", "arguments", "complements", "transitive", "ditransitive"]}, {"t": "essential components", "judge": false, "k": ["gap", "requirements", "units", "missing", "items"]}, {"t": "lexical demands", "judge": false, "k": ["dictates", "controls", "governs", "orders", "needs"]}, {"t": "Is the suggested fix a natural, professional business sentence?", "judge": true, "k": []}, {"t": "Does the explanation connect the verb’s inherent \"opinion\" to the sentence’s failure?", "judge": true, "k": []}], "model": "To correct the error, one could write: \"The software updates the client records automatically.\" The original phrase feels unfinished because the verb \"update\" acts as a transitive head. In syntax, every head possesses a specific \"opinion\" regarding what must surround it to form a complete unit, a process known as selection. A transitive verb specifically demands two arguments: a subject (the entity performing the action) and a direct object (the entity receiving the action). \n\nWhile the subject was provided, the lack of a direct object left the verb’s structural requirements unfulfilled. This creates a \"gap\" in the speaker's internal linguistic system. By adding \"the client records,\" we satisfy the valency requirements of the head. This transforms a fragmented string into a complete declarative clause. As a communication coach, I note that satisfying these requirements is not just about rules; it is about providing the reader with the necessary participants to form a complete mental proposition, thereby ensuring the message is processed without confusion or cognitive strain."}, {"tag": "Grammaticality vs. Semantic Sense", "secs": "6.1", "prompt": "Evaluate these two strings of words:", "ask": "Assign the appropriate linguistic symbol (* or #) to each string. Explain why our mental patterns accept the \"shape\" of the first string while rejecting the second, regardless of whether the words describe a realistic event.", "words": "120", "rubric": [{"t": "cognitive faculty", "judge": false, "k": ["internal", "grammar", "intuition", "processing", "mental"]}, {"t": "star/asterisk", "judge": false, "k": ["*", "ungrammaticality", "structural", "violation"]}, {"t": "hash/pound", "judge": false, "k": ["#", "semantic", "anomaly", "oddity", "meaningfulness"]}, {"t": "generative capacity", "judge": false, "k": ["productivity", "novelty", "infinite", "create*"]}, {"t": "syntactic rule*", "judge": false, "k": ["pattern*", "system", "arrangement", "organization"]}, {"t": "Does the explanation effectively distinguish between structural validity and literal logic?", "judge": true, "k": []}], "model": "The first string should be marked with a hashmark (#), as it is syntactically valid but semantically odd. The second string requires an asterisk (*) because it violates English word order. This distinction highlights that our internal grammar is a generative mental system focused on the hierarchical organization of phrases, independent of dictionary definitions. \n\nString (1) follows the standard \"shape\" of an English declarative sentence, placing the subject, verb, and prepositional phrase in the correct positions. Because our language faculty is generative, we can recognize the validity of this structure even if we have never encountered a \"dancing stapler.\" We accept the pattern while acknowledging the meaning is nonsensical. String (2), however, is rejected because it fails the required patterns of English syntax. It ignores the linear and hierarchical rules governing how heads and modifiers are grouped. Ultimately, grammaticality is an evaluation of whether a string matches the structural system of the language user. Even in professional writing, a sentence can be perfectly \"legal\" in its structure while failing to convey a sensible idea."}, {"tag": "Phrase heads and agreement", "secs": "6.3", "prompt": "An employee drafts a memo stating: \"The collection of confidential files are on the desk.\"", "ask": "Identify the core element of the subject phrase and fix the matching error between the subject and verb. Explain why this mistake occurs, focusing on how a \"distractor\" noun obscures the relationship between the actual primary word and the action.", "words": "120", "rubric": [{"t": "syntactic head", "judge": false, "k": ["central", "anchor", "focal", "essential", "main", "primary"]}, {"t": "noun category", "judge": false, "k": ["NP", "distribution", "constituent", "group", "unit"]}, {"t": "singular/plural inflection", "judge": false, "k": ["agreement", "person", "number", "verb"]}, {"t": "modifier/adjunct", "judge": false, "k": ["optional", "descriptive", "decoration", "attachment", "prepositional"]}, {"t": "Does the explanation of the \"cost\" of the error (cognitive fatigue or loss of authority) meet professional coaching standards?", "judge": true, "k": []}], "model": "The corrected sentence is: \"The collection of confidential files is on the desk.\" In this sentence, the subject is a noun phrase where the syntactic head is \"collection.\" This head is the essential anchor of the phrase; it determines the category of the entire unit and dictates how it interacts with the verb. \n\nThe error \"are\" occurs because the plural \"distractor\" noun, \"files,\" sits closer to the verb. However, \"files\" is merely part of a prepositional phrase acting as a modifier. Because \"collection\" is singular, the verb must show singular agreement inflection (\"is\"). When writers focus on linear word order rather than hierarchical structure, they mistakenly match the verb to the nearest noun. From a professional coaching perspective, the \"cost\" here is significant: it forces the reader to \"re-parse\" the sentence, leading to cognitive fatigue. Such errors undermine the writer’s credibility and professional authority, as they signal a failure to track the primary subject, potentially causing the reader to focus on the \"files\" rather than the \"collection\" itself."}], "notebook": "https://notebooklm.google.com/notebook/9c3efebf-1b56-4efd-a0e8-f4f236a20e42/artifact/d00db2c0-16a4-40f1-b7ef-51515c94b655", "root": "../index.html", "tab": "quiz", "sheet": "## Head of phrase\nThe syntactic head serves as the central core component that determines the essential category and grammatical distribution of the entire phrase.\n\n### Key terms\n1. **Head** or **Syntactic Head** — the essential core element of a phrase that determines its category and primary meaning.\n   1. coffee — the head of the noun phrase \"extremely delicious coffee.\"\n\n## Grammaticality judgement\nA grammaticality judgement is an individual language user’s subconscious evaluation of whether a sentence matches the structural patterns of their internal linguistic system.\n\n### Key terms\n1. **Grammaticality judgement** — an individual's evaluation used as a diagnostic tool to investigate the specific properties of their internal linguistic system.\n\n## Internal grammar\nThe internal grammar is the subconscious mental system that allows language users to recognize structural patterns and generate or understand an infinite variety of novel sentences.\n\n### Key terms\n1. **Internal grammar** — the generative mental system allowing users to identify patterns, recognize valid sentence shapes, and process expressions never previously encountered.\n\n## Generativity\nGenerativity refers to the fundamental property of natural language grammars to generalize rules to brand-new cases and combinations.\n\n### Key terms\n1. **Generativity** — the capacity of a grammar to produce and interpret an infinite variety of sentences that have never been previously encountered.\n\n## Meaning of Grammatical\nIn theoretical linguistics, the term \"grammatical\" describes a sentence that is consistent with the structural patterns of a user's internal grammar regardless of prescriptive school rules.\n\n### Key terms\n1. **Grammatical** — a status where a sentence matches the internal structural patterns and system of a specific language user.\n\n## Syntactic variation\nSyntactic variation occurs when language users disagree on the status of a specific example, providing evidence of distinct internal grammatical rules between speakers.\n\n### Key terms\n1. **Syntactic variation** — differences in the perceived status of linguistic examples between users, indicating the existence of distinct internal systems.\n\n## Linguistic symbols\nLinguists utilize specific notation symbols at the beginning of examples to indicate whether a sentence is syntactically well-formed or semantically coherent.\n\n### Key terms\n1. **Asterisk/Star (*)** — the notation marking a sentence as syntactically ungrammatical or inconsistent with a user's internal system.\n2. **Hashmark (#)** — the notation marking a sentence as semantically odd or nonsensical despite having a correct structural shape.\n\n## Variation as Data\nDisagreements between speakers regarding grammaticality are treated as scientific data used to test and refine models of linguistic theory.\n\n### Key terms\n1. **Data** — the recorded acceptances or rejections of sentence structures by speakers, used to investigate linguistic limits and test theoretical models.\n\n## Descriptive vs Prescriptive\nLinguistic theory prioritizes the descriptive analysis of how speakers actually produce language over the prescriptive rules found in style guides or textbooks.\n\n### Key terms\n1. **Descriptive** — the scientific study of the structural patterns that native speakers actually produce in natural use.\n2. **Prescriptive** — the formal, often arbitrary rules for \"correct\" grammar taught in educational or professional settings.\n\n## Constituency tests\nConstituency tests are diagnostic methods used to determine if a specific group of words functions together as a single structural unit.\n\n### Key terms\n1. **Constituency tests** — diagnostic procedures, such as movement, substitution, and standing alone, used to verify if word groups function as a unit.\n\n## Fixed word order\nFixed word order characterizes languages where the sequence of elements is relatively rigid and directly determines the meaning or grammaticality of the sentence.\n\n### Key terms\n1. **Fixed word order** — a linguistic property where altering the word sequence results in ungrammaticality or a fundamental shift in meaning.\n   1. English — a language with relatively fixed order where position determines grammatical function.\n   2. French — a fixed-order language where the verb position is strictly regulated.\n   3. Chatino — an indigenous language of Mexico exhibiting fixed word order patterns.\n   4. Choktaw — a language where fixed word order serves as a primary indicator of grammatical roles.\n\n## Complex sentences\nComplex sentences are defined by a hierarchical organization in which at least one subordinate clause is embedded within another clause.\n\n### Key terms\n1. **Complex sentence** — a sentence containing at least one subordinate embedded clause, effectively demonstrating the property of recursion.\n\n## Sentence functions\nSentences are categorized by their function, which describes the communicative intent of the speaker within a conversational context.\n\n### Key terms\n1. **Declarative** — a clause used to make a statement that can be evaluated as true or false.\n2. **Interrogative** — a clause used to ask questions to elicit information or confirmation.\n   1. Yes-No questions — questions designed to elicit a simple affirmative or negative response.\n   2. Content questions — questions used to seek specific information, often initiated by \"wh-\" words in English.\n3. **Imperative** — a clause used to express a request, instruction, or direct command.\n\n## Propositional content\nPropositional content refers to the essential meaning or statement expressed by a declarative sentence that can be evaluated for truth or falsity.\n\n### Key terms\n1. **Proposition** — the complete statement or meaning expressed by a sentence that possesses a truth value.\n\n## Argument count\nThe argument count, or valency, classifies predicates according to the specific number of participants required to satisfy their structural and semantic needs.\n\n### Key terms\n1. **Transitivity** (or **Valency**) — the total number of arguments, including subjects and objects, that a predicate requires.\n2. **Intransitive** — a predicate requiring only one argument, which functions as the subject.\n3. **Transitive** — a predicate requiring two arguments: typically a subject and a direct object.\n\n## Word order evolution\nEnglish underwent a historical evolution from a freer word order to a rigid system as it lost the morphological case endings that previously marked grammatical roles.\n\n### Key terms\n1. **Case endings** — morphological markers on words that previously allowed for freer word order in Old English by explicitly indicating grammatical functions.\n\n## Ditransitives\nDitransitive predicates are structures that require three distinct arguments to fulfill the complex action described by the verb.\n\n### Key terms\n1. **Ditransitive** — a predicate taking three arguments: a subject, a direct object, and an indirect object.\n2. **Indirect object** — the argument in a ditransitive construction that typically represents the recipient of the action.\n\n## Transitivity in editing\nIn applied linguistics and editing, transitivity rules help identify \"selectional failures\" where a sentence feels incomplete because a head is missing a required partner.\n\n### Key terms\n1. **Selectional failure** — an error occurring when a head, such as a verb, lacks a complement or argument required by its internal lexical rules.\n\n## Fronting/Emphasis\nFronting is a rhetorical transformation that moves a phrase to the beginning of a sentence to create emphasis, resulting in what linguists call a \"marked\" structure.\n\n### Key terms\n1. **Fronting** — the movement of a phrase to the sentence-initial position for emphasis, which incurs a rhetorical \"cost\" in terms of information processing.\n\n## Information structure\nInformation structure describes how flexible-order languages organize sentences based on the conversational prominence of the topic and the focus of the message.\n\n### Key terms\n1. **Information structure** — the organization of a sentence based on the status of information (topic and focus) rather than fixed grammatical slots.\n2. **Topic** — the entity or concept that the sentence is about.\n3. **Focus** — the specific element within the sentence that the speaker intends to emphasize or highlight.\n   1. Latin — a language where flexible word order is used to manage information structure.\n   2. Anishinaabemowin — an Algonquian language that employs flexible order to indicate focus.\n   3. Kanien’kéha (Mohawk) — a language using word order to express subtle shades of meaning.\n   4. ASL — a visual language that utilizes flexible order for information prominence.\n\n### Names and studies\n1. **Dr. Kanatawakhon-Maracle** — demonstrated that Mohawk (Kanien’kéha) uses flexible word order to convey specific shades of meaning that are difficult to translate directly into English.\n\n## Substitution test\nThe substitution test is a constituency diagnostic where a group of words is replaced by a single pro-form to verify that they function as a unit.\n\n### Key terms\n1. **Substitution** — the diagnostic process of replacing a group of words with a single pro-form (such as \"it\" or \"there\") to confirm constituency.\n\n## Headedness\nHeadedness is the fundamental principle stating that the properties of a phrase are derived from its central head, which determines category and distribution.\n\n### Key terms\n1. **Headedness** — the principle where the category and internal requirements of a phrase are dictated by its central head.\n\n## Recursion\nRecursion is the capacity of human language to achieve infinite complexity by nesting one structural unit inside another unit of the same category.\n\n### Key terms\n1. **Recursion** — the capacity for a structural unit, such as a clause or noun phrase, to be embedded within another of the same type.\n\n## Head and Agreement\nThe head of a phrase dictates the morphological agreement requirements, such as number and person, that must be reflected on associated words.\n\n### Key terms\n1. **Subject agreement** — the process by which the head noun of the subject determines the specific inflectional form of the verb.\n\n## Head directionality\nHead directionality is a language-specific parameter that determines whether a head typically precedes or follows its complement within a syntactic phrase.\n\n### Key terms\n1. **Head directionality** — the property defining the relative linear order of a head and its selected complement.\n2. **Head initial** — a parameter where the head appears before its complement, as seen in English and Romance languages.\n3. **Head final** — a parameter where the head follows its complement, as seen in Japanese and Korean.\n4. **Adpositions** — a cross-linguistic term covering both prepositions and postpositions.\n5. **Postpositions** — heads of adpositional phrases that appear after their noun phrase complements in head-final languages.\n\n### Names and studies\n1. **Matthew S. Dryer (2013)** — analyzed the World Atlas of Language Structures to demonstrate that SOV (41%) and SVO (35.5%) are the most common word orders in human languages.\n\n## Selection\nSelection is the technical process by which a head dictates the presence and the specific grammatical category of its required complements.\n\n### Key terms\n1. **Selection** — the process by which a head determines the presence and syntactic category of its internal complements.\n2. **Complement** — a required phrase or object selected by a head to satisfy its semantic and structural requirements.\n\n## Head vs Modifier\nSyntactic theory distinguishes between the head, which is the mandatory core of a phrase, and modifiers, which are optional structural additions.\n\n### Key terms\n1. **Modifier** (or adjunct) — an optional element that can be removed from a phrase without resulting in ungrammaticality.\n\n## Verbal selection\nVerbal selection, or subcategorization, refers to the unique and specific requirements individual verbs impose on the phrases that must accompany them.\n\n### Key terms\n1. **Subcategorization** — the specific demand a verb makes for certain types of objects or locational complements.\n   1. put — a verb that selects for both a direct object (NP) and a locational complement (PP).\n\n## Substitution with 'one'\nOne-substitution is a specialized constituency test used to identify a word group consisting of a noun plus its modifiers.\n\n### Key terms\n1. **One-substitution** — a diagnostic test where the word \"one\" replaces a noun plus its modifiers to confirm they function together as a constituent.\n\n## Selection/Judgement\nA language user perceives a sentence as ungrammatical or \"incomplete\" when the specific selectional requirements of a syntactic head are left unsatisfied.\n\n### Key terms\n1. **Incompleteness** — the specific feeling of ungrammaticality triggered when a head does not receive its required selected complement."}</script>
+<script>
+(function(){
+  if(window.lqSync) return;
+  const API = 'https://terp-plate.vercel.app/api/quiz-sync', MK = 'lqsync:meta';
+  const none = {first: Promise.resolve([]), now: async()=>[], listen(){}};
+  let key = '';
+  try{ key = localStorage.getItem('lq:key') || ''; }catch(e){}
+  const hm = /[#&]k=([A-Za-z0-9_-]{40,})/.exec(location.hash);
+  if(hm) key = hm[1];
+  if(!key || !window.crypto || !crypto.subtle){ window.lqSync = none; return; }
+
+  const skip = k => k.indexOf('lq:') !== 0 || k === 'lq:key' || k === 'lq:speech';
+  const rawSet = Storage.prototype.setItem;
+  let meta = {};
+  try{ meta = JSON.parse(localStorage.getItem(MK) || '{}') || {}; }catch(e){}
+  const putMeta = ()=>{ try{ rawSet.call(localStorage, MK, JSON.stringify(meta)); }catch(e){} };
+  const hash = t => { let h = 5381; for(let i=0;i<t.length;i++) h = ((h<<5) + h + t.charCodeAt(i)) | 0; return h; };
+  const isState = k => /^lq:[^:]+$/.test(k) && k !== 'lq:hub';
+  function weight(s){
+    return Object.keys(s.answers||{}).length + Object.keys(s.pass2||{}).length
+         + Object.keys(s.skipped||{}).length + Object.keys(s.starred||{}).length
+         + Object.keys(s.unsure||{}).length + 1000 * (s.history||[]).length + (s.done ? 500 : 0);
+  }
+  // '' = nothing worth sending
+  function sig(k, v){
+    if(isState(k)){
+      try{ const s = JSON.parse(v);
+        if(!s || typeof s !== 'object') return '';
+        if(!weight(s) && !s.only && !s.tagf) return '';
+        const c = Object.assign({}, s); delete c.ms; delete c.qms; delete c.meta; delete c.hintOpen;
+        return JSON.stringify(c);
+      }catch(e){ return ''; }
+    }
+    return (v && v !== '{}' && v !== '[]' && v !== '{"defs":[],"q":{}}') ? v : '';
+  }
+  let frozen = false, applying = false, timer = null, busy = false;
+  function mark(k, v){
+    if(skip(k)) return;
+    const g = sig(k, v), h = hash(g), m = meta[k] || (meta[k] = {t:0});
+    if(m.h === h) return;
+    m.h = h;
+    if(g){ m.t = Date.now(); m.d = 1; clearTimeout(timer); timer = setTimeout(run, 1500); }
+    putMeta();
+  }
+  Storage.prototype.setItem = function(k, v){
+    if(this === localStorage && frozen && String(k).indexOf('lq:') === 0) return;
+    rawSet.call(this, k, v);
+    if(this === localStorage && !applying){ try{ mark(String(k), String(v)); }catch(e){} }
+  };
+  // What was already here before sync existed: age unknown, so it is stamped low, and a real
+  // attempt outranks a thinner one by how much is in it.
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(skip(k) || meta[k]) continue;
+      const v = localStorage.getItem(k), g = sig(k, v);
+      meta[k] = {t: 0, h: hash(g)};
+      if(g){ let w = 1; if(isState(k)){ try{ w = 1 + weight(JSON.parse(v)); }catch(e){} }
+             meta[k].t = w; meta[k].d = 1; }
+    }
+    putMeta();
+  }catch(e){}
+
+  const enc = new TextEncoder(), dec = new TextDecoder();
+  const toB = s => { s = s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length % 4) s += '=';
+                     return Uint8Array.from(atob(s), c => c.charCodeAt(0)); };
+  const fromB = u => { let t = ''; for(let i=0;i<u.length;i+=8192) t += String.fromCharCode.apply(null, u.subarray(i, i+8192));
+                       return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+  const hex = b => Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,'0')).join('');
+  let ck = null, bucket = '';
+  const ready = (async()=>{
+    ck = await crypto.subtle.importKey('raw', toB(key), 'AES-GCM', false, ['encrypt','decrypt']);
+    bucket = hex(await crypto.subtle.digest('SHA-256', enc.encode('lq-sync:' + key))).slice(0, 32);
+  })();
+  const kid = async k => hex(await crypto.subtle.digest('SHA-256', enc.encode(bucket + '|' + k))).slice(0, 32);
+  async function seal(o){
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv}, ck, enc.encode(JSON.stringify(o)));
+    return fromB(iv) + '.' + fromB(new Uint8Array(ct));
+  }
+  async function unseal(t){
+    const p = t.split('.');
+    return JSON.parse(dec.decode(await crypto.subtle.decrypt({name:'AES-GCM', iv:toB(p[0])}, ck, toB(p[1]))));
+  }
+
+  function pageId(){
+    const el = document.getElementById('quiz-data');
+    if(!el) return null;
+    try{ return JSON.parse(el.textContent).id; }catch(e){ return null; }
+  }
+  async function run(){
+    if(busy || frozen) return [];
+    busy = true;
+    const changed = [];
+    try{
+      await ready;
+      const have = {}, puts = [], sent = {};
+      for(const k of Object.keys(meta)){
+        const m = meta[k];
+        if(!m.id) m.id = await kid(k);
+        have[m.id] = m.t || 0;
+        if(m.d){
+          const v = localStorage.getItem(k);
+          if(v === null){ m.d = 0; continue; }
+          puts.push({k: m.id, v: await seal({k, v}), ts: m.t});
+          sent[k] = m.t;
+        }
+      }
+      const r = await fetch(API, {method:'POST', headers:{'content-type':'text/plain'},
+                                  body: JSON.stringify({bucket, have, puts})});
+      if(!r.ok) throw new Error('sync ' + r.status);
+      const j = await r.json();
+      for(const k in sent) if(meta[k].t === sent[k]) meta[k].d = 0;
+      for(const row of j.rows || []){
+        let o; try{ o = await unseal(row.v); }catch(e){ continue; }
+        if(!o || skip(o.k)) continue;
+        const m = meta[o.k] || (meta[o.k] = {t:0});
+        if((m.t || 0) >= row.ts) continue;
+        applying = true;
+        try{ rawSet.call(localStorage, o.k, o.v); }catch(e){}
+        applying = false;
+        m.t = row.ts; m.d = 0; m.h = hash(sig(o.k, o.v)); m.id = row.k;
+        changed.push(o.k);
+      }
+      putMeta();
+    }catch(e){}
+    busy = false;
+    if(changed.length && window.lqSync.live){
+      const id = pageId();
+      const mine = id ? changed.some(k => k === 'lq:' + id || k.indexOf('lq:' + id + ':') === 0)
+                      : !!document.getElementById('manifest');
+      if(mine){ frozen = true; location.reload(); }
+    }
+    return changed;
+  }
+  function wake(){ if(document.visibilityState !== 'hidden') run(); }
+  function leave(){ if(document.visibilityState === 'hidden') run(); }
+  function listen(){
+    document.removeEventListener('visibilitychange', wake); document.addEventListener('visibilitychange', wake);
+    document.removeEventListener('visibilitychange', leave); document.addEventListener('visibilitychange', leave);
+    removeEventListener('focus', wake); addEventListener('focus', wake);
+  }
+  // `live` = this page should reload itself when its own quiz arrives newer. The locked shell
+  // turns it on only after it has drawn the page.
+  window.lqSync = {first: null, now: run, listen, live: true};
+  listen();
+  setInterval(wake, 20000);
+  window.lqSync.first = run();
+})();
+</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -1078,7 +1292,7 @@ function qk(i){ return D.questions[i].qid; }
 function blank(){ return {v:2, hash:D.hash, i:0, answers:{}, pass2:{}, skipped:{}, starred:{},
                           unsure:{}, hints:{}, phase:1, p2list:null, done:false, at:null,
                           shuf:{}, history:[], only:null, sat:{}, promoted:{},
-                          ms:0}; }
+                          ms:0, qms:{}}; }
 function migrate(s){
   // v1 keyed every map on the array index. The hash matches, so the indices are still valid
   // and this is a straight re-key — done once, then never again.
@@ -1136,6 +1350,9 @@ function load(){
     // attempt saved before it. Zero and hidden are the right defaults for an attempt that was
     // never timed: it reads as "not measured" rather than as a suspiciously fast paper.
     if(typeof s.ms !== 'number') s.ms = 0;
+    // NEW ON 08-21 and absent from every attempt before it. An empty map means "never
+    // measured", which momentum() reads as "print nothing" rather than as a paper of zeroes.
+    if(!s.qms) s.qms = {};
     return s;
   }catch(e){ return blank(); }
 }
@@ -1180,10 +1397,44 @@ function save(){
    the sitting's subchapters into this one function is what makes a half-paper behave exactly
    like a whole one — one direction, one end card, one second pass — with no branch anywhere
    downstream. `only: null` (not chosen, or a page built without parts) filters nothing. */
+/* ---- TAGS (10-12, his ask) ------------------------------------------------------------
+   *"a text box at first, but it functions like a Notion tag property … once I press enter it
+   creates a tag and that tag stays for this exam and only for this exam."* Its own key, like
+   the research box, so a Retake and a rebuild keep them. `defs` is the order he made them in;
+   a tag no question carries any more is dropped from it. Off unless the page was built with
+   `tags`, so every page built before this is what it was. */
+const TKEY = KEY + ':tags';
+let T = (function(){
+  try{ const t = JSON.parse(localStorage.getItem(TKEY) || '{}') || {};
+       return {defs: t.defs || [], q: t.q || {}}; }
+  catch(e){ return {defs:[], q:{}}; } })();
+function tput(){ try{ localStorage.setItem(TKEY, JSON.stringify(T)); }catch(e){} }
+function tagsOf(i){ return T.q[qk(i)] || []; }
+function hasTag(i, name){ return tagsOf(i).indexOf(name) >= 0; }
+function tagAdd(i, raw){
+  const name = String(raw).trim().replace(/\s+/g, ' ');
+  if(!name) return;
+  const known = T.defs.find(d => d.toLowerCase() === name.toLowerCase()) || name;
+  if(T.defs.indexOf(known) < 0) T.defs.push(known);
+  const l = T.q[qk(i)] || (T.q[qk(i)] = []);
+  if(l.indexOf(known) < 0) l.push(known);
+  tput();
+}
+function tagDrop(i, name){
+  const id = qk(i);
+  T.q[id] = (T.q[id] || []).filter(x => x !== name);
+  if(!T.q[id].length) delete T.q[id];
+  if(!Object.keys(T.q).some(k => T.q[k].indexOf(name) >= 0)) T.defs = T.defs.filter(d => d !== name);
+  tput();
+}
+
 function active(s){
-  const only = D.parts ? (s.only || null) : null;
+  // A TAG RUN ("test only these") rides here for the same reason the section filter does.
+  const tf = D.tags ? (s.tagf || null) : null;
+  const only = (D.parts && !tf) ? (s.only || null) : null;
   return D.questions.map((_,i)=>i).filter(i => onPaper(s, i)
-    && (!only || only.indexOf(D.questions[i].sec) >= 0));
+    && (!only || only.indexOf(D.questions[i].sec) >= 0)
+    && (!tf || hasTag(i, tf)));
 }
 /* ---- THE RESERVES (08-16) ------------------------------------------------------------
    His ask: *"if 1 question is skipped, another one is replaced in that section about it… you
@@ -1451,7 +1702,9 @@ function flushFrq(){
 function drawFrq(){
   const box = $('#frqview');
   if(!box || !(D.frq||[]).length) return;
-  let h = '<p class="say">Three written answers, from the same sources as the paper. Write '
+  const NW = D.frq.length, WORDS = ['No','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'];
+  let h = '<p class="say">' + (WORDS[NW] || NW) + ' written answer' + (NW === 1 ? '' : 's')
+        + ', from the same sources as the paper. Write '
         + 'one, then mark it: every point that can be settled by what you wrote is checked '
         + 'for you, and the ones that need judgement are handed back. Click any row to '
         + 'overrule it.</p>';
@@ -1650,6 +1903,9 @@ function setTab(name){
     // back — the question must be exactly where he left it.
     if(quizPad !== null) $('main').style.paddingTop = quizPad;
   } else {
+    // The sheet, the starred list and the written half are not the question, so his
+    // reading time on them belongs to no question. `draw()` puts it back on the way in.
+    timeOn(null);
     if(name==='starred') drawStarred();
     if(name==='sheet'){ renderScore(); renderSheetExtras(); }
     if(name==='frq') drawFrq();
@@ -1739,7 +1995,7 @@ function draw(){
   // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
   // the rest of the sitting, so nothing about answering, going back or the second pass has
   // to know the picker exists.
-  if(sectioned() && !S.only) return picker();
+  if(sectioned() && !S.only && !S.tagf) return picker();
   const act = runList();
   if(!act.length) return end();
   if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
@@ -1748,6 +2004,61 @@ function draw(){
 
 /* Pure markup, no DOM writes and no state changes — so the same builder can render the
    question and be measured off-screen for the centring reserve. */
+/* The tag box above the question. Chips for what this question carries, then the box: type and
+   Enter makes the tag (or reuses one spelled the same), the ones he already made show under it
+   to click, Backspace on an empty box takes the last one off, Esc leaves. */
+function tagRowInner(i){
+  const mine = tagsOf(i);
+  let h = '';
+  mine.forEach((n,k)=>{ h += '<span class="tchip">' + esc(n) + '<button class="tx" data-drop="' + k
+                           + '" tabindex="-1" aria-label="Remove tag">×</button></span>'; });
+  return h + '<input id="tagin" class="tagin" type="text" autocomplete="off" spellcheck="false" '
+           + 'placeholder="' + (mine.length ? 'Add a tag' : 'Tag this question  ( l )') + '">'
+           + '<div class="tsug hide" id="tsug"></div>';
+}
+function paintSug(i){
+  const inp = $('#tagin'), box = $('#tsug');
+  if(!inp || !box) return;
+  const raw = inp.value.trim(), v = raw.toLowerCase(), mine = tagsOf(i);
+  let h = T.defs.map((d,n)=>({d,n}))
+    .filter(x => mine.indexOf(x.d) < 0 && (!v || x.d.toLowerCase().indexOf(v) >= 0))
+    .map(x => '<button class="tchip pick" data-n="' + x.n + '" tabindex="-1">' + esc(x.d) + '</button>')
+    .join('');
+  if(v && !T.defs.some(d => d.toLowerCase() === v))
+    h += '<span class="tnew">Enter makes “' + esc(raw) + '”</span>';
+  box.innerHTML = h;
+  box.classList.toggle('hide', !h || document.activeElement !== inp);
+  // mousedown, not click: the box must not blur (and hide these) before the pick lands
+  box.querySelectorAll('.pick').forEach(b => { b.onmousedown = e => {
+    e.preventDefault(); tagAdd(i, T.defs[+b.dataset.n]); redrawTags(i, true); }; });
+}
+function redrawTags(i, focus){
+  const row = $('#tagrow');
+  if(!row) return;
+  row.innerHTML = tagRowInner(i);
+  wireTags(i);
+  if(focus) $('#tagin').focus();
+}
+function wireTags(i){
+  const row = $('#tagrow'), inp = $('#tagin');
+  if(!row || !inp) return;
+  row.querySelectorAll('.tx').forEach(b => b.onclick = ()=>{
+    tagDrop(i, tagsOf(i)[+b.dataset.drop]); redrawTags(i, false); });
+  inp.onfocus = ()=> paintSug(i);
+  inp.oninput = ()=> paintSug(i);
+  inp.onblur = ()=> { const b = $('#tsug'); if(b) b.classList.add('hide'); };
+  inp.onkeydown = e => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      if(!inp.value.trim()){ inp.blur(); return; }
+      tagAdd(i, inp.value); redrawTags(i, true);
+    } else if(e.key === 'Escape'){ inp.value = ''; inp.blur(); }
+    else if(e.key === 'Backspace' && !inp.value && tagsOf(i).length){
+      tagDrop(i, tagsOf(i).slice(-1)[0]); redrawTags(i, true);
+    }
+  };
+}
+
 function buildQ(i, picked, fresh, en){
   const q = D.questions[i];
   const answered = picked !== undefined;
@@ -1759,10 +2070,12 @@ function buildQ(i, picked, fresh, en){
   // The counter sits top-left above the question, the way the notebook does it, rather than
   // up in the bar — it belongs with the thing it counts. On a second pass it counts the
   // second pass, so four wrong answers read as "1 / 4" and not as a broken 16.
-  let h = '<div class="qhead' + en + '"><div class="qcol">'
+  let h = (D.tags ? '<div class="tagrow no-read-aloud" id="tagrow">' + tagRowInner(i) + '</div>' : '')
+        + '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta no-read-aloud"><span class="num">' + (pos+1) + ' / '
         + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        + (D.tags && S.tagf ? '<span class="dot">·</span><span>only ' + esc(S.tagf) + '</span>' : '')
         // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
         // 10 reads as the paper having lost his place, which is how he read it.
         + (recycling && S.phase!==2
@@ -1861,6 +2174,9 @@ let justAnswered = null;
 
 function question(fresh){
   const i = S.i, q = D.questions[i], picked = pick(i);
+  // THE CLOCK MOVES WITH HIM. Re-rendering the same question is harmless: timeOn() banks
+  // what is owed and carries on against the same qid.
+  timeOn(q.qid);
   const answered = picked !== undefined;
   const act = runList();
   const pos = act.indexOf(i);
@@ -1955,6 +2271,7 @@ function question(fresh){
   $('#star').onclick = ()=> toggleStar(i);
   $('#qmark').onclick = ()=> toggleUnsure(i);
   $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
+  if(D.tags) wireTags(i);
 
   // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
   // touches it — and nothing above the options ever changes height.
@@ -2445,19 +2762,32 @@ function openMenu(){
   m.className = 'menu';
   // The clock's only other way in. `w` is not written anywhere else on the page, and a key
   // nothing announces is a key he has to remember he asked for.
-  m.innerHTML = '<button id="skipq">Skip this question</button>'
+  m.innerHTML = '<button id="skipq">Skip this question  ( x )</button>'
               // The reader's own two entries. Space and `v` are written nowhere else on the
               // page, and a key nothing announces is a key he has to remember he asked for.
               + '<button id="readtog">' + (sayOn ? 'Stop' : 'Start') + ' read-aloud  ( space )</button>'
               + '<button id="voiceset">Voice, speed and pauses…</button>'
-              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>';
+              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>'
+              // EVERY KEY, WRITTEN DOWN ONCE (10-12). He could not find Redo or remember its key.
+              + '<div class="keys"><kbd>x</kbd><span>Skip</span><kbd>u</kbd><span>Redo your answer</span>'
+              + '<kbd>h</kbd><span>Hint, when the question has one</span>'
+              + '<kbd>s</kbd><span>Star</span><kbd>/</kbd><span>No idea</span>'
+              + '<kbd>r</kbd><span>Research</span><kbd>f</kbd><span>Fix this question</span>'
+              + '<kbd>t</kbd><span>Reflection</span>'
+              + (D.tags ? '<kbd>l</kbd><span>Tag</span>' : '')
+              + '<kbd>↵</kbd><span>Next</span><kbd>←</kbd><span>Back</span></div>';
   host.appendChild(m);
   m.querySelector('#clocktog').onclick = ()=>{ toggleClock(); closeMenu(); };
   m.querySelector('#readtog').onclick = ()=>{ closeMenu(); sayOn ? sayOff() : sayToggle(); };
   m.querySelector('#voiceset').onclick = ()=>{ closeMenu(); openVset(); };
-  m.querySelector('#skipq').onclick = ()=>{
+  m.querySelector('#skipq').onclick = ()=>{ closeMenu(); skipQuestion(); };
+  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
+}
+/* One path for skipping, whether it came from the menu or from `x` (10-12, his ask: a key
+   *"rather than going into the top bar and then pressing skip"*). */
+function skipQuestion(){
     const list = runList(), pos = list.indexOf(S.i);
-    if(list.length <= 1) return closeMenu();        // never skip the last one standing
+    if(list.length <= 1) return;                    // never skip the last one standing
     const sec = bucketOf(S.i);
     S.skipped[qk(S.i)] = true;
     delete S.answers[qk(S.i)];
@@ -2471,7 +2801,6 @@ function openMenu(){
     // have handed him an end card with a question still owed.
     const filled = promoteReserve(sec) >= 0;
     const wasLast = !filled && pos === list.length - 1;
-    closeMenu();
     syncTabs();
     if(wasLast){ finish(); return; }
     // After the removal the list has shrunk, so the item now AT `pos` is the one that
@@ -2480,8 +2809,6 @@ function openMenu(){
     S.hintOpen = false;
     lastShown = -1;
     save(); question(); window.scrollTo(0,0);
-  };
-  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
 }
 function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(); }
 
@@ -2540,6 +2867,7 @@ function group(act, keyOf, head, label){
 let pickSel = null;
 
 function picker(){
+  timeOn(null);
   const p = paperStat();
   if(!pickSel) pickSel = p.left.map(s => s.sec);          // default: what is still outstanding
   const chosen = p.secs.filter(s => pickSel.indexOf(s.sec) >= 0);
@@ -2635,7 +2963,143 @@ function beginSitting(secs){
   save(); draw(); window.scrollTo(0,0);
 }
 
+/* ---- MOMENTUM — the pace half of the end card (08-21, his ask) ------------------------
+   *"once I'm done with the quiz, the same screen that shows the right and wrong answers, I
+   can also see a breakdown of momentum… ranked by correct versus incorrect, and then also
+   time spent. Maybe that'll help me determine a goal and a time per question."*
+
+   THREE THINGS IN ONE BLOCK, because they answer three different questions:
+
+   • THE STRIP is the paper in the order he sat it — where he slowed down, and whether the
+     slow ones cluster at the end (tiring) or the start (warming up). It is the only thing
+     anywhere on this page that is in time order; every other table is sorted by something.
+   • THE TWO MEDIANS are the comparison worth having: how long the ones he got right took
+     against the ones he got wrong. MEDIAN AND NOT MEAN — one question he walked away from
+     mid-paper drags an average off the map, and that is exactly the question a page that
+     only banks visible time is most likely to have.
+   • THE RANKING is what to look at next: slowest first, each one marked, so a slow ✕ sits
+     at the top of the list on its own.
+
+   THE GOAL IS HIS OWN NUMBER, NOT ONE INVENTED HERE — the median of the questions he got
+   RIGHT, rounded to five seconds. A pace he has already answered correctly at is the only
+   pace this page has any business suggesting.
+
+   IT PRINTS NOTHING UNLESS THE QUESTIONS WERE ACTUALLY TIMED. Every attempt saved before
+   today has an empty `qms`, so the block is absent on those rather than reporting a paper
+   of zeroes — the same rule the clock already uses for `ms:0` in the copy markdown. */
+const MOM_CAP = 14, MOM_SHOW = 10;
+let momAll = false;
+function qms(i){ return (S.qms || {})[qk(i)] || 0; }
+function median(a){
+  if(!a.length) return 0;
+  const s = a.slice().sort((x,y)=>x-y), h = s.length >> 1;
+  return s.length % 2 ? s[h] : Math.round((s[h-1] + s[h]) / 2);
+}
+/* What to call a question in one line. The topic tag when the quiz carries one — it is
+   already the name he thinks of it by, and it is what the topics table above uses — and the
+   stem itself when it does not. Through a div because a stem can carry math markup. */
+function momLabel(i){
+  const q = D.questions[i];
+  if(q.topic) return q.topic;
+  const d = document.createElement('div');
+  d.innerHTML = q.q || '';
+  const t = (d.textContent || '').trim();
+  return t.length > 70 ? t.slice(0, 69).trim() + '…' : t;
+}
+function momentum(){
+  const act = active(S), timed = act.filter(i => qms(i) > 0);
+  // One timed question is not a pace, and two is the least that can have a shape.
+  if(timed.length < 2) return '';
+  const rows = timed.map(i => ({i:i, ms:qms(i), ok:finalRight(i), n:act.indexOf(i)+1}));
+  const all = rows.map(r=>r.ms);
+  const max = Math.max.apply(null, all), med = median(all);
+  const okMs = rows.filter(r=>r.ok).map(r=>r.ms);
+  const noMs = rows.filter(r=>!r.ok).map(r=>r.ms);
+
+  let h = '<div class="topics mom"><h3>Momentum</h3>';
+
+  /* THE STRIP IS `aria-hidden` AND `.no-read-aloud`. It is a picture of the list printed
+     underneath it, so a page reader that walked it would read the same paper twice. */
+  h += '<div class="strip no-read-aloud" aria-hidden="true">';
+  h += '<i class="med" style="bottom:' + (max ? med/max*100 : 0) + '%"></i>';
+  rows.forEach(r=>{
+    // A floor of 4%, so a five-second question is a visible mark and not a gap in the row.
+    const pc = Math.max(4, max ? r.ms/max*100 : 0);
+    h += '<i class="sb ' + (r.ok ? 'r' : 'w') + '" style="height:' + pc + '%" title="'
+       + esc(r.n + ' · ' + (r.ok ? 'right' : 'wrong') + ' · ' + fmtMs(r.ms)) + '"></i>';
+  });
+  h += '</div>';
+  h += '<p class="momax no-read-aloud"><span>first</span>'
+     + '<span>median ' + fmtMs(med) + '</span><span>last</span></p>';
+
+  h += '<p class="mline">Median <b>' + fmtMs(med) + '</b> a question'
+     + (okMs.length ? ' · right ones <b>' + fmtMs(median(okMs)) + '</b>' : '')
+     + (noMs.length ? ' · wrong ones <b>' + fmtMs(median(noMs)) + '</b>' : '')
+     + ' · slowest <b>' + fmtMs(max) + '</b></p>';
+
+  /* A QUIZ SHOWS EVERY QUESTION AND A 40-QUESTION EXAM DOES NOT (not without asking).
+     Ranked slowest-first, the rows he needs are the ones at the top; forty of them would
+     bury the tables underneath in a list he scrolls past. `momAll` is a plain module-level
+     flag like `clockOn` — the end card opens short every time, and expanding it is one
+     click that does not survive the page. */
+  const rank = rows.slice().sort((a,b)=> b.ms - a.ms);
+  const shown = (momAll || rank.length <= MOM_CAP) ? rank : rank.slice(0, MOM_SHOW);
+  shown.forEach(r=>{
+    h += '<div class="mrow"><span class="mg">' + (r.ok ? G_OK : G_NO) + '</span>'
+       + '<span class="mn">' + r.n + '</span>'
+       + '<span class="mlab">' + esc(momLabel(r.i)) + '</span>'
+       + '<span class="mt">' + fmtMs(r.ms) + '</span>'
+       + '<span class="tbar"><i class="' + (r.ok ? '' : 'w') + '" style="width:'
+       + (max ? r.ms/max*100 : 0) + '%"></i></span></div>';
+  });
+
+  if(shown.length < rank.length)
+    h += '<p class="note mmore"><button class="link" id="momall">Show all '
+       + rank.length + ' questions</button></p>';
+
+  const base = okMs.length ? median(okMs) : med;
+  const goal = Math.max(5000, Math.round(base/5000)*5000);
+  h += '<p class="mgoal">Your own pace on the ones you got right, to the nearest five '
+     + 'seconds: <b>' + fmtMs(goal) + '</b> a question — <b>' + fmtMs(goal*act.length)
+     + '</b> for a paper this size.</p>';
+  return h + '</div>';
+}
+
+/* THE TAGS ON THE END CARD: how each group went, and a way to sit one group alone. A tag run
+   is a fresh attempt on only those questions (the finished one goes into history first, as a
+   Retake does); Retake, or "every question" here, goes back to the whole paper. Not offered
+   on a sectioned paper, whose picker already owns which questions a sitting holds. */
+function tagTable(){
+  if(!D.tags || !T.defs.length) return '';
+  const all = D.questions.map((_,i)=>i).filter(i => onPaper(S, i));
+  let h = '';
+  T.defs.forEach((d,n)=>{
+    const qs = all.filter(i => hasTag(i, d));
+    if(!qs.length) return;
+    const sat = qs.filter(i => ans(i) !== undefined || ans2(i) !== undefined);
+    const ok = sat.filter(i => finalRight(i)).length;
+    h += '<div class="tagline"><span class="tchip">' + esc(d) + '</span><span class="tn">'
+       + (sat.length ? ok + ' / ' + sat.length + ' right' : qs.length + ' question' + (qs.length>1?'s':''))
+       + '</span>' + (D.parts ? '' : '<button class="link" data-tagrun="' + n + '">Test only these</button>')
+       + '</div>';
+  });
+  if(!h && !S.tagf) return '';
+  if(S.tagf) h += '<p class="note">This run was only “' + esc(S.tagf) + '”. '
+                + '<button class="link" id="tagall">Back to every question</button></p>';
+  return '<div class="tagtable"><h3>By tag</h3>' + h + '</div>';
+}
+function startRun(tag){
+  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length, ms:S.ms,
+                             tag:S.tagf || undefined});
+  const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
+  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  if(tag) S.tagf = tag;
+  pickSel = null; lastShown = -1;
+  save(); syncTabs(); renderScore(); draw(); window.scrollTo(0,0);
+}
+
 function end(){
+  timeOn(null);
   const act = active(S), n = score(S), t = act.length;
   const pct = t ? Math.round(n/t*100) : 0;
   const red = redeemed().length;
@@ -2649,6 +3113,10 @@ function end(){
         // grayscale-safe hatch and would make the one number he reads harder to read; the
         // count says it in words instead.
         + (red ? '<span>+<b>'+red+'</b> on the second pass</span>' : '') + '</p>';
+
+  // BEFORE the topic tables and after the score: it is about this sitting, the way the score
+  // is, where everything below it is about the material.
+  h += momentum();
 
   const by = {};
   act.forEach(i=>{
@@ -2711,6 +3179,7 @@ function end(){
             + 'every one is done; sitting one again replaces its score.</p>';
   }
 
+  h += tagTable();
   const nskip = Object.keys(S.skipped||{}).length;
   if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
               + '<button class="link" id="unskip">put them back</button></p>';
@@ -2721,6 +3190,12 @@ function end(){
   $('#quizview').innerHTML = h;
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  document.querySelectorAll('[data-tagrun]').forEach(b =>
+    b.onclick = ()=> startRun(T.defs[+b.dataset.tagrun]));
+  const tall = $('#tagall');
+  if(tall) tall.onclick = ()=> startRun(null);
+  const ma = $('#momall');
+  if(ma) ma.onclick = ()=>{ momAll = true; end(); };
   const m = $('#more');
   if(m) m.onclick = ()=>{ S.only = null; S.done = false; S.reviewing = false;
                           pickSel = null; save(); draw(); window.scrollTo(0,0); };
@@ -2755,6 +3230,7 @@ function itemHTML(i, n){
   const q = D.questions[i], first = ans(i), second = ans2(i);
   let h = '<div class="item">';
   if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
+  if(D.tags) tagsOf(i).forEach(t => { h += '<span class="tchip sm">'+esc(t)+'</span>'; });
   h += '<p class="qq">'+(n===undefined?'':(n+1)+'. ')+esc(q.q)+'</p>'
      + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
   if(!firstRight(i)){
@@ -2771,11 +3247,26 @@ function itemHTML(i, n){
   return h + '</div>';
 }
 
+let revByTag = false;
 function review(){
+  timeOn(null);
+  const act = active(S), canSort = D.tags && T.defs.length;
   let h = '<div class="rev"><h3>Every question</h3>';
-  active(S).forEach((i,n)=>{ h += itemHTML(i, n); });
+  if(canSort) h += '<p class="note" style="margin:0 0 6px"><button class="link" id="revsort">'
+                 + (revByTag ? 'Sort in order' : 'Sort by tag') + '</button></p>';
+  if(canSort && revByTag){
+    // a question with two tags is listed under both; the untagged ones come last
+    T.defs.concat(['']).forEach(d=>{
+      const qs = act.filter(i => d ? hasTag(i, d) : !tagsOf(i).length);
+      if(!qs.length) return;
+      h += '<h3 class="tgroup">' + (d ? esc(d) : 'No tag') + ' · ' + qs.length + '</h3>';
+      qs.forEach(i => { h += itemHTML(i, act.indexOf(i)); });
+    });
+  } else act.forEach((i,n)=>{ h += itemHTML(i, n); });
   h += '</div>';
   $('#quizview').innerHTML = h;
+  const rs = $('#revsort');
+  if(rs) rs.onclick = ()=>{ revByTag = !revByTag; review(); };
   $('#band').classList.add('off');
   showResearch(false);
   $('#footer').classList.remove('hide');
@@ -2948,12 +3439,29 @@ function paintClock(){
   // not start counting from the moment he looked.
   el.textContent = fmtMs(S.ms);
 }
+/* ---- WHERE THE SECOND WENT (08-21) ---------------------------------------------------
+   The same delta that goes into `S.ms` goes into `S.qms[qid]`, so the total and the
+   per-question times are banked from ONE measurement and can never disagree with each other.
+
+   `qAt` IS THE QUESTION ON SCREEN AND NOTHING ELSE. The end card, the picker, the review
+   list and every other tab set it to null, so twenty minutes spent reading his own study
+   sheet is never filed under whichever question happened to be open last — the number the
+   momentum block reports is time spent on the question, not time the tab was alive. */
+let qAt = null;
+function bankMs(now){
+  const on = !S.done && !document.hidden;
+  if(tickAt && on){
+    const d = now - tickAt;
+    S.ms += d;
+    if(qAt) S.qms[qAt] = (S.qms[qAt] || 0) + d;
+  }
+  tickAt = on ? now : null;
+}
+/* Every renderer calls this, and it flushes BEFORE the switch: without the flush, up to a
+   second of question 3 would be banked against question 2. */
+function timeOn(id){ bankMs(Date.now()); qAt = id || null; }
 function tick(){
-  const now = Date.now();
-  if(!S.done && !document.hidden){
-    if(tickAt) S.ms += now - tickAt;
-    tickAt = now;
-  }else tickAt = null;
+  bankMs(Date.now());
   paintClock();
   // A WRITE A SECOND WOULD BE A WRITE A SECOND. Every answer already saves, and this only has
   // to cover the case of a tab closed mid-question — 15 seconds is the most that can cost.
@@ -4065,6 +4573,10 @@ document.addEventListener('keydown', e=>{
   // `w` FOR WATCH — the clock in the bar, off by default. Past G like every other command
   // key here, so it can never be an option letter.
   if(e.key === 'w' || e.key === 'W'){ toggleClock(); return; }
+  // `x` SKIPS, `l` (label) PUTS THE CARET IN THE TAG BOX. Both past G, so never an option key.
+  if(e.key === 'x' || e.key === 'X'){ e.preventDefault(); skipQuestion(); return; }
+  if((e.key === 'l' || e.key === 'L') && D.tags){
+    const ti = $('#tagin'); if(ti){ e.preventDefault(); ti.focus(); } return; }
   if(e.key === '/' || e.key === '?'){ e.preventDefault(); toggleUnsure(S.i); return; }
   /* THE KEY NAMES A POSITION ON SCREEN, not an option. `2` and `B` mean the second card he
      can see, which is the only thing either of them could mean to him — after a Redo has

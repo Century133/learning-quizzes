@@ -326,6 +326,32 @@ kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid
 .qmark:hover{background:var(--surface);color:var(--text)}
 .qmark.on{color:var(--text);border-color:var(--accent);background:var(--surface-hi)}
 
+/* ---- tags (10-12): his own labels on a question, kept per quiz ---- */
+.tagrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.tchip{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:.78rem;
+ color:var(--text);background:var(--surface-hi);border:1px solid var(--line);
+ border-radius:6px;padding:2px 8px;line-height:1.5}
+.tchip.sm{font-size:.7rem;margin:0 6px 9px 0}
+button.tchip{cursor:pointer}
+button.tchip:hover{border-color:var(--muted)}
+.tx{background:none;border:0;color:var(--muted);font:inherit;padding:0;cursor:pointer;line-height:1}
+.tx:hover{color:var(--text)}
+.tagin{flex:1 1 140px;min-width:120px;background:none;border:0;outline:0;color:var(--text);
+ font:inherit;font-size:.82rem;padding:3px 2px}
+.tagin::placeholder{color:var(--muted);opacity:.75}
+.tsug{flex:1 0 100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tnew{color:var(--muted);font-size:.76rem}
+.tagtable{margin:26px 0 0;text-align:left}
+.tagtable h3{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+ font-weight:500;margin:0 0 6px}
+.tagline{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line);
+ font-size:.88rem}
+.tagline .tn{flex:1;color:var(--muted);font-variant-numeric:tabular-nums}
+.tgroup{margin-top:30px}
+.menu .keys{border-top:1px solid var(--line);margin:5px 0 0;padding:8px 10px 4px;
+ display:grid;grid-template-columns:auto 1fr;gap:5px 10px;font-size:.78rem;color:var(--muted);
+ align-items:center}
+
 /* ---- the ⋮ menu ---- */
 .more{position:relative;flex:0 0 auto}
 .dots{background:none;border:0;color:var(--muted);font-size:1.15rem;line-height:1;
@@ -836,7 +862,157 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "bmgt221-module-ch02-2026-09-26-143244", "title": "BMGT221 — Chapter 2 module exam", "subtitle": "22 questions · chapter 2 (Job-Order Costing: Calculating Unit Product Costs) · from the slides", "book": "BMGT221", "hash": "778e1505f7ba1b86", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "Zeta manufacturing estimates that for the upcoming year, it will require 40,000 direct labor-hours. The company's total fixed manufacturing overhead is estimated at 280,000, with variable manufacturing overhead costs at 3.50 per direct labor-hour. What is the predetermined overhead rate (POHR) using direct labor-hours as the allocation base?", "options": ["7.00 per direct labor-hour", "3.50 per direct labor-hour", "10.50 per direct labor-hour", "140,000 per direct labor-hour"], "rationales": ["This calculation reflects a 'Step 2' error where only the fixed manufacturing overhead is divided by the allocation base, neglecting the variable overhead component.", "This value represents only the variable overhead rate per unit of the base, failing to 'absorb' any of the fixed manufacturing costs into the rate.", "The POHR is calculated by adding the fixed overhead ($280,000) to the total variable overhead (3.50 × 40,000 =140,000$), resulting in $420,000$ total estimated MOH, divided by $40,000$ hours.", "This error involves confusing total variable overhead costs for the rate itself, indicating a misunderstanding of the POHR formula structure."], "correct": 2, "hint": "Recall the formula for total manufacturing overhead: $Y = a + bX$.", "topic": "", "sec": "", "src": "", "link": "", "qid": "2866ac88ab"}, {"q": "A production manager is reviewing cost classifications under absorption costing for a factory that makes custom furniture. Which cost is classified as direct materials and therefore capitalized as a product cost before the furniture is sold?", "options": ["The cost of wood and varnish used in construction.", "Wages paid to the assembly line workers.", "The commission paid to the sales team for every sofa sold.", "The salary of the security guard monitoring the factory floor."], "rationales": ["Wood and varnish are materials traceable to the furniture being made, so they are direct materials and product costs.", "These wages are direct labor, a product cost, but they are not direct materials.", "Sales commissions are selling expenses and period costs.", "This is indirect labor and manufacturing overhead, not direct materials."], "correct": 0, "hint": "Identify the cost of physical inputs that become part of, or are used directly to make, the furniture.", "topic": "", "sec": "", "src": "", "link": "", "qid": "a7eae03253"}, {"q": "A custom sign company uses a plantwide POHR based on machine-hours. For the year, total estimated MOH is 120,000 and estimated machine-hours are 15,000. Job 50 used 100 machine-hours, 500 in direct materials, and 400 in direct labor. If the company applies a 60\\% markup on total manufacturing cost, what is the selling price for Job 50?", "options": ["2,720", "1,020", "19,200", "1,440"], "rationales": ["Total manufacturing cost is 1,700 (DM $500 +$ DL $400 +$ Applied MOH 800 (calculated as 120,000/15,000 × 100)). The price is 1,700 × 1.60.", "This result stems from applying the markup percentage to the wrong base, essentially calculating only the profit margin (1,700 × 0.60) rather than the full selling price.", "This error occurs if the student uses the total estimated overhead for the year (120,000) as the cost for a single job before applying the markup.", "This calculation uses a 'Step 3' error, only applying the markup to DM and DL while completely omitting the applied manufacturing overhead."], "correct": 0, "hint": "Calculate the applied overhead for the specific job first, then find the total manufacturing cost.", "topic": "", "sec": "", "src": "", "link": "", "qid": "5ddae031cb"}, {"q": "A distillery pays 12,000 per month in fixed rent for its warehouse. In October, it produced 2,000 barrels; in November, it produced 3,000 barrels. If no other costs change, how does the rent cost absorbed per barrel change under absorption costing?", "options": ["It remains at 6.00 in both months.", "It increases from 4.00 in October to 6.00 in November.", "It decreases from 6.00 in October to 4.00 in November.", "It cannot be determined without knowing the direct labor-hours."], "rationales": ["This error assumes that because the total lease payment is fixed, the cost assigned to each unit must also be fixed regardless of production levels.", "This is a common misconception that fixed costs behave like variable costs, where more production would lead to higher per-unit costs.", "Fixed costs remain constant in total, so as production volume increases, the fixed cost allocated to each individual unit decreases.", "This suggests a procedural confusion, as fixed cost absorption per unit is a direct division of total cost by units produced, independent of the allocation base used for other overhead."], "correct": 2, "hint": "Consider the mathematical effect of a constant numerator and an increasing denominator.", "topic": "", "sec": "", "src": "", "link": "", "qid": "7eff5fcfc2"}, {"q": "A aerospace firm has a cost-plus contract with a government agency that pays a 10\\% profit margin over total manufacturing costs. The firm also makes commercial satellites in the same factory. If the firm wants to maximize the revenue from the government contract, which strategic move regarding overhead allocation would be most effective?", "options": ["Reducing the total manufacturing overhead for the entire factory.", "Selecting an allocation base that heavily weights the government project, such as increasing labor-hours spent on that specific job.", "Allocating overhead based on machine-hours if the government project is mostly manual labor.", "Treating all factory depreciation as a period cost instead of a product cost."], "rationales": ["While efficient, this would actually reduce the total cost basis for the government's 10\\% profit calculation, resulting in lower total profit dollars for that contract.", "In a cost-plus contract, shifting more overhead to the contract project increases the 'total cost' base, which then increases the 10\\% profit margin paid by the government.", "Using a base that the project uses very little of would minimize the overhead shifted to the cost-plus contract, which is the opposite of the firm's strategic incentive.", "Period costs are expensed immediately and not allocated to jobs, meaning they would not be included in the cost-plus calculation, losing potential profit."], "correct": 1, "hint": "In a 'cost-plus' scenario, higher reported costs for the specific job lead to higher total earnings.", "topic": "", "sec": "", "src": "", "link": "", "qid": "83545ec05a"}, {"q": "A company finishes a job in March. Under a normal costing system, why is the overhead for this job calculated in March rather than waiting until the end of the year to see the actual total overhead costs?", "options": ["Because the actual overhead rate per month is too volatile to calculate.", "Because the use of a predetermined rate allows for immediate costing and pricing throughout the year.", "Because predetermined rates are always more accurate than actual year-end rates.", "Because actual overhead rates are required by GAAP for monthly reporting."], "rationales": ["While monthly actual rates can be volatile, the decision to use a POHR is a strategic choice for management planning, not an impossibility of calculating monthly actuals.", "One of the main advantages of normal costing is 'timing,' providing stable and immediate cost data rather than waiting for year-end actuals.", "Predetermined rates are based on estimates and are not necessarily more 'accurate' than actuals; their primary benefit is 'stability' and 'timing' rather than precision.", "This is factually incorrect; GAAP requires absorption costing, but normal costing (using POHRs) is the standard practical application for timely reporting."], "correct": 1, "hint": "Think about the needs of a manager who must set a price for a customer as soon as a job is completed.", "topic": "", "sec": "", "src": "", "link": "", "qid": "5ae5c84f73"}, {"q": "Refer to the cost flow classifications for a manufacturing company. When a product is finished but not yet sold, where do the combined costs of Direct Materials, Direct Labor, and Applied Manufacturing Overhead reside?", "options": ["Cost of Goods Sold on the Income Statement", "Work in Process Inventory on the Balance Sheet", "Selling and Administrative Expenses", "Finished Goods Inventory on the Balance Sheet"], "rationales": ["This is a timing error; costs only transition to the income statement as COGS once the 'goods' are actually 'sold,' not just finished.", "This classification is for products currently 'in process'; once completed, the costs must flow out of WIP and into Finished Goods.", "This reflects a fundamental classification error, as manufacturing costs (DM, DL, MOH) are product costs, while SGA consists exclusively of non-manufacturing period costs.", "Product costs are capitalized as inventory assets and only move to the income statement as an expense when the sale finally occurs."], "correct": 3, "hint": "Consider the state of the product (completed) and the action that has not yet happened (sold).", "topic": "", "sec": "", "src": "", "link": "", "qid": "44ea1d73a3"}, {"q": "Aura Glow manufactures custom chandeliers. For the upcoming year, the company budgets total manufacturing overhead at $480,000 and total direct labor-hours at 16,000. Job X-21 requires $1,200 in direct materials and 40 direct labor-hours at a rate of $25 per hour. The job also has an individual budgeted overhead of $1,000. Under a normal costing system, what is the total manufacturing cost recorded for Job X-21?", "options": ["$3,200", "$3,400", "$2,400", "$2,200"], "rationales": ["This result stems from a common trap where the specific job's budgeted overhead ($1,000) is used instead of the overhead applied via the POHR ($1,200).", "This follows the correct multi-step process: calculating a plantwide POHR ($480,000 / 16,000 = $30/DLH) and applying it to actual hours (30 × 40 =1,200), then adding direct materials ($1,200) and direct labor ($1,000).", "This value is reached if the student applies the overhead correctly ($1,200) and includes direct materials ($1,200), but forgets to include the cost of direct labor.", "This error occurs if the student only sums the direct materials and direct labor costs, completely neglecting to apply any manufacturing overhead to the job."], "correct": 1, "hint": "Recall that normal costing requires applying overhead based on a predetermined rate multiplied by actual activity, not job-specific budgets.", "topic": "", "sec": "", "src": "", "link": "", "qid": "5f5479e331"}, {"q": "Vortex Dynamics operates two departments: Machining and Assembly. Machining is highly automated, whereas Assembly relies on manual craftsmanship. Most overhead in Machining relates to machine depreciation, while Assembly overhead consists primarily of indirect labor and supplies. To achieve the most accurate job costs, which combination of departmental overhead rates should management select?", "options": ["Direct labor-hours for Machining and machine-hours for Assembly.", "Machine-hours for Machining and direct labor-hours for Assembly.", "A single plantwide rate based on direct labor-hours.", "Machine-hours for both Machining and Assembly."], "rationales": ["This is a procedural reversal that assigns a labor-based rate to an automated department and a machine-based rate to a labor-intensive one, leading to inaccurate costs.", "This aligns the allocation base with the primary driver of overhead in each department: machine usage for the automated area and labor time for the manual area.", "This approach ignores the departmental differences and would likely under-allocate costs to automated jobs that use few labor hours but significant machine resources.", "While appropriate for Machining, this base would be inaccurate for Assembly where costs are driven by human labor rather than machine run-time."], "correct": 1, "hint": "Match the allocation base to the resource that 'drives' or causes the majority of the overhead expenses in that specific environment.", "topic": "", "sec": "", "src": "", "link": "", "qid": "f32dab122e"}, {"q": "Nova Artisans currently uses a single plantwide POHR of $25 per direct labor-hour. A specific job for a custom mural used 150 direct labor-hours and 10 machine-hours. If Nova Artisans switches to an allocation base of machine-hours, given that total estimated overhead is $100,000 and total estimated machine-hours are 2,000, how will the overhead applied to the mural job change?", "options": ["It will decrease by $500.", "It will decrease by $3,250.", "It will not change because the total estimated overhead remains $100,000.", "It will increase by $3,250."], "rationales": ["This error involves confusing the new total applied overhead ($500) with the net change in the amount applied.", "Initially, overhead is $3,750 ($25 \\times 150$). Under the new rate ($100,000 / 2,000 = 50/MH), overhead is $500 ($50 \\times 10$). The difference is a decrease of $3,250.", "This reflects a misconception that changing the allocation base does not affect specific job costs as long as the total pool of costs remains constant.", "This result would occur if the student correctly calculated the numbers but misidentified the direction of the change between the two methods."], "correct": 1, "hint": "Calculate the applied overhead under both the old labor-hour rate and the new machine-hour rate, then find the difference.", "topic": "", "sec": "", "src": "", "link": "", "qid": "9a1e3ef259"}, {"q": "Starlight Campers builds custom trailers and uses a single plantwide POHR based on machine-hours. At the start of the year, it estimated 12,000 machine-hours, $144,000 in fixed manufacturing overhead, and variable manufacturing overhead of $3.00 per machine-hour. Job B-12, consisting of 5 identical trailers, used $20,000 in direct materials, $10,000 in direct labor, and 400 machine-hours. The company sets prices using a 40% markup on total manufacturing cost. What is the selling price per trailer for Job B-12?", "options": ["$10,080", "$36,000", "$8,680", "$50,400"], "rationales": ["First, find POHR: ($144,000 / 12,000) + $3.00 = $15/MH. Job cost: $20,000 + $10,000 + ($15 \\times 400) = $36,000. Total price: $36,000 \\times 1.4 = $50,400. Per unit: $50,400 / 5 = $10,080.", "This is the total manufacturing cost of the job before any markup is applied, ignoring the company's pricing strategy.", "This error occurs if the student only applies the fixed portion of the POHR ($12) and ignores the variable overhead portion ($3) in the total cost calculation.", "This value represents the total selling price for the entire job of 5 trailers, missing the final step to find the price per individual trailer."], "correct": 0, "hint": "This is a five-step problem: calculate the full POHR, apply it to the job, sum all manufacturing costs, apply the markup, and divide by the number of units.", "topic": "", "sec": "", "src": "", "link": "", "qid": "a60c140ada"}, {"q": "Refer to the provided diagram regarding cost flows. Which statement accurately describes when product costs are reported on the income statement?", "options": ["Product costs only appear on the income statement as Cost of Goods Sold once the related finished goods are sold.", "Selling and administrative expenses are capitalized as inventory until the related goods are sold.", "Direct labor and manufacturing overhead are expensed immediately rather than recorded in inventory.", "Raw materials purchases are immediately recorded as an expense on the income statement in the period they are bought."], "rationales": ["Product costs remain in inventory until sale, when they become Cost of Goods Sold.", "Selling and administrative expenses are period costs and are expensed as incurred.", "Direct labor and manufacturing overhead are product costs that are first capitalized in Work in Process inventory.", "Raw materials are initially recorded as inventory and become expense only through the cost-flow process."], "correct": 0, "hint": "Product costs are held in inventory until the related finished goods are sold.", "topic": "", "sec": "", "src": "", "link": "", "qid": "2a04bf8d9a"}, {"q": "A company reports the following for the month: Sales $500,000; Direct Materials $120,000; Direct Labor $80,000; Applied Manufacturing Overhead $100,000; and Selling and Administrative Expenses $60,000. Under absorption costing, what is the company's Gross Profit?", "options": ["$300,000", "$200,000", "$240,000", "$140,000"], "rationales": ["This is the total Cost of Goods Sold (Product Costs) rather than the profit remaining after subtracting these costs from sales.", "Gross Profit is calculated as Sales ($500,000) minus Cost of Goods Sold ($120,000 + $80,000 + $100,000 = $300,000).", "This error occurs if the student mistakenly includes Selling and Administrative expenses in the COGS calculation, treating them as product costs.", "This value represents the Operating Income (Gross Profit minus Selling and Administrative Expenses), not the Gross Profit itself."], "correct": 1, "hint": "Remember the specific format of an absorption costing income statement: Sales minus COGS equals Gross Profit.", "topic": "", "sec": "", "src": "", "link": "", "qid": "55df4dd488"}, {"q": "Which of the following is TRUE regarding the Predetermined Overhead Rate (POHR) in a normal costing system?", "options": ["Using a POHR based on budgeted rates causes the unit cost of jobs to fluctuate wildly whenever a one-time unexpected repair cost occurs.", "It allows a company to estimate job costs immediately without waiting for actual overhead costs to be finalized at year-end.", "It is used exclusively to allocate direct materials and direct labor to specific production jobs.", "It is calculated by dividing the actual manufacturing overhead for the period by the actual amount of the allocation base."], "rationales": ["Actually, the use of a budgeted POHR helps smooth out such fluctuations, as the rate is fixed for the year regardless of monthly spikes in actual costs.", "A primary benefit of POHR is providing timely cost information by using budgeted rates set at the beginning of the year.", "POHR is used only for indirect costs (overhead); direct materials and direct labor are traced directly to jobs, not allocated via a rate.", "This describes 'actual costing'; POHR is 'predetermined' because it uses budgeted/estimated figures from the start of the period."], "correct": 1, "hint": "Focus on the 'predetermined' aspect and why a company would want to set a rate before actual results are known.", "topic": "", "sec": "", "src": "", "link": "", "qid": "3f52770d3a"}, {"q": "A production run for Job X-10 at Ironwood Manufacturing requires direct materials of $5,200. Direct labor costs are $2,400 for the Machining Department (at $30 per hour) and $1,200 for the Finishing Department (at $20 per hour). If the Machining Department applies overhead at $18 per direct labor-hour and the Finishing Department applies overhead at $15 per direct labor-hour, what is the total manufacturing cost for Job X-10?", "options": ["$12,460", "$9,250", "$11,140", "$10,240"], "rationales": ["This error results from using the total labor cost as the base for overhead application instead of first calculating the specific direct labor-hours.", "This value incorrectly omits the applied overhead from both departments, summing only the direct materials and direct labor costs.", "Total cost is calculated by summing direct materials ($5,200), direct labor ($2,400 + $1,200), and applied overhead for both Machining ($18 \\times 80\\text{ DLHs}$) and Finishing ($15 \\times 60\\text{ DLHs}$). The DLHs are derived by dividing labor costs by the respective wage rates.", "This result occurs if the student correctly calculates Machining overhead but fails to include the Finishing Department's overhead in the total."], "correct": 2, "hint": "You must first determine the number of direct labor-hours worked in each department before you can apply the overhead rates.", "topic": "", "sec": "", "src": "", "link": "", "qid": "10f139d29a"}, {"q": "Titanium Tech uses a plantwide predetermined overhead rate based on direct labor-hours. For Job Alpha, the company applied $320,000 of manufacturing overhead and recorded 16,000 direct labor-hours. For Job Beta, the total job cost is $1,870,000, which includes 40,000 direct labor-hours at a wage rate of $18 per hour. Using the plantwide rate derived from Job Alpha, what is the cost of direct materials for Job Beta?", "options": ["$125,000", "$430,000", "$1,150,000", "$350,000"], "rationales": ["This does not equal the direct materials cost calculated from the job-cost equation.", "This does not equal the residual after subtracting Job Beta's direct labor and applied overhead from total job cost.", "This amount does not equal the direct materials cost for Job Beta.", "The predetermined overhead rate is $20 per direct labor-hour ($320,000 ÷ 16,000). Job Beta has direct labor of $720,000 (40,000 × $18) and applied overhead of $800,000 (40,000 × $20). Direct materials equal $1,870,000 − $720,000 − $800,000 = $350,000."], "correct": 3, "hint": "Compute the predetermined overhead rate, calculate Job Beta's direct labor and applied overhead, then subtract both from total job cost.", "topic": "", "sec": "", "src": "", "link": "", "qid": "3ff1f31dec"}, {"q": "During the second quarter, production is expected to drop to 80,000 units. Using the fixed cost of $200,000 and variable cost of $3.50 per unit, what is the estimated total manufacturing overhead cost for the second quarter?", "options": ["$280,000", "$480,000", "$550,000", "$440,000"], "rationales": ["This reflects only the variable overhead for the quarter and fails to include the fixed manufacturing overhead.", "The total overhead is the sum of the fixed cost ($200,000) and the variable cost for the specific volume ($3.50 \\times 80,000 = $280,000).", "This assumes overhead remains static regardless of production volume, ignoring the variable cost component.", "This is calculated by incorrectly reducing the fixed cost proportionally with the drop in production units."], "correct": 1, "hint": "Apply the mixed cost formula $Y = a + bX$ where X is the new production volume.", "topic": "", "sec": "", "src": "", "link": "", "qid": "6b6aa4dd14"}, {"q": "A firm's unit product cost is $15.50 in a quarter with high production and $18.20 in a quarter with low production. What is the most likely cause of this fluctuation?", "options": ["The variable manufacturing overhead rate increases as volume decreases.", "Direct materials costs per unit are higher when purchasing smaller quantities.", "The company switched from departmental overhead rates to a plantwide overhead rate.", "Total fixed manufacturing overhead is being spread over fewer units during low production periods."], "rationales": ["By definition, variable costs per unit remain constant; they do not increase simply because production volume decreases.", "While possible in reality, the source material identifies fixed overhead distribution as the primary driver of fluctuating unit costs in these exercises.", "A switch in rates might change the cost, but the inherent fluctuation between high and low volume periods is a function of fixed cost behavior.", "Fixed costs are constant in total, meaning the cost per unit increases when the denominator (total units) decreases."], "correct": 3, "hint": "Consider the behavior of fixed costs per unit when production volume changes.", "topic": "", "sec": "", "src": "", "link": "", "qid": "928b34429d"}, {"q": "Vertex Corp has two departments. The Molding Department has an estimated fixed overhead of $400,000 and a variable rate of $5.00 per machine-hour (MH) for 50,000 MHs. The Assembly Department has an estimated fixed overhead of $200,000 and a variable rate of $2.00 per direct labor-hour (DLH) for 40,000 DLHs. What are the predetermined overhead rates for Molding and Assembly respectively?", "options": ["$8.00 per MH and $5.00 per DLH", "$13.00 per MH and $7.00 per DLH", "$12.00 per MH and $9.00 per DLH", "$5.00 per MH and $2.00 per DLH"], "rationales": ["This calculation only considers the fixed cost portion of the overhead and ignores the variable component.", "Molding: [($400,000 + ($5 \\times 50,000)) \\div 50,000] = $13. Assembly: [($200,000 + (2 × 40,000)) ÷ 40,000] =7.", "This results from dividing the total fixed overhead of one department by the activity base of the other department.", "This error uses only the variable rate as the predetermined overhead rate, omitting the fixed overhead entirely."], "correct": 1, "hint": "Calculate the total estimated overhead (Fixed + Total Variable) for each department separately before dividing by the respective activity base.", "topic": "", "sec": "", "src": "", "link": "", "qid": "2acfa4a7bb"}, {"q": "Using the rates from Vertex Corp (Molding: $13/MH; Assembly: $7/DLH), calculate the total manufacturing cost for Job 502. The job uses $3,000 in materials, $1,500 in total labor, 100 MHs in Molding, and 50 DLHs in Assembly.", "options": ["$7,250", "$4,500", "$5,800", "$6,150"], "rationales": ["This reflects a calculation where the total activity hours (150) are applied to the higher rate ($13) regardless of the department.", "This represents only the prime costs (materials and labor) and ignores all applied manufacturing overhead.", "This error occurs if only the Molding Department's overhead is added to the materials and labor costs.", "The total cost includes materials ($3,000), labor ($1,500), Molding overhead (13 × 100 =1,300), and Assembly overhead (7 × 50 =350)."], "correct": 3, "hint": "Apply each department's specific overhead rate only to the activity hours consumed within that department.", "topic": "", "sec": "", "src": "", "link": "", "qid": "843384e503"}, {"q": "Which of the following are valid reasons for a company to use departmental overhead rates instead of a single plantwide overhead rate?", "options": ["Jobs that spend a disproportionate amount of time in highly automated departments would be under-costed by a plantwide labor-based rate.", "Different departments may have different cost drivers, such as machine-hours vs. direct labor-hours.", "A plantwide rate ignores the fact that some departments may have much higher fixed costs than others.", "Departmental rates are generally simpler and less expensive to maintain than a plantwide rate."], "rationales": ["Automation increases overhead while decreasing labor, so labor-based rates fail to capture the heavy resource consumption of automated stages.", "Departmental rates allow for more precise allocation when one department is capital-intensive and another is labor-intensive.", "A single rate averages out high and low-cost areas, potentially distorting the cost of jobs that only pass through one of those areas.", "Multiple rates require more data collection and complex calculations compared to a single plantwide average."], "correct": 1, "hint": "Think about how resource consumption varies across different types of production processes (automated vs. manual).", "topic": "", "sec": "", "src": "", "link": "", "qid": "849ea5ee68"}, {"q": "To stabilize unit product costs throughout the year despite seasonal fluctuations in production volume, a company should:", "options": ["Switch to a variable costing system where only variable overhead is applied to products.", "Use an annual predetermined overhead rate based on total estimated costs and activity for the entire year.", "Charge all fixed manufacturing overhead directly to period expenses instead of product costs.", "Calculate a new predetermined overhead rate each month based on that month's actual activity."], "rationales": ["The source material focuses on using an annual predetermined rate to address the issue within the context of job-order costing.", "An annual rate spreads the total fixed overhead evenly across all units produced during the year, regardless of when they were made.", "While this might stabilize unit costs, it violates the matching principle in financial accounting for manufacturing costs.", "Monthly rates would lead to the exact volatility the company is trying to avoid, as rates would spike during low-production months."], "correct": 1, "hint": "Look for a method that averages the fixed costs over the total annual output rather than quarterly output.", "topic": "", "sec": "", "src": "", "link": "", "qid": "a49d65d8c7"}], "hasSheet": false, "parts": false, "secTitles": {}, "reserve": 0, "frq": [], "notebook": "https://notebook.google.com/notebook/525c986d-7367-4cbe-9df7-862288201c93", "root": "../index.html", "tab": "quiz", "sheet": ""}</script>
+<script id="quiz-data" type="application/json">{"id": "bmgt221-module-ch02-2026-09-26-143244", "title": "BMGT221 — Chapter 2 module exam", "subtitle": "22 questions · chapter 2 (Job-Order Costing: Calculating Unit Product Costs) · from the slides", "book": "BMGT221", "hash": "778e1505f7ba1b86", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "Zeta manufacturing estimates that for the upcoming year, it will require 40,000 direct labor-hours. The company's total fixed manufacturing overhead is estimated at 280,000, with variable manufacturing overhead costs at 3.50 per direct labor-hour. What is the predetermined overhead rate (POHR) using direct labor-hours as the allocation base?", "options": ["7.00 per direct labor-hour", "3.50 per direct labor-hour", "10.50 per direct labor-hour", "140,000 per direct labor-hour"], "rationales": ["This calculation reflects a 'Step 2' error where only the fixed manufacturing overhead is divided by the allocation base, neglecting the variable overhead component.", "This value represents only the variable overhead rate per unit of the base, failing to 'absorb' any of the fixed manufacturing costs into the rate.", "The POHR is calculated by adding the fixed overhead ($280,000) to the total variable overhead (3.50 × 40,000 =140,000$), resulting in $420,000$ total estimated MOH, divided by $40,000$ hours.", "This error involves confusing total variable overhead costs for the rate itself, indicating a misunderstanding of the POHR formula structure."], "correct": 2, "hint": "Recall the formula for total manufacturing overhead: $Y = a + bX$.", "topic": "", "sec": "", "src": "", "link": "", "qid": "2866ac88ab"}, {"q": "A production manager is reviewing cost classifications under absorption costing for a factory that makes custom furniture. Which cost is classified as direct materials and therefore capitalized as a product cost before the furniture is sold?", "options": ["The cost of wood and varnish used in construction.", "Wages paid to the assembly line workers.", "The commission paid to the sales team for every sofa sold.", "The salary of the security guard monitoring the factory floor."], "rationales": ["Wood and varnish are materials traceable to the furniture being made, so they are direct materials and product costs.", "These wages are direct labor, a product cost, but they are not direct materials.", "Sales commissions are selling expenses and period costs.", "This is indirect labor and manufacturing overhead, not direct materials."], "correct": 0, "hint": "Identify the cost of physical inputs that become part of, or are used directly to make, the furniture.", "topic": "", "sec": "", "src": "", "link": "", "qid": "a7eae03253"}, {"q": "A custom sign company uses a plantwide POHR based on machine-hours. For the year, total estimated MOH is 120,000 and estimated machine-hours are 15,000. Job 50 used 100 machine-hours, 500 in direct materials, and 400 in direct labor. If the company applies a 60\\% markup on total manufacturing cost, what is the selling price for Job 50?", "options": ["2,720", "1,020", "19,200", "1,440"], "rationales": ["Total manufacturing cost is 1,700 (DM $500 +$ DL $400 +$ Applied MOH 800 (calculated as 120,000/15,000 × 100)). The price is 1,700 × 1.60.", "This result stems from applying the markup percentage to the wrong base, essentially calculating only the profit margin (1,700 × 0.60) rather than the full selling price.", "This error occurs if the student uses the total estimated overhead for the year (120,000) as the cost for a single job before applying the markup.", "This calculation uses a 'Step 3' error, only applying the markup to DM and DL while completely omitting the applied manufacturing overhead."], "correct": 0, "hint": "Calculate the applied overhead for the specific job first, then find the total manufacturing cost.", "topic": "", "sec": "", "src": "", "link": "", "qid": "5ddae031cb"}, {"q": "A distillery pays 12,000 per month in fixed rent for its warehouse. In October, it produced 2,000 barrels; in November, it produced 3,000 barrels. If no other costs change, how does the rent cost absorbed per barrel change under absorption costing?", "options": ["It remains at 6.00 in both months.", "It increases from 4.00 in October to 6.00 in November.", "It decreases from 6.00 in October to 4.00 in November.", "It cannot be determined without knowing the direct labor-hours."], "rationales": ["This error assumes that because the total lease payment is fixed, the cost assigned to each unit must also be fixed regardless of production levels.", "This is a common misconception that fixed costs behave like variable costs, where more production would lead to higher per-unit costs.", "Fixed costs remain constant in total, so as production volume increases, the fixed cost allocated to each individual unit decreases.", "This suggests a procedural confusion, as fixed cost absorption per unit is a direct division of total cost by units produced, independent of the allocation base used for other overhead."], "correct": 2, "hint": "Consider the mathematical effect of a constant numerator and an increasing denominator.", "topic": "", "sec": "", "src": "", "link": "", "qid": "7eff5fcfc2"}, {"q": "A aerospace firm has a cost-plus contract with a government agency that pays a 10\\% profit margin over total manufacturing costs. The firm also makes commercial satellites in the same factory. If the firm wants to maximize the revenue from the government contract, which strategic move regarding overhead allocation would be most effective?", "options": ["Reducing the total manufacturing overhead for the entire factory.", "Selecting an allocation base that heavily weights the government project, such as increasing labor-hours spent on that specific job.", "Allocating overhead based on machine-hours if the government project is mostly manual labor.", "Treating all factory depreciation as a period cost instead of a product cost."], "rationales": ["While efficient, this would actually reduce the total cost basis for the government's 10\\% profit calculation, resulting in lower total profit dollars for that contract.", "In a cost-plus contract, shifting more overhead to the contract project increases the 'total cost' base, which then increases the 10\\% profit margin paid by the government.", "Using a base that the project uses very little of would minimize the overhead shifted to the cost-plus contract, which is the opposite of the firm's strategic incentive.", "Period costs are expensed immediately and not allocated to jobs, meaning they would not be included in the cost-plus calculation, losing potential profit."], "correct": 1, "hint": "In a 'cost-plus' scenario, higher reported costs for the specific job lead to higher total earnings.", "topic": "", "sec": "", "src": "", "link": "", "qid": "83545ec05a"}, {"q": "A company finishes a job in March. Under a normal costing system, why is the overhead for this job calculated in March rather than waiting until the end of the year to see the actual total overhead costs?", "options": ["Because the actual overhead rate per month is too volatile to calculate.", "Because the use of a predetermined rate allows for immediate costing and pricing throughout the year.", "Because predetermined rates are always more accurate than actual year-end rates.", "Because actual overhead rates are required by GAAP for monthly reporting."], "rationales": ["While monthly actual rates can be volatile, the decision to use a POHR is a strategic choice for management planning, not an impossibility of calculating monthly actuals.", "One of the main advantages of normal costing is 'timing,' providing stable and immediate cost data rather than waiting for year-end actuals.", "Predetermined rates are based on estimates and are not necessarily more 'accurate' than actuals; their primary benefit is 'stability' and 'timing' rather than precision.", "This is factually incorrect; GAAP requires absorption costing, but normal costing (using POHRs) is the standard practical application for timely reporting."], "correct": 1, "hint": "Think about the needs of a manager who must set a price for a customer as soon as a job is completed.", "topic": "", "sec": "", "src": "", "link": "", "qid": "5ae5c84f73"}, {"q": "Refer to the cost flow classifications for a manufacturing company. When a product is finished but not yet sold, where do the combined costs of Direct Materials, Direct Labor, and Applied Manufacturing Overhead reside?", "options": ["Cost of Goods Sold on the Income Statement", "Work in Process Inventory on the Balance Sheet", "Selling and Administrative Expenses", "Finished Goods Inventory on the Balance Sheet"], "rationales": ["This is a timing error; costs only transition to the income statement as COGS once the 'goods' are actually 'sold,' not just finished.", "This classification is for products currently 'in process'; once completed, the costs must flow out of WIP and into Finished Goods.", "This reflects a fundamental classification error, as manufacturing costs (DM, DL, MOH) are product costs, while SGA consists exclusively of non-manufacturing period costs.", "Product costs are capitalized as inventory assets and only move to the income statement as an expense when the sale finally occurs."], "correct": 3, "hint": "Consider the state of the product (completed) and the action that has not yet happened (sold).", "topic": "", "sec": "", "src": "", "link": "", "qid": "44ea1d73a3"}, {"q": "Aura Glow manufactures custom chandeliers. For the upcoming year, the company budgets total manufacturing overhead at $480,000 and total direct labor-hours at 16,000. Job X-21 requires $1,200 in direct materials and 40 direct labor-hours at a rate of $25 per hour. The job also has an individual budgeted overhead of $1,000. Under a normal costing system, what is the total manufacturing cost recorded for Job X-21?", "options": ["$3,200", "$3,400", "$2,400", "$2,200"], "rationales": ["This result stems from a common trap where the specific job's budgeted overhead ($1,000) is used instead of the overhead applied via the POHR ($1,200).", "This follows the correct multi-step process: calculating a plantwide POHR ($480,000 / 16,000 = $30/DLH) and applying it to actual hours (30 × 40 =1,200), then adding direct materials ($1,200) and direct labor ($1,000).", "This value is reached if the student applies the overhead correctly ($1,200) and includes direct materials ($1,200), but forgets to include the cost of direct labor.", "This error occurs if the student only sums the direct materials and direct labor costs, completely neglecting to apply any manufacturing overhead to the job."], "correct": 1, "hint": "Recall that normal costing requires applying overhead based on a predetermined rate multiplied by actual activity, not job-specific budgets.", "topic": "", "sec": "", "src": "", "link": "", "qid": "5f5479e331"}, {"q": "Vortex Dynamics operates two departments: Machining and Assembly. Machining is highly automated, whereas Assembly relies on manual craftsmanship. Most overhead in Machining relates to machine depreciation, while Assembly overhead consists primarily of indirect labor and supplies. To achieve the most accurate job costs, which combination of departmental overhead rates should management select?", "options": ["Direct labor-hours for Machining and machine-hours for Assembly.", "Machine-hours for Machining and direct labor-hours for Assembly.", "A single plantwide rate based on direct labor-hours.", "Machine-hours for both Machining and Assembly."], "rationales": ["This is a procedural reversal that assigns a labor-based rate to an automated department and a machine-based rate to a labor-intensive one, leading to inaccurate costs.", "This aligns the allocation base with the primary driver of overhead in each department: machine usage for the automated area and labor time for the manual area.", "This approach ignores the departmental differences and would likely under-allocate costs to automated jobs that use few labor hours but significant machine resources.", "While appropriate for Machining, this base would be inaccurate for Assembly where costs are driven by human labor rather than machine run-time."], "correct": 1, "hint": "Match the allocation base to the resource that 'drives' or causes the majority of the overhead expenses in that specific environment.", "topic": "", "sec": "", "src": "", "link": "", "qid": "f32dab122e"}, {"q": "Nova Artisans currently uses a single plantwide POHR of $25 per direct labor-hour. A specific job for a custom mural used 150 direct labor-hours and 10 machine-hours. If Nova Artisans switches to an allocation base of machine-hours, given that total estimated overhead is $100,000 and total estimated machine-hours are 2,000, how will the overhead applied to the mural job change?", "options": ["It will decrease by $500.", "It will decrease by $3,250.", "It will not change because the total estimated overhead remains $100,000.", "It will increase by $3,250."], "rationales": ["This error involves confusing the new total applied overhead ($500) with the net change in the amount applied.", "Initially, overhead is $3,750 ($25 \\times 150$). Under the new rate ($100,000 / 2,000 = 50/MH), overhead is $500 ($50 \\times 10$). The difference is a decrease of $3,250.", "This reflects a misconception that changing the allocation base does not affect specific job costs as long as the total pool of costs remains constant.", "This result would occur if the student correctly calculated the numbers but misidentified the direction of the change between the two methods."], "correct": 1, "hint": "Calculate the applied overhead under both the old labor-hour rate and the new machine-hour rate, then find the difference.", "topic": "", "sec": "", "src": "", "link": "", "qid": "9a1e3ef259"}, {"q": "Starlight Campers builds custom trailers and uses a single plantwide POHR based on machine-hours. At the start of the year, it estimated 12,000 machine-hours, $144,000 in fixed manufacturing overhead, and variable manufacturing overhead of $3.00 per machine-hour. Job B-12, consisting of 5 identical trailers, used $20,000 in direct materials, $10,000 in direct labor, and 400 machine-hours. The company sets prices using a 40% markup on total manufacturing cost. What is the selling price per trailer for Job B-12?", "options": ["$10,080", "$36,000", "$8,680", "$50,400"], "rationales": ["First, find POHR: ($144,000 / 12,000) + $3.00 = $15/MH. Job cost: $20,000 + $10,000 + ($15 \\times 400) = $36,000. Total price: $36,000 \\times 1.4 = $50,400. Per unit: $50,400 / 5 = $10,080.", "This is the total manufacturing cost of the job before any markup is applied, ignoring the company's pricing strategy.", "This error occurs if the student only applies the fixed portion of the POHR ($12) and ignores the variable overhead portion ($3) in the total cost calculation.", "This value represents the total selling price for the entire job of 5 trailers, missing the final step to find the price per individual trailer."], "correct": 0, "hint": "This is a five-step problem: calculate the full POHR, apply it to the job, sum all manufacturing costs, apply the markup, and divide by the number of units.", "topic": "", "sec": "", "src": "", "link": "", "qid": "a60c140ada"}, {"q": "Refer to the provided diagram regarding cost flows. Which statement accurately describes when product costs are reported on the income statement?", "options": ["Product costs only appear on the income statement as Cost of Goods Sold once the related finished goods are sold.", "Selling and administrative expenses are capitalized as inventory until the related goods are sold.", "Direct labor and manufacturing overhead are expensed immediately rather than recorded in inventory.", "Raw materials purchases are immediately recorded as an expense on the income statement in the period they are bought."], "rationales": ["Product costs remain in inventory until sale, when they become Cost of Goods Sold.", "Selling and administrative expenses are period costs and are expensed as incurred.", "Direct labor and manufacturing overhead are product costs that are first capitalized in Work in Process inventory.", "Raw materials are initially recorded as inventory and become expense only through the cost-flow process."], "correct": 0, "hint": "Product costs are held in inventory until the related finished goods are sold.", "topic": "", "sec": "", "src": "", "link": "", "qid": "2a04bf8d9a"}, {"q": "A company reports the following for the month: Sales $500,000; Direct Materials $120,000; Direct Labor $80,000; Applied Manufacturing Overhead $100,000; and Selling and Administrative Expenses $60,000. Under absorption costing, what is the company's Gross Profit?", "options": ["$300,000", "$200,000", "$240,000", "$140,000"], "rationales": ["This is the total Cost of Goods Sold (Product Costs) rather than the profit remaining after subtracting these costs from sales.", "Gross Profit is calculated as Sales ($500,000) minus Cost of Goods Sold ($120,000 + $80,000 + $100,000 = $300,000).", "This error occurs if the student mistakenly includes Selling and Administrative expenses in the COGS calculation, treating them as product costs.", "This value represents the Operating Income (Gross Profit minus Selling and Administrative Expenses), not the Gross Profit itself."], "correct": 1, "hint": "Remember the specific format of an absorption costing income statement: Sales minus COGS equals Gross Profit.", "topic": "", "sec": "", "src": "", "link": "", "qid": "55df4dd488"}, {"q": "Which of the following is TRUE regarding the Predetermined Overhead Rate (POHR) in a normal costing system?", "options": ["Using a POHR based on budgeted rates causes the unit cost of jobs to fluctuate wildly whenever a one-time unexpected repair cost occurs.", "It allows a company to estimate job costs immediately without waiting for actual overhead costs to be finalized at year-end.", "It is used exclusively to allocate direct materials and direct labor to specific production jobs.", "It is calculated by dividing the actual manufacturing overhead for the period by the actual amount of the allocation base."], "rationales": ["Actually, the use of a budgeted POHR helps smooth out such fluctuations, as the rate is fixed for the year regardless of monthly spikes in actual costs.", "A primary benefit of POHR is providing timely cost information by using budgeted rates set at the beginning of the year.", "POHR is used only for indirect costs (overhead); direct materials and direct labor are traced directly to jobs, not allocated via a rate.", "This describes 'actual costing'; POHR is 'predetermined' because it uses budgeted/estimated figures from the start of the period."], "correct": 1, "hint": "Focus on the 'predetermined' aspect and why a company would want to set a rate before actual results are known.", "topic": "", "sec": "", "src": "", "link": "", "qid": "3f52770d3a"}, {"q": "A production run for Job X-10 at Ironwood Manufacturing requires direct materials of $5,200. Direct labor costs are $2,400 for the Machining Department (at $30 per hour) and $1,200 for the Finishing Department (at $20 per hour). If the Machining Department applies overhead at $18 per direct labor-hour and the Finishing Department applies overhead at $15 per direct labor-hour, what is the total manufacturing cost for Job X-10?", "options": ["$12,460", "$9,250", "$11,140", "$10,240"], "rationales": ["This error results from using the total labor cost as the base for overhead application instead of first calculating the specific direct labor-hours.", "This value incorrectly omits the applied overhead from both departments, summing only the direct materials and direct labor costs.", "Total cost is calculated by summing direct materials ($5,200), direct labor ($2,400 + $1,200), and applied overhead for both Machining ($18 \\times 80\\text{ DLHs}$) and Finishing ($15 \\times 60\\text{ DLHs}$). The DLHs are derived by dividing labor costs by the respective wage rates.", "This result occurs if the student correctly calculates Machining overhead but fails to include the Finishing Department's overhead in the total."], "correct": 2, "hint": "You must first determine the number of direct labor-hours worked in each department before you can apply the overhead rates.", "topic": "", "sec": "", "src": "", "link": "", "qid": "10f139d29a"}, {"q": "Titanium Tech uses a plantwide predetermined overhead rate based on direct labor-hours. For Job Alpha, the company applied $320,000 of manufacturing overhead and recorded 16,000 direct labor-hours. For Job Beta, the total job cost is $1,870,000, which includes 40,000 direct labor-hours at a wage rate of $18 per hour. Using the plantwide rate derived from Job Alpha, what is the cost of direct materials for Job Beta?", "options": ["$125,000", "$430,000", "$1,150,000", "$350,000"], "rationales": ["This does not equal the direct materials cost calculated from the job-cost equation.", "This does not equal the residual after subtracting Job Beta's direct labor and applied overhead from total job cost.", "This amount does not equal the direct materials cost for Job Beta.", "The predetermined overhead rate is $20 per direct labor-hour ($320,000 ÷ 16,000). Job Beta has direct labor of $720,000 (40,000 × $18) and applied overhead of $800,000 (40,000 × $20). Direct materials equal $1,870,000 − $720,000 − $800,000 = $350,000."], "correct": 3, "hint": "Compute the predetermined overhead rate, calculate Job Beta's direct labor and applied overhead, then subtract both from total job cost.", "topic": "", "sec": "", "src": "", "link": "", "qid": "3ff1f31dec"}, {"q": "During the second quarter, production is expected to drop to 80,000 units. Using the fixed cost of $200,000 and variable cost of $3.50 per unit, what is the estimated total manufacturing overhead cost for the second quarter?", "options": ["$280,000", "$480,000", "$550,000", "$440,000"], "rationales": ["This reflects only the variable overhead for the quarter and fails to include the fixed manufacturing overhead.", "The total overhead is the sum of the fixed cost ($200,000) and the variable cost for the specific volume ($3.50 \\times 80,000 = $280,000).", "This assumes overhead remains static regardless of production volume, ignoring the variable cost component.", "This is calculated by incorrectly reducing the fixed cost proportionally with the drop in production units."], "correct": 1, "hint": "Apply the mixed cost formula $Y = a + bX$ where X is the new production volume.", "topic": "", "sec": "", "src": "", "link": "", "qid": "6b6aa4dd14"}, {"q": "A firm's unit product cost is $15.50 in a quarter with high production and $18.20 in a quarter with low production. What is the most likely cause of this fluctuation?", "options": ["The variable manufacturing overhead rate increases as volume decreases.", "Direct materials costs per unit are higher when purchasing smaller quantities.", "The company switched from departmental overhead rates to a plantwide overhead rate.", "Total fixed manufacturing overhead is being spread over fewer units during low production periods."], "rationales": ["By definition, variable costs per unit remain constant; they do not increase simply because production volume decreases.", "While possible in reality, the source material identifies fixed overhead distribution as the primary driver of fluctuating unit costs in these exercises.", "A switch in rates might change the cost, but the inherent fluctuation between high and low volume periods is a function of fixed cost behavior.", "Fixed costs are constant in total, meaning the cost per unit increases when the denominator (total units) decreases."], "correct": 3, "hint": "Consider the behavior of fixed costs per unit when production volume changes.", "topic": "", "sec": "", "src": "", "link": "", "qid": "928b34429d"}, {"q": "Vertex Corp has two departments. The Molding Department has an estimated fixed overhead of $400,000 and a variable rate of $5.00 per machine-hour (MH) for 50,000 MHs. The Assembly Department has an estimated fixed overhead of $200,000 and a variable rate of $2.00 per direct labor-hour (DLH) for 40,000 DLHs. What are the predetermined overhead rates for Molding and Assembly respectively?", "options": ["$8.00 per MH and $5.00 per DLH", "$13.00 per MH and $7.00 per DLH", "$12.00 per MH and $9.00 per DLH", "$5.00 per MH and $2.00 per DLH"], "rationales": ["This calculation only considers the fixed cost portion of the overhead and ignores the variable component.", "Molding: [($400,000 + ($5 \\times 50,000)) \\div 50,000] = $13. Assembly: [($200,000 + (2 × 40,000)) ÷ 40,000] =7.", "This results from dividing the total fixed overhead of one department by the activity base of the other department.", "This error uses only the variable rate as the predetermined overhead rate, omitting the fixed overhead entirely."], "correct": 1, "hint": "Calculate the total estimated overhead (Fixed + Total Variable) for each department separately before dividing by the respective activity base.", "topic": "", "sec": "", "src": "", "link": "", "qid": "2acfa4a7bb"}, {"q": "Using the rates from Vertex Corp (Molding: $13/MH; Assembly: $7/DLH), calculate the total manufacturing cost for Job 502. The job uses $3,000 in materials, $1,500 in total labor, 100 MHs in Molding, and 50 DLHs in Assembly.", "options": ["$7,250", "$4,500", "$5,800", "$6,150"], "rationales": ["This reflects a calculation where the total activity hours (150) are applied to the higher rate ($13) regardless of the department.", "This represents only the prime costs (materials and labor) and ignores all applied manufacturing overhead.", "This error occurs if only the Molding Department's overhead is added to the materials and labor costs.", "The total cost includes materials ($3,000), labor ($1,500), Molding overhead (13 × 100 =1,300), and Assembly overhead (7 × 50 =350)."], "correct": 3, "hint": "Apply each department's specific overhead rate only to the activity hours consumed within that department.", "topic": "", "sec": "", "src": "", "link": "", "qid": "843384e503"}, {"q": "Which of the following are valid reasons for a company to use departmental overhead rates instead of a single plantwide overhead rate?", "options": ["Jobs that spend a disproportionate amount of time in highly automated departments would be under-costed by a plantwide labor-based rate.", "Different departments may have different cost drivers, such as machine-hours vs. direct labor-hours.", "A plantwide rate ignores the fact that some departments may have much higher fixed costs than others.", "Departmental rates are generally simpler and less expensive to maintain than a plantwide rate."], "rationales": ["Automation increases overhead while decreasing labor, so labor-based rates fail to capture the heavy resource consumption of automated stages.", "Departmental rates allow for more precise allocation when one department is capital-intensive and another is labor-intensive.", "A single rate averages out high and low-cost areas, potentially distorting the cost of jobs that only pass through one of those areas.", "Multiple rates require more data collection and complex calculations compared to a single plantwide average."], "correct": 1, "hint": "Think about how resource consumption varies across different types of production processes (automated vs. manual).", "topic": "", "sec": "", "src": "", "link": "", "qid": "849ea5ee68"}, {"q": "To stabilize unit product costs throughout the year despite seasonal fluctuations in production volume, a company should:", "options": ["Switch to a variable costing system where only variable overhead is applied to products.", "Use an annual predetermined overhead rate based on total estimated costs and activity for the entire year.", "Charge all fixed manufacturing overhead directly to period expenses instead of product costs.", "Calculate a new predetermined overhead rate each month based on that month's actual activity."], "rationales": ["The source material focuses on using an annual predetermined rate to address the issue within the context of job-order costing.", "An annual rate spreads the total fixed overhead evenly across all units produced during the year, regardless of when they were made.", "While this might stabilize unit costs, it violates the matching principle in financial accounting for manufacturing costs.", "Monthly rates would lead to the exact volatility the company is trying to avoid, as rates would spike during low-production months."], "correct": 1, "hint": "Look for a method that averages the fixed costs over the total annual output rather than quarterly output.", "topic": "", "sec": "", "src": "", "link": "", "qid": "a49d65d8c7"}], "hasSheet": false, "parts": false, "secTitles": {}, "reserve": 0, "tags": false, "frq": [], "notebook": "https://notebook.google.com/notebook/525c986d-7367-4cbe-9df7-862288201c93", "root": "../index.html", "tab": "quiz", "sheet": ""}</script>
+<script>
+(function(){
+  if(window.lqSync) return;
+  const API = 'https://terp-plate.vercel.app/api/quiz-sync', MK = 'lqsync:meta';
+  const none = {first: Promise.resolve([]), now: async()=>[], listen(){}};
+  let key = '';
+  try{ key = localStorage.getItem('lq:key') || ''; }catch(e){}
+  const hm = /[#&]k=([A-Za-z0-9_-]{40,})/.exec(location.hash);
+  if(hm) key = hm[1];
+  if(!key || !window.crypto || !crypto.subtle){ window.lqSync = none; return; }
+
+  const skip = k => k.indexOf('lq:') !== 0 || k === 'lq:key' || k === 'lq:speech';
+  const rawSet = Storage.prototype.setItem;
+  let meta = {};
+  try{ meta = JSON.parse(localStorage.getItem(MK) || '{}') || {}; }catch(e){}
+  const putMeta = ()=>{ try{ rawSet.call(localStorage, MK, JSON.stringify(meta)); }catch(e){} };
+  const hash = t => { let h = 5381; for(let i=0;i<t.length;i++) h = ((h<<5) + h + t.charCodeAt(i)) | 0; return h; };
+  const isState = k => /^lq:[^:]+$/.test(k) && k !== 'lq:hub';
+  function weight(s){
+    return Object.keys(s.answers||{}).length + Object.keys(s.pass2||{}).length
+         + Object.keys(s.skipped||{}).length + Object.keys(s.starred||{}).length
+         + Object.keys(s.unsure||{}).length + 1000 * (s.history||[]).length + (s.done ? 500 : 0);
+  }
+  // '' = nothing worth sending
+  function sig(k, v){
+    if(isState(k)){
+      try{ const s = JSON.parse(v);
+        if(!s || typeof s !== 'object') return '';
+        if(!weight(s) && !s.only && !s.tagf) return '';
+        const c = Object.assign({}, s); delete c.ms; delete c.qms; delete c.meta; delete c.hintOpen;
+        return JSON.stringify(c);
+      }catch(e){ return ''; }
+    }
+    return (v && v !== '{}' && v !== '[]' && v !== '{"defs":[],"q":{}}') ? v : '';
+  }
+  let frozen = false, applying = false, timer = null, busy = false;
+  function mark(k, v){
+    if(skip(k)) return;
+    const g = sig(k, v), h = hash(g), m = meta[k] || (meta[k] = {t:0});
+    if(m.h === h) return;
+    m.h = h;
+    if(g){ m.t = Date.now(); m.d = 1; clearTimeout(timer); timer = setTimeout(run, 1500); }
+    putMeta();
+  }
+  Storage.prototype.setItem = function(k, v){
+    if(this === localStorage && frozen && String(k).indexOf('lq:') === 0) return;
+    rawSet.call(this, k, v);
+    if(this === localStorage && !applying){ try{ mark(String(k), String(v)); }catch(e){} }
+  };
+  // What was already here before sync existed: age unknown, so it is stamped low, and a real
+  // attempt outranks a thinner one by how much is in it.
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(skip(k) || meta[k]) continue;
+      const v = localStorage.getItem(k), g = sig(k, v);
+      meta[k] = {t: 0, h: hash(g)};
+      if(g){ let w = 1; if(isState(k)){ try{ w = 1 + weight(JSON.parse(v)); }catch(e){} }
+             meta[k].t = w; meta[k].d = 1; }
+    }
+    putMeta();
+  }catch(e){}
+
+  const enc = new TextEncoder(), dec = new TextDecoder();
+  const toB = s => { s = s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length % 4) s += '=';
+                     return Uint8Array.from(atob(s), c => c.charCodeAt(0)); };
+  const fromB = u => { let t = ''; for(let i=0;i<u.length;i+=8192) t += String.fromCharCode.apply(null, u.subarray(i, i+8192));
+                       return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+  const hex = b => Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,'0')).join('');
+  let ck = null, bucket = '';
+  const ready = (async()=>{
+    ck = await crypto.subtle.importKey('raw', toB(key), 'AES-GCM', false, ['encrypt','decrypt']);
+    bucket = hex(await crypto.subtle.digest('SHA-256', enc.encode('lq-sync:' + key))).slice(0, 32);
+  })();
+  const kid = async k => hex(await crypto.subtle.digest('SHA-256', enc.encode(bucket + '|' + k))).slice(0, 32);
+  async function seal(o){
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv}, ck, enc.encode(JSON.stringify(o)));
+    return fromB(iv) + '.' + fromB(new Uint8Array(ct));
+  }
+  async function unseal(t){
+    const p = t.split('.');
+    return JSON.parse(dec.decode(await crypto.subtle.decrypt({name:'AES-GCM', iv:toB(p[0])}, ck, toB(p[1]))));
+  }
+
+  function pageId(){
+    const el = document.getElementById('quiz-data');
+    if(!el) return null;
+    try{ return JSON.parse(el.textContent).id; }catch(e){ return null; }
+  }
+  async function run(){
+    if(busy || frozen) return [];
+    busy = true;
+    const changed = [];
+    try{
+      await ready;
+      const have = {}, puts = [], sent = {};
+      for(const k of Object.keys(meta)){
+        const m = meta[k];
+        if(!m.id) m.id = await kid(k);
+        have[m.id] = m.t || 0;
+        if(m.d){
+          const v = localStorage.getItem(k);
+          if(v === null){ m.d = 0; continue; }
+          puts.push({k: m.id, v: await seal({k, v}), ts: m.t});
+          sent[k] = m.t;
+        }
+      }
+      const r = await fetch(API, {method:'POST', headers:{'content-type':'text/plain'},
+                                  body: JSON.stringify({bucket, have, puts})});
+      if(!r.ok) throw new Error('sync ' + r.status);
+      const j = await r.json();
+      for(const k in sent) if(meta[k].t === sent[k]) meta[k].d = 0;
+      for(const row of j.rows || []){
+        let o; try{ o = await unseal(row.v); }catch(e){ continue; }
+        if(!o || skip(o.k)) continue;
+        const m = meta[o.k] || (meta[o.k] = {t:0});
+        if((m.t || 0) >= row.ts) continue;
+        applying = true;
+        try{ rawSet.call(localStorage, o.k, o.v); }catch(e){}
+        applying = false;
+        m.t = row.ts; m.d = 0; m.h = hash(sig(o.k, o.v)); m.id = row.k;
+        changed.push(o.k);
+      }
+      putMeta();
+    }catch(e){}
+    busy = false;
+    if(changed.length && window.lqSync.live){
+      const id = pageId();
+      const mine = id ? changed.some(k => k === 'lq:' + id || k.indexOf('lq:' + id + ':') === 0)
+                      : !!document.getElementById('manifest');
+      if(mine){ frozen = true; location.reload(); }
+    }
+    return changed;
+  }
+  function wake(){ if(document.visibilityState !== 'hidden') run(); }
+  function leave(){ if(document.visibilityState === 'hidden') run(); }
+  function listen(){
+    document.removeEventListener('visibilitychange', wake); document.addEventListener('visibilitychange', wake);
+    document.removeEventListener('visibilitychange', leave); document.addEventListener('visibilitychange', leave);
+    removeEventListener('focus', wake); addEventListener('focus', wake);
+  }
+  // `live` = this page should reload itself when its own quiz arrives newer. The locked shell
+  // turns it on only after it has drawn the page.
+  window.lqSync = {first: null, now: run, listen, live: true};
+  listen();
+  setInterval(wake, 20000);
+  window.lqSync.first = run();
+})();
+</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -998,10 +1174,44 @@ function save(){
    the sitting's subchapters into this one function is what makes a half-paper behave exactly
    like a whole one — one direction, one end card, one second pass — with no branch anywhere
    downstream. `only: null` (not chosen, or a page built without parts) filters nothing. */
+/* ---- TAGS (10-12, his ask) ------------------------------------------------------------
+   *"a text box at first, but it functions like a Notion tag property … once I press enter it
+   creates a tag and that tag stays for this exam and only for this exam."* Its own key, like
+   the research box, so a Retake and a rebuild keep them. `defs` is the order he made them in;
+   a tag no question carries any more is dropped from it. Off unless the page was built with
+   `tags`, so every page built before this is what it was. */
+const TKEY = KEY + ':tags';
+let T = (function(){
+  try{ const t = JSON.parse(localStorage.getItem(TKEY) || '{}') || {};
+       return {defs: t.defs || [], q: t.q || {}}; }
+  catch(e){ return {defs:[], q:{}}; } })();
+function tput(){ try{ localStorage.setItem(TKEY, JSON.stringify(T)); }catch(e){} }
+function tagsOf(i){ return T.q[qk(i)] || []; }
+function hasTag(i, name){ return tagsOf(i).indexOf(name) >= 0; }
+function tagAdd(i, raw){
+  const name = String(raw).trim().replace(/\s+/g, ' ');
+  if(!name) return;
+  const known = T.defs.find(d => d.toLowerCase() === name.toLowerCase()) || name;
+  if(T.defs.indexOf(known) < 0) T.defs.push(known);
+  const l = T.q[qk(i)] || (T.q[qk(i)] = []);
+  if(l.indexOf(known) < 0) l.push(known);
+  tput();
+}
+function tagDrop(i, name){
+  const id = qk(i);
+  T.q[id] = (T.q[id] || []).filter(x => x !== name);
+  if(!T.q[id].length) delete T.q[id];
+  if(!Object.keys(T.q).some(k => T.q[k].indexOf(name) >= 0)) T.defs = T.defs.filter(d => d !== name);
+  tput();
+}
+
 function active(s){
-  const only = D.parts ? (s.only || null) : null;
+  // A TAG RUN ("test only these") rides here for the same reason the section filter does.
+  const tf = D.tags ? (s.tagf || null) : null;
+  const only = (D.parts && !tf) ? (s.only || null) : null;
   return D.questions.map((_,i)=>i).filter(i => onPaper(s, i)
-    && (!only || only.indexOf(D.questions[i].sec) >= 0));
+    && (!only || only.indexOf(D.questions[i].sec) >= 0)
+    && (!tf || hasTag(i, tf)));
 }
 /* ---- THE RESERVES (08-16) ------------------------------------------------------------
    His ask: *"if 1 question is skipped, another one is replaced in that section about it… you
@@ -1269,7 +1479,9 @@ function flushFrq(){
 function drawFrq(){
   const box = $('#frqview');
   if(!box || !(D.frq||[]).length) return;
-  let h = '<p class="say">Three written answers, from the same sources as the paper. Write '
+  const NW = D.frq.length, WORDS = ['No','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'];
+  let h = '<p class="say">' + (WORDS[NW] || NW) + ' written answer' + (NW === 1 ? '' : 's')
+        + ', from the same sources as the paper. Write '
         + 'one, then mark it: every point that can be settled by what you wrote is checked '
         + 'for you, and the ones that need judgement are handed back. Click any row to '
         + 'overrule it.</p>';
@@ -1560,7 +1772,7 @@ function draw(){
   // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
   // the rest of the sitting, so nothing about answering, going back or the second pass has
   // to know the picker exists.
-  if(sectioned() && !S.only) return picker();
+  if(sectioned() && !S.only && !S.tagf) return picker();
   const act = runList();
   if(!act.length) return end();
   if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
@@ -1569,6 +1781,61 @@ function draw(){
 
 /* Pure markup, no DOM writes and no state changes — so the same builder can render the
    question and be measured off-screen for the centring reserve. */
+/* The tag box above the question. Chips for what this question carries, then the box: type and
+   Enter makes the tag (or reuses one spelled the same), the ones he already made show under it
+   to click, Backspace on an empty box takes the last one off, Esc leaves. */
+function tagRowInner(i){
+  const mine = tagsOf(i);
+  let h = '';
+  mine.forEach((n,k)=>{ h += '<span class="tchip">' + esc(n) + '<button class="tx" data-drop="' + k
+                           + '" tabindex="-1" aria-label="Remove tag">×</button></span>'; });
+  return h + '<input id="tagin" class="tagin" type="text" autocomplete="off" spellcheck="false" '
+           + 'placeholder="' + (mine.length ? 'Add a tag' : 'Tag this question  ( l )') + '">'
+           + '<div class="tsug hide" id="tsug"></div>';
+}
+function paintSug(i){
+  const inp = $('#tagin'), box = $('#tsug');
+  if(!inp || !box) return;
+  const raw = inp.value.trim(), v = raw.toLowerCase(), mine = tagsOf(i);
+  let h = T.defs.map((d,n)=>({d,n}))
+    .filter(x => mine.indexOf(x.d) < 0 && (!v || x.d.toLowerCase().indexOf(v) >= 0))
+    .map(x => '<button class="tchip pick" data-n="' + x.n + '" tabindex="-1">' + esc(x.d) + '</button>')
+    .join('');
+  if(v && !T.defs.some(d => d.toLowerCase() === v))
+    h += '<span class="tnew">Enter makes “' + esc(raw) + '”</span>';
+  box.innerHTML = h;
+  box.classList.toggle('hide', !h || document.activeElement !== inp);
+  // mousedown, not click: the box must not blur (and hide these) before the pick lands
+  box.querySelectorAll('.pick').forEach(b => { b.onmousedown = e => {
+    e.preventDefault(); tagAdd(i, T.defs[+b.dataset.n]); redrawTags(i, true); }; });
+}
+function redrawTags(i, focus){
+  const row = $('#tagrow');
+  if(!row) return;
+  row.innerHTML = tagRowInner(i);
+  wireTags(i);
+  if(focus) $('#tagin').focus();
+}
+function wireTags(i){
+  const row = $('#tagrow'), inp = $('#tagin');
+  if(!row || !inp) return;
+  row.querySelectorAll('.tx').forEach(b => b.onclick = ()=>{
+    tagDrop(i, tagsOf(i)[+b.dataset.drop]); redrawTags(i, false); });
+  inp.onfocus = ()=> paintSug(i);
+  inp.oninput = ()=> paintSug(i);
+  inp.onblur = ()=> { const b = $('#tsug'); if(b) b.classList.add('hide'); };
+  inp.onkeydown = e => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      if(!inp.value.trim()){ inp.blur(); return; }
+      tagAdd(i, inp.value); redrawTags(i, true);
+    } else if(e.key === 'Escape'){ inp.value = ''; inp.blur(); }
+    else if(e.key === 'Backspace' && !inp.value && tagsOf(i).length){
+      tagDrop(i, tagsOf(i).slice(-1)[0]); redrawTags(i, true);
+    }
+  };
+}
+
 function buildQ(i, picked, fresh, en){
   const q = D.questions[i];
   const answered = picked !== undefined;
@@ -1580,10 +1847,12 @@ function buildQ(i, picked, fresh, en){
   // The counter sits top-left above the question, the way the notebook does it, rather than
   // up in the bar — it belongs with the thing it counts. On a second pass it counts the
   // second pass, so four wrong answers read as "1 / 4" and not as a broken 16.
-  let h = '<div class="qhead' + en + '"><div class="qcol">'
+  let h = (D.tags ? '<div class="tagrow no-read-aloud" id="tagrow">' + tagRowInner(i) + '</div>' : '')
+        + '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta no-read-aloud"><span class="num">' + (pos+1) + ' / '
         + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        + (D.tags && S.tagf ? '<span class="dot">·</span><span>only ' + esc(S.tagf) + '</span>' : '')
         // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
         // 10 reads as the paper having lost his place, which is how he read it.
         + (recycling && S.phase!==2
@@ -1779,6 +2048,7 @@ function question(fresh){
   $('#star').onclick = ()=> toggleStar(i);
   $('#qmark').onclick = ()=> toggleUnsure(i);
   $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
+  if(D.tags) wireTags(i);
 
   // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
   // touches it — and nothing above the options ever changes height.
@@ -2269,19 +2539,32 @@ function openMenu(){
   m.className = 'menu';
   // The clock's only other way in. `w` is not written anywhere else on the page, and a key
   // nothing announces is a key he has to remember he asked for.
-  m.innerHTML = '<button id="skipq">Skip this question</button>'
+  m.innerHTML = '<button id="skipq">Skip this question  ( x )</button>'
               // The reader's own two entries. Space and `v` are written nowhere else on the
               // page, and a key nothing announces is a key he has to remember he asked for.
               + '<button id="readtog">' + (sayOn ? 'Stop' : 'Start') + ' read-aloud  ( space )</button>'
               + '<button id="voiceset">Voice, speed and pauses…</button>'
-              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>';
+              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>'
+              // EVERY KEY, WRITTEN DOWN ONCE (10-12). He could not find Redo or remember its key.
+              + '<div class="keys"><kbd>x</kbd><span>Skip</span><kbd>u</kbd><span>Redo your answer</span>'
+              + '<kbd>h</kbd><span>Hint, when the question has one</span>'
+              + '<kbd>s</kbd><span>Star</span><kbd>/</kbd><span>No idea</span>'
+              + '<kbd>r</kbd><span>Research</span><kbd>f</kbd><span>Fix this question</span>'
+              + '<kbd>t</kbd><span>Reflection</span>'
+              + (D.tags ? '<kbd>l</kbd><span>Tag</span>' : '')
+              + '<kbd>↵</kbd><span>Next</span><kbd>←</kbd><span>Back</span></div>';
   host.appendChild(m);
   m.querySelector('#clocktog').onclick = ()=>{ toggleClock(); closeMenu(); };
   m.querySelector('#readtog').onclick = ()=>{ closeMenu(); sayOn ? sayOff() : sayToggle(); };
   m.querySelector('#voiceset').onclick = ()=>{ closeMenu(); openVset(); };
-  m.querySelector('#skipq').onclick = ()=>{
+  m.querySelector('#skipq').onclick = ()=>{ closeMenu(); skipQuestion(); };
+  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
+}
+/* One path for skipping, whether it came from the menu or from `x` (10-12, his ask: a key
+   *"rather than going into the top bar and then pressing skip"*). */
+function skipQuestion(){
     const list = runList(), pos = list.indexOf(S.i);
-    if(list.length <= 1) return closeMenu();        // never skip the last one standing
+    if(list.length <= 1) return;                    // never skip the last one standing
     const sec = bucketOf(S.i);
     S.skipped[qk(S.i)] = true;
     delete S.answers[qk(S.i)];
@@ -2295,7 +2578,6 @@ function openMenu(){
     // have handed him an end card with a question still owed.
     const filled = promoteReserve(sec) >= 0;
     const wasLast = !filled && pos === list.length - 1;
-    closeMenu();
     syncTabs();
     if(wasLast){ finish(); return; }
     // After the removal the list has shrunk, so the item now AT `pos` is the one that
@@ -2304,8 +2586,6 @@ function openMenu(){
     S.hintOpen = false;
     lastShown = -1;
     save(); question(); window.scrollTo(0,0);
-  };
-  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
 }
 function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(); }
 
@@ -2562,6 +2842,39 @@ function momentum(){
   return h + '</div>';
 }
 
+/* THE TAGS ON THE END CARD: how each group went, and a way to sit one group alone. A tag run
+   is a fresh attempt on only those questions (the finished one goes into history first, as a
+   Retake does); Retake, or "every question" here, goes back to the whole paper. Not offered
+   on a sectioned paper, whose picker already owns which questions a sitting holds. */
+function tagTable(){
+  if(!D.tags || !T.defs.length) return '';
+  const all = D.questions.map((_,i)=>i).filter(i => onPaper(S, i));
+  let h = '';
+  T.defs.forEach((d,n)=>{
+    const qs = all.filter(i => hasTag(i, d));
+    if(!qs.length) return;
+    const sat = qs.filter(i => ans(i) !== undefined || ans2(i) !== undefined);
+    const ok = sat.filter(i => finalRight(i)).length;
+    h += '<div class="tagline"><span class="tchip">' + esc(d) + '</span><span class="tn">'
+       + (sat.length ? ok + ' / ' + sat.length + ' right' : qs.length + ' question' + (qs.length>1?'s':''))
+       + '</span>' + (D.parts ? '' : '<button class="link" data-tagrun="' + n + '">Test only these</button>')
+       + '</div>';
+  });
+  if(!h && !S.tagf) return '';
+  if(S.tagf) h += '<p class="note">This run was only “' + esc(S.tagf) + '”. '
+                + '<button class="link" id="tagall">Back to every question</button></p>';
+  return '<div class="tagtable"><h3>By tag</h3>' + h + '</div>';
+}
+function startRun(tag){
+  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length, ms:S.ms,
+                             tag:S.tagf || undefined});
+  const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
+  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  if(tag) S.tagf = tag;
+  pickSel = null; lastShown = -1;
+  save(); syncTabs(); renderScore(); draw(); window.scrollTo(0,0);
+}
+
 function end(){
   timeOn(null);
   const act = active(S), n = score(S), t = act.length;
@@ -2643,6 +2956,7 @@ function end(){
             + 'every one is done; sitting one again replaces its score.</p>';
   }
 
+  h += tagTable();
   const nskip = Object.keys(S.skipped||{}).length;
   if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
               + '<button class="link" id="unskip">put them back</button></p>';
@@ -2653,6 +2967,10 @@ function end(){
   $('#quizview').innerHTML = h;
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  document.querySelectorAll('[data-tagrun]').forEach(b =>
+    b.onclick = ()=> startRun(T.defs[+b.dataset.tagrun]));
+  const tall = $('#tagall');
+  if(tall) tall.onclick = ()=> startRun(null);
   const ma = $('#momall');
   if(ma) ma.onclick = ()=>{ momAll = true; end(); };
   const m = $('#more');
@@ -2689,6 +3007,7 @@ function itemHTML(i, n){
   const q = D.questions[i], first = ans(i), second = ans2(i);
   let h = '<div class="item">';
   if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
+  if(D.tags) tagsOf(i).forEach(t => { h += '<span class="tchip sm">'+esc(t)+'</span>'; });
   h += '<p class="qq">'+(n===undefined?'':(n+1)+'. ')+esc(q.q)+'</p>'
      + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
   if(!firstRight(i)){
@@ -2705,12 +3024,26 @@ function itemHTML(i, n){
   return h + '</div>';
 }
 
+let revByTag = false;
 function review(){
   timeOn(null);
+  const act = active(S), canSort = D.tags && T.defs.length;
   let h = '<div class="rev"><h3>Every question</h3>';
-  active(S).forEach((i,n)=>{ h += itemHTML(i, n); });
+  if(canSort) h += '<p class="note" style="margin:0 0 6px"><button class="link" id="revsort">'
+                 + (revByTag ? 'Sort in order' : 'Sort by tag') + '</button></p>';
+  if(canSort && revByTag){
+    // a question with two tags is listed under both; the untagged ones come last
+    T.defs.concat(['']).forEach(d=>{
+      const qs = act.filter(i => d ? hasTag(i, d) : !tagsOf(i).length);
+      if(!qs.length) return;
+      h += '<h3 class="tgroup">' + (d ? esc(d) : 'No tag') + ' · ' + qs.length + '</h3>';
+      qs.forEach(i => { h += itemHTML(i, act.indexOf(i)); });
+    });
+  } else act.forEach((i,n)=>{ h += itemHTML(i, n); });
   h += '</div>';
   $('#quizview').innerHTML = h;
+  const rs = $('#revsort');
+  if(rs) rs.onclick = ()=>{ revByTag = !revByTag; review(); };
   $('#band').classList.add('off');
   showResearch(false);
   $('#footer').classList.remove('hide');
@@ -4017,6 +4350,10 @@ document.addEventListener('keydown', e=>{
   // `w` FOR WATCH — the clock in the bar, off by default. Past G like every other command
   // key here, so it can never be an option letter.
   if(e.key === 'w' || e.key === 'W'){ toggleClock(); return; }
+  // `x` SKIPS, `l` (label) PUTS THE CARET IN THE TAG BOX. Both past G, so never an option key.
+  if(e.key === 'x' || e.key === 'X'){ e.preventDefault(); skipQuestion(); return; }
+  if((e.key === 'l' || e.key === 'L') && D.tags){
+    const ti = $('#tagin'); if(ti){ e.preventDefault(); ti.focus(); } return; }
   if(e.key === '/' || e.key === '?'){ e.preventDefault(); toggleUnsure(S.i); return; }
   /* THE KEY NAMES A POSITION ON SCREEN, not an option. `2` and `B` mean the second card he
      can see, which is the only thing either of them could mean to him — after a Redo has

@@ -326,6 +326,32 @@ kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid
 .qmark:hover{background:var(--surface);color:var(--text)}
 .qmark.on{color:var(--text);border-color:var(--accent);background:var(--surface-hi)}
 
+/* ---- tags (10-12): his own labels on a question, kept per quiz ---- */
+.tagrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.tchip{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:.78rem;
+ color:var(--text);background:var(--surface-hi);border:1px solid var(--line);
+ border-radius:6px;padding:2px 8px;line-height:1.5}
+.tchip.sm{font-size:.7rem;margin:0 6px 9px 0}
+button.tchip{cursor:pointer}
+button.tchip:hover{border-color:var(--muted)}
+.tx{background:none;border:0;color:var(--muted);font:inherit;padding:0;cursor:pointer;line-height:1}
+.tx:hover{color:var(--text)}
+.tagin{flex:1 1 140px;min-width:120px;background:none;border:0;outline:0;color:var(--text);
+ font:inherit;font-size:.82rem;padding:3px 2px}
+.tagin::placeholder{color:var(--muted);opacity:.75}
+.tsug{flex:1 0 100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tnew{color:var(--muted);font-size:.76rem}
+.tagtable{margin:26px 0 0;text-align:left}
+.tagtable h3{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+ font-weight:500;margin:0 0 6px}
+.tagline{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line);
+ font-size:.88rem}
+.tagline .tn{flex:1;color:var(--muted);font-variant-numeric:tabular-nums}
+.tgroup{margin-top:30px}
+.menu .keys{border-top:1px solid var(--line);margin:5px 0 0;padding:8px 10px 4px;
+ display:grid;grid-template-columns:auto 1fr;gap:5px 10px;font-size:.78rem;color:var(--muted);
+ align-items:center}
+
 /* ---- the ⋮ menu ---- */
 .more{position:relative;flex:0 0 auto}
 .dots{background:none;border:0;color:var(--muted);font-size:1.15rem;line-height:1;
@@ -836,7 +862,157 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "bmgt340-chapter-3-module-exam-2026-09-26-145723", "title": "BMGT340 — Chapter 3 module exam", "subtitle": "14 multiple choice + 4 written · chapter 3 (Time Value of Money: An Introduction) · from the slides", "book": "BMGT340", "hash": "4f5a8819345a0d84", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "An investor notices that a specific gold certificate is trading for $1,250 on a New York exchange and simultaneously for $1,235 on a London exchange. According to the Valuation Principle and the Law of One Price, what would be the result of an arbitrageur's actions in this scenario?", "options": ["The arbitrageur would wait for both prices to rise before selling, ensuring a profit in both markets.", "No action would be taken because the difference is less than 5% of the total asset value.", "The arbitrageur would buy in London and sell in New York, eventually causing the prices to converge.", "The arbitrageur would buy in New York and sell in London to exploit the higher market value."], "rationales": ["This describes a long-term investment strategy rather than arbitrage, which relies on the immediate exploitation of price differences for risk-free profit.", "The Valuation Principle states that any action where benefits exceed costs should be taken; as long as transaction costs are lower than $15, an arbitrage opportunity exists regardless of the percentage difference.", "Arbitrage involves buying an asset at a lower price and immediately selling it at a higher price; this increased demand in the cheaper market and supply in the more expensive market drives prices toward equilibrium.", "This describes a 'buy high, sell low' strategy, which results in a loss of $15 per unit rather than a profit."], "correct": 2, "hint": "Consider the direction of trade that yields an immediate, risk-free profit.", "topic": "", "sec": "", "src": "", "link": "", "qid": "b788838633"}, {"q": "A startup's annual revenue grew from $1.2 million in 2018 to $3.5 million in 2023. If the company maintains this same annual growth rate, what is the projected revenue for the year 2026?", "options": ["$5.87 million", "$4.88 million", "$6.65 million", "$10.21 million"], "rationales": ["This is not the compound-growth projection. Using the CAGR from 2018 to 2023 and compounding for three additional years produces approximately $6.65 million.", "This value results from applying a simple average growth increment ($0.46 million per year) for three years instead of using the compound annual growth rate.", "The CAGR is (3.5/1.2)¹/5-1 ≈ 23.87\\%. Projecting three more years gives 3.5(1.2387)³ ≈ 6.65 million.", "This error occurs if the total growth factor (3.5/1.2) is incorrectly applied as the annual growth rate for the remaining three years."], "correct": 2, "hint": "This is a two-step problem: first calculate the historical rate of return, then use it to find the future value.", "topic": "", "sec": "", "src": "", "link": "", "qid": "36bf1e6d45"}, {"q": "According to the Valuation Principle and the properties of market values discussed in the material, which of the following statements are true regarding financial decision-making?", "options": ["Book values are generally preferred over market values when evaluating the benefits of a potential investment.", "A firm should only undertake projects where the total benefits are exactly equal to the total costs.", "Costs and benefits must be converted to the same point in time to be directly comparable.", "Market values should be used to measure costs and benefits because they represent the opportunity cost."], "rationales": ["The conceptual questions in the source explicitly state that market values are the appropriate measure, making options favoring book values incorrect.", "The Valuation Principle states that actions should be taken only if benefits exceed the costs, not merely equal them.", "The time value of money principle requires that cash flows at different times be moved to the same period (usually the present) before comparison.", "The material specifies that if a market value is available, it is the best measure of the value of an action's components."], "correct": 3, "hint": "Focus on the rules for measuring benefits/costs and the requirement for time-consistency.", "topic": "", "sec": "", "src": "", "link": "", "qid": "ecbca381fa"}, {"q": "A logistics company is considering a new software package. The software costs $45,000 today but is expected to save the company $52,000 in labor costs in exactly 3 years. If the competitive market interest rate is 6%, what is the Net Present Value (NPV) of this investment?", "options": ["$7,000.00", "-$1,334.46", "$4,056.60", "-$1,132.08"], "rationales": ["This value ignores the time value of money entirely, simply subtracting the nominal cost from the nominal future benefit ($52,000 - 45,000$).", "The PV of the benefit is 52,000 / (1.06)³ ≈ 43,665.54. The NPV is the PV of benefits minus the cost: $43,665.54 - 45,000 = -1,334.46$.", "This result occurs if the benefit is only discounted for one year ($52,000 / 1.06 - 45,000$) instead of the full three-year duration.", "This error involves incorrectly using the discount factor formula frac11+r mentioned in the terminology section as if it applied to all 3 years without an exponent."], "correct": 1, "hint": "Calculate the present value of the future benefit first, then subtract the initial cost.", "topic": "", "sec": "", "src": "", "link": "", "qid": "69276f68fb"}, {"q": "You have $5,000 to invest for 8 years. How much additional money will you have at the end of the 8 years if you find an account paying 7% annual interest compared to one paying 5.5% annual interest?", "options": ["$600.00", "$1,125.40", "$143.20", "$834.15"], "rationales": ["This is the result of using simple interest for the calculation: 5000 × (0.07 - 0.055) × 8 years.", "This reflects a common error of calculating the difference in rates (1.5\\%) and then applying that as the only rate for compounding over 8 years: 5000(1.015)⁸.", "This value might be reached if only one year of compound interest difference was calculated instead of eight.", "Compare FVA = 5000(1.07)⁸ ≈ 8590.93 and FVB = 5000(1.055)⁸ ≈ 7756.78. The difference is $8590.93 - 7756.78 = 834.15$."], "correct": 3, "hint": "Find the future value for each interest rate separately and then calculate the difference between them.", "topic": "", "sec": "", "src": "", "link": "", "qid": "e5c575bfb3"}, {"q": "If an investment provides a 4% return every year, what is the equivalent cumulative growth rate over a 5-year period?", "options": ["16.99%", "21.67%", "20.00%", "25.00%"], "rationales": ["This is a plausible error if the student uses the formula for discounting over 4 years instead of compounding over 5 years.", "The equivalent rate for a different period is found using (1 + rannual)⁵ = 1 + r₅-year. So, (1.04)⁵ - 1 ≈ 0.21665 or 21.67\\%.", "This is the result of simple interest (4\\% × 5 years), which fails to account for the compounding of the returns each year.", "This represents a calculation error where the investor might divide 1 by the interest rate instead of compounding the growth factor."], "correct": 1, "hint": "Compound the annual growth factor for the total number of years in the period.", "topic": "", "sec": "", "src": "", "link": "", "qid": "f08ce0cda6"}, {"q": "A bank offers a 'Double Your Money' certificate that pays out $20,000 in 12 years for an initial deposit today. If the market interest rate for similar risk investments is 6.5%, is this a good deal according to the Valuation Principle?", "options": ["Yes, because the annual rate earned (6.0\\%) is very close to the market rate of 6.5\\%.", "Yes, because doubling your money is always a superior return regardless of the timeframe.", "No, because the Rule of 72 says money should double in 7 years at this rate.", "No, because the present value of the $20,000 is less than the $10,000 required deposit."], "rationales": ["Under the Valuation Principle, a deal is only 'good' if benefits exceed costs; being 'close' but lower results in a negative NPV, making it a poor choice.", "This ignores the time value of money; a return must be compared to what the competitive market rate would have yielded over the same 12 years.", "While the Rule of 72 estimates a doubling time of ≈ 11 years at 6.5\\%, the decision must be based on comparing the specific deal's PV or FV to market alternatives.", "PV of 20,000 at 6.5\\% for 12 years is20,000 / (1.065)^{12} \\approx $9,394. Since the PV of the benefit ($9,394) is less than the cost ($10,000), the action should not be taken."], "correct": 3, "hint": "Calculate the present value of the $20,000 benefit using the 6.5% market rate and compare it to the $10,000 cost.", "topic": "", "sec": "", "src": "", "link": "", "qid": "74f2007b9e"}, {"q": "A precious metals dealer is selling gold for 1,900 per ounce in Tokyo and buying it for 1,920 per ounce in New York. If the total cost to transport and insure the gold between cities is 5 per ounce, what is the arbitrage profit per ounce if you buy in Tokyo and sell in New York immediately?", "options": ["0", "20", "25", "15"], "rationales": ["This assumes the Law of One Price is currently in effect, but the scenario describes a market inefficiency where a net profit is possible even after costs.", "This value represents the gross price difference but fails to account for the transaction and transportation costs associated with moving the asset.", "This result stems from a procedural error of adding the costs to the price difference rather than subtracting them from the potential gain.", "Arbitrage profit is the net gain after all costs; here, the price difference is 20 ($$1,920 - 1,900$$), and after subtracting the 5 transport cost, the remaining profit is 15."], "correct": 3, "hint": "Remember that arbitrage requires calculating the net profit after accounting for all necessary expenses to execute the trade.", "topic": "", "sec": "", "src": "", "link": "", "qid": "bfb17e6171"}, {"q": "Solaris Tech is considering a project that requires an immediate investment of 25,000. The project is guaranteed to pay out 32,000 in exactly six years. If the appropriate discount rate for this level of risk is 4.5\\%, what is the Net Present Value (NPV) of this project?", "options": ["-603.22", "24,512.11", "-487.89", "7,000.00"], "rationales": ["This error likely occurs from using the wrong number of periods (n=7 instead of n=6) when discounting the future payment.", "This value represents only the present value of the future benefit and neglects to subtract the initial cost required to start the project.", "The NPV is calculated by finding the PV of the benefit (32,000 / (1.045)⁶ ≈ 24,512.11) and subtracting the initial cost (25,000), resulting in a negative value.", "This is the nominal profit ($$32,000 - 25,000$$), which ignores the time value of money by failing to discount the future cash flow to the present."], "correct": 2, "hint": "The Net Present Value is the difference between the present value of the benefits and the present value of the costs.", "topic": "", "sec": "", "src": "", "link": "", "qid": "c1e0e8269e"}, {"q": "In financial modeling, the variable 'r' in the equation PV = FV / (1 + r)n can be referred to by which of the following terms depending on the context?", "options": ["Accumulation factor", "Yield to maturity", "Cost of capital", "Discount rate"], "rationales": ["The accumulation factor refers to the entire expression (1+r)n, not just the rate r itself.", "This is the specific term used for the expected return on a bond if held until its expiration date.", "This represents the return required by investors or the interest paid to lenders to justify a project.", "This term is used specifically when determining the present value of future cash flows."], "correct": 3, "hint": "Consider the different roles r plays when looking at bonds, stocks, or bank deposits.", "topic": "", "sec": "", "src": "", "link": "", "qid": "4f04761ff2"}, {"q": "Investment X offers to pay you 5,000 in four years, while Investment Y offers to pay you 7,500 in nine years. If the market interest rate is 6\\%, which investment is more valuable today and by how much?", "options": ["They are equally valuable because they both have a 6\\% return", "Investment X is more valuable by 520.12", "Investment Y is more valuable by approximately 480.95", "Investment Y is more valuable by 2,500.00"], "rationales": ["While the discount rate is the same, the timing and magnitudes of the cash flows differ, leading to distinct present values.", "This error may result from incorrectly using the interest rate as a multiplier (5,000 × 1.06 × 4) instead of discounting.", "The PV of X is 5,000 / (1.06)⁴ ≈ 3,960.47 and the PV of Y is 7,500 / (1.06)⁹ ≈ 4,441.42; the difference is $$4,441.42 - 3,960.47 = 480.95$$.", "This is the difference in nominal future values ($$7,500 - 5,000$$) and ignores the fact that the payments occur at different points in time."], "correct": 2, "hint": "To compare values at different times, you must move both cash flows to the same point on the timeline, usually the present (t=0).", "topic": "", "sec": "", "src": "", "link": "", "qid": "f3bae40687"}, {"q": "Using the 'Rule of 72' as an approximation, how much longer would it take to double your money at a 4\\% annual return compared to an 8\\% annual return?", "options": ["9 years longer", "18 years longer", "2 years longer", "4 years longer"], "rationales": ["The Rule of 72 suggests doubling times of $$72/4 = 18$$ years and $$72/8 = 9$$ years; the difference is $$18 - 9 = 9$$ years.", "This is the total time for the 4\\% investment to double, not the difference between the two investments.", "This incorrectly assumes the relationship between interest rate and time is linear (dividing 8/4) rather than inverse and hyperbolic.", "This simply subtracts the interest rates ($$8 - 4$$) rather than calculating and comparing the resulting time periods."], "correct": 0, "hint": "Calculate the doubling time for each rate individually before finding the difference.", "topic": "", "sec": "", "src": "", "link": "", "qid": "c3c84a512b"}, {"q": "An environmental grant was worth 500,000 in 2010. By 2020, the same grant had increased to 800,000. If the grant continues to grow at the same annual rate, what will its approximate value be in 2030?", "options": ["1,040,000", "1,280,000", "1,350,000", "1,100,000"], "rationales": ["This error stems from calculating simple interest on the original 500,000 for the second period instead of compounding on the new balance.", "The growth factor for 10 years is $$800,000 / 500,000 = 1.6$$. Applying this same factor to the 2020 value for another 10 years gives 800,000 × 1.6 = 1,280,000.", "This is a result of overestimating the annual growth rate by rounding up too early in the multi-step calculation.", "This assumes linear growth (adding 300,000 every 10 years) rather than the geometric/compounded growth typical of financial values."], "correct": 1, "hint": "Determine the growth factor over the first 10-year period and apply that same factor to the next 10-year period.", "topic": "", "sec": "", "src": "", "link": "", "qid": "a8ce3d6cd0"}, {"q": "When using a financial calculator to solve for the number of periods (n), why is it usually necessary to enter the Present Value (PV) as a negative number if the Future Value (FV) is positive?", "options": ["The calculator cannot process logarithms of positive numbers", "Because present values are always mathematically negative in TVM formulas", "To account for the effect of inflation on purchasing power", "To represent the opposite direction of cash flows (outflow vs. inflow)"], "rationales": ["Calculators can process logs of positive numbers; the error occurs if the signs imply a growth direction that is mathematically impossible given the interest rate.", "PV is not inherently negative; the negative sign is a directional convention for cash flow, not a mathematical property of value.", "The sign convention is a tool for tracking cash flows and is unrelated to external economic factors like inflation.", "Financial calculators use a sign convention where money leaving your pocket (investment) is negative and money returning to you (payout) is positive."], "correct": 3, "hint": "Think about the 'perspective' of your wallet when you make an investment and when you receive a return.", "topic": "", "sec": "", "src": "", "link": "", "qid": "aca61742c1"}], "hasSheet": false, "parts": false, "secTitles": {}, "reserve": 0, "frq": [{"ask": "In financial terminology, the process of determining the present value of a future cash flow is known as ___, which involves using a discount rate to adjust for the time value of money.", "rubric": [{"t": "The answer: discounting", "judge": false, "k": ["discounting cash flows", "discounting"]}], "model": "discounting\n\nDiscounting is the specific term used when moving from a future value (FV) back to a present value (PV), effectively removing the earned interest to see what the value is worth today."}, {"ask": "Using the 'Rule of 72' approximation described in the class notes, an investment earning a 9% annual return will take approximately ___ years to double in value.", "rubric": [{"t": "The answer: 8", "judge": false, "k": ["8", "8 years", "eight"]}], "model": "8\n\nThe Rule of 72 states that the number of periods to double is approximately 72 divided by the interest rate percentage ($72 / 9 = 8$)."}, {"ask": "If a venture capital firm reports that its portfolio has an annual growth rate of $$12\\%$$, the equivalent growth rate for a five-year period (rounded to two decimal places) would be ___ percent.", "rubric": [{"t": "The answer: 76.23", "judge": false, "k": ["76.23%", "76.23", "seventy-six point two three"]}], "model": "76.23\n\nTo convert an annual rate to a multi-year period, you must use the compounding formula $(1 + r_{annual})^n - 1$; in this case, $(1.12)^5 - 1 = 0.7623$ or $76.23\\%$."}, {"ask": "The mathematical expression $\\frac{1}{(1 + r)^n}$ is known as the ___, which represents the value today of a single dollar to be received in the future.", "rubric": [{"t": "The answer: discount factor", "judge": false, "k": ["Present Value Factor", "PV Factor", "discount factor"]}], "model": "discount factor\n\nThe discount factor is the specific multiplier used to convert a future value into its equivalent present value."}], "notebook": "https://notebook.google.com/notebook/5aaf743e-52c7-4229-a64d-4af011920c80", "root": "../index.html", "tab": "quiz", "sheet": ""}</script>
+<script id="quiz-data" type="application/json">{"id": "bmgt340-chapter-3-module-exam-2026-09-26-145723", "title": "BMGT340 — Chapter 3 module exam", "subtitle": "14 multiple choice + 4 written · chapter 3 (Time Value of Money: An Introduction) · from the slides", "book": "BMGT340", "hash": "4f5a8819345a0d84", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "An investor notices that a specific gold certificate is trading for $1,250 on a New York exchange and simultaneously for $1,235 on a London exchange. According to the Valuation Principle and the Law of One Price, what would be the result of an arbitrageur's actions in this scenario?", "options": ["The arbitrageur would wait for both prices to rise before selling, ensuring a profit in both markets.", "No action would be taken because the difference is less than 5% of the total asset value.", "The arbitrageur would buy in London and sell in New York, eventually causing the prices to converge.", "The arbitrageur would buy in New York and sell in London to exploit the higher market value."], "rationales": ["This describes a long-term investment strategy rather than arbitrage, which relies on the immediate exploitation of price differences for risk-free profit.", "The Valuation Principle states that any action where benefits exceed costs should be taken; as long as transaction costs are lower than $15, an arbitrage opportunity exists regardless of the percentage difference.", "Arbitrage involves buying an asset at a lower price and immediately selling it at a higher price; this increased demand in the cheaper market and supply in the more expensive market drives prices toward equilibrium.", "This describes a 'buy high, sell low' strategy, which results in a loss of $15 per unit rather than a profit."], "correct": 2, "hint": "Consider the direction of trade that yields an immediate, risk-free profit.", "topic": "", "sec": "", "src": "", "link": "", "qid": "b788838633"}, {"q": "A startup's annual revenue grew from $1.2 million in 2018 to $3.5 million in 2023. If the company maintains this same annual growth rate, what is the projected revenue for the year 2026?", "options": ["$5.87 million", "$4.88 million", "$6.65 million", "$10.21 million"], "rationales": ["This is not the compound-growth projection. Using the CAGR from 2018 to 2023 and compounding for three additional years produces approximately $6.65 million.", "This value results from applying a simple average growth increment ($0.46 million per year) for three years instead of using the compound annual growth rate.", "The CAGR is (3.5/1.2)¹/5-1 ≈ 23.87\\%. Projecting three more years gives 3.5(1.2387)³ ≈ 6.65 million.", "This error occurs if the total growth factor (3.5/1.2) is incorrectly applied as the annual growth rate for the remaining three years."], "correct": 2, "hint": "This is a two-step problem: first calculate the historical rate of return, then use it to find the future value.", "topic": "", "sec": "", "src": "", "link": "", "qid": "36bf1e6d45"}, {"q": "According to the Valuation Principle and the properties of market values discussed in the material, which of the following statements are true regarding financial decision-making?", "options": ["Book values are generally preferred over market values when evaluating the benefits of a potential investment.", "A firm should only undertake projects where the total benefits are exactly equal to the total costs.", "Costs and benefits must be converted to the same point in time to be directly comparable.", "Market values should be used to measure costs and benefits because they represent the opportunity cost."], "rationales": ["The conceptual questions in the source explicitly state that market values are the appropriate measure, making options favoring book values incorrect.", "The Valuation Principle states that actions should be taken only if benefits exceed the costs, not merely equal them.", "The time value of money principle requires that cash flows at different times be moved to the same period (usually the present) before comparison.", "The material specifies that if a market value is available, it is the best measure of the value of an action's components."], "correct": 3, "hint": "Focus on the rules for measuring benefits/costs and the requirement for time-consistency.", "topic": "", "sec": "", "src": "", "link": "", "qid": "ecbca381fa"}, {"q": "A logistics company is considering a new software package. The software costs $45,000 today but is expected to save the company $52,000 in labor costs in exactly 3 years. If the competitive market interest rate is 6%, what is the Net Present Value (NPV) of this investment?", "options": ["$7,000.00", "-$1,334.46", "$4,056.60", "-$1,132.08"], "rationales": ["This value ignores the time value of money entirely, simply subtracting the nominal cost from the nominal future benefit ($52,000 - 45,000$).", "The PV of the benefit is 52,000 / (1.06)³ ≈ 43,665.54. The NPV is the PV of benefits minus the cost: $43,665.54 - 45,000 = -1,334.46$.", "This result occurs if the benefit is only discounted for one year ($52,000 / 1.06 - 45,000$) instead of the full three-year duration.", "This error involves incorrectly using the discount factor formula frac11+r mentioned in the terminology section as if it applied to all 3 years without an exponent."], "correct": 1, "hint": "Calculate the present value of the future benefit first, then subtract the initial cost.", "topic": "", "sec": "", "src": "", "link": "", "qid": "69276f68fb"}, {"q": "You have $5,000 to invest for 8 years. How much additional money will you have at the end of the 8 years if you find an account paying 7% annual interest compared to one paying 5.5% annual interest?", "options": ["$600.00", "$1,125.40", "$143.20", "$834.15"], "rationales": ["This is the result of using simple interest for the calculation: 5000 × (0.07 - 0.055) × 8 years.", "This reflects a common error of calculating the difference in rates (1.5\\%) and then applying that as the only rate for compounding over 8 years: 5000(1.015)⁸.", "This value might be reached if only one year of compound interest difference was calculated instead of eight.", "Compare FVA = 5000(1.07)⁸ ≈ 8590.93 and FVB = 5000(1.055)⁸ ≈ 7756.78. The difference is $8590.93 - 7756.78 = 834.15$."], "correct": 3, "hint": "Find the future value for each interest rate separately and then calculate the difference between them.", "topic": "", "sec": "", "src": "", "link": "", "qid": "e5c575bfb3"}, {"q": "If an investment provides a 4% return every year, what is the equivalent cumulative growth rate over a 5-year period?", "options": ["16.99%", "21.67%", "20.00%", "25.00%"], "rationales": ["This is a plausible error if the student uses the formula for discounting over 4 years instead of compounding over 5 years.", "The equivalent rate for a different period is found using (1 + rannual)⁵ = 1 + r₅-year. So, (1.04)⁵ - 1 ≈ 0.21665 or 21.67\\%.", "This is the result of simple interest (4\\% × 5 years), which fails to account for the compounding of the returns each year.", "This represents a calculation error where the investor might divide 1 by the interest rate instead of compounding the growth factor."], "correct": 1, "hint": "Compound the annual growth factor for the total number of years in the period.", "topic": "", "sec": "", "src": "", "link": "", "qid": "f08ce0cda6"}, {"q": "A bank offers a 'Double Your Money' certificate that pays out $20,000 in 12 years for an initial deposit today. If the market interest rate for similar risk investments is 6.5%, is this a good deal according to the Valuation Principle?", "options": ["Yes, because the annual rate earned (6.0\\%) is very close to the market rate of 6.5\\%.", "Yes, because doubling your money is always a superior return regardless of the timeframe.", "No, because the Rule of 72 says money should double in 7 years at this rate.", "No, because the present value of the $20,000 is less than the $10,000 required deposit."], "rationales": ["Under the Valuation Principle, a deal is only 'good' if benefits exceed costs; being 'close' but lower results in a negative NPV, making it a poor choice.", "This ignores the time value of money; a return must be compared to what the competitive market rate would have yielded over the same 12 years.", "While the Rule of 72 estimates a doubling time of ≈ 11 years at 6.5\\%, the decision must be based on comparing the specific deal's PV or FV to market alternatives.", "PV of 20,000 at 6.5\\% for 12 years is20,000 / (1.065)^{12} \\approx $9,394. Since the PV of the benefit ($9,394) is less than the cost ($10,000), the action should not be taken."], "correct": 3, "hint": "Calculate the present value of the $20,000 benefit using the 6.5% market rate and compare it to the $10,000 cost.", "topic": "", "sec": "", "src": "", "link": "", "qid": "74f2007b9e"}, {"q": "A precious metals dealer is selling gold for 1,900 per ounce in Tokyo and buying it for 1,920 per ounce in New York. If the total cost to transport and insure the gold between cities is 5 per ounce, what is the arbitrage profit per ounce if you buy in Tokyo and sell in New York immediately?", "options": ["0", "20", "25", "15"], "rationales": ["This assumes the Law of One Price is currently in effect, but the scenario describes a market inefficiency where a net profit is possible even after costs.", "This value represents the gross price difference but fails to account for the transaction and transportation costs associated with moving the asset.", "This result stems from a procedural error of adding the costs to the price difference rather than subtracting them from the potential gain.", "Arbitrage profit is the net gain after all costs; here, the price difference is 20 ($$1,920 - 1,900$$), and after subtracting the 5 transport cost, the remaining profit is 15."], "correct": 3, "hint": "Remember that arbitrage requires calculating the net profit after accounting for all necessary expenses to execute the trade.", "topic": "", "sec": "", "src": "", "link": "", "qid": "bfb17e6171"}, {"q": "Solaris Tech is considering a project that requires an immediate investment of 25,000. The project is guaranteed to pay out 32,000 in exactly six years. If the appropriate discount rate for this level of risk is 4.5\\%, what is the Net Present Value (NPV) of this project?", "options": ["-603.22", "24,512.11", "-487.89", "7,000.00"], "rationales": ["This error likely occurs from using the wrong number of periods (n=7 instead of n=6) when discounting the future payment.", "This value represents only the present value of the future benefit and neglects to subtract the initial cost required to start the project.", "The NPV is calculated by finding the PV of the benefit (32,000 / (1.045)⁶ ≈ 24,512.11) and subtracting the initial cost (25,000), resulting in a negative value.", "This is the nominal profit ($$32,000 - 25,000$$), which ignores the time value of money by failing to discount the future cash flow to the present."], "correct": 2, "hint": "The Net Present Value is the difference between the present value of the benefits and the present value of the costs.", "topic": "", "sec": "", "src": "", "link": "", "qid": "c1e0e8269e"}, {"q": "In financial modeling, the variable 'r' in the equation PV = FV / (1 + r)n can be referred to by which of the following terms depending on the context?", "options": ["Accumulation factor", "Yield to maturity", "Cost of capital", "Discount rate"], "rationales": ["The accumulation factor refers to the entire expression (1+r)n, not just the rate r itself.", "This is the specific term used for the expected return on a bond if held until its expiration date.", "This represents the return required by investors or the interest paid to lenders to justify a project.", "This term is used specifically when determining the present value of future cash flows."], "correct": 3, "hint": "Consider the different roles r plays when looking at bonds, stocks, or bank deposits.", "topic": "", "sec": "", "src": "", "link": "", "qid": "4f04761ff2"}, {"q": "Investment X offers to pay you 5,000 in four years, while Investment Y offers to pay you 7,500 in nine years. If the market interest rate is 6\\%, which investment is more valuable today and by how much?", "options": ["They are equally valuable because they both have a 6\\% return", "Investment X is more valuable by 520.12", "Investment Y is more valuable by approximately 480.95", "Investment Y is more valuable by 2,500.00"], "rationales": ["While the discount rate is the same, the timing and magnitudes of the cash flows differ, leading to distinct present values.", "This error may result from incorrectly using the interest rate as a multiplier (5,000 × 1.06 × 4) instead of discounting.", "The PV of X is 5,000 / (1.06)⁴ ≈ 3,960.47 and the PV of Y is 7,500 / (1.06)⁹ ≈ 4,441.42; the difference is $$4,441.42 - 3,960.47 = 480.95$$.", "This is the difference in nominal future values ($$7,500 - 5,000$$) and ignores the fact that the payments occur at different points in time."], "correct": 2, "hint": "To compare values at different times, you must move both cash flows to the same point on the timeline, usually the present (t=0).", "topic": "", "sec": "", "src": "", "link": "", "qid": "f3bae40687"}, {"q": "Using the 'Rule of 72' as an approximation, how much longer would it take to double your money at a 4\\% annual return compared to an 8\\% annual return?", "options": ["9 years longer", "18 years longer", "2 years longer", "4 years longer"], "rationales": ["The Rule of 72 suggests doubling times of $$72/4 = 18$$ years and $$72/8 = 9$$ years; the difference is $$18 - 9 = 9$$ years.", "This is the total time for the 4\\% investment to double, not the difference between the two investments.", "This incorrectly assumes the relationship between interest rate and time is linear (dividing 8/4) rather than inverse and hyperbolic.", "This simply subtracts the interest rates ($$8 - 4$$) rather than calculating and comparing the resulting time periods."], "correct": 0, "hint": "Calculate the doubling time for each rate individually before finding the difference.", "topic": "", "sec": "", "src": "", "link": "", "qid": "c3c84a512b"}, {"q": "An environmental grant was worth 500,000 in 2010. By 2020, the same grant had increased to 800,000. If the grant continues to grow at the same annual rate, what will its approximate value be in 2030?", "options": ["1,040,000", "1,280,000", "1,350,000", "1,100,000"], "rationales": ["This error stems from calculating simple interest on the original 500,000 for the second period instead of compounding on the new balance.", "The growth factor for 10 years is $$800,000 / 500,000 = 1.6$$. Applying this same factor to the 2020 value for another 10 years gives 800,000 × 1.6 = 1,280,000.", "This is a result of overestimating the annual growth rate by rounding up too early in the multi-step calculation.", "This assumes linear growth (adding 300,000 every 10 years) rather than the geometric/compounded growth typical of financial values."], "correct": 1, "hint": "Determine the growth factor over the first 10-year period and apply that same factor to the next 10-year period.", "topic": "", "sec": "", "src": "", "link": "", "qid": "a8ce3d6cd0"}, {"q": "When using a financial calculator to solve for the number of periods (n), why is it usually necessary to enter the Present Value (PV) as a negative number if the Future Value (FV) is positive?", "options": ["The calculator cannot process logarithms of positive numbers", "Because present values are always mathematically negative in TVM formulas", "To account for the effect of inflation on purchasing power", "To represent the opposite direction of cash flows (outflow vs. inflow)"], "rationales": ["Calculators can process logs of positive numbers; the error occurs if the signs imply a growth direction that is mathematically impossible given the interest rate.", "PV is not inherently negative; the negative sign is a directional convention for cash flow, not a mathematical property of value.", "The sign convention is a tool for tracking cash flows and is unrelated to external economic factors like inflation.", "Financial calculators use a sign convention where money leaving your pocket (investment) is negative and money returning to you (payout) is positive."], "correct": 3, "hint": "Think about the 'perspective' of your wallet when you make an investment and when you receive a return.", "topic": "", "sec": "", "src": "", "link": "", "qid": "aca61742c1"}], "hasSheet": false, "parts": false, "secTitles": {}, "reserve": 0, "tags": false, "frq": [{"ask": "In financial terminology, the process of determining the present value of a future cash flow is known as ___, which involves using a discount rate to adjust for the time value of money.", "rubric": [{"t": "The answer: discounting", "judge": false, "k": ["discounting cash flows", "discounting"]}], "model": "discounting\n\nDiscounting is the specific term used when moving from a future value (FV) back to a present value (PV), effectively removing the earned interest to see what the value is worth today."}, {"ask": "Using the 'Rule of 72' approximation described in the class notes, an investment earning a 9% annual return will take approximately ___ years to double in value.", "rubric": [{"t": "The answer: 8", "judge": false, "k": ["8", "8 years", "eight"]}], "model": "8\n\nThe Rule of 72 states that the number of periods to double is approximately 72 divided by the interest rate percentage ($72 / 9 = 8$)."}, {"ask": "If a venture capital firm reports that its portfolio has an annual growth rate of $$12\\%$$, the equivalent growth rate for a five-year period (rounded to two decimal places) would be ___ percent.", "rubric": [{"t": "The answer: 76.23", "judge": false, "k": ["76.23%", "76.23", "seventy-six point two three"]}], "model": "76.23\n\nTo convert an annual rate to a multi-year period, you must use the compounding formula $(1 + r_{annual})^n - 1$; in this case, $(1.12)^5 - 1 = 0.7623$ or $76.23\\%$."}, {"ask": "The mathematical expression $\\frac{1}{(1 + r)^n}$ is known as the ___, which represents the value today of a single dollar to be received in the future.", "rubric": [{"t": "The answer: discount factor", "judge": false, "k": ["Present Value Factor", "PV Factor", "discount factor"]}], "model": "discount factor\n\nThe discount factor is the specific multiplier used to convert a future value into its equivalent present value."}], "notebook": "https://notebook.google.com/notebook/5aaf743e-52c7-4229-a64d-4af011920c80", "root": "../index.html", "tab": "quiz", "sheet": ""}</script>
+<script>
+(function(){
+  if(window.lqSync) return;
+  const API = 'https://terp-plate.vercel.app/api/quiz-sync', MK = 'lqsync:meta';
+  const none = {first: Promise.resolve([]), now: async()=>[], listen(){}};
+  let key = '';
+  try{ key = localStorage.getItem('lq:key') || ''; }catch(e){}
+  const hm = /[#&]k=([A-Za-z0-9_-]{40,})/.exec(location.hash);
+  if(hm) key = hm[1];
+  if(!key || !window.crypto || !crypto.subtle){ window.lqSync = none; return; }
+
+  const skip = k => k.indexOf('lq:') !== 0 || k === 'lq:key' || k === 'lq:speech';
+  const rawSet = Storage.prototype.setItem;
+  let meta = {};
+  try{ meta = JSON.parse(localStorage.getItem(MK) || '{}') || {}; }catch(e){}
+  const putMeta = ()=>{ try{ rawSet.call(localStorage, MK, JSON.stringify(meta)); }catch(e){} };
+  const hash = t => { let h = 5381; for(let i=0;i<t.length;i++) h = ((h<<5) + h + t.charCodeAt(i)) | 0; return h; };
+  const isState = k => /^lq:[^:]+$/.test(k) && k !== 'lq:hub';
+  function weight(s){
+    return Object.keys(s.answers||{}).length + Object.keys(s.pass2||{}).length
+         + Object.keys(s.skipped||{}).length + Object.keys(s.starred||{}).length
+         + Object.keys(s.unsure||{}).length + 1000 * (s.history||[]).length + (s.done ? 500 : 0);
+  }
+  // '' = nothing worth sending
+  function sig(k, v){
+    if(isState(k)){
+      try{ const s = JSON.parse(v);
+        if(!s || typeof s !== 'object') return '';
+        if(!weight(s) && !s.only && !s.tagf) return '';
+        const c = Object.assign({}, s); delete c.ms; delete c.qms; delete c.meta; delete c.hintOpen;
+        return JSON.stringify(c);
+      }catch(e){ return ''; }
+    }
+    return (v && v !== '{}' && v !== '[]' && v !== '{"defs":[],"q":{}}') ? v : '';
+  }
+  let frozen = false, applying = false, timer = null, busy = false;
+  function mark(k, v){
+    if(skip(k)) return;
+    const g = sig(k, v), h = hash(g), m = meta[k] || (meta[k] = {t:0});
+    if(m.h === h) return;
+    m.h = h;
+    if(g){ m.t = Date.now(); m.d = 1; clearTimeout(timer); timer = setTimeout(run, 1500); }
+    putMeta();
+  }
+  Storage.prototype.setItem = function(k, v){
+    if(this === localStorage && frozen && String(k).indexOf('lq:') === 0) return;
+    rawSet.call(this, k, v);
+    if(this === localStorage && !applying){ try{ mark(String(k), String(v)); }catch(e){} }
+  };
+  // What was already here before sync existed: age unknown, so it is stamped low, and a real
+  // attempt outranks a thinner one by how much is in it.
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(skip(k) || meta[k]) continue;
+      const v = localStorage.getItem(k), g = sig(k, v);
+      meta[k] = {t: 0, h: hash(g)};
+      if(g){ let w = 1; if(isState(k)){ try{ w = 1 + weight(JSON.parse(v)); }catch(e){} }
+             meta[k].t = w; meta[k].d = 1; }
+    }
+    putMeta();
+  }catch(e){}
+
+  const enc = new TextEncoder(), dec = new TextDecoder();
+  const toB = s => { s = s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length % 4) s += '=';
+                     return Uint8Array.from(atob(s), c => c.charCodeAt(0)); };
+  const fromB = u => { let t = ''; for(let i=0;i<u.length;i+=8192) t += String.fromCharCode.apply(null, u.subarray(i, i+8192));
+                       return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+  const hex = b => Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,'0')).join('');
+  let ck = null, bucket = '';
+  const ready = (async()=>{
+    ck = await crypto.subtle.importKey('raw', toB(key), 'AES-GCM', false, ['encrypt','decrypt']);
+    bucket = hex(await crypto.subtle.digest('SHA-256', enc.encode('lq-sync:' + key))).slice(0, 32);
+  })();
+  const kid = async k => hex(await crypto.subtle.digest('SHA-256', enc.encode(bucket + '|' + k))).slice(0, 32);
+  async function seal(o){
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv}, ck, enc.encode(JSON.stringify(o)));
+    return fromB(iv) + '.' + fromB(new Uint8Array(ct));
+  }
+  async function unseal(t){
+    const p = t.split('.');
+    return JSON.parse(dec.decode(await crypto.subtle.decrypt({name:'AES-GCM', iv:toB(p[0])}, ck, toB(p[1]))));
+  }
+
+  function pageId(){
+    const el = document.getElementById('quiz-data');
+    if(!el) return null;
+    try{ return JSON.parse(el.textContent).id; }catch(e){ return null; }
+  }
+  async function run(){
+    if(busy || frozen) return [];
+    busy = true;
+    const changed = [];
+    try{
+      await ready;
+      const have = {}, puts = [], sent = {};
+      for(const k of Object.keys(meta)){
+        const m = meta[k];
+        if(!m.id) m.id = await kid(k);
+        have[m.id] = m.t || 0;
+        if(m.d){
+          const v = localStorage.getItem(k);
+          if(v === null){ m.d = 0; continue; }
+          puts.push({k: m.id, v: await seal({k, v}), ts: m.t});
+          sent[k] = m.t;
+        }
+      }
+      const r = await fetch(API, {method:'POST', headers:{'content-type':'text/plain'},
+                                  body: JSON.stringify({bucket, have, puts})});
+      if(!r.ok) throw new Error('sync ' + r.status);
+      const j = await r.json();
+      for(const k in sent) if(meta[k].t === sent[k]) meta[k].d = 0;
+      for(const row of j.rows || []){
+        let o; try{ o = await unseal(row.v); }catch(e){ continue; }
+        if(!o || skip(o.k)) continue;
+        const m = meta[o.k] || (meta[o.k] = {t:0});
+        if((m.t || 0) >= row.ts) continue;
+        applying = true;
+        try{ rawSet.call(localStorage, o.k, o.v); }catch(e){}
+        applying = false;
+        m.t = row.ts; m.d = 0; m.h = hash(sig(o.k, o.v)); m.id = row.k;
+        changed.push(o.k);
+      }
+      putMeta();
+    }catch(e){}
+    busy = false;
+    if(changed.length && window.lqSync.live){
+      const id = pageId();
+      const mine = id ? changed.some(k => k === 'lq:' + id || k.indexOf('lq:' + id + ':') === 0)
+                      : !!document.getElementById('manifest');
+      if(mine){ frozen = true; location.reload(); }
+    }
+    return changed;
+  }
+  function wake(){ if(document.visibilityState !== 'hidden') run(); }
+  function leave(){ if(document.visibilityState === 'hidden') run(); }
+  function listen(){
+    document.removeEventListener('visibilitychange', wake); document.addEventListener('visibilitychange', wake);
+    document.removeEventListener('visibilitychange', leave); document.addEventListener('visibilitychange', leave);
+    removeEventListener('focus', wake); addEventListener('focus', wake);
+  }
+  // `live` = this page should reload itself when its own quiz arrives newer. The locked shell
+  // turns it on only after it has drawn the page.
+  window.lqSync = {first: null, now: run, listen, live: true};
+  listen();
+  setInterval(wake, 20000);
+  window.lqSync.first = run();
+})();
+</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -998,10 +1174,44 @@ function save(){
    the sitting's subchapters into this one function is what makes a half-paper behave exactly
    like a whole one — one direction, one end card, one second pass — with no branch anywhere
    downstream. `only: null` (not chosen, or a page built without parts) filters nothing. */
+/* ---- TAGS (10-12, his ask) ------------------------------------------------------------
+   *"a text box at first, but it functions like a Notion tag property … once I press enter it
+   creates a tag and that tag stays for this exam and only for this exam."* Its own key, like
+   the research box, so a Retake and a rebuild keep them. `defs` is the order he made them in;
+   a tag no question carries any more is dropped from it. Off unless the page was built with
+   `tags`, so every page built before this is what it was. */
+const TKEY = KEY + ':tags';
+let T = (function(){
+  try{ const t = JSON.parse(localStorage.getItem(TKEY) || '{}') || {};
+       return {defs: t.defs || [], q: t.q || {}}; }
+  catch(e){ return {defs:[], q:{}}; } })();
+function tput(){ try{ localStorage.setItem(TKEY, JSON.stringify(T)); }catch(e){} }
+function tagsOf(i){ return T.q[qk(i)] || []; }
+function hasTag(i, name){ return tagsOf(i).indexOf(name) >= 0; }
+function tagAdd(i, raw){
+  const name = String(raw).trim().replace(/\s+/g, ' ');
+  if(!name) return;
+  const known = T.defs.find(d => d.toLowerCase() === name.toLowerCase()) || name;
+  if(T.defs.indexOf(known) < 0) T.defs.push(known);
+  const l = T.q[qk(i)] || (T.q[qk(i)] = []);
+  if(l.indexOf(known) < 0) l.push(known);
+  tput();
+}
+function tagDrop(i, name){
+  const id = qk(i);
+  T.q[id] = (T.q[id] || []).filter(x => x !== name);
+  if(!T.q[id].length) delete T.q[id];
+  if(!Object.keys(T.q).some(k => T.q[k].indexOf(name) >= 0)) T.defs = T.defs.filter(d => d !== name);
+  tput();
+}
+
 function active(s){
-  const only = D.parts ? (s.only || null) : null;
+  // A TAG RUN ("test only these") rides here for the same reason the section filter does.
+  const tf = D.tags ? (s.tagf || null) : null;
+  const only = (D.parts && !tf) ? (s.only || null) : null;
   return D.questions.map((_,i)=>i).filter(i => onPaper(s, i)
-    && (!only || only.indexOf(D.questions[i].sec) >= 0));
+    && (!only || only.indexOf(D.questions[i].sec) >= 0)
+    && (!tf || hasTag(i, tf)));
 }
 /* ---- THE RESERVES (08-16) ------------------------------------------------------------
    His ask: *"if 1 question is skipped, another one is replaced in that section about it… you
@@ -1562,7 +1772,7 @@ function draw(){
   // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
   // the rest of the sitting, so nothing about answering, going back or the second pass has
   // to know the picker exists.
-  if(sectioned() && !S.only) return picker();
+  if(sectioned() && !S.only && !S.tagf) return picker();
   const act = runList();
   if(!act.length) return end();
   if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
@@ -1571,6 +1781,61 @@ function draw(){
 
 /* Pure markup, no DOM writes and no state changes — so the same builder can render the
    question and be measured off-screen for the centring reserve. */
+/* The tag box above the question. Chips for what this question carries, then the box: type and
+   Enter makes the tag (or reuses one spelled the same), the ones he already made show under it
+   to click, Backspace on an empty box takes the last one off, Esc leaves. */
+function tagRowInner(i){
+  const mine = tagsOf(i);
+  let h = '';
+  mine.forEach((n,k)=>{ h += '<span class="tchip">' + esc(n) + '<button class="tx" data-drop="' + k
+                           + '" tabindex="-1" aria-label="Remove tag">×</button></span>'; });
+  return h + '<input id="tagin" class="tagin" type="text" autocomplete="off" spellcheck="false" '
+           + 'placeholder="' + (mine.length ? 'Add a tag' : 'Tag this question  ( l )') + '">'
+           + '<div class="tsug hide" id="tsug"></div>';
+}
+function paintSug(i){
+  const inp = $('#tagin'), box = $('#tsug');
+  if(!inp || !box) return;
+  const raw = inp.value.trim(), v = raw.toLowerCase(), mine = tagsOf(i);
+  let h = T.defs.map((d,n)=>({d,n}))
+    .filter(x => mine.indexOf(x.d) < 0 && (!v || x.d.toLowerCase().indexOf(v) >= 0))
+    .map(x => '<button class="tchip pick" data-n="' + x.n + '" tabindex="-1">' + esc(x.d) + '</button>')
+    .join('');
+  if(v && !T.defs.some(d => d.toLowerCase() === v))
+    h += '<span class="tnew">Enter makes “' + esc(raw) + '”</span>';
+  box.innerHTML = h;
+  box.classList.toggle('hide', !h || document.activeElement !== inp);
+  // mousedown, not click: the box must not blur (and hide these) before the pick lands
+  box.querySelectorAll('.pick').forEach(b => { b.onmousedown = e => {
+    e.preventDefault(); tagAdd(i, T.defs[+b.dataset.n]); redrawTags(i, true); }; });
+}
+function redrawTags(i, focus){
+  const row = $('#tagrow');
+  if(!row) return;
+  row.innerHTML = tagRowInner(i);
+  wireTags(i);
+  if(focus) $('#tagin').focus();
+}
+function wireTags(i){
+  const row = $('#tagrow'), inp = $('#tagin');
+  if(!row || !inp) return;
+  row.querySelectorAll('.tx').forEach(b => b.onclick = ()=>{
+    tagDrop(i, tagsOf(i)[+b.dataset.drop]); redrawTags(i, false); });
+  inp.onfocus = ()=> paintSug(i);
+  inp.oninput = ()=> paintSug(i);
+  inp.onblur = ()=> { const b = $('#tsug'); if(b) b.classList.add('hide'); };
+  inp.onkeydown = e => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      if(!inp.value.trim()){ inp.blur(); return; }
+      tagAdd(i, inp.value); redrawTags(i, true);
+    } else if(e.key === 'Escape'){ inp.value = ''; inp.blur(); }
+    else if(e.key === 'Backspace' && !inp.value && tagsOf(i).length){
+      tagDrop(i, tagsOf(i).slice(-1)[0]); redrawTags(i, true);
+    }
+  };
+}
+
 function buildQ(i, picked, fresh, en){
   const q = D.questions[i];
   const answered = picked !== undefined;
@@ -1582,10 +1847,12 @@ function buildQ(i, picked, fresh, en){
   // The counter sits top-left above the question, the way the notebook does it, rather than
   // up in the bar — it belongs with the thing it counts. On a second pass it counts the
   // second pass, so four wrong answers read as "1 / 4" and not as a broken 16.
-  let h = '<div class="qhead' + en + '"><div class="qcol">'
+  let h = (D.tags ? '<div class="tagrow no-read-aloud" id="tagrow">' + tagRowInner(i) + '</div>' : '')
+        + '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta no-read-aloud"><span class="num">' + (pos+1) + ' / '
         + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        + (D.tags && S.tagf ? '<span class="dot">·</span><span>only ' + esc(S.tagf) + '</span>' : '')
         // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
         // 10 reads as the paper having lost his place, which is how he read it.
         + (recycling && S.phase!==2
@@ -1781,6 +2048,7 @@ function question(fresh){
   $('#star').onclick = ()=> toggleStar(i);
   $('#qmark').onclick = ()=> toggleUnsure(i);
   $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
+  if(D.tags) wireTags(i);
 
   // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
   // touches it — and nothing above the options ever changes height.
@@ -2271,19 +2539,32 @@ function openMenu(){
   m.className = 'menu';
   // The clock's only other way in. `w` is not written anywhere else on the page, and a key
   // nothing announces is a key he has to remember he asked for.
-  m.innerHTML = '<button id="skipq">Skip this question</button>'
+  m.innerHTML = '<button id="skipq">Skip this question  ( x )</button>'
               // The reader's own two entries. Space and `v` are written nowhere else on the
               // page, and a key nothing announces is a key he has to remember he asked for.
               + '<button id="readtog">' + (sayOn ? 'Stop' : 'Start') + ' read-aloud  ( space )</button>'
               + '<button id="voiceset">Voice, speed and pauses…</button>'
-              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>';
+              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>'
+              // EVERY KEY, WRITTEN DOWN ONCE (10-12). He could not find Redo or remember its key.
+              + '<div class="keys"><kbd>x</kbd><span>Skip</span><kbd>u</kbd><span>Redo your answer</span>'
+              + '<kbd>h</kbd><span>Hint, when the question has one</span>'
+              + '<kbd>s</kbd><span>Star</span><kbd>/</kbd><span>No idea</span>'
+              + '<kbd>r</kbd><span>Research</span><kbd>f</kbd><span>Fix this question</span>'
+              + '<kbd>t</kbd><span>Reflection</span>'
+              + (D.tags ? '<kbd>l</kbd><span>Tag</span>' : '')
+              + '<kbd>↵</kbd><span>Next</span><kbd>←</kbd><span>Back</span></div>';
   host.appendChild(m);
   m.querySelector('#clocktog').onclick = ()=>{ toggleClock(); closeMenu(); };
   m.querySelector('#readtog').onclick = ()=>{ closeMenu(); sayOn ? sayOff() : sayToggle(); };
   m.querySelector('#voiceset').onclick = ()=>{ closeMenu(); openVset(); };
-  m.querySelector('#skipq').onclick = ()=>{
+  m.querySelector('#skipq').onclick = ()=>{ closeMenu(); skipQuestion(); };
+  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
+}
+/* One path for skipping, whether it came from the menu or from `x` (10-12, his ask: a key
+   *"rather than going into the top bar and then pressing skip"*). */
+function skipQuestion(){
     const list = runList(), pos = list.indexOf(S.i);
-    if(list.length <= 1) return closeMenu();        // never skip the last one standing
+    if(list.length <= 1) return;                    // never skip the last one standing
     const sec = bucketOf(S.i);
     S.skipped[qk(S.i)] = true;
     delete S.answers[qk(S.i)];
@@ -2297,7 +2578,6 @@ function openMenu(){
     // have handed him an end card with a question still owed.
     const filled = promoteReserve(sec) >= 0;
     const wasLast = !filled && pos === list.length - 1;
-    closeMenu();
     syncTabs();
     if(wasLast){ finish(); return; }
     // After the removal the list has shrunk, so the item now AT `pos` is the one that
@@ -2306,8 +2586,6 @@ function openMenu(){
     S.hintOpen = false;
     lastShown = -1;
     save(); question(); window.scrollTo(0,0);
-  };
-  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
 }
 function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(); }
 
@@ -2564,6 +2842,39 @@ function momentum(){
   return h + '</div>';
 }
 
+/* THE TAGS ON THE END CARD: how each group went, and a way to sit one group alone. A tag run
+   is a fresh attempt on only those questions (the finished one goes into history first, as a
+   Retake does); Retake, or "every question" here, goes back to the whole paper. Not offered
+   on a sectioned paper, whose picker already owns which questions a sitting holds. */
+function tagTable(){
+  if(!D.tags || !T.defs.length) return '';
+  const all = D.questions.map((_,i)=>i).filter(i => onPaper(S, i));
+  let h = '';
+  T.defs.forEach((d,n)=>{
+    const qs = all.filter(i => hasTag(i, d));
+    if(!qs.length) return;
+    const sat = qs.filter(i => ans(i) !== undefined || ans2(i) !== undefined);
+    const ok = sat.filter(i => finalRight(i)).length;
+    h += '<div class="tagline"><span class="tchip">' + esc(d) + '</span><span class="tn">'
+       + (sat.length ? ok + ' / ' + sat.length + ' right' : qs.length + ' question' + (qs.length>1?'s':''))
+       + '</span>' + (D.parts ? '' : '<button class="link" data-tagrun="' + n + '">Test only these</button>')
+       + '</div>';
+  });
+  if(!h && !S.tagf) return '';
+  if(S.tagf) h += '<p class="note">This run was only “' + esc(S.tagf) + '”. '
+                + '<button class="link" id="tagall">Back to every question</button></p>';
+  return '<div class="tagtable"><h3>By tag</h3>' + h + '</div>';
+}
+function startRun(tag){
+  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length, ms:S.ms,
+                             tag:S.tagf || undefined});
+  const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
+  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  if(tag) S.tagf = tag;
+  pickSel = null; lastShown = -1;
+  save(); syncTabs(); renderScore(); draw(); window.scrollTo(0,0);
+}
+
 function end(){
   timeOn(null);
   const act = active(S), n = score(S), t = act.length;
@@ -2645,6 +2956,7 @@ function end(){
             + 'every one is done; sitting one again replaces its score.</p>';
   }
 
+  h += tagTable();
   const nskip = Object.keys(S.skipped||{}).length;
   if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
               + '<button class="link" id="unskip">put them back</button></p>';
@@ -2655,6 +2967,10 @@ function end(){
   $('#quizview').innerHTML = h;
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  document.querySelectorAll('[data-tagrun]').forEach(b =>
+    b.onclick = ()=> startRun(T.defs[+b.dataset.tagrun]));
+  const tall = $('#tagall');
+  if(tall) tall.onclick = ()=> startRun(null);
   const ma = $('#momall');
   if(ma) ma.onclick = ()=>{ momAll = true; end(); };
   const m = $('#more');
@@ -2691,6 +3007,7 @@ function itemHTML(i, n){
   const q = D.questions[i], first = ans(i), second = ans2(i);
   let h = '<div class="item">';
   if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
+  if(D.tags) tagsOf(i).forEach(t => { h += '<span class="tchip sm">'+esc(t)+'</span>'; });
   h += '<p class="qq">'+(n===undefined?'':(n+1)+'. ')+esc(q.q)+'</p>'
      + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
   if(!firstRight(i)){
@@ -2707,12 +3024,26 @@ function itemHTML(i, n){
   return h + '</div>';
 }
 
+let revByTag = false;
 function review(){
   timeOn(null);
+  const act = active(S), canSort = D.tags && T.defs.length;
   let h = '<div class="rev"><h3>Every question</h3>';
-  active(S).forEach((i,n)=>{ h += itemHTML(i, n); });
+  if(canSort) h += '<p class="note" style="margin:0 0 6px"><button class="link" id="revsort">'
+                 + (revByTag ? 'Sort in order' : 'Sort by tag') + '</button></p>';
+  if(canSort && revByTag){
+    // a question with two tags is listed under both; the untagged ones come last
+    T.defs.concat(['']).forEach(d=>{
+      const qs = act.filter(i => d ? hasTag(i, d) : !tagsOf(i).length);
+      if(!qs.length) return;
+      h += '<h3 class="tgroup">' + (d ? esc(d) : 'No tag') + ' · ' + qs.length + '</h3>';
+      qs.forEach(i => { h += itemHTML(i, act.indexOf(i)); });
+    });
+  } else act.forEach((i,n)=>{ h += itemHTML(i, n); });
   h += '</div>';
   $('#quizview').innerHTML = h;
+  const rs = $('#revsort');
+  if(rs) rs.onclick = ()=>{ revByTag = !revByTag; review(); };
   $('#band').classList.add('off');
   showResearch(false);
   $('#footer').classList.remove('hide');
@@ -4019,6 +4350,10 @@ document.addEventListener('keydown', e=>{
   // `w` FOR WATCH — the clock in the bar, off by default. Past G like every other command
   // key here, so it can never be an option letter.
   if(e.key === 'w' || e.key === 'W'){ toggleClock(); return; }
+  // `x` SKIPS, `l` (label) PUTS THE CARET IN THE TAG BOX. Both past G, so never an option key.
+  if(e.key === 'x' || e.key === 'X'){ e.preventDefault(); skipQuestion(); return; }
+  if((e.key === 'l' || e.key === 'L') && D.tags){
+    const ti = $('#tagin'); if(ti){ e.preventDefault(); ti.focus(); } return; }
   if(e.key === '/' || e.key === '?'){ e.preventDefault(); toggleUnsure(S.i); return; }
   /* THE KEY NAMES A POSITION ON SCREEN, not an option. `2` and `B` mean the second card he
      can see, which is the only thing either of them could mean to him — after a Redo has

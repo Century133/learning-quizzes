@@ -326,6 +326,32 @@ kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid
 .qmark:hover{background:var(--surface);color:var(--text)}
 .qmark.on{color:var(--text);border-color:var(--accent);background:var(--surface-hi)}
 
+/* ---- tags (10-12): his own labels on a question, kept per quiz ---- */
+.tagrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.tchip{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:.78rem;
+ color:var(--text);background:var(--surface-hi);border:1px solid var(--line);
+ border-radius:6px;padding:2px 8px;line-height:1.5}
+.tchip.sm{font-size:.7rem;margin:0 6px 9px 0}
+button.tchip{cursor:pointer}
+button.tchip:hover{border-color:var(--muted)}
+.tx{background:none;border:0;color:var(--muted);font:inherit;padding:0;cursor:pointer;line-height:1}
+.tx:hover{color:var(--text)}
+.tagin{flex:1 1 140px;min-width:120px;background:none;border:0;outline:0;color:var(--text);
+ font:inherit;font-size:.82rem;padding:3px 2px}
+.tagin::placeholder{color:var(--muted);opacity:.75}
+.tsug{flex:1 0 100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tnew{color:var(--muted);font-size:.76rem}
+.tagtable{margin:26px 0 0;text-align:left}
+.tagtable h3{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+ font-weight:500;margin:0 0 6px}
+.tagline{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line);
+ font-size:.88rem}
+.tagline .tn{flex:1;color:var(--muted);font-variant-numeric:tabular-nums}
+.tgroup{margin-top:30px}
+.menu .keys{border-top:1px solid var(--line);margin:5px 0 0;padding:8px 10px 4px;
+ display:grid;grid-template-columns:auto 1fr;gap:5px 10px;font-size:.78rem;color:var(--muted);
+ align-items:center}
+
 /* ---- the ⋮ menu ---- */
 .more{position:relative;flex:0 0 auto}
 .dots{background:none;border:0;color:var(--muted);font-size:1.15rem;line-height:1;
@@ -836,7 +862,157 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "bmgt301-exam-1-2026-09-20-224435", "title": "BMGT301 — Exam 1", "subtitle": "30 questions · pasted material", "book": "BMGT301", "hash": "e0c26c57ebd9e1c6", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "A company wants to react fast to sudden shifts in demand and is willing to give up direct control over labor conditions and quality standards to third-party factories in exchange for lower fixed costs and flexibility. Which strategy is this, and which company is the clearest example?", "options": ["Direct-to-consumer — like Shein", "Omnichannel — like Zara", "Contract manufacturing — like Shein", "Vertical integration — like Zara"], "rationales": ["DTC describes selling without a retail intermediary; it doesn't by itself describe the production-control tradeoff being asked about.", "Omnichannel is about integrating online and physical sales/returns, not about who owns production.", "Outsourcing production to thousands of third-party manufacturers trades direct control over labor/quality/ethics for speed, flexibility, and lower fixed costs — exactly Shein's model.", "Vertical integration means owning the layers of the value chain yourself, which increases control — the opposite of giving control away."], "correct": 2, "hint": "think about who owns the factories versus who just places orders with them.", "topic": "production strategy", "sec": "", "src": "", "link": "", "qid": "7f345df862"}, {"q": "A new Shein dress sells poorly in its small initial batch on the app. Under the LATR process, what happens next?", "options": ["Production is stopped or scaled back rather than reordered", "The unsold units get marked down heavily to clear them out", "Shein forecasts stronger demand next season and produces a large batch anyway", "RFID is used to move the leftover stock to other stores"], "rationales": ["LATR's core logic is test cheaply, scale only what sells, and cut losses on what doesn't.", "That's the traditional 'inventory equals death' markdown response — LATR avoids this by never overproducing in the first place.", "That's the traditional forecast-and-produce model LATR was built to replace, not what LATR actually does.", "Shein has no physical stores, so there's no store network to redistribute inventory into — that's a Zara-style tactic."], "correct": 0, "hint": "remember what the process is actually designed to avoid doing.", "topic": "LAT", "sec": "", "src": "R", "link": "", "qid": "31f4af6d27"}, {"q": "Two retailers install identical RFID inventory systems. One redesigns staff workflows and trains employees to use it daily; the other installs the same hardware but changes nothing about training or procedures. Which part of the information-system framework explains why their results differ so much?", "options": ["Hardware — one retailer must have bought better RFID readers", "Software licensing — one retailer probably paid for a better license tier", "People and Procedures — the system was only redesigned around users and workflows in one case", "ROI calculation — one retailer must have miscalculated the expected return"], "rationales": ["The hardware is stated to be identical; the outcome difference comes from elsewhere in the IS framework.", "Not implied by the scenario; the isolated variable is training/workflow redesign, not the software itself.", "This is the Prada lesson — buying the same technology doesn't create a working information system unless procedures and people are also built around it.", "ROI measures financial outcome; it doesn't cause the operational difference described here."], "correct": 2, "hint": "hardware being equal, look at what surrounds it.", "topic": "information systems", "sec": "", "src": "", "link": "", "qid": "537eb5ef23"}, {"q": "A U.S. shopper orders a $12 top that ships straight from a factory in China to their door, instead of arriving via a retailer's bulk import and warehouse system. What lets this happen cheaply and with less customs friction?", "options": ["Omnichannel fulfillment", "LATR", "The de minimis provision", "Vertical integration"], "rationales": ["That's about integrating online and physical retail experiences, unrelated to customs treatment.", "LATR is about testing and reordering production based on sales data, not shipping/customs policy.", "It allows qualifying low-value shipments simplified import treatment, cutting customs cost and friction for direct-to-consumer packages.", "This describes owning production layers, not a customs/shipping rule."], "correct": 2, "hint": "think customs paperwork, not production or channels.", "topic": "de minimis", "sec": "", "src": "", "link": "", "qid": "e0f41eb062"}, {"q": "A dominant platform's scale advantage triggers antitrust investigations in several countries at once. What tension from the chapter does this illustrate?", "options": ["The tension between innovation-driven winner-take-all advantage and regulatory/competition concerns", "Purely a data-privacy violation", "A contract-manufacturing labor dispute", "Evidence that digital transformation projects usually fail"], "rationales": ["This is exactly the managerial tension the chapter flags: strategy that produces winner-take-all dominance draws regulatory scrutiny.", "Privacy is a related but separate risk category; this scenario is about market dominance and competition, not data misuse specifically.", "Unrelated topic — no manufacturing or labor issue is described here.", "The 72% failure stat is about execution of transformation projects, unrelated to antitrust scrutiny of already-dominant platforms."], "correct": 0, "hint": "pair strategy success with the scrutiny it invites.", "topic": "winner-take-all", "sec": "", "src": "", "link": "", "qid": "7326c8b79a"}, {"q": "A law firm's AI research tool confidently cites a court case that turns out not to exist. Which AI risk is this?", "options": ["A security vulnerability", "Algorithmic bias", "A privacy risk", "Hallucination"], "rationales": ["Nothing was hacked or exploited; the system simply generated false content.", "Bias means systematically unfair or discriminatory outputs, not fabricated facts.", "No personal data was exposed or misused here.", "Fabricating plausible-sounding but false information is the definition of hallucination."], "correct": 3, "hint": "ask whether the output is fake, or just unfair.", "topic": "AI risks", "sec": "", "src": "", "link": "", "qid": "22592a2d26"}, {"q": "Amazon has pledged $5B to Anthropic despite not being an AI research lab itself. What does this best illustrate, and how does it differ from Microsoft's OpenAI deal?", "options": ["It's essentially a cloud-hosting revenue arrangement, unrelated to competitive positioning", "It means Amazon already owns a majority stake in Anthropic, similar to Microsoft and OpenAI", "It's required by antitrust regulators to preserve competition", "It reflects firms originally dominant in different markets increasingly competing across markets via AI investment — not the same as Microsoft's 49% equity stake in OpenAI"], "rationales": ["This understates it — the slides frame these investments as major tech firms, originally dominant in different markets, competing across markets through AI.", "Confuses the size and nature of the deal — Microsoft's is a 49% stake, Amazon's is a pledge, and neither is a majority stake.", "Invented — no such requirement appears in the material.", "Correct distinction: Amazon's pledge is investment, not an ownership stake like Microsoft's 49% of OpenAI."], "correct": 3, "hint": "separate an equity stake from a pledge, and note who competed in what market before.", "topic": "AI investments", "sec": "", "src": "", "link": "", "qid": "06486608b6"}, {"q": "The slides pair '~70% mobile coverage in sub-Saharan Africa' with the fact that Google, IBM, and Microsoft run R&D centers there. What point does this combination support?", "options": ["AI dominance is limited only to U.S.-based firms", "The African tech market is already saturated, so no further investment opportunity exists", "Technology competition is global, and cheap/fast tech can fuel economic development even in emerging markets", "It demonstrates a winner-take-all monopoly forming within Africa's domestic tech market"], "rationales": ["Unrelated conclusion; the point is about emerging-market development, not AI market share by country.", "Contradicts the point — the stat is used to show opportunity and ongoing investment, not saturation.", "The stat plus the R&D centers together show tech's global reach and its role in emerging-market development.", "No monopoly claim is made; the point is about global reach and development, not one firm dominating a market."], "correct": 2, "hint": "connect a coverage statistic to why outside firms would invest there.", "topic": "global tech", "sec": "", "src": "", "link": "", "qid": "42b8fdbed8"}, {"q": "One company pays for a sponsored slot at the top of search results; another restructures its site content to rank higher organically without paying per click. Which term matches each, respectively?", "options": ["CRM, then SEM", "SEM, then SEO", "SEO, then SEM", "SEM for both"], "rationales": ["CRM is about managing customer relationships/data, not search placement at all.", "SEM (Search Engine Marketing) covers paid placement; SEO (Search Engine Optimization) covers earning organic rank.", "Reverses the two — SEO is the free/organic side, SEM is the paid side.", "The second example is specifically unpaid/organic ranking, which is SEO's definition, not SEM's."], "correct": 1, "hint": "ask which one you pay for and which one you earn.", "topic": "SEM vs SEO", "sec": "", "src": "", "link": "", "qid": "682dce0b08"}, {"q": "A retailer wants a system that remembers a customer's past purchases across visits to personalize future offers, separate from the system that just records what was rung up at checkout today. Which pair correctly matches 'personalize offers' and 'record the transaction'?", "options": ["CRM for personalizing offers; POS for recording the transaction", "CRM for both tasks", "SEM for personalizing offers; POS for recording the transaction", "POS for personalizing offers; CRM for recording the transaction"], "rationales": ["CRM builds a relationship/history for personalization; POS is the transaction-processing system that captures the purchase itself.", "CRM doesn't capture the raw checkout transaction itself; that's specifically what a POS system does.", "SEM is paid search marketing, not customer relationship tracking.", "Reverses the roles — POS only captures point-of-sale transaction data, it doesn't build a customer relationship profile."], "correct": 0, "hint": "one remembers you, the other just rings you up.", "topic": "CRM vs POS", "sec": "", "src": "", "link": "", "qid": "cd7a4ddc64"}, {"q": "After a data breach, one executive is responsible for preventing future technical intrusions into company systems; another is responsible for how customer data is legally collected, used, and disclosed. Which titles match, respectively?", "options": ["CPO, then CISO", "CISO, then CPO", "CISO, then CIO", "CIO, then CISO"], "rationales": ["Reverses the roles — CPO handles data-use/privacy policy, not technical intrusion prevention.", "CISO = Chief Information Security Officer (technical security); CPO = Chief Privacy Officer (data-use/legal compliance).", "CIO isn't the privacy-specific role described in the second half of the scenario; that's the CPO.", "CIO oversees IT strategy broadly, not specifically breach-prevention security, which is the CISO's role."], "correct": 1, "hint": "one stops hackers, one governs data use.", "topic": "security vs privacy roles", "sec": "", "src": "", "link": "", "qid": "72a231b71f"}, {"q": "A sudden tariff hike or currency swing centered on Spain would hit Zara harder than it would hit Shein. Why?", "options": ["This is actually about Zara's reliance on de minimis shipping rules", "Zara's vulnerability here is really about weak cybersecurity, not its supply chain", "Shein has no exposure to this kind of risk at all", "Zara's production and distribution are centralized in one region, so disruption there ripples through its whole supply chain, while Shein spreads production across thousands of independent contract manufacturers"], "rationales": ["De minimis is a Shein/Temu shipping-cost advantage, not part of Zara's model or vulnerability.", "The scenario describes a tariff/currency shock, not a hacking issue.", "Overstates it — Shein has its own risks (quality, labor, IP), just not this specific centralized-region exposure.", "Centralization concentrates risk; Shein's outsourced network diffuses this specific kind of shock across many suppliers and locations."], "correct": 3, "hint": "trace the advantage of centralization back to its cost.", "topic": "Zara vulnerability", "sec": "", "src": "", "link": "", "qid": "b603dd49d3"}, {"q": "During a regional lockdown, a retailer with integrated online and in-store inventory reroutes stock from closed stores to e-commerce and has store staff fulfill web orders. A competitor with separate online and store inventory systems can't do this. What concept explains the difference?", "options": ["RFID tagging alone", "LATR", "Omnichannel integration", "Vertical integration"], "rationales": ["RFID helps locate individual items but doesn't by itself unify online and store inventory into one system — that's the omnichannel piece.", "LATR is Shein's test-and-reorder production process, unrelated to store/online inventory integration.", "An integrated inventory/sales system across channels is what lets a retailer redirect stock and staff this way during disruption.", "That's about owning production layers, not about linking sales channels together."], "correct": 2, "hint": "think channels working as one system, not just item-level tracking.", "topic": "omnichannel", "sec": "", "src": "", "link": "", "qid": "89c91b9422"}, {"q": "Why would Shein's app push users through a 'discover' feed, popups, flash sales, and games instead of just letting them search directly for a product?", "options": ["To keep users in the app longer, which generates more data and drives more purchases in a reinforcing loop", "Because building reliable search functionality is too technically difficult", "Because direct-to-consumer platforms are legally required to use a discovery format", "To distract customers from noticing product quality problems"], "rationales": ["This is the stated purpose: more time in-app means more data collected, which improves targeting and increases purchases.", "Not the stated reason; the design choice is a deliberate engagement strategy, not a technical limitation.", "Invented — no such legal requirement exists.", "Overly cynical and not the reason given in the material — the stated purpose is data/engagement, not concealment."], "correct": 0, "hint": "ask what more time in-app actually generates.", "topic": "Shein app design", "sec": "", "src": "", "link": "", "qid": "5ec6fad895"}, {"q": "One shopper wants fashion items curated by AI trend-detection; another wants the widest possible range of product categories in one place. Which platform matches each shopper, respectively?", "options": ["Shein, then Temu", "Zara, then Shein", "Shein for both", "Temu, then Shein"], "rationales": ["Shein focuses on fashion with AI-driven design; Temu is a broader marketplace with huge product variety across categories.", "Zara isn't part of this AI/marketplace comparison — it's the traditional vertically-integrated retailer.", "The second shopper wants breadth across categories, which is Temu's positioning, not Shein's fashion focus.", "Reverses their actual focuses."], "correct": 0, "hint": "one is fashion-specific, one is everything.", "topic": "Shein vs Temu", "sec": "", "src": "", "link": "", "qid": "35bcad90ca"}, {"q": "Shein is adding more third-party sellers and broadening its catalog beyond fashion. Which company's model does this resemble, and what's the risk in making that shift?", "options": ["Amazon's model — but it requires stronger information systems and merchant-management capability Shein may not yet have", "It's essentially risk-free since it just adds more sales channels", "It repeats Prada's mistake of buying technology without redesigning procedures", "Zara's model — but it risks losing the scarcity that drives full-price sales"], "rationales": ["The material explicitly compares this move to Amazon and flags the IS/merchant-management demands it creates.", "Understates the risk; expanding into a marketplace demands real IS and merchant-management capability, which is the actual stated risk.", "No evidence connects this expansion to a Prada-style technology-adoption failure; the stated risk is IS/merchant-management capability, not employee procedure adoption.", "This move is compared to Amazon in the material, not Zara, and Zara-style scarcity isn't the relevant risk here."], "correct": 0, "hint": "think about which company Shein is becoming more like.", "topic": "Shein marketplace shift", "sec": "", "src": "", "link": "", "qid": "17a8dab335"}, {"q": "Which advantage-to-vulnerability pairing is mismatched?", "options": ["Big tech platforms' data/scale advantage → vulnerable to privacy and antitrust scrutiny", "Shein's thousands of outsourced suppliers → vulnerable to quality, labor, and IP control gaps", "Zara's centralized Spain-based supply chain → vulnerable to regional disruption", "Zara's scarcity/full-price strategy → vulnerable to counterfeit-product recalls"], "rationales": ["This pairing is accurate — scale and data collection are precisely what draw regulatory attention.", "This pairing is accurate — outsourcing at scale is exactly what weakens Shein's direct control.", "This pairing is accurate — Zara's advantage of centralized control creates exactly this vulnerability.", "This is the mismatch — recall/quality-control risk from mass outsourcing is the Shein-type vulnerability; Zara's scarcity strategy's real corresponding risk is regional/operational disruption from its centralized model, not counterfeit recalls."], "correct": 3, "hint": "find the one crossed with the wrong company's risk.", "topic": "advantage/vulnerability pairs", "sec": "", "src": "", "link": "", "qid": "e064c27f42"}, {"q": "Six firms that surpassed $1T valuation were originally dominant in separate markets (search, software, social media, e-commerce, chips), but the slides say they increasingly compete with each other. What's driving this convergence?", "options": ["Declining antitrust enforcement is allowing them to merge operations", "Heavy R&D investment concentrated on AI is pulling these firms into each other's markets", "Government-mandated mergers are combining these firms' product lines", "The 72% digital-transformation failure rate is forcing consolidation among survivors"], "rationales": ["The material actually notes rising antitrust/competition scrutiny of major tech firms, not declining enforcement.", "The slides identify AI as the major R&D focus causing firms from different original markets to compete across markets.", "Invented — no mergers are described in the material.", "That statistic describes project failure rates generally, not a cause of cross-market competition among the largest firms."], "correct": 1, "hint": "ask what these six firms are all pouring R&D into.", "topic": "tech convergence", "sec": "", "src": "", "link": "", "qid": "00a4277cad"}, {"q": "A company choosing between manufacturing in-house (like Zara's ~40% own-fabric production) and outsourcing to thousands of third-party suppliers (like Shein) is really weighing which tradeoff?", "options": ["Control over labor, quality, ethics, and IP versus cost, speed, and flexibility", "Which marketing budget to allocate to influencers", "Which country to headquarter the company in", "Whether to open physical stores or sell only online"], "rationales": ["This is the core make-vs-outsource tradeoff running through both the Zara and Shein/Temu material.", "Unrelated to the manufacturing decision itself.", "A real but secondary decision — it doesn't capture the core production-control tradeoff being asked about.", "That's a separate distribution-channel decision, not the make-vs-outsource tradeoff."], "correct": 0, "hint": "control on one side, cost and speed on the other.", "topic": "manufacturing tradeoff", "sec": "", "src": "", "link": "", "qid": "84654e8b58"}, {"q": "One retailer publicizes that quantities are limited and rarely runs discounts; another pushes flash sales, countdown timers, and a huge selection to create urgency. Which strategy belongs to Zara and which to Shein, respectively?", "options": ["Both use FOMO-driven flash sales", "Both use the same scarcity strategy", "Zara: FOMO/massive selection; Shein: scarcity/full-price", "Zara: scarcity/full-price; Shein: FOMO/massive selection"], "rationales": ["Flash sales and countdowns are specifically Shein's tactic, not Zara's, which avoids frequent sales and markdowns altogether.", "The strategies are explicitly contrasted — Zara stocks limited runs at full price, while Shein leans on urgency and huge selection instead.", "Reverses the two strategies.", "Zara sells limited runs mostly at full price; Shein drives urgency through massive selection and flash-sale FOMO."], "correct": 3, "hint": "one keeps supply tight, the other keeps urgency loud.", "topic": "scarcity vs FOMO", "sec": "", "src": "", "link": "", "qid": "338c5620cd"}, {"q": "A manager reads that 72% of firms fail at digital transformation and concludes the company should avoid investing in new technology altogether. What's the flaw in this conclusion, per the chapter's argument?", "options": ["The real fix is to buy more advanced hardware rather than reconsider strategy", "The conclusion is correct — the statistic shows technology investment usually isn't worth the risk", "The 72% figure actually refers to cybersecurity breaches, not transformation projects", "The chapter's point is that outcomes depend on how technology is implemented and managed, not that technology itself should be avoided — skipping it risks losing competitive advantage instead"], "rationales": ["This repeats the Prada mistake of assuming better technology alone, rather than people/procedures/strategy, solves the problem.", "This is the flawed reasoning the question asks you to identify, not the chapter's actual point.", "Misstates the statistic — it specifically describes digital transformation failure, not breaches.", "This matches the chapter's framing that AI/tech value is neither inherently good nor bad — it depends on implementation."], "correct": 3, "hint": "separate 'often fails' from 'therefore avoid.'", "topic": "digital transformation stat", "sec": "", "src": "", "link": "", "qid": "f26dde1455"}, {"q": "A customer-service complaint filmed on a bystander's phone goes viral overnight and damages a brand's reputation globally within hours. Which combination of ideas from the chapter does this best illustrate?", "options": ["It demonstrates winner-take-all market dynamics", "This is an example of social media's benefit for building trust and reputation", "It's a data-analytics personalization privacy risk", "Smartphones and social media making service failures instantly recordable and globally shareable — the risk side of social media, not its reputation-building benefit"], "rationales": ["Unrelated — no platform dominance or market concentration is involved in this scenario.", "It's the opposite — this scenario shows the risk side (damage), not the benefit side (trust-building).", "No personal data collection or personalization is described here; this is about recordability and virality of an incident, not privacy.", "The chapter pairs smartphones with social media's spread specifically as a risk, distinct from the benefit side (trust/reputation building)."], "correct": 3, "hint": "same tool that builds reputation can just as fast burn it.", "topic": "social media risk", "sec": "", "src": "", "link": "", "qid": "0c5d7a52f2"}, {"q": "A job applicant spends all their effort polishing their LinkedIn activity and GitHub contributions but submits a résumé with none of the job posting's actual keywords. What are they missing, combining two ideas from the chapter?", "options": ["Keywords no longer matter since social media has fully replaced the traditional résumé", "Automated résumé screening is a myth — a human always reads every résumé first", "Social media activity is irrelevant to hiring outside creative or tech fields", "That résumé screening is often automated and keyword-matched, so social media activity supplements but doesn't replace having the right keywords on the résumé itself"], "rationales": ["Overstates it — the chapter treats social media as an additional signal ('new résumé'), not a full replacement for keyword-screened résumés.", "Contradicts the chapter's explicit point that screening is often automated and keyword-based.", "Contradicts the chapter's point that platforms like LinkedIn function as a 'new résumé' more broadly.", "Both ideas hold at once: automated keyword screening still matters, and social media is an additional 'new résumé' signal, not a substitute for it."], "correct": 3, "hint": "the résumé and the profile are both being read, just by different readers.", "topic": "hiring tech", "sec": "", "src": "", "link": "", "qid": "e5dbdd30ab"}, {"q": "One retailer routes nearly all inventory through its own centralized distribution system before it reaches stores; another has suppliers ship finished goods directly to the end consumer. Name each company's approach and what it trades off.", "options": ["Both rely on centralized distribution systems", "Zara: centralized distribution (more control, more fixed overhead); Shein: direct supplier shipping (faster/cheaper, less centralized control)", "Zara: direct supplier shipping; Shein: centralized distribution", "Both rely on direct supplier shipping"], "rationales": ["Shein's suppliers often ship directly to consumers rather than passing through one centralized system, unlike Zara.", "This matches the Zara vs. Shein distribution contrast — tight central coordination versus direct-from-supplier shipping.", "Reverses the two companies' actual approaches.", "Zara's model is built around a centralized, tightly coordinated distribution system, not direct-from-supplier shipping."], "correct": 1, "hint": "one runs everything through itself, one lets suppliers ship straight out.", "topic": "distribution model", "sec": "", "src": "", "link": "", "qid": "95f9eedc67"}, {"q": "A class roster has 30 rows. Some students left text comments ('Great job'), some left the comment cell blank, and none entered any numbers. You want to count how many students left any comment at all, counting text but not blanks. Which function does that?", "options": ["=SUM(range)", "=COUNTA(range)", "AutoSum's Σ button used as-is", "=COUNT(range)"], "rationales": ["SUM adds numeric values; applied to a column of text comments it returns 0, not a count of entries.", "COUNTA counts every non-empty cell regardless of whether it holds text or numbers — exactly what's needed here.", "AutoSum's default action is Sum, not Count, so pressing it directly on an all-text column would return 0, not the entry count you want.", "COUNT only counts cells containing numbers, so it would return 0 here since every entry is text."], "correct": 1, "hint": "check whether the column actually contains any numbers at all.", "topic": "COUNT vs COUNTA", "sec": "", "src": "", "link": "", "qid": "bfbbb2ee99"}, {"q": "You sorted a class list by Score but only selected the Score column, without choosing 'Expand the selection.' You then want to add a 'Then by: Last Name' key to break ties. Does adding that second key fix the list?", "options": ["No, because Custom Sort would be needed instead of separate single sorts", "Yes, since Score was already the correct primary key and 'Then by' just adds detail", "Yes, because 'Then by' always resorts the whole list by name first", "No — the row data was already scrambled because Score was sorted alone while the other columns stayed in place; a 'Then by' key can't repair that"], "rationales": ["The real problem here is not expanding the selection, not the number of separate sort passes.", "Misses that the sort itself already corrupted the row pairings before any tie-break key comes into play.", "Reverses how tie-break keys work — 'Then by' only orders rows already tied on the primary key, and only matters once the primary sort is done correctly.", "Without expanding the selection, only the Score column moved, so scores no longer match their original students — no secondary key can fix rows already mismatched."], "correct": 3, "hint": "ask whether the rows actually moved together in the first place.", "topic": "sort scrambling", "sec": "", "src": "", "link": "", "qid": "e3bb853fdb"}, {"q": "You want invoice numbers 100, 200, 300… up to 1000. In Fill Series you set Step value to 100 and Stop value to 1000, but leave the starting cell blank. What happens?", "options": ["It fills correctly, since Step value 100 already tells Excel to start at 100", "It fails because Stop value should have been set to the difference between the first and last invoice number, not 1000", "Nothing fills, because Fill Series requires a starting number typed in the first cell before Step and Stop can generate the rest", "It fills starting from 0, since Excel treats a blank starting cell as zero"], "rationales": ["Confuses the step (the increment between values) with the starting value itself.", "Misapplies the increment concept to Stop value, which is simply the endpoint of the series.", "Step and Stop only control the increment and endpoint; without a typed starting value the series won't generate.", "Fill Series doesn't assume a default starting value — it needs one typed in first."], "correct": 2, "hint": "check whether a starting number was actually typed anywhere.", "topic": "Fill Series", "sec": "", "src": "", "link": "", "qid": "a90f7f9a77"}, {"q": "You build an Advanced Filter for product codes starting with 'F' using criteria range headings you retyped by hand, with the condition F*. Nothing matches, even though such codes exist. What's the most likely cause?", "options": ["The retyped heading in the criteria range doesn't exactly match the data's column heading, so Excel can't tie the condition to the right column", "The list range probably includes the criteria range itself, cancelling the filter", "Advanced Filter doesn't support wildcards, only the basic Filter dropdown does", "The wildcard should have been F? instead of F, since F only matches one character"], "rationales": ["Headings should be copied from the data itself so spelling and spacing match exactly — a retyped heading silently breaks the match.", "Misdiagnoses the problem — nothing in the scenario suggests range overlap, only a retyped heading.", "Advanced Filter does support wildcard criteria like F*.", "Reverses the wildcard rule — * matches any number of characters, ? matches exactly one."], "correct": 0, "hint": "check where that criteria heading actually came from.", "topic": "Advanced Filter", "sec": "", "src": "", "link": "", "qid": "96c9f5d194"}, {"q": "A data-bar rule ended up covering an entire column, including empty rows, because the whole column was selected instead of just the data range. You want to remove the bars from the empty rows only, leaving the rule untouched on the real data. What's the right move?", "options": ["Open Manage Rules and change the rule's color scheme", "Apply Merge & Center to the empty rows to hide the bars", "Select just the empty rows and use Clear Rules from Selected Cells", "Delete the rule entirely and rebuild it from scratch on just the correct range"], "rationales": ["Manage Rules is for changing what the rule does (like colors or thresholds), not for removing it from unwanted cells.", "Merging cells doesn't remove the conditional formatting rule; the bars would still be applied underneath.", "This removes the rule specifically from the selected (empty) cells while leaving it intact elsewhere.", "Unnecessarily rebuilds the whole rule when Clear Rules from Selected Cells fixes just the affected cells."], "correct": 2, "hint": "separate the command that targets a selection from the one that edits settings.", "topic": "conditional formatting spread", "sec": "", "src": "", "link": "", "qid": "83707fe191"}, {"q": "You set Data Validation on a discount-percentage column so nobody can enter over 100%. A coworker types 150 anyway, sees a title and message asking 'Continue?', and clicks Yes — and 150 gets entered. Which alert style did you actually pick, and would Stop have prevented this?", "options": ["There's no way to have prevented this — Data Validation can only warn, never block", "Warning style — it lets the value through on 'Yes'; Stop style would have blocked it, since Stop only allows Retry or Cancel", "Stop style — Stop always shows exactly this kind of 'Continue?' dialog", "Information style — Information also asks 'Continue?' before accepting"], "rationales": ["Stop style genuinely blocks entry outright, so a different style choice would have prevented it.", "Warning's 'Continue?' dialog is the only one that lets a bad value in on user confirmation; Stop has no such escape.", "Stop's dialog only offers Retry or Cancel, with no way to let the bad value in, which contradicts what happened in the scenario.", "Information style just tells the user and accepts on OK; it doesn't ask a 'Continue?' question."], "correct": 1, "hint": "match the dialog wording 'Continue?' to the alert style that produces it.", "topic": "Data Validation alerts", "sec": "", "src": "", "link": "", "qid": "a096e76ff0"}], "hasSheet": false, "parts": false, "secTitles": {}, "reserve": 0, "frq": [], "notebook": "", "root": "../index.html", "tab": "quiz", "sheet": ""}</script>
+<script id="quiz-data" type="application/json">{"id": "bmgt301-exam-1-2026-09-20-224435", "title": "BMGT301 — Exam 1", "subtitle": "30 questions · pasted material", "book": "BMGT301", "hash": "e0c26c57ebd9e1c6", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "A company wants to react fast to sudden shifts in demand and is willing to give up direct control over labor conditions and quality standards to third-party factories in exchange for lower fixed costs and flexibility. Which strategy is this, and which company is the clearest example?", "options": ["Direct-to-consumer — like Shein", "Omnichannel — like Zara", "Contract manufacturing — like Shein", "Vertical integration — like Zara"], "rationales": ["DTC describes selling without a retail intermediary; it doesn't by itself describe the production-control tradeoff being asked about.", "Omnichannel is about integrating online and physical sales/returns, not about who owns production.", "Outsourcing production to thousands of third-party manufacturers trades direct control over labor/quality/ethics for speed, flexibility, and lower fixed costs — exactly Shein's model.", "Vertical integration means owning the layers of the value chain yourself, which increases control — the opposite of giving control away."], "correct": 2, "hint": "think about who owns the factories versus who just places orders with them.", "topic": "production strategy", "sec": "", "src": "", "link": "", "qid": "7f345df862"}, {"q": "A new Shein dress sells poorly in its small initial batch on the app. Under the LATR process, what happens next?", "options": ["Production is stopped or scaled back rather than reordered", "The unsold units get marked down heavily to clear them out", "Shein forecasts stronger demand next season and produces a large batch anyway", "RFID is used to move the leftover stock to other stores"], "rationales": ["LATR's core logic is test cheaply, scale only what sells, and cut losses on what doesn't.", "That's the traditional 'inventory equals death' markdown response — LATR avoids this by never overproducing in the first place.", "That's the traditional forecast-and-produce model LATR was built to replace, not what LATR actually does.", "Shein has no physical stores, so there's no store network to redistribute inventory into — that's a Zara-style tactic."], "correct": 0, "hint": "remember what the process is actually designed to avoid doing.", "topic": "LAT", "sec": "", "src": "R", "link": "", "qid": "31f4af6d27"}, {"q": "Two retailers install identical RFID inventory systems. One redesigns staff workflows and trains employees to use it daily; the other installs the same hardware but changes nothing about training or procedures. Which part of the information-system framework explains why their results differ so much?", "options": ["Hardware — one retailer must have bought better RFID readers", "Software licensing — one retailer probably paid for a better license tier", "People and Procedures — the system was only redesigned around users and workflows in one case", "ROI calculation — one retailer must have miscalculated the expected return"], "rationales": ["The hardware is stated to be identical; the outcome difference comes from elsewhere in the IS framework.", "Not implied by the scenario; the isolated variable is training/workflow redesign, not the software itself.", "This is the Prada lesson — buying the same technology doesn't create a working information system unless procedures and people are also built around it.", "ROI measures financial outcome; it doesn't cause the operational difference described here."], "correct": 2, "hint": "hardware being equal, look at what surrounds it.", "topic": "information systems", "sec": "", "src": "", "link": "", "qid": "537eb5ef23"}, {"q": "A U.S. shopper orders a $12 top that ships straight from a factory in China to their door, instead of arriving via a retailer's bulk import and warehouse system. What lets this happen cheaply and with less customs friction?", "options": ["Omnichannel fulfillment", "LATR", "The de minimis provision", "Vertical integration"], "rationales": ["That's about integrating online and physical retail experiences, unrelated to customs treatment.", "LATR is about testing and reordering production based on sales data, not shipping/customs policy.", "It allows qualifying low-value shipments simplified import treatment, cutting customs cost and friction for direct-to-consumer packages.", "This describes owning production layers, not a customs/shipping rule."], "correct": 2, "hint": "think customs paperwork, not production or channels.", "topic": "de minimis", "sec": "", "src": "", "link": "", "qid": "e0f41eb062"}, {"q": "A dominant platform's scale advantage triggers antitrust investigations in several countries at once. What tension from the chapter does this illustrate?", "options": ["The tension between innovation-driven winner-take-all advantage and regulatory/competition concerns", "Purely a data-privacy violation", "A contract-manufacturing labor dispute", "Evidence that digital transformation projects usually fail"], "rationales": ["This is exactly the managerial tension the chapter flags: strategy that produces winner-take-all dominance draws regulatory scrutiny.", "Privacy is a related but separate risk category; this scenario is about market dominance and competition, not data misuse specifically.", "Unrelated topic — no manufacturing or labor issue is described here.", "The 72% failure stat is about execution of transformation projects, unrelated to antitrust scrutiny of already-dominant platforms."], "correct": 0, "hint": "pair strategy success with the scrutiny it invites.", "topic": "winner-take-all", "sec": "", "src": "", "link": "", "qid": "7326c8b79a"}, {"q": "A law firm's AI research tool confidently cites a court case that turns out not to exist. Which AI risk is this?", "options": ["A security vulnerability", "Algorithmic bias", "A privacy risk", "Hallucination"], "rationales": ["Nothing was hacked or exploited; the system simply generated false content.", "Bias means systematically unfair or discriminatory outputs, not fabricated facts.", "No personal data was exposed or misused here.", "Fabricating plausible-sounding but false information is the definition of hallucination."], "correct": 3, "hint": "ask whether the output is fake, or just unfair.", "topic": "AI risks", "sec": "", "src": "", "link": "", "qid": "22592a2d26"}, {"q": "Amazon has pledged $5B to Anthropic despite not being an AI research lab itself. What does this best illustrate, and how does it differ from Microsoft's OpenAI deal?", "options": ["It's essentially a cloud-hosting revenue arrangement, unrelated to competitive positioning", "It means Amazon already owns a majority stake in Anthropic, similar to Microsoft and OpenAI", "It's required by antitrust regulators to preserve competition", "It reflects firms originally dominant in different markets increasingly competing across markets via AI investment — not the same as Microsoft's 49% equity stake in OpenAI"], "rationales": ["This understates it — the slides frame these investments as major tech firms, originally dominant in different markets, competing across markets through AI.", "Confuses the size and nature of the deal — Microsoft's is a 49% stake, Amazon's is a pledge, and neither is a majority stake.", "Invented — no such requirement appears in the material.", "Correct distinction: Amazon's pledge is investment, not an ownership stake like Microsoft's 49% of OpenAI."], "correct": 3, "hint": "separate an equity stake from a pledge, and note who competed in what market before.", "topic": "AI investments", "sec": "", "src": "", "link": "", "qid": "06486608b6"}, {"q": "The slides pair '~70% mobile coverage in sub-Saharan Africa' with the fact that Google, IBM, and Microsoft run R&D centers there. What point does this combination support?", "options": ["AI dominance is limited only to U.S.-based firms", "The African tech market is already saturated, so no further investment opportunity exists", "Technology competition is global, and cheap/fast tech can fuel economic development even in emerging markets", "It demonstrates a winner-take-all monopoly forming within Africa's domestic tech market"], "rationales": ["Unrelated conclusion; the point is about emerging-market development, not AI market share by country.", "Contradicts the point — the stat is used to show opportunity and ongoing investment, not saturation.", "The stat plus the R&D centers together show tech's global reach and its role in emerging-market development.", "No monopoly claim is made; the point is about global reach and development, not one firm dominating a market."], "correct": 2, "hint": "connect a coverage statistic to why outside firms would invest there.", "topic": "global tech", "sec": "", "src": "", "link": "", "qid": "42b8fdbed8"}, {"q": "One company pays for a sponsored slot at the top of search results; another restructures its site content to rank higher organically without paying per click. Which term matches each, respectively?", "options": ["CRM, then SEM", "SEM, then SEO", "SEO, then SEM", "SEM for both"], "rationales": ["CRM is about managing customer relationships/data, not search placement at all.", "SEM (Search Engine Marketing) covers paid placement; SEO (Search Engine Optimization) covers earning organic rank.", "Reverses the two — SEO is the free/organic side, SEM is the paid side.", "The second example is specifically unpaid/organic ranking, which is SEO's definition, not SEM's."], "correct": 1, "hint": "ask which one you pay for and which one you earn.", "topic": "SEM vs SEO", "sec": "", "src": "", "link": "", "qid": "682dce0b08"}, {"q": "A retailer wants a system that remembers a customer's past purchases across visits to personalize future offers, separate from the system that just records what was rung up at checkout today. Which pair correctly matches 'personalize offers' and 'record the transaction'?", "options": ["CRM for personalizing offers; POS for recording the transaction", "CRM for both tasks", "SEM for personalizing offers; POS for recording the transaction", "POS for personalizing offers; CRM for recording the transaction"], "rationales": ["CRM builds a relationship/history for personalization; POS is the transaction-processing system that captures the purchase itself.", "CRM doesn't capture the raw checkout transaction itself; that's specifically what a POS system does.", "SEM is paid search marketing, not customer relationship tracking.", "Reverses the roles — POS only captures point-of-sale transaction data, it doesn't build a customer relationship profile."], "correct": 0, "hint": "one remembers you, the other just rings you up.", "topic": "CRM vs POS", "sec": "", "src": "", "link": "", "qid": "cd7a4ddc64"}, {"q": "After a data breach, one executive is responsible for preventing future technical intrusions into company systems; another is responsible for how customer data is legally collected, used, and disclosed. Which titles match, respectively?", "options": ["CPO, then CISO", "CISO, then CPO", "CISO, then CIO", "CIO, then CISO"], "rationales": ["Reverses the roles — CPO handles data-use/privacy policy, not technical intrusion prevention.", "CISO = Chief Information Security Officer (technical security); CPO = Chief Privacy Officer (data-use/legal compliance).", "CIO isn't the privacy-specific role described in the second half of the scenario; that's the CPO.", "CIO oversees IT strategy broadly, not specifically breach-prevention security, which is the CISO's role."], "correct": 1, "hint": "one stops hackers, one governs data use.", "topic": "security vs privacy roles", "sec": "", "src": "", "link": "", "qid": "72a231b71f"}, {"q": "A sudden tariff hike or currency swing centered on Spain would hit Zara harder than it would hit Shein. Why?", "options": ["This is actually about Zara's reliance on de minimis shipping rules", "Zara's vulnerability here is really about weak cybersecurity, not its supply chain", "Shein has no exposure to this kind of risk at all", "Zara's production and distribution are centralized in one region, so disruption there ripples through its whole supply chain, while Shein spreads production across thousands of independent contract manufacturers"], "rationales": ["De minimis is a Shein/Temu shipping-cost advantage, not part of Zara's model or vulnerability.", "The scenario describes a tariff/currency shock, not a hacking issue.", "Overstates it — Shein has its own risks (quality, labor, IP), just not this specific centralized-region exposure.", "Centralization concentrates risk; Shein's outsourced network diffuses this specific kind of shock across many suppliers and locations."], "correct": 3, "hint": "trace the advantage of centralization back to its cost.", "topic": "Zara vulnerability", "sec": "", "src": "", "link": "", "qid": "b603dd49d3"}, {"q": "During a regional lockdown, a retailer with integrated online and in-store inventory reroutes stock from closed stores to e-commerce and has store staff fulfill web orders. A competitor with separate online and store inventory systems can't do this. What concept explains the difference?", "options": ["RFID tagging alone", "LATR", "Omnichannel integration", "Vertical integration"], "rationales": ["RFID helps locate individual items but doesn't by itself unify online and store inventory into one system — that's the omnichannel piece.", "LATR is Shein's test-and-reorder production process, unrelated to store/online inventory integration.", "An integrated inventory/sales system across channels is what lets a retailer redirect stock and staff this way during disruption.", "That's about owning production layers, not about linking sales channels together."], "correct": 2, "hint": "think channels working as one system, not just item-level tracking.", "topic": "omnichannel", "sec": "", "src": "", "link": "", "qid": "89c91b9422"}, {"q": "Why would Shein's app push users through a 'discover' feed, popups, flash sales, and games instead of just letting them search directly for a product?", "options": ["To keep users in the app longer, which generates more data and drives more purchases in a reinforcing loop", "Because building reliable search functionality is too technically difficult", "Because direct-to-consumer platforms are legally required to use a discovery format", "To distract customers from noticing product quality problems"], "rationales": ["This is the stated purpose: more time in-app means more data collected, which improves targeting and increases purchases.", "Not the stated reason; the design choice is a deliberate engagement strategy, not a technical limitation.", "Invented — no such legal requirement exists.", "Overly cynical and not the reason given in the material — the stated purpose is data/engagement, not concealment."], "correct": 0, "hint": "ask what more time in-app actually generates.", "topic": "Shein app design", "sec": "", "src": "", "link": "", "qid": "5ec6fad895"}, {"q": "One shopper wants fashion items curated by AI trend-detection; another wants the widest possible range of product categories in one place. Which platform matches each shopper, respectively?", "options": ["Shein, then Temu", "Zara, then Shein", "Shein for both", "Temu, then Shein"], "rationales": ["Shein focuses on fashion with AI-driven design; Temu is a broader marketplace with huge product variety across categories.", "Zara isn't part of this AI/marketplace comparison — it's the traditional vertically-integrated retailer.", "The second shopper wants breadth across categories, which is Temu's positioning, not Shein's fashion focus.", "Reverses their actual focuses."], "correct": 0, "hint": "one is fashion-specific, one is everything.", "topic": "Shein vs Temu", "sec": "", "src": "", "link": "", "qid": "35bcad90ca"}, {"q": "Shein is adding more third-party sellers and broadening its catalog beyond fashion. Which company's model does this resemble, and what's the risk in making that shift?", "options": ["Amazon's model — but it requires stronger information systems and merchant-management capability Shein may not yet have", "It's essentially risk-free since it just adds more sales channels", "It repeats Prada's mistake of buying technology without redesigning procedures", "Zara's model — but it risks losing the scarcity that drives full-price sales"], "rationales": ["The material explicitly compares this move to Amazon and flags the IS/merchant-management demands it creates.", "Understates the risk; expanding into a marketplace demands real IS and merchant-management capability, which is the actual stated risk.", "No evidence connects this expansion to a Prada-style technology-adoption failure; the stated risk is IS/merchant-management capability, not employee procedure adoption.", "This move is compared to Amazon in the material, not Zara, and Zara-style scarcity isn't the relevant risk here."], "correct": 0, "hint": "think about which company Shein is becoming more like.", "topic": "Shein marketplace shift", "sec": "", "src": "", "link": "", "qid": "17a8dab335"}, {"q": "Which advantage-to-vulnerability pairing is mismatched?", "options": ["Big tech platforms' data/scale advantage → vulnerable to privacy and antitrust scrutiny", "Shein's thousands of outsourced suppliers → vulnerable to quality, labor, and IP control gaps", "Zara's centralized Spain-based supply chain → vulnerable to regional disruption", "Zara's scarcity/full-price strategy → vulnerable to counterfeit-product recalls"], "rationales": ["This pairing is accurate — scale and data collection are precisely what draw regulatory attention.", "This pairing is accurate — outsourcing at scale is exactly what weakens Shein's direct control.", "This pairing is accurate — Zara's advantage of centralized control creates exactly this vulnerability.", "This is the mismatch — recall/quality-control risk from mass outsourcing is the Shein-type vulnerability; Zara's scarcity strategy's real corresponding risk is regional/operational disruption from its centralized model, not counterfeit recalls."], "correct": 3, "hint": "find the one crossed with the wrong company's risk.", "topic": "advantage/vulnerability pairs", "sec": "", "src": "", "link": "", "qid": "e064c27f42"}, {"q": "Six firms that surpassed $1T valuation were originally dominant in separate markets (search, software, social media, e-commerce, chips), but the slides say they increasingly compete with each other. What's driving this convergence?", "options": ["Declining antitrust enforcement is allowing them to merge operations", "Heavy R&D investment concentrated on AI is pulling these firms into each other's markets", "Government-mandated mergers are combining these firms' product lines", "The 72% digital-transformation failure rate is forcing consolidation among survivors"], "rationales": ["The material actually notes rising antitrust/competition scrutiny of major tech firms, not declining enforcement.", "The slides identify AI as the major R&D focus causing firms from different original markets to compete across markets.", "Invented — no mergers are described in the material.", "That statistic describes project failure rates generally, not a cause of cross-market competition among the largest firms."], "correct": 1, "hint": "ask what these six firms are all pouring R&D into.", "topic": "tech convergence", "sec": "", "src": "", "link": "", "qid": "00a4277cad"}, {"q": "A company choosing between manufacturing in-house (like Zara's ~40% own-fabric production) and outsourcing to thousands of third-party suppliers (like Shein) is really weighing which tradeoff?", "options": ["Control over labor, quality, ethics, and IP versus cost, speed, and flexibility", "Which marketing budget to allocate to influencers", "Which country to headquarter the company in", "Whether to open physical stores or sell only online"], "rationales": ["This is the core make-vs-outsource tradeoff running through both the Zara and Shein/Temu material.", "Unrelated to the manufacturing decision itself.", "A real but secondary decision — it doesn't capture the core production-control tradeoff being asked about.", "That's a separate distribution-channel decision, not the make-vs-outsource tradeoff."], "correct": 0, "hint": "control on one side, cost and speed on the other.", "topic": "manufacturing tradeoff", "sec": "", "src": "", "link": "", "qid": "84654e8b58"}, {"q": "One retailer publicizes that quantities are limited and rarely runs discounts; another pushes flash sales, countdown timers, and a huge selection to create urgency. Which strategy belongs to Zara and which to Shein, respectively?", "options": ["Both use FOMO-driven flash sales", "Both use the same scarcity strategy", "Zara: FOMO/massive selection; Shein: scarcity/full-price", "Zara: scarcity/full-price; Shein: FOMO/massive selection"], "rationales": ["Flash sales and countdowns are specifically Shein's tactic, not Zara's, which avoids frequent sales and markdowns altogether.", "The strategies are explicitly contrasted — Zara stocks limited runs at full price, while Shein leans on urgency and huge selection instead.", "Reverses the two strategies.", "Zara sells limited runs mostly at full price; Shein drives urgency through massive selection and flash-sale FOMO."], "correct": 3, "hint": "one keeps supply tight, the other keeps urgency loud.", "topic": "scarcity vs FOMO", "sec": "", "src": "", "link": "", "qid": "338c5620cd"}, {"q": "A manager reads that 72% of firms fail at digital transformation and concludes the company should avoid investing in new technology altogether. What's the flaw in this conclusion, per the chapter's argument?", "options": ["The real fix is to buy more advanced hardware rather than reconsider strategy", "The conclusion is correct — the statistic shows technology investment usually isn't worth the risk", "The 72% figure actually refers to cybersecurity breaches, not transformation projects", "The chapter's point is that outcomes depend on how technology is implemented and managed, not that technology itself should be avoided — skipping it risks losing competitive advantage instead"], "rationales": ["This repeats the Prada mistake of assuming better technology alone, rather than people/procedures/strategy, solves the problem.", "This is the flawed reasoning the question asks you to identify, not the chapter's actual point.", "Misstates the statistic — it specifically describes digital transformation failure, not breaches.", "This matches the chapter's framing that AI/tech value is neither inherently good nor bad — it depends on implementation."], "correct": 3, "hint": "separate 'often fails' from 'therefore avoid.'", "topic": "digital transformation stat", "sec": "", "src": "", "link": "", "qid": "f26dde1455"}, {"q": "A customer-service complaint filmed on a bystander's phone goes viral overnight and damages a brand's reputation globally within hours. Which combination of ideas from the chapter does this best illustrate?", "options": ["It demonstrates winner-take-all market dynamics", "This is an example of social media's benefit for building trust and reputation", "It's a data-analytics personalization privacy risk", "Smartphones and social media making service failures instantly recordable and globally shareable — the risk side of social media, not its reputation-building benefit"], "rationales": ["Unrelated — no platform dominance or market concentration is involved in this scenario.", "It's the opposite — this scenario shows the risk side (damage), not the benefit side (trust-building).", "No personal data collection or personalization is described here; this is about recordability and virality of an incident, not privacy.", "The chapter pairs smartphones with social media's spread specifically as a risk, distinct from the benefit side (trust/reputation building)."], "correct": 3, "hint": "same tool that builds reputation can just as fast burn it.", "topic": "social media risk", "sec": "", "src": "", "link": "", "qid": "0c5d7a52f2"}, {"q": "A job applicant spends all their effort polishing their LinkedIn activity and GitHub contributions but submits a résumé with none of the job posting's actual keywords. What are they missing, combining two ideas from the chapter?", "options": ["Keywords no longer matter since social media has fully replaced the traditional résumé", "Automated résumé screening is a myth — a human always reads every résumé first", "Social media activity is irrelevant to hiring outside creative or tech fields", "That résumé screening is often automated and keyword-matched, so social media activity supplements but doesn't replace having the right keywords on the résumé itself"], "rationales": ["Overstates it — the chapter treats social media as an additional signal ('new résumé'), not a full replacement for keyword-screened résumés.", "Contradicts the chapter's explicit point that screening is often automated and keyword-based.", "Contradicts the chapter's point that platforms like LinkedIn function as a 'new résumé' more broadly.", "Both ideas hold at once: automated keyword screening still matters, and social media is an additional 'new résumé' signal, not a substitute for it."], "correct": 3, "hint": "the résumé and the profile are both being read, just by different readers.", "topic": "hiring tech", "sec": "", "src": "", "link": "", "qid": "e5dbdd30ab"}, {"q": "One retailer routes nearly all inventory through its own centralized distribution system before it reaches stores; another has suppliers ship finished goods directly to the end consumer. Name each company's approach and what it trades off.", "options": ["Both rely on centralized distribution systems", "Zara: centralized distribution (more control, more fixed overhead); Shein: direct supplier shipping (faster/cheaper, less centralized control)", "Zara: direct supplier shipping; Shein: centralized distribution", "Both rely on direct supplier shipping"], "rationales": ["Shein's suppliers often ship directly to consumers rather than passing through one centralized system, unlike Zara.", "This matches the Zara vs. Shein distribution contrast — tight central coordination versus direct-from-supplier shipping.", "Reverses the two companies' actual approaches.", "Zara's model is built around a centralized, tightly coordinated distribution system, not direct-from-supplier shipping."], "correct": 1, "hint": "one runs everything through itself, one lets suppliers ship straight out.", "topic": "distribution model", "sec": "", "src": "", "link": "", "qid": "95f9eedc67"}, {"q": "A class roster has 30 rows. Some students left text comments ('Great job'), some left the comment cell blank, and none entered any numbers. You want to count how many students left any comment at all, counting text but not blanks. Which function does that?", "options": ["=SUM(range)", "=COUNTA(range)", "AutoSum's Σ button used as-is", "=COUNT(range)"], "rationales": ["SUM adds numeric values; applied to a column of text comments it returns 0, not a count of entries.", "COUNTA counts every non-empty cell regardless of whether it holds text or numbers — exactly what's needed here.", "AutoSum's default action is Sum, not Count, so pressing it directly on an all-text column would return 0, not the entry count you want.", "COUNT only counts cells containing numbers, so it would return 0 here since every entry is text."], "correct": 1, "hint": "check whether the column actually contains any numbers at all.", "topic": "COUNT vs COUNTA", "sec": "", "src": "", "link": "", "qid": "bfbbb2ee99"}, {"q": "You sorted a class list by Score but only selected the Score column, without choosing 'Expand the selection.' You then want to add a 'Then by: Last Name' key to break ties. Does adding that second key fix the list?", "options": ["No, because Custom Sort would be needed instead of separate single sorts", "Yes, since Score was already the correct primary key and 'Then by' just adds detail", "Yes, because 'Then by' always resorts the whole list by name first", "No — the row data was already scrambled because Score was sorted alone while the other columns stayed in place; a 'Then by' key can't repair that"], "rationales": ["The real problem here is not expanding the selection, not the number of separate sort passes.", "Misses that the sort itself already corrupted the row pairings before any tie-break key comes into play.", "Reverses how tie-break keys work — 'Then by' only orders rows already tied on the primary key, and only matters once the primary sort is done correctly.", "Without expanding the selection, only the Score column moved, so scores no longer match their original students — no secondary key can fix rows already mismatched."], "correct": 3, "hint": "ask whether the rows actually moved together in the first place.", "topic": "sort scrambling", "sec": "", "src": "", "link": "", "qid": "e3bb853fdb"}, {"q": "You want invoice numbers 100, 200, 300… up to 1000. In Fill Series you set Step value to 100 and Stop value to 1000, but leave the starting cell blank. What happens?", "options": ["It fills correctly, since Step value 100 already tells Excel to start at 100", "It fails because Stop value should have been set to the difference between the first and last invoice number, not 1000", "Nothing fills, because Fill Series requires a starting number typed in the first cell before Step and Stop can generate the rest", "It fills starting from 0, since Excel treats a blank starting cell as zero"], "rationales": ["Confuses the step (the increment between values) with the starting value itself.", "Misapplies the increment concept to Stop value, which is simply the endpoint of the series.", "Step and Stop only control the increment and endpoint; without a typed starting value the series won't generate.", "Fill Series doesn't assume a default starting value — it needs one typed in first."], "correct": 2, "hint": "check whether a starting number was actually typed anywhere.", "topic": "Fill Series", "sec": "", "src": "", "link": "", "qid": "a90f7f9a77"}, {"q": "You build an Advanced Filter for product codes starting with 'F' using criteria range headings you retyped by hand, with the condition F*. Nothing matches, even though such codes exist. What's the most likely cause?", "options": ["The retyped heading in the criteria range doesn't exactly match the data's column heading, so Excel can't tie the condition to the right column", "The list range probably includes the criteria range itself, cancelling the filter", "Advanced Filter doesn't support wildcards, only the basic Filter dropdown does", "The wildcard should have been F? instead of F, since F only matches one character"], "rationales": ["Headings should be copied from the data itself so spelling and spacing match exactly — a retyped heading silently breaks the match.", "Misdiagnoses the problem — nothing in the scenario suggests range overlap, only a retyped heading.", "Advanced Filter does support wildcard criteria like F*.", "Reverses the wildcard rule — * matches any number of characters, ? matches exactly one."], "correct": 0, "hint": "check where that criteria heading actually came from.", "topic": "Advanced Filter", "sec": "", "src": "", "link": "", "qid": "96c9f5d194"}, {"q": "A data-bar rule ended up covering an entire column, including empty rows, because the whole column was selected instead of just the data range. You want to remove the bars from the empty rows only, leaving the rule untouched on the real data. What's the right move?", "options": ["Open Manage Rules and change the rule's color scheme", "Apply Merge & Center to the empty rows to hide the bars", "Select just the empty rows and use Clear Rules from Selected Cells", "Delete the rule entirely and rebuild it from scratch on just the correct range"], "rationales": ["Manage Rules is for changing what the rule does (like colors or thresholds), not for removing it from unwanted cells.", "Merging cells doesn't remove the conditional formatting rule; the bars would still be applied underneath.", "This removes the rule specifically from the selected (empty) cells while leaving it intact elsewhere.", "Unnecessarily rebuilds the whole rule when Clear Rules from Selected Cells fixes just the affected cells."], "correct": 2, "hint": "separate the command that targets a selection from the one that edits settings.", "topic": "conditional formatting spread", "sec": "", "src": "", "link": "", "qid": "83707fe191"}, {"q": "You set Data Validation on a discount-percentage column so nobody can enter over 100%. A coworker types 150 anyway, sees a title and message asking 'Continue?', and clicks Yes — and 150 gets entered. Which alert style did you actually pick, and would Stop have prevented this?", "options": ["There's no way to have prevented this — Data Validation can only warn, never block", "Warning style — it lets the value through on 'Yes'; Stop style would have blocked it, since Stop only allows Retry or Cancel", "Stop style — Stop always shows exactly this kind of 'Continue?' dialog", "Information style — Information also asks 'Continue?' before accepting"], "rationales": ["Stop style genuinely blocks entry outright, so a different style choice would have prevented it.", "Warning's 'Continue?' dialog is the only one that lets a bad value in on user confirmation; Stop has no such escape.", "Stop's dialog only offers Retry or Cancel, with no way to let the bad value in, which contradicts what happened in the scenario.", "Information style just tells the user and accepts on OK; it doesn't ask a 'Continue?' question."], "correct": 1, "hint": "match the dialog wording 'Continue?' to the alert style that produces it.", "topic": "Data Validation alerts", "sec": "", "src": "", "link": "", "qid": "a096e76ff0"}], "hasSheet": false, "parts": false, "secTitles": {}, "reserve": 0, "tags": false, "frq": [], "notebook": "", "root": "../index.html", "tab": "quiz", "sheet": ""}</script>
+<script>
+(function(){
+  if(window.lqSync) return;
+  const API = 'https://terp-plate.vercel.app/api/quiz-sync', MK = 'lqsync:meta';
+  const none = {first: Promise.resolve([]), now: async()=>[], listen(){}};
+  let key = '';
+  try{ key = localStorage.getItem('lq:key') || ''; }catch(e){}
+  const hm = /[#&]k=([A-Za-z0-9_-]{40,})/.exec(location.hash);
+  if(hm) key = hm[1];
+  if(!key || !window.crypto || !crypto.subtle){ window.lqSync = none; return; }
+
+  const skip = k => k.indexOf('lq:') !== 0 || k === 'lq:key' || k === 'lq:speech';
+  const rawSet = Storage.prototype.setItem;
+  let meta = {};
+  try{ meta = JSON.parse(localStorage.getItem(MK) || '{}') || {}; }catch(e){}
+  const putMeta = ()=>{ try{ rawSet.call(localStorage, MK, JSON.stringify(meta)); }catch(e){} };
+  const hash = t => { let h = 5381; for(let i=0;i<t.length;i++) h = ((h<<5) + h + t.charCodeAt(i)) | 0; return h; };
+  const isState = k => /^lq:[^:]+$/.test(k) && k !== 'lq:hub';
+  function weight(s){
+    return Object.keys(s.answers||{}).length + Object.keys(s.pass2||{}).length
+         + Object.keys(s.skipped||{}).length + Object.keys(s.starred||{}).length
+         + Object.keys(s.unsure||{}).length + 1000 * (s.history||[]).length + (s.done ? 500 : 0);
+  }
+  // '' = nothing worth sending
+  function sig(k, v){
+    if(isState(k)){
+      try{ const s = JSON.parse(v);
+        if(!s || typeof s !== 'object') return '';
+        if(!weight(s) && !s.only && !s.tagf) return '';
+        const c = Object.assign({}, s); delete c.ms; delete c.qms; delete c.meta; delete c.hintOpen;
+        return JSON.stringify(c);
+      }catch(e){ return ''; }
+    }
+    return (v && v !== '{}' && v !== '[]' && v !== '{"defs":[],"q":{}}') ? v : '';
+  }
+  let frozen = false, applying = false, timer = null, busy = false;
+  function mark(k, v){
+    if(skip(k)) return;
+    const g = sig(k, v), h = hash(g), m = meta[k] || (meta[k] = {t:0});
+    if(m.h === h) return;
+    m.h = h;
+    if(g){ m.t = Date.now(); m.d = 1; clearTimeout(timer); timer = setTimeout(run, 1500); }
+    putMeta();
+  }
+  Storage.prototype.setItem = function(k, v){
+    if(this === localStorage && frozen && String(k).indexOf('lq:') === 0) return;
+    rawSet.call(this, k, v);
+    if(this === localStorage && !applying){ try{ mark(String(k), String(v)); }catch(e){} }
+  };
+  // What was already here before sync existed: age unknown, so it is stamped low, and a real
+  // attempt outranks a thinner one by how much is in it.
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(skip(k) || meta[k]) continue;
+      const v = localStorage.getItem(k), g = sig(k, v);
+      meta[k] = {t: 0, h: hash(g)};
+      if(g){ let w = 1; if(isState(k)){ try{ w = 1 + weight(JSON.parse(v)); }catch(e){} }
+             meta[k].t = w; meta[k].d = 1; }
+    }
+    putMeta();
+  }catch(e){}
+
+  const enc = new TextEncoder(), dec = new TextDecoder();
+  const toB = s => { s = s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length % 4) s += '=';
+                     return Uint8Array.from(atob(s), c => c.charCodeAt(0)); };
+  const fromB = u => { let t = ''; for(let i=0;i<u.length;i+=8192) t += String.fromCharCode.apply(null, u.subarray(i, i+8192));
+                       return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+  const hex = b => Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,'0')).join('');
+  let ck = null, bucket = '';
+  const ready = (async()=>{
+    ck = await crypto.subtle.importKey('raw', toB(key), 'AES-GCM', false, ['encrypt','decrypt']);
+    bucket = hex(await crypto.subtle.digest('SHA-256', enc.encode('lq-sync:' + key))).slice(0, 32);
+  })();
+  const kid = async k => hex(await crypto.subtle.digest('SHA-256', enc.encode(bucket + '|' + k))).slice(0, 32);
+  async function seal(o){
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv}, ck, enc.encode(JSON.stringify(o)));
+    return fromB(iv) + '.' + fromB(new Uint8Array(ct));
+  }
+  async function unseal(t){
+    const p = t.split('.');
+    return JSON.parse(dec.decode(await crypto.subtle.decrypt({name:'AES-GCM', iv:toB(p[0])}, ck, toB(p[1]))));
+  }
+
+  function pageId(){
+    const el = document.getElementById('quiz-data');
+    if(!el) return null;
+    try{ return JSON.parse(el.textContent).id; }catch(e){ return null; }
+  }
+  async function run(){
+    if(busy || frozen) return [];
+    busy = true;
+    const changed = [];
+    try{
+      await ready;
+      const have = {}, puts = [], sent = {};
+      for(const k of Object.keys(meta)){
+        const m = meta[k];
+        if(!m.id) m.id = await kid(k);
+        have[m.id] = m.t || 0;
+        if(m.d){
+          const v = localStorage.getItem(k);
+          if(v === null){ m.d = 0; continue; }
+          puts.push({k: m.id, v: await seal({k, v}), ts: m.t});
+          sent[k] = m.t;
+        }
+      }
+      const r = await fetch(API, {method:'POST', headers:{'content-type':'text/plain'},
+                                  body: JSON.stringify({bucket, have, puts})});
+      if(!r.ok) throw new Error('sync ' + r.status);
+      const j = await r.json();
+      for(const k in sent) if(meta[k].t === sent[k]) meta[k].d = 0;
+      for(const row of j.rows || []){
+        let o; try{ o = await unseal(row.v); }catch(e){ continue; }
+        if(!o || skip(o.k)) continue;
+        const m = meta[o.k] || (meta[o.k] = {t:0});
+        if((m.t || 0) >= row.ts) continue;
+        applying = true;
+        try{ rawSet.call(localStorage, o.k, o.v); }catch(e){}
+        applying = false;
+        m.t = row.ts; m.d = 0; m.h = hash(sig(o.k, o.v)); m.id = row.k;
+        changed.push(o.k);
+      }
+      putMeta();
+    }catch(e){}
+    busy = false;
+    if(changed.length && window.lqSync.live){
+      const id = pageId();
+      const mine = id ? changed.some(k => k === 'lq:' + id || k.indexOf('lq:' + id + ':') === 0)
+                      : !!document.getElementById('manifest');
+      if(mine){ frozen = true; location.reload(); }
+    }
+    return changed;
+  }
+  function wake(){ if(document.visibilityState !== 'hidden') run(); }
+  function leave(){ if(document.visibilityState === 'hidden') run(); }
+  function listen(){
+    document.removeEventListener('visibilitychange', wake); document.addEventListener('visibilitychange', wake);
+    document.removeEventListener('visibilitychange', leave); document.addEventListener('visibilitychange', leave);
+    removeEventListener('focus', wake); addEventListener('focus', wake);
+  }
+  // `live` = this page should reload itself when its own quiz arrives newer. The locked shell
+  // turns it on only after it has drawn the page.
+  window.lqSync = {first: null, now: run, listen, live: true};
+  listen();
+  setInterval(wake, 20000);
+  window.lqSync.first = run();
+})();
+</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -998,10 +1174,44 @@ function save(){
    the sitting's subchapters into this one function is what makes a half-paper behave exactly
    like a whole one — one direction, one end card, one second pass — with no branch anywhere
    downstream. `only: null` (not chosen, or a page built without parts) filters nothing. */
+/* ---- TAGS (10-12, his ask) ------------------------------------------------------------
+   *"a text box at first, but it functions like a Notion tag property … once I press enter it
+   creates a tag and that tag stays for this exam and only for this exam."* Its own key, like
+   the research box, so a Retake and a rebuild keep them. `defs` is the order he made them in;
+   a tag no question carries any more is dropped from it. Off unless the page was built with
+   `tags`, so every page built before this is what it was. */
+const TKEY = KEY + ':tags';
+let T = (function(){
+  try{ const t = JSON.parse(localStorage.getItem(TKEY) || '{}') || {};
+       return {defs: t.defs || [], q: t.q || {}}; }
+  catch(e){ return {defs:[], q:{}}; } })();
+function tput(){ try{ localStorage.setItem(TKEY, JSON.stringify(T)); }catch(e){} }
+function tagsOf(i){ return T.q[qk(i)] || []; }
+function hasTag(i, name){ return tagsOf(i).indexOf(name) >= 0; }
+function tagAdd(i, raw){
+  const name = String(raw).trim().replace(/\s+/g, ' ');
+  if(!name) return;
+  const known = T.defs.find(d => d.toLowerCase() === name.toLowerCase()) || name;
+  if(T.defs.indexOf(known) < 0) T.defs.push(known);
+  const l = T.q[qk(i)] || (T.q[qk(i)] = []);
+  if(l.indexOf(known) < 0) l.push(known);
+  tput();
+}
+function tagDrop(i, name){
+  const id = qk(i);
+  T.q[id] = (T.q[id] || []).filter(x => x !== name);
+  if(!T.q[id].length) delete T.q[id];
+  if(!Object.keys(T.q).some(k => T.q[k].indexOf(name) >= 0)) T.defs = T.defs.filter(d => d !== name);
+  tput();
+}
+
 function active(s){
-  const only = D.parts ? (s.only || null) : null;
+  // A TAG RUN ("test only these") rides here for the same reason the section filter does.
+  const tf = D.tags ? (s.tagf || null) : null;
+  const only = (D.parts && !tf) ? (s.only || null) : null;
   return D.questions.map((_,i)=>i).filter(i => onPaper(s, i)
-    && (!only || only.indexOf(D.questions[i].sec) >= 0));
+    && (!only || only.indexOf(D.questions[i].sec) >= 0)
+    && (!tf || hasTag(i, tf)));
 }
 /* ---- THE RESERVES (08-16) ------------------------------------------------------------
    His ask: *"if 1 question is skipped, another one is replaced in that section about it… you
@@ -1269,7 +1479,9 @@ function flushFrq(){
 function drawFrq(){
   const box = $('#frqview');
   if(!box || !(D.frq||[]).length) return;
-  let h = '<p class="say">Three written answers, from the same sources as the paper. Write '
+  const NW = D.frq.length, WORDS = ['No','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'];
+  let h = '<p class="say">' + (WORDS[NW] || NW) + ' written answer' + (NW === 1 ? '' : 's')
+        + ', from the same sources as the paper. Write '
         + 'one, then mark it: every point that can be settled by what you wrote is checked '
         + 'for you, and the ones that need judgement are handed back. Click any row to '
         + 'overrule it.</p>';
@@ -1560,7 +1772,7 @@ function draw(){
   // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
   // the rest of the sitting, so nothing about answering, going back or the second pass has
   // to know the picker exists.
-  if(sectioned() && !S.only) return picker();
+  if(sectioned() && !S.only && !S.tagf) return picker();
   const act = runList();
   if(!act.length) return end();
   if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
@@ -1569,6 +1781,61 @@ function draw(){
 
 /* Pure markup, no DOM writes and no state changes — so the same builder can render the
    question and be measured off-screen for the centring reserve. */
+/* The tag box above the question. Chips for what this question carries, then the box: type and
+   Enter makes the tag (or reuses one spelled the same), the ones he already made show under it
+   to click, Backspace on an empty box takes the last one off, Esc leaves. */
+function tagRowInner(i){
+  const mine = tagsOf(i);
+  let h = '';
+  mine.forEach((n,k)=>{ h += '<span class="tchip">' + esc(n) + '<button class="tx" data-drop="' + k
+                           + '" tabindex="-1" aria-label="Remove tag">×</button></span>'; });
+  return h + '<input id="tagin" class="tagin" type="text" autocomplete="off" spellcheck="false" '
+           + 'placeholder="' + (mine.length ? 'Add a tag' : 'Tag this question  ( l )') + '">'
+           + '<div class="tsug hide" id="tsug"></div>';
+}
+function paintSug(i){
+  const inp = $('#tagin'), box = $('#tsug');
+  if(!inp || !box) return;
+  const raw = inp.value.trim(), v = raw.toLowerCase(), mine = tagsOf(i);
+  let h = T.defs.map((d,n)=>({d,n}))
+    .filter(x => mine.indexOf(x.d) < 0 && (!v || x.d.toLowerCase().indexOf(v) >= 0))
+    .map(x => '<button class="tchip pick" data-n="' + x.n + '" tabindex="-1">' + esc(x.d) + '</button>')
+    .join('');
+  if(v && !T.defs.some(d => d.toLowerCase() === v))
+    h += '<span class="tnew">Enter makes “' + esc(raw) + '”</span>';
+  box.innerHTML = h;
+  box.classList.toggle('hide', !h || document.activeElement !== inp);
+  // mousedown, not click: the box must not blur (and hide these) before the pick lands
+  box.querySelectorAll('.pick').forEach(b => { b.onmousedown = e => {
+    e.preventDefault(); tagAdd(i, T.defs[+b.dataset.n]); redrawTags(i, true); }; });
+}
+function redrawTags(i, focus){
+  const row = $('#tagrow');
+  if(!row) return;
+  row.innerHTML = tagRowInner(i);
+  wireTags(i);
+  if(focus) $('#tagin').focus();
+}
+function wireTags(i){
+  const row = $('#tagrow'), inp = $('#tagin');
+  if(!row || !inp) return;
+  row.querySelectorAll('.tx').forEach(b => b.onclick = ()=>{
+    tagDrop(i, tagsOf(i)[+b.dataset.drop]); redrawTags(i, false); });
+  inp.onfocus = ()=> paintSug(i);
+  inp.oninput = ()=> paintSug(i);
+  inp.onblur = ()=> { const b = $('#tsug'); if(b) b.classList.add('hide'); };
+  inp.onkeydown = e => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      if(!inp.value.trim()){ inp.blur(); return; }
+      tagAdd(i, inp.value); redrawTags(i, true);
+    } else if(e.key === 'Escape'){ inp.value = ''; inp.blur(); }
+    else if(e.key === 'Backspace' && !inp.value && tagsOf(i).length){
+      tagDrop(i, tagsOf(i).slice(-1)[0]); redrawTags(i, true);
+    }
+  };
+}
+
 function buildQ(i, picked, fresh, en){
   const q = D.questions[i];
   const answered = picked !== undefined;
@@ -1580,10 +1847,12 @@ function buildQ(i, picked, fresh, en){
   // The counter sits top-left above the question, the way the notebook does it, rather than
   // up in the bar — it belongs with the thing it counts. On a second pass it counts the
   // second pass, so four wrong answers read as "1 / 4" and not as a broken 16.
-  let h = '<div class="qhead' + en + '"><div class="qcol">'
+  let h = (D.tags ? '<div class="tagrow no-read-aloud" id="tagrow">' + tagRowInner(i) + '</div>' : '')
+        + '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta no-read-aloud"><span class="num">' + (pos+1) + ' / '
         + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        + (D.tags && S.tagf ? '<span class="dot">·</span><span>only ' + esc(S.tagf) + '</span>' : '')
         // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
         // 10 reads as the paper having lost his place, which is how he read it.
         + (recycling && S.phase!==2
@@ -1779,6 +2048,7 @@ function question(fresh){
   $('#star').onclick = ()=> toggleStar(i);
   $('#qmark').onclick = ()=> toggleUnsure(i);
   $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
+  if(D.tags) wireTags(i);
 
   // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
   // touches it — and nothing above the options ever changes height.
@@ -2269,19 +2539,32 @@ function openMenu(){
   m.className = 'menu';
   // The clock's only other way in. `w` is not written anywhere else on the page, and a key
   // nothing announces is a key he has to remember he asked for.
-  m.innerHTML = '<button id="skipq">Skip this question</button>'
+  m.innerHTML = '<button id="skipq">Skip this question  ( x )</button>'
               // The reader's own two entries. Space and `v` are written nowhere else on the
               // page, and a key nothing announces is a key he has to remember he asked for.
               + '<button id="readtog">' + (sayOn ? 'Stop' : 'Start') + ' read-aloud  ( space )</button>'
               + '<button id="voiceset">Voice, speed and pauses…</button>'
-              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>';
+              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>'
+              // EVERY KEY, WRITTEN DOWN ONCE (10-12). He could not find Redo or remember its key.
+              + '<div class="keys"><kbd>x</kbd><span>Skip</span><kbd>u</kbd><span>Redo your answer</span>'
+              + '<kbd>h</kbd><span>Hint, when the question has one</span>'
+              + '<kbd>s</kbd><span>Star</span><kbd>/</kbd><span>No idea</span>'
+              + '<kbd>r</kbd><span>Research</span><kbd>f</kbd><span>Fix this question</span>'
+              + '<kbd>t</kbd><span>Reflection</span>'
+              + (D.tags ? '<kbd>l</kbd><span>Tag</span>' : '')
+              + '<kbd>↵</kbd><span>Next</span><kbd>←</kbd><span>Back</span></div>';
   host.appendChild(m);
   m.querySelector('#clocktog').onclick = ()=>{ toggleClock(); closeMenu(); };
   m.querySelector('#readtog').onclick = ()=>{ closeMenu(); sayOn ? sayOff() : sayToggle(); };
   m.querySelector('#voiceset').onclick = ()=>{ closeMenu(); openVset(); };
-  m.querySelector('#skipq').onclick = ()=>{
+  m.querySelector('#skipq').onclick = ()=>{ closeMenu(); skipQuestion(); };
+  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
+}
+/* One path for skipping, whether it came from the menu or from `x` (10-12, his ask: a key
+   *"rather than going into the top bar and then pressing skip"*). */
+function skipQuestion(){
     const list = runList(), pos = list.indexOf(S.i);
-    if(list.length <= 1) return closeMenu();        // never skip the last one standing
+    if(list.length <= 1) return;                    // never skip the last one standing
     const sec = bucketOf(S.i);
     S.skipped[qk(S.i)] = true;
     delete S.answers[qk(S.i)];
@@ -2295,7 +2578,6 @@ function openMenu(){
     // have handed him an end card with a question still owed.
     const filled = promoteReserve(sec) >= 0;
     const wasLast = !filled && pos === list.length - 1;
-    closeMenu();
     syncTabs();
     if(wasLast){ finish(); return; }
     // After the removal the list has shrunk, so the item now AT `pos` is the one that
@@ -2304,8 +2586,6 @@ function openMenu(){
     S.hintOpen = false;
     lastShown = -1;
     save(); question(); window.scrollTo(0,0);
-  };
-  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
 }
 function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(); }
 
@@ -2562,6 +2842,39 @@ function momentum(){
   return h + '</div>';
 }
 
+/* THE TAGS ON THE END CARD: how each group went, and a way to sit one group alone. A tag run
+   is a fresh attempt on only those questions (the finished one goes into history first, as a
+   Retake does); Retake, or "every question" here, goes back to the whole paper. Not offered
+   on a sectioned paper, whose picker already owns which questions a sitting holds. */
+function tagTable(){
+  if(!D.tags || !T.defs.length) return '';
+  const all = D.questions.map((_,i)=>i).filter(i => onPaper(S, i));
+  let h = '';
+  T.defs.forEach((d,n)=>{
+    const qs = all.filter(i => hasTag(i, d));
+    if(!qs.length) return;
+    const sat = qs.filter(i => ans(i) !== undefined || ans2(i) !== undefined);
+    const ok = sat.filter(i => finalRight(i)).length;
+    h += '<div class="tagline"><span class="tchip">' + esc(d) + '</span><span class="tn">'
+       + (sat.length ? ok + ' / ' + sat.length + ' right' : qs.length + ' question' + (qs.length>1?'s':''))
+       + '</span>' + (D.parts ? '' : '<button class="link" data-tagrun="' + n + '">Test only these</button>')
+       + '</div>';
+  });
+  if(!h && !S.tagf) return '';
+  if(S.tagf) h += '<p class="note">This run was only “' + esc(S.tagf) + '”. '
+                + '<button class="link" id="tagall">Back to every question</button></p>';
+  return '<div class="tagtable"><h3>By tag</h3>' + h + '</div>';
+}
+function startRun(tag){
+  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length, ms:S.ms,
+                             tag:S.tagf || undefined});
+  const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
+  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  if(tag) S.tagf = tag;
+  pickSel = null; lastShown = -1;
+  save(); syncTabs(); renderScore(); draw(); window.scrollTo(0,0);
+}
+
 function end(){
   timeOn(null);
   const act = active(S), n = score(S), t = act.length;
@@ -2643,6 +2956,7 @@ function end(){
             + 'every one is done; sitting one again replaces its score.</p>';
   }
 
+  h += tagTable();
   const nskip = Object.keys(S.skipped||{}).length;
   if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
               + '<button class="link" id="unskip">put them back</button></p>';
@@ -2653,6 +2967,10 @@ function end(){
   $('#quizview').innerHTML = h;
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  document.querySelectorAll('[data-tagrun]').forEach(b =>
+    b.onclick = ()=> startRun(T.defs[+b.dataset.tagrun]));
+  const tall = $('#tagall');
+  if(tall) tall.onclick = ()=> startRun(null);
   const ma = $('#momall');
   if(ma) ma.onclick = ()=>{ momAll = true; end(); };
   const m = $('#more');
@@ -2689,6 +3007,7 @@ function itemHTML(i, n){
   const q = D.questions[i], first = ans(i), second = ans2(i);
   let h = '<div class="item">';
   if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
+  if(D.tags) tagsOf(i).forEach(t => { h += '<span class="tchip sm">'+esc(t)+'</span>'; });
   h += '<p class="qq">'+(n===undefined?'':(n+1)+'. ')+esc(q.q)+'</p>'
      + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
   if(!firstRight(i)){
@@ -2705,12 +3024,26 @@ function itemHTML(i, n){
   return h + '</div>';
 }
 
+let revByTag = false;
 function review(){
   timeOn(null);
+  const act = active(S), canSort = D.tags && T.defs.length;
   let h = '<div class="rev"><h3>Every question</h3>';
-  active(S).forEach((i,n)=>{ h += itemHTML(i, n); });
+  if(canSort) h += '<p class="note" style="margin:0 0 6px"><button class="link" id="revsort">'
+                 + (revByTag ? 'Sort in order' : 'Sort by tag') + '</button></p>';
+  if(canSort && revByTag){
+    // a question with two tags is listed under both; the untagged ones come last
+    T.defs.concat(['']).forEach(d=>{
+      const qs = act.filter(i => d ? hasTag(i, d) : !tagsOf(i).length);
+      if(!qs.length) return;
+      h += '<h3 class="tgroup">' + (d ? esc(d) : 'No tag') + ' · ' + qs.length + '</h3>';
+      qs.forEach(i => { h += itemHTML(i, act.indexOf(i)); });
+    });
+  } else act.forEach((i,n)=>{ h += itemHTML(i, n); });
   h += '</div>';
   $('#quizview').innerHTML = h;
+  const rs = $('#revsort');
+  if(rs) rs.onclick = ()=>{ revByTag = !revByTag; review(); };
   $('#band').classList.add('off');
   showResearch(false);
   $('#footer').classList.remove('hide');
@@ -4017,6 +4350,10 @@ document.addEventListener('keydown', e=>{
   // `w` FOR WATCH — the clock in the bar, off by default. Past G like every other command
   // key here, so it can never be an option letter.
   if(e.key === 'w' || e.key === 'W'){ toggleClock(); return; }
+  // `x` SKIPS, `l` (label) PUTS THE CARET IN THE TAG BOX. Both past G, so never an option key.
+  if(e.key === 'x' || e.key === 'X'){ e.preventDefault(); skipQuestion(); return; }
+  if((e.key === 'l' || e.key === 'L') && D.tags){
+    const ti = $('#tagin'); if(ti){ e.preventDefault(); ti.focus(); } return; }
   if(e.key === '/' || e.key === '?'){ e.preventDefault(); toggleUnsure(S.i); return; }
   /* THE KEY NAMES A POSITION ON SCREEN, not an option. `2` and `B` mean the second card he
      can see, which is the only thing either of them could mean to him — after a Redo has

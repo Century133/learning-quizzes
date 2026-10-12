@@ -326,6 +326,32 @@ kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid
 .qmark:hover{background:var(--surface);color:var(--text)}
 .qmark.on{color:var(--text);border-color:var(--accent);background:var(--surface-hi)}
 
+/* ---- tags (10-12): his own labels on a question, kept per quiz ---- */
+.tagrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.tchip{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:.78rem;
+ color:var(--text);background:var(--surface-hi);border:1px solid var(--line);
+ border-radius:6px;padding:2px 8px;line-height:1.5}
+.tchip.sm{font-size:.7rem;margin:0 6px 9px 0}
+button.tchip{cursor:pointer}
+button.tchip:hover{border-color:var(--muted)}
+.tx{background:none;border:0;color:var(--muted);font:inherit;padding:0;cursor:pointer;line-height:1}
+.tx:hover{color:var(--text)}
+.tagin{flex:1 1 140px;min-width:120px;background:none;border:0;outline:0;color:var(--text);
+ font:inherit;font-size:.82rem;padding:3px 2px}
+.tagin::placeholder{color:var(--muted);opacity:.75}
+.tsug{flex:1 0 100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tnew{color:var(--muted);font-size:.76rem}
+.tagtable{margin:26px 0 0;text-align:left}
+.tagtable h3{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+ font-weight:500;margin:0 0 6px}
+.tagline{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line);
+ font-size:.88rem}
+.tagline .tn{flex:1;color:var(--muted);font-variant-numeric:tabular-nums}
+.tgroup{margin-top:30px}
+.menu .keys{border-top:1px solid var(--line);margin:5px 0 0;padding:8px 10px 4px;
+ display:grid;grid-template-columns:auto 1fr;gap:5px 10px;font-size:.78rem;color:var(--muted);
+ align-items:center}
+
 /* ---- the ⋮ menu ---- */
 .more{position:relative;flex:0 0 auto}
 .dots{background:none;border:0;color:var(--muted);font-size:1.15rem;line-height:1;
@@ -452,6 +478,44 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .ptotal{margin:14px 0 0;color:var(--muted);font-size:.88rem}
 .ptotal b{color:var(--text);font-variant-numeric:tabular-nums;font-size:1.05rem;
  font-weight:600;margin-right:8px}
+
+/* ---- MOMENTUM (08-21) ----
+   Same furniture as every other end-card table — same heading, same hairline rows, same
+   rails — because it is one more breakdown of the same sitting and must not read as a
+   dashboard bolted on. The only new shape is the strip, and it is deliberately small: it is
+   there to be glanced at, not measured off.
+
+   IT READS IN GRAYSCALE. A wrong bar is HATCHED as well as coloured, exactly like the wrong
+   half of the score chart above it, so the split survives a screenshot with the colour gone
+   and survives him printing it. */
+.mom .strip{display:flex;align-items:flex-end;gap:2px;height:56px;position:relative;
+ margin:0 0 5px;padding-top:2px}
+.mom .strip .sb{flex:1 1 0;min-width:2px;border-radius:2px 2px 0 0;background:var(--text)}
+.mom .strip .sb.r{background:var(--right)}
+.mom .strip .sb.w{background:var(--wrong);
+ background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,
+ rgba(0,0,0,.45) 3px,rgba(0,0,0,.45) 6px)}
+/* The median, drawn across the strip rather than written under it — the whole question the
+   strip answers is "which of these are the long ones", and a line answers it at a glance. */
+.mom .strip .med{position:absolute;left:0;right:0;height:0;border-top:1px dashed var(--muted);
+ opacity:.55;pointer-events:none}
+.momax{display:flex;justify-content:space-between;color:var(--muted);font-size:.72rem;
+ letter-spacing:.04em;margin:0 0 16px}
+.mline{color:var(--muted);font-size:.88rem;margin:0 0 18px}
+.mline b{color:var(--text);font-variant-numeric:tabular-nums;font-weight:500}
+.mrow{display:grid;grid-template-columns:1.1em 1.7em 1fr auto;gap:5px 10px;align-items:center;
+ padding:8px 0;border-top:1px solid var(--line);font-size:.9rem}
+.mrow .mg{color:var(--muted);font-size:.85rem;user-select:none;-webkit-user-select:none}
+.mrow .mn{color:var(--muted);font-size:.8rem;font-variant-numeric:tabular-nums;text-align:right}
+.mrow .mlab{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mrow .mt{color:var(--muted);font-size:.86rem;font-variant-numeric:tabular-nums}
+/* The rail is `.tbar`, borrowed whole from the tables above. `i.w` is the only addition:
+   time on a question he got wrong gets the same hatch as everything else wrong on the page. */
+.mrow .tbar i.w{background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,
+ rgba(0,0,0,.45) 3px,rgba(0,0,0,.45) 6px)}
+.mmore{margin:12px 0 0;font-size:.85rem}
+.mgoal{margin:16px 0 0;color:var(--muted);font-size:.88rem;max-width:52ch}
+.mgoal b{color:var(--text);font-variant-numeric:tabular-nums;font-weight:500}
 
 /* ---- THE SUBCHAPTER PICKER (08-16) ----
    Deliberately the same furniture as the end card — same heading treatment, same rails, same
@@ -876,7 +940,157 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "el-6-1", "title": "6.1 Syntactic knowledge and grammaticality judgements", "subtitle": "Chapter 6 · Syntax", "book": "EL", "hash": "1a2e2483bef46d70", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "If you were to rearrange the sentence 'The manager sent a brief email' into 'Brief a sent email manager the,' why would a reader struggle to understand it even though all the words are common English?", "options": ["The sentence is too short to convey a complex professional thought.", "The sentence ignores the specific rules for how words must be organized into phrases.", "The sentence lacks a clear subject-verb agreement in its spelling.", "The words used are too simple to form a meaningful sentence in this order."], "rationales": ["Sentence length does not determine structural correctness; even very short sentences can be syntactically sound.", "Syntax involves the study of how words are organized into structural patterns rather than just existing as a random string.", "The issue is word organization and structure (syntax), not spelling or morphological agreement.", "Simple words are perfectly capable of forming complex structures if organized according to grammatical patterns."], "correct": 1, "hint": "Think about whether sentences are just lists of words or have a specific organization.", "topic": "Syntactic structure", "sec": "", "src": "", "link": "", "qid": "dc7586f1bd"}, {"q": "Consider the phrase 'the bright red truck.' If you view this as more than just a list of four words, how are these words actually organized in the mind of a speaker?", "options": ["They are organized alphabetically to allow for faster mental processing.", "They are organized into a hierarchical structure where some words group together more closely.", "They are organized as a simple horizontal string with no internal grouping.", "They are organized by the length of the words from shortest to longest."], "rationales": ["Sentence structure is based on syntactic relationships, not the alphabetical order of the vocabulary used.", "Linguistic theory suggests that sentences and phrases are built as nested levels of organization rather than a flat line of words.", "While words appear in a line when written, the internal grammar treats them as having layered relationships.", "Word length is an physical property that does not dictate how words are grouped into meaningful phrases."], "correct": 1, "hint": "Reflect on whether words in a phrase are a flat sequence or layered groups.", "topic": "Hierarchical structure", "sec": "", "src": "", "link": "", "qid": "44c630b6e1"}, {"q": "In the phrase 'extremely delicious coffee,' which word acts as the central element that defines the entire group as a noun phrase?", "options": ["The combination of all three equally", "delicious", "coffee", "extremely"], "rationales": ["While all words contribute meaning, one specific word acts as the structural 'head' of the phrase.", "This word describes a quality but is not the central element that allows the phrase to function as a noun.", "Every phrase has a syntactic head, which is the core element that determines the category and primary meaning of the group.", "This word only serves to modify the adjective and cannot be the core of a noun phrase."], "correct": 2, "hint": "Identify the single word that makes the whole group a 'thing' rather than an 'action' or 'description'.", "topic": "Syntactic heads", "sec": "", "src": "", "link": "", "qid": "0e6d7b17e2"}, {"q": "You hear someone say, 'My digital toaster is trying to negotiate a peace treaty with the microwave.' Even though this is an impossible scenario you've never heard before, you recognize it as a valid English sentence. What principle explains this?", "options": ["The sentence is only valid because it uses high-tech modern terminology.", "Your brain ignores the meaning and only focuses on the familiar vocabulary.", "The generativity of language allows you to understand and create brand-new sentences.", "You have a memorized list of every possible sentence structure in your brain."], "rationales": ["The validity of the sentence structure (syntax) is independent of the specific vocabulary or time period of the words.", "Understanding a novel sentence requires applying structural rules, not just recognizing individual words.", "Language is generative, meaning our internal grammar can produce and interpret an infinite number of novel combinations.", "Because language is infinite, it is impossible to memorize all possible sentences; we rely on rules instead."], "correct": 2, "hint": "Consider how humans handle sentences they have never encountered before.", "topic": "Language generativity", "sec": "", "src": "", "link": "", "qid": "1745afaf99"}, {"q": "When a linguist describes the sentence 'The cat sat on the mat' as 'grammatical,' what specifically do they mean?", "options": ["The sentence is factual and provides accurate information about a real cat.", "The sentence matches the structural patterns required by the user's internal grammar.", "The sentence is polite and appropriate for use in a professional setting.", "The sentence follows the formal rules found in a style guide or school textbook."], "rationales": ["Grammaticality is about the 'shape' or structure of the sentence, regardless of whether the statement is true.", "Grammaticality in linguistics refers to whether a sentence fits the subconscious system of a language user.", "Social etiquette and professionalism are separate from the structural patterns that define a grammatical sentence.", "Linguistic grammaticality is about the internal mental system, not prescriptive rules taught in school."], "correct": 1, "hint": "Focus on the relationship between a sentence and a speaker's internal system.", "topic": "Grammaticality patterns", "sec": "", "src": "", "link": "", "qid": "a07c2c17a3"}, {"q": "If you encounter the sentence 'Coffee the finished I,' why would it be categorized as ungrammatical in the linguistic sense?", "options": ["It is inconsistent with the grammatical system of an English speaker.", "The sentence is offensive to people who enjoy drinking coffee.", "It is a sentence that has never been written in an English book before.", "It uses words that are too short to form a proper professional statement."], "rationales": ["Ungrammaticality occurs when a string of words does not match the patterns of the speaker's internal linguistic system.", "Linguistic ungrammaticality is a structural failure, not a social or emotional offense.", "New sentences are created constantly; being 'new' does not make a sentence ungrammatical.", "The length or complexity of words does not determine if a sentence is ungrammatical; the organization does."], "correct": 0, "hint": "Look for why a specific order of words fails to feel like a 'real' sentence.", "topic": "Ungrammatical sentences", "sec": "", "src": "", "link": "", "qid": "ce29a0e873"}, {"q": "If you are asked to decide if 'He don't like it' sounds like a natural sentence in your own way of speaking, what are you providing?", "options": ["A prescriptive correction.", "A universal rule for all English.", "A semantic clarification.", "A grammaticality judgement."], "rationales": ["Correcting someone based on school rules is different from judging if a sentence fits your own natural grammar.", "Judgements come from individuals; there is no way to get a single judgement for 'English' as a whole.", "This task is about the shape/form of the sentence, not just clarifying its meaning.", "A grammaticality judgement is an individual's evaluation of whether a sentence fits their internal linguistic system."], "correct": 3, "hint": "Think about the tool used to investigate an individual's internal linguistic system.", "topic": "Grammaticality judgements", "sec": "", "src": "", "link": "", "qid": "fa4e149356"}, {"q": "Two coworkers are discussing an upcoming project. One says, 'The report needs finished,' while the other says, 'The report needs to be finished.' What does their disagreement tell us about the English language?", "options": ["The first speaker is using a 'bad' version of English that should be corrected.", "English is a finite language that is currently losing its rules.", "There is syntactic variation between different users of the language.", "One speaker has a more advanced vocabulary than the other."], "rationales": ["Linguistics views these differences as variation within a system rather than making moral judgements about 'bad grammar'.", "Variation is a standard feature of living languages and does not imply a loss of rules or finiteness.", "Disagreements on whether an example is grammatical often reveal natural variations in the rules speakers use.", "Both sentences use the same words; the difference is in how they are organized, not word choice."], "correct": 2, "hint": "Consider what it means when two native speakers have different gut feelings about a sentence.", "topic": "Syntactic variation", "sec": "", "src": "", "link": "", "qid": "ef95b01351"}, {"q": "In a linguistics textbook, you see the example '*Ran the dog quickly away.' Why is there a star symbol at the beginning of this sentence?", "options": ["To indicate that the sentence is a direct quote from a famous author.", "To suggest that the sentence is grammatically correct but factually false.", "To show that the sentence is ungrammatical according to the linguistic system.", "To emphasize that this is a particularly important or poetic sentence."], "rationales": ["Linguists use asterisks as structural markers, not as a citation style.", "The star marks structural failures (syntax), while a different symbol is used for meaning issues.", "The asterisk or 'star' is the standard convention to mark examples that do not follow syntactic patterns.", "Stars are used to mark structural errors, not for emphasis or poetic merit."], "correct": 2, "hint": "Recall the specific meaning of the asterisk placed before a sentence.", "topic": "Linguistic symbols", "sec": "", "src": "", "link": "", "qid": "e24510f737"}, {"q": "A linguist marks the sentence '#The suitcase enjoyed its vacation' with a hashmark. What is this symbol communicating about the sentence?", "options": ["The sentence is too informal for a linguistic study.", "The sentence has a word order error that makes it impossible to parse.", "The sentence is grammatically well-formed but has a nonsensical meaning.", "The sentence contains a typo that needs to be fixed before analysis."], "rationales": ["Linguistic symbols mark specific properties of structure or meaning, not the level of formality.", "Word order issues are structural errors marked by a star, not a hashmark.", "The hashmark indicates semantic oddness, where the structure is correct but the meaning does not make sense.", "The hashmark is used intentionally to describe the relationship between grammar and meaning."], "correct": 2, "hint": "Distinguish between a sentence that is 'broken' in its structure versus one 'broken' in its logic.", "topic": "Meaning vs syntax", "sec": "", "src": "", "link": "", "qid": "03b0d128ff"}, {"q": "When you recognize that 'to the store' in the sentence 'He went to the store' can be replaced by the word 'there,' what does this imply about those three words?", "options": ["They are three unrelated words that happen to be next to each other.", "They form a constituency, meaning they act together as a single group.", "They represent a violation of standard English word order.", "They are the only words in the sentence that carry any meaning."], "rationales": ["Words in a sentence are structured into groups rather than being a string of isolated items.", "Syntax is not just about the order of words; it involves understanding how they group into constituents.", "Being able to replace a group of words with a single word usually indicates a valid, grammatical grouping.", "All words in a sentence contribute to meaning and structure, but some form tighter units than others."], "correct": 1, "hint": "Reflect on why certain strings of words can be treated as a single unit.", "topic": "Word grouping", "sec": "", "src": "", "link": "", "qid": "3c17e640b4"}, {"q": "Which of the following best describes what you are using when you instantly know that 'The blue sky' is a phrase but 'Sky blue the' is not?", "options": ["The dictionary definition of each word.", "A list of phrases you have previously read in books.", "The spelling rules you learned in school.", "Your internal grammar."], "rationales": ["Definitions tell you what words mean, but they do not tell you how to arrange them into valid phrases.", "Knowing syntax is more than just a list of examples; it's a system of rules that applies to new cases.", "Spelling is about the written form of individual words, not the structural patterns of sentences.", "Internal grammar is the mental system that allows language users to recognize and generate patterns."], "correct": 3, "hint": "Think about the mental software that processes the 'shape' of your language.", "topic": "Internal grammar", "sec": "", "src": "", "link": "", "qid": "415c6ec780"}], "hasSheet": true, "parts": false, "secTitles": {}, "reserve": 0, "frq": [], "notebook": "https://notebooklm.google.com/notebook/9c3efebf-1b56-4efd-a0e8-f4f236a20e42/artifact/7ed76464-c587-4a39-b401-bcdca9ad692b", "root": "../index.html", "tab": "quiz", "sheet": "## 1. Syntactic structure\nSyntax is defined as the study of how words are organized into larger units such as phrases and sentences.\n### Key terms\n1. Syntax: The study of word organization into phrases and sentences based on underlying hierarchical structures.\n\n## 2. Hierarchical structure\nSentences are organized into multi-level structures rather than being processed as simple linear strings of words.\n### Key terms\n1. Hierarchical structure: The multi-level organization of words where components are nested within larger syntactic units.\n\n## 3. Syntactic heads\nEvery linguistic phrase contains a central core component, known as a head, which determines its syntactic nature.\n### Key terms\n1. Syntactic head: The essential core element that exists within every linguistic phrase.\n\n## 4. Language generativity\nThe internal grammar of a language user provides the generative capacity to apply rules to brand-new linguistic inputs.\n### Key terms\n1. Generativity: The ability of a language user’s grammar to generalize to and produce sentences never heard or read before.\n\n## 5. Grammaticality patterns\nA sentence is defined by whether its structure adheres to the specific patterns required by a user's internal grammar.\n### Key terms\n1. Grammatical: A description of sentences that match the structural patterns of a specific user's internal grammar.\n\n## 6. Ungrammatical sentences\nUngrammaticality refers to a failure to align with a user's internal system and is distinct from prescriptive \"bad grammar\" or school-taught rules.\n### Key terms\n1. Ungrammatical: A status for sentences that are inconsistent with the internal grammatical system of a language user.\n   1. ex. *Grypnos tichek all are.\n\n## 7. Grammaticality judgements\nEvaluations of sentences by individuals serve as a primary research tool for investigating the properties of a specific linguistic system.\n### Key terms\n1. Grammaticality judgement: A user's evaluation used as a tool to investigate the linguistic system of an individual.\n\n## 8. Syntactic variation\nDisagreements between language users regarding a sentence's status reveal syntactic variation, which serves as a tool for testing and refining linguistic theories.\n### Key terms\n1. Syntactic variation: The phenomenon where users disagree on an example’s status, indicating a need for theory changes if the model cannot account for the pattern.\n\n## 9. Linguistic symbols\nLinguists use specific notation symbols placed at the beginning of examples to mark their syntactic or semantic status.\n### Key terms\n1. Asterisk/Star (*): The symbol used at the beginning of an example to mark a sentence as syntactically ungrammatical.\n2. Hashmark (#): The symbol used at the beginning of an example to indicate a sentence is semantically odd rather than syntactically incorrect.\n\n## 10. Meaning vs syntax\nTheoretical syntax distinguishes between the structural \"shape\" of a sentence and the semantic sense or meaning it conveys.\n### Key terms\n1. Semantically odd: A status for a sentence that possesses the correct structural \"shape\" but makes no sense.\n   1. ex. #The book pedalled the ladder harmoniously.\n\n## 11. Word grouping\nSyntactic knowledge is fundamentally based on the grouping of words into constituents rather than the simple linear order of strings.\n### Key terms\n1. Constituency: The hierarchical grouping of words that serves as the foundational alternative to linear string processing in syntactic theory.\n\n## 12. Internal grammar\nThe internal grammar is the mental system that allows users to predict grammaticality and explain the observed properties of sentences.\n### Key terms\n1. Internal grammar: The generative mental system used to identify patterns, explain sentence properties, and understand sentences never encountered before."}</script>
+<script id="quiz-data" type="application/json">{"id": "el-6-1", "title": "6.1 Syntactic knowledge and grammaticality judgements", "subtitle": "Chapter 6 · Syntax", "book": "EL", "hash": "1a2e2483bef46d70", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "If you were to rearrange the sentence 'The manager sent a brief email' into 'Brief a sent email manager the,' why would a reader struggle to understand it even though all the words are common English?", "options": ["The sentence is too short to convey a complex professional thought.", "The sentence ignores the specific rules for how words must be organized into phrases.", "The sentence lacks a clear subject-verb agreement in its spelling.", "The words used are too simple to form a meaningful sentence in this order."], "rationales": ["Sentence length does not determine structural correctness; even very short sentences can be syntactically sound.", "Syntax involves the study of how words are organized into structural patterns rather than just existing as a random string.", "The issue is word organization and structure (syntax), not spelling or morphological agreement.", "Simple words are perfectly capable of forming complex structures if organized according to grammatical patterns."], "correct": 1, "hint": "Think about whether sentences are just lists of words or have a specific organization.", "topic": "Syntactic structure", "sec": "", "src": "", "link": "", "qid": "dc7586f1bd"}, {"q": "Consider the phrase 'the bright red truck.' If you view this as more than just a list of four words, how are these words actually organized in the mind of a speaker?", "options": ["They are organized alphabetically to allow for faster mental processing.", "They are organized into a hierarchical structure where some words group together more closely.", "They are organized as a simple horizontal string with no internal grouping.", "They are organized by the length of the words from shortest to longest."], "rationales": ["Sentence structure is based on syntactic relationships, not the alphabetical order of the vocabulary used.", "Linguistic theory suggests that sentences and phrases are built as nested levels of organization rather than a flat line of words.", "While words appear in a line when written, the internal grammar treats them as having layered relationships.", "Word length is an physical property that does not dictate how words are grouped into meaningful phrases."], "correct": 1, "hint": "Reflect on whether words in a phrase are a flat sequence or layered groups.", "topic": "Hierarchical structure", "sec": "", "src": "", "link": "", "qid": "44c630b6e1"}, {"q": "In the phrase 'extremely delicious coffee,' which word acts as the central element that defines the entire group as a noun phrase?", "options": ["The combination of all three equally", "delicious", "coffee", "extremely"], "rationales": ["While all words contribute meaning, one specific word acts as the structural 'head' of the phrase.", "This word describes a quality but is not the central element that allows the phrase to function as a noun.", "Every phrase has a syntactic head, which is the core element that determines the category and primary meaning of the group.", "This word only serves to modify the adjective and cannot be the core of a noun phrase."], "correct": 2, "hint": "Identify the single word that makes the whole group a 'thing' rather than an 'action' or 'description'.", "topic": "Syntactic heads", "sec": "", "src": "", "link": "", "qid": "0e6d7b17e2"}, {"q": "You hear someone say, 'My digital toaster is trying to negotiate a peace treaty with the microwave.' Even though this is an impossible scenario you've never heard before, you recognize it as a valid English sentence. What principle explains this?", "options": ["The sentence is only valid because it uses high-tech modern terminology.", "Your brain ignores the meaning and only focuses on the familiar vocabulary.", "The generativity of language allows you to understand and create brand-new sentences.", "You have a memorized list of every possible sentence structure in your brain."], "rationales": ["The validity of the sentence structure (syntax) is independent of the specific vocabulary or time period of the words.", "Understanding a novel sentence requires applying structural rules, not just recognizing individual words.", "Language is generative, meaning our internal grammar can produce and interpret an infinite number of novel combinations.", "Because language is infinite, it is impossible to memorize all possible sentences; we rely on rules instead."], "correct": 2, "hint": "Consider how humans handle sentences they have never encountered before.", "topic": "Language generativity", "sec": "", "src": "", "link": "", "qid": "1745afaf99"}, {"q": "When a linguist describes the sentence 'The cat sat on the mat' as 'grammatical,' what specifically do they mean?", "options": ["The sentence is factual and provides accurate information about a real cat.", "The sentence matches the structural patterns required by the user's internal grammar.", "The sentence is polite and appropriate for use in a professional setting.", "The sentence follows the formal rules found in a style guide or school textbook."], "rationales": ["Grammaticality is about the 'shape' or structure of the sentence, regardless of whether the statement is true.", "Grammaticality in linguistics refers to whether a sentence fits the subconscious system of a language user.", "Social etiquette and professionalism are separate from the structural patterns that define a grammatical sentence.", "Linguistic grammaticality is about the internal mental system, not prescriptive rules taught in school."], "correct": 1, "hint": "Focus on the relationship between a sentence and a speaker's internal system.", "topic": "Grammaticality patterns", "sec": "", "src": "", "link": "", "qid": "a07c2c17a3"}, {"q": "If you encounter the sentence 'Coffee the finished I,' why would it be categorized as ungrammatical in the linguistic sense?", "options": ["It is inconsistent with the grammatical system of an English speaker.", "The sentence is offensive to people who enjoy drinking coffee.", "It is a sentence that has never been written in an English book before.", "It uses words that are too short to form a proper professional statement."], "rationales": ["Ungrammaticality occurs when a string of words does not match the patterns of the speaker's internal linguistic system.", "Linguistic ungrammaticality is a structural failure, not a social or emotional offense.", "New sentences are created constantly; being 'new' does not make a sentence ungrammatical.", "The length or complexity of words does not determine if a sentence is ungrammatical; the organization does."], "correct": 0, "hint": "Look for why a specific order of words fails to feel like a 'real' sentence.", "topic": "Ungrammatical sentences", "sec": "", "src": "", "link": "", "qid": "ce29a0e873"}, {"q": "If you are asked to decide if 'He don't like it' sounds like a natural sentence in your own way of speaking, what are you providing?", "options": ["A prescriptive correction.", "A universal rule for all English.", "A semantic clarification.", "A grammaticality judgement."], "rationales": ["Correcting someone based on school rules is different from judging if a sentence fits your own natural grammar.", "Judgements come from individuals; there is no way to get a single judgement for 'English' as a whole.", "This task is about the shape/form of the sentence, not just clarifying its meaning.", "A grammaticality judgement is an individual's evaluation of whether a sentence fits their internal linguistic system."], "correct": 3, "hint": "Think about the tool used to investigate an individual's internal linguistic system.", "topic": "Grammaticality judgements", "sec": "", "src": "", "link": "", "qid": "fa4e149356"}, {"q": "Two coworkers are discussing an upcoming project. One says, 'The report needs finished,' while the other says, 'The report needs to be finished.' What does their disagreement tell us about the English language?", "options": ["The first speaker is using a 'bad' version of English that should be corrected.", "English is a finite language that is currently losing its rules.", "There is syntactic variation between different users of the language.", "One speaker has a more advanced vocabulary than the other."], "rationales": ["Linguistics views these differences as variation within a system rather than making moral judgements about 'bad grammar'.", "Variation is a standard feature of living languages and does not imply a loss of rules or finiteness.", "Disagreements on whether an example is grammatical often reveal natural variations in the rules speakers use.", "Both sentences use the same words; the difference is in how they are organized, not word choice."], "correct": 2, "hint": "Consider what it means when two native speakers have different gut feelings about a sentence.", "topic": "Syntactic variation", "sec": "", "src": "", "link": "", "qid": "ef95b01351"}, {"q": "In a linguistics textbook, you see the example '*Ran the dog quickly away.' Why is there a star symbol at the beginning of this sentence?", "options": ["To indicate that the sentence is a direct quote from a famous author.", "To suggest that the sentence is grammatically correct but factually false.", "To show that the sentence is ungrammatical according to the linguistic system.", "To emphasize that this is a particularly important or poetic sentence."], "rationales": ["Linguists use asterisks as structural markers, not as a citation style.", "The star marks structural failures (syntax), while a different symbol is used for meaning issues.", "The asterisk or 'star' is the standard convention to mark examples that do not follow syntactic patterns.", "Stars are used to mark structural errors, not for emphasis or poetic merit."], "correct": 2, "hint": "Recall the specific meaning of the asterisk placed before a sentence.", "topic": "Linguistic symbols", "sec": "", "src": "", "link": "", "qid": "e24510f737"}, {"q": "A linguist marks the sentence '#The suitcase enjoyed its vacation' with a hashmark. What is this symbol communicating about the sentence?", "options": ["The sentence is too informal for a linguistic study.", "The sentence has a word order error that makes it impossible to parse.", "The sentence is grammatically well-formed but has a nonsensical meaning.", "The sentence contains a typo that needs to be fixed before analysis."], "rationales": ["Linguistic symbols mark specific properties of structure or meaning, not the level of formality.", "Word order issues are structural errors marked by a star, not a hashmark.", "The hashmark indicates semantic oddness, where the structure is correct but the meaning does not make sense.", "The hashmark is used intentionally to describe the relationship between grammar and meaning."], "correct": 2, "hint": "Distinguish between a sentence that is 'broken' in its structure versus one 'broken' in its logic.", "topic": "Meaning vs syntax", "sec": "", "src": "", "link": "", "qid": "03b0d128ff"}, {"q": "When you recognize that 'to the store' in the sentence 'He went to the store' can be replaced by the word 'there,' what does this imply about those three words?", "options": ["They are three unrelated words that happen to be next to each other.", "They form a constituency, meaning they act together as a single group.", "They represent a violation of standard English word order.", "They are the only words in the sentence that carry any meaning."], "rationales": ["Words in a sentence are structured into groups rather than being a string of isolated items.", "Syntax is not just about the order of words; it involves understanding how they group into constituents.", "Being able to replace a group of words with a single word usually indicates a valid, grammatical grouping.", "All words in a sentence contribute to meaning and structure, but some form tighter units than others."], "correct": 1, "hint": "Reflect on why certain strings of words can be treated as a single unit.", "topic": "Word grouping", "sec": "", "src": "", "link": "", "qid": "3c17e640b4"}, {"q": "Which of the following best describes what you are using when you instantly know that 'The blue sky' is a phrase but 'Sky blue the' is not?", "options": ["The dictionary definition of each word.", "A list of phrases you have previously read in books.", "The spelling rules you learned in school.", "Your internal grammar."], "rationales": ["Definitions tell you what words mean, but they do not tell you how to arrange them into valid phrases.", "Knowing syntax is more than just a list of examples; it's a system of rules that applies to new cases.", "Spelling is about the written form of individual words, not the structural patterns of sentences.", "Internal grammar is the mental system that allows language users to recognize and generate patterns."], "correct": 3, "hint": "Think about the mental software that processes the 'shape' of your language.", "topic": "Internal grammar", "sec": "", "src": "", "link": "", "qid": "415c6ec780"}], "hasSheet": true, "parts": false, "secTitles": {}, "reserve": 0, "tags": false, "frq": [], "notebook": "https://notebooklm.google.com/notebook/9c3efebf-1b56-4efd-a0e8-f4f236a20e42/artifact/7ed76464-c587-4a39-b401-bcdca9ad692b", "root": "../index.html", "tab": "quiz", "sheet": "## 1. Syntactic structure\nSyntax is defined as the study of how words are organized into larger units such as phrases and sentences.\n### Key terms\n1. Syntax: The study of word organization into phrases and sentences based on underlying hierarchical structures.\n\n## 2. Hierarchical structure\nSentences are organized into multi-level structures rather than being processed as simple linear strings of words.\n### Key terms\n1. Hierarchical structure: The multi-level organization of words where components are nested within larger syntactic units.\n\n## 3. Syntactic heads\nEvery linguistic phrase contains a central core component, known as a head, which determines its syntactic nature.\n### Key terms\n1. Syntactic head: The essential core element that exists within every linguistic phrase.\n\n## 4. Language generativity\nThe internal grammar of a language user provides the generative capacity to apply rules to brand-new linguistic inputs.\n### Key terms\n1. Generativity: The ability of a language user’s grammar to generalize to and produce sentences never heard or read before.\n\n## 5. Grammaticality patterns\nA sentence is defined by whether its structure adheres to the specific patterns required by a user's internal grammar.\n### Key terms\n1. Grammatical: A description of sentences that match the structural patterns of a specific user's internal grammar.\n\n## 6. Ungrammatical sentences\nUngrammaticality refers to a failure to align with a user's internal system and is distinct from prescriptive \"bad grammar\" or school-taught rules.\n### Key terms\n1. Ungrammatical: A status for sentences that are inconsistent with the internal grammatical system of a language user.\n   1. ex. *Grypnos tichek all are.\n\n## 7. Grammaticality judgements\nEvaluations of sentences by individuals serve as a primary research tool for investigating the properties of a specific linguistic system.\n### Key terms\n1. Grammaticality judgement: A user's evaluation used as a tool to investigate the linguistic system of an individual.\n\n## 8. Syntactic variation\nDisagreements between language users regarding a sentence's status reveal syntactic variation, which serves as a tool for testing and refining linguistic theories.\n### Key terms\n1. Syntactic variation: The phenomenon where users disagree on an example’s status, indicating a need for theory changes if the model cannot account for the pattern.\n\n## 9. Linguistic symbols\nLinguists use specific notation symbols placed at the beginning of examples to mark their syntactic or semantic status.\n### Key terms\n1. Asterisk/Star (*): The symbol used at the beginning of an example to mark a sentence as syntactically ungrammatical.\n2. Hashmark (#): The symbol used at the beginning of an example to indicate a sentence is semantically odd rather than syntactically incorrect.\n\n## 10. Meaning vs syntax\nTheoretical syntax distinguishes between the structural \"shape\" of a sentence and the semantic sense or meaning it conveys.\n### Key terms\n1. Semantically odd: A status for a sentence that possesses the correct structural \"shape\" but makes no sense.\n   1. ex. #The book pedalled the ladder harmoniously.\n\n## 11. Word grouping\nSyntactic knowledge is fundamentally based on the grouping of words into constituents rather than the simple linear order of strings.\n### Key terms\n1. Constituency: The hierarchical grouping of words that serves as the foundational alternative to linear string processing in syntactic theory.\n\n## 12. Internal grammar\nThe internal grammar is the mental system that allows users to predict grammaticality and explain the observed properties of sentences.\n### Key terms\n1. Internal grammar: The generative mental system used to identify patterns, explain sentence properties, and understand sentences never encountered before."}</script>
+<script>
+(function(){
+  if(window.lqSync) return;
+  const API = 'https://terp-plate.vercel.app/api/quiz-sync', MK = 'lqsync:meta';
+  const none = {first: Promise.resolve([]), now: async()=>[], listen(){}};
+  let key = '';
+  try{ key = localStorage.getItem('lq:key') || ''; }catch(e){}
+  const hm = /[#&]k=([A-Za-z0-9_-]{40,})/.exec(location.hash);
+  if(hm) key = hm[1];
+  if(!key || !window.crypto || !crypto.subtle){ window.lqSync = none; return; }
+
+  const skip = k => k.indexOf('lq:') !== 0 || k === 'lq:key' || k === 'lq:speech';
+  const rawSet = Storage.prototype.setItem;
+  let meta = {};
+  try{ meta = JSON.parse(localStorage.getItem(MK) || '{}') || {}; }catch(e){}
+  const putMeta = ()=>{ try{ rawSet.call(localStorage, MK, JSON.stringify(meta)); }catch(e){} };
+  const hash = t => { let h = 5381; for(let i=0;i<t.length;i++) h = ((h<<5) + h + t.charCodeAt(i)) | 0; return h; };
+  const isState = k => /^lq:[^:]+$/.test(k) && k !== 'lq:hub';
+  function weight(s){
+    return Object.keys(s.answers||{}).length + Object.keys(s.pass2||{}).length
+         + Object.keys(s.skipped||{}).length + Object.keys(s.starred||{}).length
+         + Object.keys(s.unsure||{}).length + 1000 * (s.history||[]).length + (s.done ? 500 : 0);
+  }
+  // '' = nothing worth sending
+  function sig(k, v){
+    if(isState(k)){
+      try{ const s = JSON.parse(v);
+        if(!s || typeof s !== 'object') return '';
+        if(!weight(s) && !s.only && !s.tagf) return '';
+        const c = Object.assign({}, s); delete c.ms; delete c.qms; delete c.meta; delete c.hintOpen;
+        return JSON.stringify(c);
+      }catch(e){ return ''; }
+    }
+    return (v && v !== '{}' && v !== '[]' && v !== '{"defs":[],"q":{}}') ? v : '';
+  }
+  let frozen = false, applying = false, timer = null, busy = false;
+  function mark(k, v){
+    if(skip(k)) return;
+    const g = sig(k, v), h = hash(g), m = meta[k] || (meta[k] = {t:0});
+    if(m.h === h) return;
+    m.h = h;
+    if(g){ m.t = Date.now(); m.d = 1; clearTimeout(timer); timer = setTimeout(run, 1500); }
+    putMeta();
+  }
+  Storage.prototype.setItem = function(k, v){
+    if(this === localStorage && frozen && String(k).indexOf('lq:') === 0) return;
+    rawSet.call(this, k, v);
+    if(this === localStorage && !applying){ try{ mark(String(k), String(v)); }catch(e){} }
+  };
+  // What was already here before sync existed: age unknown, so it is stamped low, and a real
+  // attempt outranks a thinner one by how much is in it.
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(skip(k) || meta[k]) continue;
+      const v = localStorage.getItem(k), g = sig(k, v);
+      meta[k] = {t: 0, h: hash(g)};
+      if(g){ let w = 1; if(isState(k)){ try{ w = 1 + weight(JSON.parse(v)); }catch(e){} }
+             meta[k].t = w; meta[k].d = 1; }
+    }
+    putMeta();
+  }catch(e){}
+
+  const enc = new TextEncoder(), dec = new TextDecoder();
+  const toB = s => { s = s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length % 4) s += '=';
+                     return Uint8Array.from(atob(s), c => c.charCodeAt(0)); };
+  const fromB = u => { let t = ''; for(let i=0;i<u.length;i+=8192) t += String.fromCharCode.apply(null, u.subarray(i, i+8192));
+                       return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+  const hex = b => Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,'0')).join('');
+  let ck = null, bucket = '';
+  const ready = (async()=>{
+    ck = await crypto.subtle.importKey('raw', toB(key), 'AES-GCM', false, ['encrypt','decrypt']);
+    bucket = hex(await crypto.subtle.digest('SHA-256', enc.encode('lq-sync:' + key))).slice(0, 32);
+  })();
+  const kid = async k => hex(await crypto.subtle.digest('SHA-256', enc.encode(bucket + '|' + k))).slice(0, 32);
+  async function seal(o){
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv}, ck, enc.encode(JSON.stringify(o)));
+    return fromB(iv) + '.' + fromB(new Uint8Array(ct));
+  }
+  async function unseal(t){
+    const p = t.split('.');
+    return JSON.parse(dec.decode(await crypto.subtle.decrypt({name:'AES-GCM', iv:toB(p[0])}, ck, toB(p[1]))));
+  }
+
+  function pageId(){
+    const el = document.getElementById('quiz-data');
+    if(!el) return null;
+    try{ return JSON.parse(el.textContent).id; }catch(e){ return null; }
+  }
+  async function run(){
+    if(busy || frozen) return [];
+    busy = true;
+    const changed = [];
+    try{
+      await ready;
+      const have = {}, puts = [], sent = {};
+      for(const k of Object.keys(meta)){
+        const m = meta[k];
+        if(!m.id) m.id = await kid(k);
+        have[m.id] = m.t || 0;
+        if(m.d){
+          const v = localStorage.getItem(k);
+          if(v === null){ m.d = 0; continue; }
+          puts.push({k: m.id, v: await seal({k, v}), ts: m.t});
+          sent[k] = m.t;
+        }
+      }
+      const r = await fetch(API, {method:'POST', headers:{'content-type':'text/plain'},
+                                  body: JSON.stringify({bucket, have, puts})});
+      if(!r.ok) throw new Error('sync ' + r.status);
+      const j = await r.json();
+      for(const k in sent) if(meta[k].t === sent[k]) meta[k].d = 0;
+      for(const row of j.rows || []){
+        let o; try{ o = await unseal(row.v); }catch(e){ continue; }
+        if(!o || skip(o.k)) continue;
+        const m = meta[o.k] || (meta[o.k] = {t:0});
+        if((m.t || 0) >= row.ts) continue;
+        applying = true;
+        try{ rawSet.call(localStorage, o.k, o.v); }catch(e){}
+        applying = false;
+        m.t = row.ts; m.d = 0; m.h = hash(sig(o.k, o.v)); m.id = row.k;
+        changed.push(o.k);
+      }
+      putMeta();
+    }catch(e){}
+    busy = false;
+    if(changed.length && window.lqSync.live){
+      const id = pageId();
+      const mine = id ? changed.some(k => k === 'lq:' + id || k.indexOf('lq:' + id + ':') === 0)
+                      : !!document.getElementById('manifest');
+      if(mine){ frozen = true; location.reload(); }
+    }
+    return changed;
+  }
+  function wake(){ if(document.visibilityState !== 'hidden') run(); }
+  function leave(){ if(document.visibilityState === 'hidden') run(); }
+  function listen(){
+    document.removeEventListener('visibilitychange', wake); document.addEventListener('visibilitychange', wake);
+    document.removeEventListener('visibilitychange', leave); document.addEventListener('visibilitychange', leave);
+    removeEventListener('focus', wake); addEventListener('focus', wake);
+  }
+  // `live` = this page should reload itself when its own quiz arrives newer. The locked shell
+  // turns it on only after it has drawn the page.
+  window.lqSync = {first: null, now: run, listen, live: true};
+  listen();
+  setInterval(wake, 20000);
+  window.lqSync.first = run();
+})();
+</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -933,7 +1147,7 @@ function qk(i){ return D.questions[i].qid; }
 function blank(){ return {v:2, hash:D.hash, i:0, answers:{}, pass2:{}, skipped:{}, starred:{},
                           unsure:{}, hints:{}, phase:1, p2list:null, done:false, at:null,
                           shuf:{}, history:[], only:null, sat:{}, promoted:{},
-                          ms:0}; }
+                          ms:0, qms:{}}; }
 function migrate(s){
   // v1 keyed every map on the array index. The hash matches, so the indices are still valid
   // and this is a straight re-key — done once, then never again.
@@ -991,6 +1205,9 @@ function load(){
     // attempt saved before it. Zero and hidden are the right defaults for an attempt that was
     // never timed: it reads as "not measured" rather than as a suspiciously fast paper.
     if(typeof s.ms !== 'number') s.ms = 0;
+    // NEW ON 08-21 and absent from every attempt before it. An empty map means "never
+    // measured", which momentum() reads as "print nothing" rather than as a paper of zeroes.
+    if(!s.qms) s.qms = {};
     return s;
   }catch(e){ return blank(); }
 }
@@ -1035,10 +1252,44 @@ function save(){
    the sitting's subchapters into this one function is what makes a half-paper behave exactly
    like a whole one — one direction, one end card, one second pass — with no branch anywhere
    downstream. `only: null` (not chosen, or a page built without parts) filters nothing. */
+/* ---- TAGS (10-12, his ask) ------------------------------------------------------------
+   *"a text box at first, but it functions like a Notion tag property … once I press enter it
+   creates a tag and that tag stays for this exam and only for this exam."* Its own key, like
+   the research box, so a Retake and a rebuild keep them. `defs` is the order he made them in;
+   a tag no question carries any more is dropped from it. Off unless the page was built with
+   `tags`, so every page built before this is what it was. */
+const TKEY = KEY + ':tags';
+let T = (function(){
+  try{ const t = JSON.parse(localStorage.getItem(TKEY) || '{}') || {};
+       return {defs: t.defs || [], q: t.q || {}}; }
+  catch(e){ return {defs:[], q:{}}; } })();
+function tput(){ try{ localStorage.setItem(TKEY, JSON.stringify(T)); }catch(e){} }
+function tagsOf(i){ return T.q[qk(i)] || []; }
+function hasTag(i, name){ return tagsOf(i).indexOf(name) >= 0; }
+function tagAdd(i, raw){
+  const name = String(raw).trim().replace(/\s+/g, ' ');
+  if(!name) return;
+  const known = T.defs.find(d => d.toLowerCase() === name.toLowerCase()) || name;
+  if(T.defs.indexOf(known) < 0) T.defs.push(known);
+  const l = T.q[qk(i)] || (T.q[qk(i)] = []);
+  if(l.indexOf(known) < 0) l.push(known);
+  tput();
+}
+function tagDrop(i, name){
+  const id = qk(i);
+  T.q[id] = (T.q[id] || []).filter(x => x !== name);
+  if(!T.q[id].length) delete T.q[id];
+  if(!Object.keys(T.q).some(k => T.q[k].indexOf(name) >= 0)) T.defs = T.defs.filter(d => d !== name);
+  tput();
+}
+
 function active(s){
-  const only = D.parts ? (s.only || null) : null;
+  // A TAG RUN ("test only these") rides here for the same reason the section filter does.
+  const tf = D.tags ? (s.tagf || null) : null;
+  const only = (D.parts && !tf) ? (s.only || null) : null;
   return D.questions.map((_,i)=>i).filter(i => onPaper(s, i)
-    && (!only || only.indexOf(D.questions[i].sec) >= 0));
+    && (!only || only.indexOf(D.questions[i].sec) >= 0)
+    && (!tf || hasTag(i, tf)));
 }
 /* ---- THE RESERVES (08-16) ------------------------------------------------------------
    His ask: *"if 1 question is skipped, another one is replaced in that section about it… you
@@ -1306,7 +1557,9 @@ function flushFrq(){
 function drawFrq(){
   const box = $('#frqview');
   if(!box || !(D.frq||[]).length) return;
-  let h = '<p class="say">Three written answers, from the same sources as the paper. Write '
+  const NW = D.frq.length, WORDS = ['No','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'];
+  let h = '<p class="say">' + (WORDS[NW] || NW) + ' written answer' + (NW === 1 ? '' : 's')
+        + ', from the same sources as the paper. Write '
         + 'one, then mark it: every point that can be settled by what you wrote is checked '
         + 'for you, and the ones that need judgement are handed back. Click any row to '
         + 'overrule it.</p>';
@@ -1505,6 +1758,9 @@ function setTab(name){
     // back — the question must be exactly where he left it.
     if(quizPad !== null) $('main').style.paddingTop = quizPad;
   } else {
+    // The sheet, the starred list and the written half are not the question, so his
+    // reading time on them belongs to no question. `draw()` puts it back on the way in.
+    timeOn(null);
     if(name==='starred') drawStarred();
     if(name==='sheet'){ renderScore(); renderSheetExtras(); }
     if(name==='frq') drawFrq();
@@ -1594,7 +1850,7 @@ function draw(){
   // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
   // the rest of the sitting, so nothing about answering, going back or the second pass has
   // to know the picker exists.
-  if(sectioned() && !S.only) return picker();
+  if(sectioned() && !S.only && !S.tagf) return picker();
   const act = runList();
   if(!act.length) return end();
   if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
@@ -1603,6 +1859,61 @@ function draw(){
 
 /* Pure markup, no DOM writes and no state changes — so the same builder can render the
    question and be measured off-screen for the centring reserve. */
+/* The tag box above the question. Chips for what this question carries, then the box: type and
+   Enter makes the tag (or reuses one spelled the same), the ones he already made show under it
+   to click, Backspace on an empty box takes the last one off, Esc leaves. */
+function tagRowInner(i){
+  const mine = tagsOf(i);
+  let h = '';
+  mine.forEach((n,k)=>{ h += '<span class="tchip">' + esc(n) + '<button class="tx" data-drop="' + k
+                           + '" tabindex="-1" aria-label="Remove tag">×</button></span>'; });
+  return h + '<input id="tagin" class="tagin" type="text" autocomplete="off" spellcheck="false" '
+           + 'placeholder="' + (mine.length ? 'Add a tag' : 'Tag this question  ( l )') + '">'
+           + '<div class="tsug hide" id="tsug"></div>';
+}
+function paintSug(i){
+  const inp = $('#tagin'), box = $('#tsug');
+  if(!inp || !box) return;
+  const raw = inp.value.trim(), v = raw.toLowerCase(), mine = tagsOf(i);
+  let h = T.defs.map((d,n)=>({d,n}))
+    .filter(x => mine.indexOf(x.d) < 0 && (!v || x.d.toLowerCase().indexOf(v) >= 0))
+    .map(x => '<button class="tchip pick" data-n="' + x.n + '" tabindex="-1">' + esc(x.d) + '</button>')
+    .join('');
+  if(v && !T.defs.some(d => d.toLowerCase() === v))
+    h += '<span class="tnew">Enter makes “' + esc(raw) + '”</span>';
+  box.innerHTML = h;
+  box.classList.toggle('hide', !h || document.activeElement !== inp);
+  // mousedown, not click: the box must not blur (and hide these) before the pick lands
+  box.querySelectorAll('.pick').forEach(b => { b.onmousedown = e => {
+    e.preventDefault(); tagAdd(i, T.defs[+b.dataset.n]); redrawTags(i, true); }; });
+}
+function redrawTags(i, focus){
+  const row = $('#tagrow');
+  if(!row) return;
+  row.innerHTML = tagRowInner(i);
+  wireTags(i);
+  if(focus) $('#tagin').focus();
+}
+function wireTags(i){
+  const row = $('#tagrow'), inp = $('#tagin');
+  if(!row || !inp) return;
+  row.querySelectorAll('.tx').forEach(b => b.onclick = ()=>{
+    tagDrop(i, tagsOf(i)[+b.dataset.drop]); redrawTags(i, false); });
+  inp.onfocus = ()=> paintSug(i);
+  inp.oninput = ()=> paintSug(i);
+  inp.onblur = ()=> { const b = $('#tsug'); if(b) b.classList.add('hide'); };
+  inp.onkeydown = e => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      if(!inp.value.trim()){ inp.blur(); return; }
+      tagAdd(i, inp.value); redrawTags(i, true);
+    } else if(e.key === 'Escape'){ inp.value = ''; inp.blur(); }
+    else if(e.key === 'Backspace' && !inp.value && tagsOf(i).length){
+      tagDrop(i, tagsOf(i).slice(-1)[0]); redrawTags(i, true);
+    }
+  };
+}
+
 function buildQ(i, picked, fresh, en){
   const q = D.questions[i];
   const answered = picked !== undefined;
@@ -1614,10 +1925,12 @@ function buildQ(i, picked, fresh, en){
   // The counter sits top-left above the question, the way the notebook does it, rather than
   // up in the bar — it belongs with the thing it counts. On a second pass it counts the
   // second pass, so four wrong answers read as "1 / 4" and not as a broken 16.
-  let h = '<div class="qhead' + en + '"><div class="qcol">'
+  let h = (D.tags ? '<div class="tagrow no-read-aloud" id="tagrow">' + tagRowInner(i) + '</div>' : '')
+        + '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta no-read-aloud"><span class="num">' + (pos+1) + ' / '
         + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        + (D.tags && S.tagf ? '<span class="dot">·</span><span>only ' + esc(S.tagf) + '</span>' : '')
         // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
         // 10 reads as the paper having lost his place, which is how he read it.
         + (recycling && S.phase!==2
@@ -1716,6 +2029,9 @@ let justAnswered = null;
 
 function question(fresh){
   const i = S.i, q = D.questions[i], picked = pick(i);
+  // THE CLOCK MOVES WITH HIM. Re-rendering the same question is harmless: timeOn() banks
+  // what is owed and carries on against the same qid.
+  timeOn(q.qid);
   const answered = picked !== undefined;
   const act = runList();
   const pos = act.indexOf(i);
@@ -1810,6 +2126,7 @@ function question(fresh){
   $('#star').onclick = ()=> toggleStar(i);
   $('#qmark').onclick = ()=> toggleUnsure(i);
   $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
+  if(D.tags) wireTags(i);
 
   // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
   // touches it — and nothing above the options ever changes height.
@@ -2300,19 +2617,32 @@ function openMenu(){
   m.className = 'menu';
   // The clock's only other way in. `w` is not written anywhere else on the page, and a key
   // nothing announces is a key he has to remember he asked for.
-  m.innerHTML = '<button id="skipq">Skip this question</button>'
+  m.innerHTML = '<button id="skipq">Skip this question  ( x )</button>'
               // The reader's own two entries. Space and `v` are written nowhere else on the
               // page, and a key nothing announces is a key he has to remember he asked for.
               + '<button id="readtog">' + (sayOn ? 'Stop' : 'Start') + ' read-aloud  ( space )</button>'
               + '<button id="voiceset">Voice, speed and pauses…</button>'
-              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>';
+              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>'
+              // EVERY KEY, WRITTEN DOWN ONCE (10-12). He could not find Redo or remember its key.
+              + '<div class="keys"><kbd>x</kbd><span>Skip</span><kbd>u</kbd><span>Redo your answer</span>'
+              + '<kbd>h</kbd><span>Hint, when the question has one</span>'
+              + '<kbd>s</kbd><span>Star</span><kbd>/</kbd><span>No idea</span>'
+              + '<kbd>r</kbd><span>Research</span><kbd>f</kbd><span>Fix this question</span>'
+              + '<kbd>t</kbd><span>Reflection</span>'
+              + (D.tags ? '<kbd>l</kbd><span>Tag</span>' : '')
+              + '<kbd>↵</kbd><span>Next</span><kbd>←</kbd><span>Back</span></div>';
   host.appendChild(m);
   m.querySelector('#clocktog').onclick = ()=>{ toggleClock(); closeMenu(); };
   m.querySelector('#readtog').onclick = ()=>{ closeMenu(); sayOn ? sayOff() : sayToggle(); };
   m.querySelector('#voiceset').onclick = ()=>{ closeMenu(); openVset(); };
-  m.querySelector('#skipq').onclick = ()=>{
+  m.querySelector('#skipq').onclick = ()=>{ closeMenu(); skipQuestion(); };
+  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
+}
+/* One path for skipping, whether it came from the menu or from `x` (10-12, his ask: a key
+   *"rather than going into the top bar and then pressing skip"*). */
+function skipQuestion(){
     const list = runList(), pos = list.indexOf(S.i);
-    if(list.length <= 1) return closeMenu();        // never skip the last one standing
+    if(list.length <= 1) return;                    // never skip the last one standing
     const sec = bucketOf(S.i);
     S.skipped[qk(S.i)] = true;
     delete S.answers[qk(S.i)];
@@ -2326,7 +2656,6 @@ function openMenu(){
     // have handed him an end card with a question still owed.
     const filled = promoteReserve(sec) >= 0;
     const wasLast = !filled && pos === list.length - 1;
-    closeMenu();
     syncTabs();
     if(wasLast){ finish(); return; }
     // After the removal the list has shrunk, so the item now AT `pos` is the one that
@@ -2335,8 +2664,6 @@ function openMenu(){
     S.hintOpen = false;
     lastShown = -1;
     save(); question(); window.scrollTo(0,0);
-  };
-  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
 }
 function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(); }
 
@@ -2395,6 +2722,7 @@ function group(act, keyOf, head, label){
 let pickSel = null;
 
 function picker(){
+  timeOn(null);
   const p = paperStat();
   if(!pickSel) pickSel = p.left.map(s => s.sec);          // default: what is still outstanding
   const chosen = p.secs.filter(s => pickSel.indexOf(s.sec) >= 0);
@@ -2490,7 +2818,143 @@ function beginSitting(secs){
   save(); draw(); window.scrollTo(0,0);
 }
 
+/* ---- MOMENTUM — the pace half of the end card (08-21, his ask) ------------------------
+   *"once I'm done with the quiz, the same screen that shows the right and wrong answers, I
+   can also see a breakdown of momentum… ranked by correct versus incorrect, and then also
+   time spent. Maybe that'll help me determine a goal and a time per question."*
+
+   THREE THINGS IN ONE BLOCK, because they answer three different questions:
+
+   • THE STRIP is the paper in the order he sat it — where he slowed down, and whether the
+     slow ones cluster at the end (tiring) or the start (warming up). It is the only thing
+     anywhere on this page that is in time order; every other table is sorted by something.
+   • THE TWO MEDIANS are the comparison worth having: how long the ones he got right took
+     against the ones he got wrong. MEDIAN AND NOT MEAN — one question he walked away from
+     mid-paper drags an average off the map, and that is exactly the question a page that
+     only banks visible time is most likely to have.
+   • THE RANKING is what to look at next: slowest first, each one marked, so a slow ✕ sits
+     at the top of the list on its own.
+
+   THE GOAL IS HIS OWN NUMBER, NOT ONE INVENTED HERE — the median of the questions he got
+   RIGHT, rounded to five seconds. A pace he has already answered correctly at is the only
+   pace this page has any business suggesting.
+
+   IT PRINTS NOTHING UNLESS THE QUESTIONS WERE ACTUALLY TIMED. Every attempt saved before
+   today has an empty `qms`, so the block is absent on those rather than reporting a paper
+   of zeroes — the same rule the clock already uses for `ms:0` in the copy markdown. */
+const MOM_CAP = 14, MOM_SHOW = 10;
+let momAll = false;
+function qms(i){ return (S.qms || {})[qk(i)] || 0; }
+function median(a){
+  if(!a.length) return 0;
+  const s = a.slice().sort((x,y)=>x-y), h = s.length >> 1;
+  return s.length % 2 ? s[h] : Math.round((s[h-1] + s[h]) / 2);
+}
+/* What to call a question in one line. The topic tag when the quiz carries one — it is
+   already the name he thinks of it by, and it is what the topics table above uses — and the
+   stem itself when it does not. Through a div because a stem can carry math markup. */
+function momLabel(i){
+  const q = D.questions[i];
+  if(q.topic) return q.topic;
+  const d = document.createElement('div');
+  d.innerHTML = q.q || '';
+  const t = (d.textContent || '').trim();
+  return t.length > 70 ? t.slice(0, 69).trim() + '…' : t;
+}
+function momentum(){
+  const act = active(S), timed = act.filter(i => qms(i) > 0);
+  // One timed question is not a pace, and two is the least that can have a shape.
+  if(timed.length < 2) return '';
+  const rows = timed.map(i => ({i:i, ms:qms(i), ok:finalRight(i), n:act.indexOf(i)+1}));
+  const all = rows.map(r=>r.ms);
+  const max = Math.max.apply(null, all), med = median(all);
+  const okMs = rows.filter(r=>r.ok).map(r=>r.ms);
+  const noMs = rows.filter(r=>!r.ok).map(r=>r.ms);
+
+  let h = '<div class="topics mom"><h3>Momentum</h3>';
+
+  /* THE STRIP IS `aria-hidden` AND `.no-read-aloud`. It is a picture of the list printed
+     underneath it, so a page reader that walked it would read the same paper twice. */
+  h += '<div class="strip no-read-aloud" aria-hidden="true">';
+  h += '<i class="med" style="bottom:' + (max ? med/max*100 : 0) + '%"></i>';
+  rows.forEach(r=>{
+    // A floor of 4%, so a five-second question is a visible mark and not a gap in the row.
+    const pc = Math.max(4, max ? r.ms/max*100 : 0);
+    h += '<i class="sb ' + (r.ok ? 'r' : 'w') + '" style="height:' + pc + '%" title="'
+       + esc(r.n + ' · ' + (r.ok ? 'right' : 'wrong') + ' · ' + fmtMs(r.ms)) + '"></i>';
+  });
+  h += '</div>';
+  h += '<p class="momax no-read-aloud"><span>first</span>'
+     + '<span>median ' + fmtMs(med) + '</span><span>last</span></p>';
+
+  h += '<p class="mline">Median <b>' + fmtMs(med) + '</b> a question'
+     + (okMs.length ? ' · right ones <b>' + fmtMs(median(okMs)) + '</b>' : '')
+     + (noMs.length ? ' · wrong ones <b>' + fmtMs(median(noMs)) + '</b>' : '')
+     + ' · slowest <b>' + fmtMs(max) + '</b></p>';
+
+  /* A QUIZ SHOWS EVERY QUESTION AND A 40-QUESTION EXAM DOES NOT (not without asking).
+     Ranked slowest-first, the rows he needs are the ones at the top; forty of them would
+     bury the tables underneath in a list he scrolls past. `momAll` is a plain module-level
+     flag like `clockOn` — the end card opens short every time, and expanding it is one
+     click that does not survive the page. */
+  const rank = rows.slice().sort((a,b)=> b.ms - a.ms);
+  const shown = (momAll || rank.length <= MOM_CAP) ? rank : rank.slice(0, MOM_SHOW);
+  shown.forEach(r=>{
+    h += '<div class="mrow"><span class="mg">' + (r.ok ? G_OK : G_NO) + '</span>'
+       + '<span class="mn">' + r.n + '</span>'
+       + '<span class="mlab">' + esc(momLabel(r.i)) + '</span>'
+       + '<span class="mt">' + fmtMs(r.ms) + '</span>'
+       + '<span class="tbar"><i class="' + (r.ok ? '' : 'w') + '" style="width:'
+       + (max ? r.ms/max*100 : 0) + '%"></i></span></div>';
+  });
+
+  if(shown.length < rank.length)
+    h += '<p class="note mmore"><button class="link" id="momall">Show all '
+       + rank.length + ' questions</button></p>';
+
+  const base = okMs.length ? median(okMs) : med;
+  const goal = Math.max(5000, Math.round(base/5000)*5000);
+  h += '<p class="mgoal">Your own pace on the ones you got right, to the nearest five '
+     + 'seconds: <b>' + fmtMs(goal) + '</b> a question — <b>' + fmtMs(goal*act.length)
+     + '</b> for a paper this size.</p>';
+  return h + '</div>';
+}
+
+/* THE TAGS ON THE END CARD: how each group went, and a way to sit one group alone. A tag run
+   is a fresh attempt on only those questions (the finished one goes into history first, as a
+   Retake does); Retake, or "every question" here, goes back to the whole paper. Not offered
+   on a sectioned paper, whose picker already owns which questions a sitting holds. */
+function tagTable(){
+  if(!D.tags || !T.defs.length) return '';
+  const all = D.questions.map((_,i)=>i).filter(i => onPaper(S, i));
+  let h = '';
+  T.defs.forEach((d,n)=>{
+    const qs = all.filter(i => hasTag(i, d));
+    if(!qs.length) return;
+    const sat = qs.filter(i => ans(i) !== undefined || ans2(i) !== undefined);
+    const ok = sat.filter(i => finalRight(i)).length;
+    h += '<div class="tagline"><span class="tchip">' + esc(d) + '</span><span class="tn">'
+       + (sat.length ? ok + ' / ' + sat.length + ' right' : qs.length + ' question' + (qs.length>1?'s':''))
+       + '</span>' + (D.parts ? '' : '<button class="link" data-tagrun="' + n + '">Test only these</button>')
+       + '</div>';
+  });
+  if(!h && !S.tagf) return '';
+  if(S.tagf) h += '<p class="note">This run was only “' + esc(S.tagf) + '”. '
+                + '<button class="link" id="tagall">Back to every question</button></p>';
+  return '<div class="tagtable"><h3>By tag</h3>' + h + '</div>';
+}
+function startRun(tag){
+  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length, ms:S.ms,
+                             tag:S.tagf || undefined});
+  const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
+  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  if(tag) S.tagf = tag;
+  pickSel = null; lastShown = -1;
+  save(); syncTabs(); renderScore(); draw(); window.scrollTo(0,0);
+}
+
 function end(){
+  timeOn(null);
   const act = active(S), n = score(S), t = act.length;
   const pct = t ? Math.round(n/t*100) : 0;
   const red = redeemed().length;
@@ -2504,6 +2968,10 @@ function end(){
         // grayscale-safe hatch and would make the one number he reads harder to read; the
         // count says it in words instead.
         + (red ? '<span>+<b>'+red+'</b> on the second pass</span>' : '') + '</p>';
+
+  // BEFORE the topic tables and after the score: it is about this sitting, the way the score
+  // is, where everything below it is about the material.
+  h += momentum();
 
   const by = {};
   act.forEach(i=>{
@@ -2566,6 +3034,7 @@ function end(){
             + 'every one is done; sitting one again replaces its score.</p>';
   }
 
+  h += tagTable();
   const nskip = Object.keys(S.skipped||{}).length;
   if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
               + '<button class="link" id="unskip">put them back</button></p>';
@@ -2576,6 +3045,12 @@ function end(){
   $('#quizview').innerHTML = h;
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  document.querySelectorAll('[data-tagrun]').forEach(b =>
+    b.onclick = ()=> startRun(T.defs[+b.dataset.tagrun]));
+  const tall = $('#tagall');
+  if(tall) tall.onclick = ()=> startRun(null);
+  const ma = $('#momall');
+  if(ma) ma.onclick = ()=>{ momAll = true; end(); };
   const m = $('#more');
   if(m) m.onclick = ()=>{ S.only = null; S.done = false; S.reviewing = false;
                           pickSel = null; save(); draw(); window.scrollTo(0,0); };
@@ -2610,6 +3085,7 @@ function itemHTML(i, n){
   const q = D.questions[i], first = ans(i), second = ans2(i);
   let h = '<div class="item">';
   if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
+  if(D.tags) tagsOf(i).forEach(t => { h += '<span class="tchip sm">'+esc(t)+'</span>'; });
   h += '<p class="qq">'+(n===undefined?'':(n+1)+'. ')+esc(q.q)+'</p>'
      + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
   if(!firstRight(i)){
@@ -2626,11 +3102,26 @@ function itemHTML(i, n){
   return h + '</div>';
 }
 
+let revByTag = false;
 function review(){
+  timeOn(null);
+  const act = active(S), canSort = D.tags && T.defs.length;
   let h = '<div class="rev"><h3>Every question</h3>';
-  active(S).forEach((i,n)=>{ h += itemHTML(i, n); });
+  if(canSort) h += '<p class="note" style="margin:0 0 6px"><button class="link" id="revsort">'
+                 + (revByTag ? 'Sort in order' : 'Sort by tag') + '</button></p>';
+  if(canSort && revByTag){
+    // a question with two tags is listed under both; the untagged ones come last
+    T.defs.concat(['']).forEach(d=>{
+      const qs = act.filter(i => d ? hasTag(i, d) : !tagsOf(i).length);
+      if(!qs.length) return;
+      h += '<h3 class="tgroup">' + (d ? esc(d) : 'No tag') + ' · ' + qs.length + '</h3>';
+      qs.forEach(i => { h += itemHTML(i, act.indexOf(i)); });
+    });
+  } else act.forEach((i,n)=>{ h += itemHTML(i, n); });
   h += '</div>';
   $('#quizview').innerHTML = h;
+  const rs = $('#revsort');
+  if(rs) rs.onclick = ()=>{ revByTag = !revByTag; review(); };
   $('#band').classList.add('off');
   showResearch(false);
   $('#footer').classList.remove('hide');
@@ -2803,12 +3294,29 @@ function paintClock(){
   // not start counting from the moment he looked.
   el.textContent = fmtMs(S.ms);
 }
+/* ---- WHERE THE SECOND WENT (08-21) ---------------------------------------------------
+   The same delta that goes into `S.ms` goes into `S.qms[qid]`, so the total and the
+   per-question times are banked from ONE measurement and can never disagree with each other.
+
+   `qAt` IS THE QUESTION ON SCREEN AND NOTHING ELSE. The end card, the picker, the review
+   list and every other tab set it to null, so twenty minutes spent reading his own study
+   sheet is never filed under whichever question happened to be open last — the number the
+   momentum block reports is time spent on the question, not time the tab was alive. */
+let qAt = null;
+function bankMs(now){
+  const on = !S.done && !document.hidden;
+  if(tickAt && on){
+    const d = now - tickAt;
+    S.ms += d;
+    if(qAt) S.qms[qAt] = (S.qms[qAt] || 0) + d;
+  }
+  tickAt = on ? now : null;
+}
+/* Every renderer calls this, and it flushes BEFORE the switch: without the flush, up to a
+   second of question 3 would be banked against question 2. */
+function timeOn(id){ bankMs(Date.now()); qAt = id || null; }
 function tick(){
-  const now = Date.now();
-  if(!S.done && !document.hidden){
-    if(tickAt) S.ms += now - tickAt;
-    tickAt = now;
-  }else tickAt = null;
+  bankMs(Date.now());
   paintClock();
   // A WRITE A SECOND WOULD BE A WRITE A SECOND. Every answer already saves, and this only has
   // to cover the case of a tab closed mid-question — 15 seconds is the most that can cost.
@@ -3920,6 +4428,10 @@ document.addEventListener('keydown', e=>{
   // `w` FOR WATCH — the clock in the bar, off by default. Past G like every other command
   // key here, so it can never be an option letter.
   if(e.key === 'w' || e.key === 'W'){ toggleClock(); return; }
+  // `x` SKIPS, `l` (label) PUTS THE CARET IN THE TAG BOX. Both past G, so never an option key.
+  if(e.key === 'x' || e.key === 'X'){ e.preventDefault(); skipQuestion(); return; }
+  if((e.key === 'l' || e.key === 'L') && D.tags){
+    const ti = $('#tagin'); if(ti){ e.preventDefault(); ti.focus(); } return; }
   if(e.key === '/' || e.key === '?'){ e.preventDefault(); toggleUnsure(S.i); return; }
   /* THE KEY NAMES A POSITION ON SCREEN, not an option. `2` and `B` mean the second card he
      can see, which is the only thing either of them could mean to him — after a Redo has

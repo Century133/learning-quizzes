@@ -326,6 +326,32 @@ kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid
 .qmark:hover{background:var(--surface);color:var(--text)}
 .qmark.on{color:var(--text);border-color:var(--accent);background:var(--surface-hi)}
 
+/* ---- tags (10-12): his own labels on a question, kept per quiz ---- */
+.tagrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.tchip{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:.78rem;
+ color:var(--text);background:var(--surface-hi);border:1px solid var(--line);
+ border-radius:6px;padding:2px 8px;line-height:1.5}
+.tchip.sm{font-size:.7rem;margin:0 6px 9px 0}
+button.tchip{cursor:pointer}
+button.tchip:hover{border-color:var(--muted)}
+.tx{background:none;border:0;color:var(--muted);font:inherit;padding:0;cursor:pointer;line-height:1}
+.tx:hover{color:var(--text)}
+.tagin{flex:1 1 140px;min-width:120px;background:none;border:0;outline:0;color:var(--text);
+ font:inherit;font-size:.82rem;padding:3px 2px}
+.tagin::placeholder{color:var(--muted);opacity:.75}
+.tsug{flex:1 0 100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tnew{color:var(--muted);font-size:.76rem}
+.tagtable{margin:26px 0 0;text-align:left}
+.tagtable h3{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+ font-weight:500;margin:0 0 6px}
+.tagline{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line);
+ font-size:.88rem}
+.tagline .tn{flex:1;color:var(--muted);font-variant-numeric:tabular-nums}
+.tgroup{margin-top:30px}
+.menu .keys{border-top:1px solid var(--line);margin:5px 0 0;padding:8px 10px 4px;
+ display:grid;grid-template-columns:auto 1fr;gap:5px 10px;font-size:.78rem;color:var(--muted);
+ align-items:center}
+
 /* ---- the ⋮ menu ---- */
 .more{position:relative;flex:0 0 auto}
 .dots{background:none;border:0;color:var(--muted);font-size:1.15rem;line-height:1;
@@ -452,6 +478,44 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .ptotal{margin:14px 0 0;color:var(--muted);font-size:.88rem}
 .ptotal b{color:var(--text);font-variant-numeric:tabular-nums;font-size:1.05rem;
  font-weight:600;margin-right:8px}
+
+/* ---- MOMENTUM (08-21) ----
+   Same furniture as every other end-card table — same heading, same hairline rows, same
+   rails — because it is one more breakdown of the same sitting and must not read as a
+   dashboard bolted on. The only new shape is the strip, and it is deliberately small: it is
+   there to be glanced at, not measured off.
+
+   IT READS IN GRAYSCALE. A wrong bar is HATCHED as well as coloured, exactly like the wrong
+   half of the score chart above it, so the split survives a screenshot with the colour gone
+   and survives him printing it. */
+.mom .strip{display:flex;align-items:flex-end;gap:2px;height:56px;position:relative;
+ margin:0 0 5px;padding-top:2px}
+.mom .strip .sb{flex:1 1 0;min-width:2px;border-radius:2px 2px 0 0;background:var(--text)}
+.mom .strip .sb.r{background:var(--right)}
+.mom .strip .sb.w{background:var(--wrong);
+ background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,
+ rgba(0,0,0,.45) 3px,rgba(0,0,0,.45) 6px)}
+/* The median, drawn across the strip rather than written under it — the whole question the
+   strip answers is "which of these are the long ones", and a line answers it at a glance. */
+.mom .strip .med{position:absolute;left:0;right:0;height:0;border-top:1px dashed var(--muted);
+ opacity:.55;pointer-events:none}
+.momax{display:flex;justify-content:space-between;color:var(--muted);font-size:.72rem;
+ letter-spacing:.04em;margin:0 0 16px}
+.mline{color:var(--muted);font-size:.88rem;margin:0 0 18px}
+.mline b{color:var(--text);font-variant-numeric:tabular-nums;font-weight:500}
+.mrow{display:grid;grid-template-columns:1.1em 1.7em 1fr auto;gap:5px 10px;align-items:center;
+ padding:8px 0;border-top:1px solid var(--line);font-size:.9rem}
+.mrow .mg{color:var(--muted);font-size:.85rem;user-select:none;-webkit-user-select:none}
+.mrow .mn{color:var(--muted);font-size:.8rem;font-variant-numeric:tabular-nums;text-align:right}
+.mrow .mlab{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mrow .mt{color:var(--muted);font-size:.86rem;font-variant-numeric:tabular-nums}
+/* The rail is `.tbar`, borrowed whole from the tables above. `i.w` is the only addition:
+   time on a question he got wrong gets the same hatch as everything else wrong on the page. */
+.mrow .tbar i.w{background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,
+ rgba(0,0,0,.45) 3px,rgba(0,0,0,.45) 6px)}
+.mmore{margin:12px 0 0;font-size:.85rem}
+.mgoal{margin:16px 0 0;color:var(--muted);font-size:.88rem;max-width:52ch}
+.mgoal b{color:var(--text);font-variant-numeric:tabular-nums;font-weight:500}
 
 /* ---- THE SUBCHAPTER PICKER (08-16) ----
    Deliberately the same furniture as the end card — same heading treatment, same rails, same
@@ -909,7 +973,157 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "ap2e-11-2", "title": "11.2 Naming Skeletal Muscles", "subtitle": "Chapter 11 · The Muscular System", "book": "A&P 2e", "hash": "00c831dd52bd66f8", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "A person lifts their head from a chin-on-chest position to an upright position. The articular endings of the cervical vertebrae act as the fixed point in this movement.", "options": ["Articular endings as fulcrum; head as effort", "Articular endings as fulcrum; head as load", "Articular endings as lever; head as load", "Articular endings as lever; head as effort"], "rationales": ["While the joint is the fulcrum, the effort is provided by muscle contraction rather than the weight of the head itself.", "In the musculoskeletal system, the articular endings of bones act as the fixed point or fulcrum, while the part of the body being moved acts as the load.", "The bones themselves serve as the stiff levers, but the articular endings at the joint specifically function as the fulcrum.", "The articular endings represent the fixed rotation point, and the effort must come from contracting skeletal muscle."], "correct": 1, "hint": "identify which component remains stationary during movement.", "topic": "Lever systems", "sec": "", "src": "", "link": "", "qid": "b1197e04c0"}, {"q": "A muscle at the hip joint contracts, and its name begins with the root ab-. Based on the anatomical direction, what movement is occurring?", "options": ["Moves away from midline; Adduction", "Moves toward midline; Abduction", "Moves toward midline; Adduction", "Moves away from midline; Abduction"], "rationales": ["Moving away from the midline is correct for the root 'ab', but adduction refers to moving toward the midline.", "Moving toward the midline corresponds to the root 'ad', whereas abduction is the action of moving away.", "While adduction involves moving toward the midline, it corresponds to the root 'ad' rather than 'ab'.", "The root 'ab' means away from, and abduction describes the specific action of moving a limb away from the midline of the body."], "correct": 3, "hint": "determine the direction of limb movement relative to the midline.", "topic": "Muscle action", "sec": "", "src": "", "link": "", "qid": "ad8aa6c7c0"}, {"q": "Two muscles in the same region perform the same action, but one has a significantly shorter muscle belly and tendon than the other.", "options": ["The shorter muscle is named maximus", "The shorter muscle is named minimus", "The shorter muscle is named longus", "The shorter muscle is named brevis"], "rationales": ["Maximus refers to the overall size or volume of a muscle rather than specifically describing its relative length.", "Minimus means tiny or little, whereas brevis is the specific term used to denote a short length in comparison to longus.", "The root 'longus' is used for the longer muscle in a pair, not the shorter one.", "The Latin root 'brevis' means short and is used to distinguish a muscle from a longer counterpart performing the same function."], "correct": 3, "hint": "compare descriptors for muscles of different lengths in the same region.", "topic": "Naming criteria", "sec": "", "src": "", "link": "", "qid": "a1bbbd42e6"}, {"q": "An anatomist observes a muscle in the upper arm that attaches to three distinct tendons of origin at its proximal end.", "options": ["Bi; three origins", "Tri; two origins", "Tri; three origins", "Bi; two origins"], "rationales": ["The root 'bi' specifically refers to two origins, not three.", "While 'tri' means three, it would not be used for a muscle that only has two origins.", "The root 'tri' indicates three, which in muscle naming refers to the number of heads or origins a muscle possesses.", "While 'bi' means two, the scenario describes a muscle with three distinct origins."], "correct": 2, "hint": "associate numerical prefixes with the number of anatomical heads.", "topic": "Muscle origins", "sec": "", "src": "", "link": "", "qid": "43d72717ec"}, {"q": "The rectus abdominis muscle is named based on the orientation of its muscle fibers. How do these fibers relate to the midline of the body?", "options": ["At a 45-degree angle to the midline", "Perpendicular to the midline", "Circular around the midline", "Parallel to the midline"], "rationales": ["Fibers at an angle are usually named 'oblique' rather than 'rectus'.", "Fibers running perpendicular to the midline are generally named 'transversus'.", "Circular fibers are typically named 'orbicularis' or 'sphincter' rather than 'rectus'.", "The Latin root 'rectus' means straight, and in anatomy, it refers to fibers that run straight and parallel to the midline."], "correct": 3, "hint": "look for the Latin root that suggests a straight path.", "topic": "Fiber orientation", "sec": "", "src": "", "link": "", "qid": "06e9b8037e"}, {"q": "An anatomist identifies a muscle layer located directly on top of a bone and another located underneath it.", "options": ["Sub (on top); Epi (under)", "Epi (on top); Apo (under)", "Epi (on top); Sub (under)", "Apo (on top); Sub (under)"], "rationales": ["This reverses the meanings of the roots, as 'sub' indicates a position below and 'epi' indicates a position above.", "While 'epi' is correct for on top, 'apo' refers to a side position rather than an underlying one.", "The root 'epi' means 'on top of' and 'sub' means 'under', accurately describing the relative positions of these muscle layers.", "While 'sub' is correct for under, 'apo' means 'to the side of' rather than on top of."], "correct": 2, "hint": "differentiate between structures situated above or below one another.", "topic": "Positional roots", "sec": "", "src": "", "link": "", "qid": "728177ac75"}, {"q": "In the gluteal region, three muscles are categorized by their relative volume and surface area. Which naming convention correctly identifies the largest and smallest?", "options": ["Maximus (largest); Medius (smallest)", "Minimus (largest); Maximus (smallest)", "Maximus (largest); Minimus (smallest)", "Medius (largest); Minimus (smallest)"], "rationales": ["While maximus is the largest, medius refers to the medium-sized muscle in the middle of the group.", "This correctly identifies the labels but completely reverses their anatomical meanings of size.", "The root 'maximus' designates the largest muscle in a group, and 'minimus' designates the smallest or tiny muscle.", "Medius is the middle size, not the largest, which is reserved for the maximus."], "correct": 2, "hint": "rank descriptors from largest to smallest volume.", "topic": "Muscle size", "sec": "", "src": "", "link": "", "qid": "f28a016f22"}, {"q": "A weightlifter performs a bicep curl. The skeletal muscle of the arm contracts to move the forearm and the weight held in the hand.", "options": ["Muscle contraction provides fulcrum; weight provides effort", "Muscle contraction provides effort; weight provides load", "Muscle contraction provides load; weight provides effort", "Muscle contraction provides effort; weight provides fulcrum"], "rationales": ["The joint is the fulcrum, and the muscle provides the effort to move the weight.", "In a biological lever system, the applied force comes from the contracting muscle (effort) to overcome the resistance (load).", "The weight in the hand is the resistance (load), not the force doing the work (effort).", "While muscle provides the effort, the fulcrum is the fixed point at the joint, not the weight being lifted."], "correct": 1, "hint": "distinguish between the source of force and the resistance being overcome.", "topic": "Lever components", "sec": "", "src": "", "link": "", "qid": "c60b2e0600"}, {"q": "A muscle is named the Adductor longus. Based on its etymology, what is the specific role of the ductor portion of the name?", "options": ["It denotes the muscle as a secondary anchor", "It denotes the muscle as an antagonist", "It denotes the muscle as a stabilizer", "It denotes the muscle as a mover"], "rationales": ["The term for movement is 'ductor', whereas anchoring would refer to origin or insertion points.", "An antagonist opposes a movement, but the root 'ductor' simply means a mover, regardless of direction.", "While muscles can stabilize, the etymology of 'ductor' specifically relates to causing movement.", "The root 'ductor' literally means 'something that moves,' identifying the muscle's functional role in the body."], "correct": 3, "hint": "consider the root word for a person or thing that directs movement.", "topic": "Etymology", "sec": "", "src": "", "link": "", "qid": "c46ef781ba"}, {"q": "A patient is asked to bring their arm from a horizontal position back toward the side of their torso. How is this action and its corresponding root classified?", "options": ["Abduction; ab (away from)", "Adduction; ad (to/toward)", "Abduction; ad (to/toward)", "Adduction; ab (away from)"], "rationales": ["While the root 'ab' means away from, the described action is bringing the arm toward the torso.", "Adduction is the act of moving a limb toward the body's midline, which is derived from the root 'ad' meaning 'to' or 'toward'.", "Abduction is the movement away from the midline, so it would not use the root 'ad'.", "The action is adduction, but it is derived from 'ad', not 'ab', which means away from."], "correct": 1, "hint": "choose the prefix that implies movement toward a target.", "topic": "Directional roots", "sec": "", "src": "", "link": "", "qid": "3071af4b70"}, {"q": "Understanding the etymology of skeletal muscles is emphasized as a study strategy. How does this help a student identify the characteristics of the Fibularis longus?", "options": ["Action (fibula) and shape (long)", "Location (fibula) and length (long)", "Attachment (fibula) and width (long)", "Shape (fibula) and depth (long)"], "rationales": ["The root 'fibularis' refers to the bone location, and 'longus' describes its physical length rather than its specific action or overall shape.", "The name indicates the muscle is located near the fibula bone and is the longer of the muscles in that specific area.", "The root 'longus' refers to the long dimension of the muscle, which is its length, not its width.", "While 'longus' refers to length, 'fibularis' refers to the anatomical location near the fibula rather than the muscle's shape."], "correct": 1, "hint": "combine anatomical landmarks with physical descriptions.", "topic": "Naming criteria", "sec": "", "src": "", "link": "", "qid": "a24bb343c5"}, {"q": "Skeletal muscles are arranged in pairs to move the body. What determines the specific force, speed, and range of movement for a bone in this system?", "options": ["The width of the joint surface", "The connection point to the bone", "The length of the skeletal bone", "The thickness of the muscle belly"], "rationales": ["Joint width may influence stability, but the connection point of the muscle is the deciding factor for movement characteristics.", "The physical connection point of the muscle to the bone determines the mechanical leverage, affecting force, speed, and range.", "The bone acts as the lever, but the specific performance of that lever is dictated by where the muscle applies effort.", "While thickness can affect force, the overall mechanics of speed and range are primarily determined by the connection to the skeleton."], "correct": 1, "hint": "evaluate how physical connections influence mechanical output.", "topic": "Lever systems", "sec": "", "src": "", "link": "", "qid": "fa026595a9"}, {"q": "A muscle is identified as having four distinct heads of origin. Based on the Latin roots provided, how would its name likely begin?", "options": ["Bi-", "Multi-", "Tri-", "Quad-"], "rationales": ["The root 'bi' refers to two origins, which is only half of the count described.", "While 'multi' means many, anatomists use the more specific 'quad' to denote exactly four heads.", "The root 'tri' refers to three origins, which does not match the four described.", "The root 'quad' means four, as seen in the term quadruplets, indicating a muscle with four points of origin."], "correct": 3, "hint": "apply numerical roots to count structural attachments.", "topic": "Muscle origins", "sec": "", "src": "", "link": "", "qid": "6c8231c9fd"}, {"q": "A muscle's name begins with the prefix anti-. Based on the mnemonic for social behavior, what does this suggest about the muscle's relationship to a specific action?", "options": ["It works to the side of the action", "It works on top of the action", "It works against the action", "It works alongside the action"], "rationales": ["The root for 'to the side of' is 'apo', whereas 'anti' means against.", "The root for 'on top of' is 'epi', while 'anti' specifically implies opposition.", "The root 'anti' means against, indicating the muscle performs an action that opposes or works against another.", "Working alongside or with an action would typically be described by roots other than 'anti'."], "correct": 2, "hint": "recall the prefix used for actions that are contradictory.", "topic": "Opposition roots", "sec": "", "src": "", "link": "", "qid": "100f7b78b5"}, {"q": "A group of muscles in the back are all relatively long, but one is the longest in the entire group. What suffix or root would distinguish this specific muscle?", "options": ["-issimus", "-imus", "-us", "-is"], "rationales": ["The suffix 'longissimus' is the superlative form meaning 'longest,' used to identify the longest muscle among other long muscles.", "While this is part of the ending, the full comparative root for longest as provided in the text is 'longissimus'.", "The root 'longus' just means long and does not indicate it is the longest member of a group.", "This is a common Latin ending but does not convey the superlative 'longest' meaning required."], "correct": 0, "hint": "identify the superlative form used for the extreme of a category.", "topic": "Length descriptors", "sec": "", "src": "", "link": "", "qid": "11fff06949"}, {"q": "A muscle has several points of origin (many) compared to a muscle with only one origin. Which pair of roots distinguishes these counts?", "options": ["Tri- (three) and Uni- (one)", "Quad- (four) and Di- (two)", "Multi- (many) and Uni- (one)", "Multi- (many) and Di- (two)"], "rationales": ["While 'uni' means one, 'tri' refers specifically to three origins rather than 'many' in general.", "These roots refer specifically to four and two origins, respectively, rather than general multiple and single counts.", "The root 'multi' refers to many, while 'uni' refers to one, accurately distinguishing the number of origins.", "While 'multi' means many, 'di' refers to two origins rather than a single one."], "correct": 2, "hint": "compare prefixes for single versus multiple points of origin.", "topic": "Muscle origins", "sec": "", "src": "", "link": "", "qid": "0510f46ed7"}], "hasSheet": true, "parts": false, "secTitles": {}, "reserve": 2, "frq": [], "notebook": "https://notebooklm.google.com/notebook/99f2f7b9-6991-4040-8c15-5fdd08ac7563/artifact/2c4200d3-bd45-4f3d-a989-8b5ce62f131a", "root": "../index.html", "tab": "quiz", "sheet": "### 1. Lever systems\nThe musculoskeletal system functions as a mechanical lever system in which bones act as stiff levers and synovial joints serve as fixed fulcrums to facilitate bodily movement.\n\n*   **Key terms**\n    *   **Lever:** A stiff component used to move a load; in the human body, **bones** serve as the specific anatomical levers.\n    *   **Fulcrum:** The fixed point in a lever system upon which force is applied; anatomically, these are the **articular endings of bones** encased in synovial joints.\n\n### 2. Muscle action\nThe specific functional arrangement and attachment of muscles to the skeleton determine the mechanical characteristics of force, speed, and range of movement.\n\n*   **Key terms**\n    *   **Abduct:** A movement that carries a limb away from the body or the midline; the **anterior fascicle of the deltoid** performs this action when only that specific fascicle is stimulated.\n    *   **Flex:** A movement occurring in the anterior direction; in the arm, this action takes place at the **shoulder joint**.\n\n### 3. Naming criteria\nAnatomists utilize specific physiological and anatomical criteria to categorize skeletal muscles, creating a nomenclature that helps describe the muscle's shape, location, and actions.\n\n*   **Key terms**\n    *   **Muscle names:** Descriptive indicators used to identify and describe the shapes, locations, and actions of muscles; **location** is a primary criterion in this naming process.\n\n### 4. Muscle origins\nMuscle nomenclature incorporates numerical roots to indicate the number of starting points, or \"heads,\" a specific muscle possesses.\n\n*   **Key terms**\n    *   **Bi/Di:** A numerical root translating to **two**.\n    *   **Tri:** A numerical root translating to **three**.\n    *   **Quad:** A numerical root translating to **four**.\n\n### 5. Fiber orientation\nThe alignment of muscle fascicles relative to the midline or the muscle's long axis is represented through specific anatomical terminology.\n\n*   **Key terms**\n    *   **Rectus:** The anatomical term translating to **straight**, used to describe a specific parallel fiber alignment.\n\n### 6. Positional roots\nPrefixes are employed in muscle naming to denote the specific placement of a muscle relative to other structures or the body surface.\n\n*   **Key terms**\n    *   **Sub:** A prefix translating to **under**.\n    *   **Epi:** A prefix translating to **on top of**.\n    *   **Apo:** A prefix translating to **to the side of**.\n\n### 7. Muscle size\nComparative Latin roots are used within muscle nomenclature to describe the relative mass or dimensions of muscles within a group.\n\n*   **Key terms**\n    *   **Maximus:** A descriptor used to indicate a **large** scale.\n    *   **Medius:** A descriptor used to indicate a **medium** scale.\n    *   **Minimus:** A descriptor used to indicate a **tiny; little** scale.\n\n### 8. Lever components\nThe mechanical function of the musculoskeletal system involves the interaction between a force generated by contraction and the resistance it must overcome.\n\n*   **Key terms**\n    *   **Effort:** The applied force within the system; in the body, this is generated by **contracting skeletal muscle**.\n    *   **Load:** The resistance to movement within the system; **the head** serves as an example of a biological load when a person is lifting it.\n\n### 9. Etymology\nEtymology is the formal study of word origins, focusing on how linguistic roots enter a language and evolve over time to form technical vocabulary.\n\n*   **Key terms**\n    *   **Etymology:** The study of how the roots of particular words enter a language and how the use of the word evolves over time.\n*   **Names and studies**\n    *   **Greeks and Romans:** These civilizations conducted the first formal studies of the human body in Western culture, establishing the Greek and Latin root system that remains the foundation of modern anatomical terminology.\n\n### 10. Directional roots\nSpecific roots are used to describe the path of a muscle's action relative to a target point or the midline of the body.\n\n*   **Key terms**\n    *   **Ad:** A prefix indicating movement **to; toward** a point.\n    *   **Ab:** A prefix indicating movement **away from** a point.\n\n### 11. Opposition roots\nAnatomical terminology includes specific prefixes that indicate a relationship of contrary action or resistance between structures.\n\n*   **Key terms**\n    *   **Anti:** A prefix translating to **against**.\n\n### 12. Length descriptors\nPrecise Latin-derived terms are utilized to identify and compare the longitudinal extent of various skeletal muscles within the body.\n\n*   **Key terms**\n    *   **Longissimus:** The anatomical descriptor translating to **longest**.\n    *   **Longus:** The standard anatomical term for a **long** muscle.\n    *   **Brevis:** The standard anatomical term for a **short** muscle."}</script>
+<script id="quiz-data" type="application/json">{"id": "ap2e-11-2", "title": "11.2 Naming Skeletal Muscles", "subtitle": "Chapter 11 · The Muscular System", "book": "A&P 2e", "hash": "00c831dd52bd66f8", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "A person lifts their head from a chin-on-chest position to an upright position. The articular endings of the cervical vertebrae act as the fixed point in this movement.", "options": ["Articular endings as fulcrum; head as effort", "Articular endings as fulcrum; head as load", "Articular endings as lever; head as load", "Articular endings as lever; head as effort"], "rationales": ["While the joint is the fulcrum, the effort is provided by muscle contraction rather than the weight of the head itself.", "In the musculoskeletal system, the articular endings of bones act as the fixed point or fulcrum, while the part of the body being moved acts as the load.", "The bones themselves serve as the stiff levers, but the articular endings at the joint specifically function as the fulcrum.", "The articular endings represent the fixed rotation point, and the effort must come from contracting skeletal muscle."], "correct": 1, "hint": "identify which component remains stationary during movement.", "topic": "Lever systems", "sec": "", "src": "", "link": "", "qid": "b1197e04c0"}, {"q": "A muscle at the hip joint contracts, and its name begins with the root ab-. Based on the anatomical direction, what movement is occurring?", "options": ["Moves away from midline; Adduction", "Moves toward midline; Abduction", "Moves toward midline; Adduction", "Moves away from midline; Abduction"], "rationales": ["Moving away from the midline is correct for the root 'ab', but adduction refers to moving toward the midline.", "Moving toward the midline corresponds to the root 'ad', whereas abduction is the action of moving away.", "While adduction involves moving toward the midline, it corresponds to the root 'ad' rather than 'ab'.", "The root 'ab' means away from, and abduction describes the specific action of moving a limb away from the midline of the body."], "correct": 3, "hint": "determine the direction of limb movement relative to the midline.", "topic": "Muscle action", "sec": "", "src": "", "link": "", "qid": "ad8aa6c7c0"}, {"q": "Two muscles in the same region perform the same action, but one has a significantly shorter muscle belly and tendon than the other.", "options": ["The shorter muscle is named maximus", "The shorter muscle is named minimus", "The shorter muscle is named longus", "The shorter muscle is named brevis"], "rationales": ["Maximus refers to the overall size or volume of a muscle rather than specifically describing its relative length.", "Minimus means tiny or little, whereas brevis is the specific term used to denote a short length in comparison to longus.", "The root 'longus' is used for the longer muscle in a pair, not the shorter one.", "The Latin root 'brevis' means short and is used to distinguish a muscle from a longer counterpart performing the same function."], "correct": 3, "hint": "compare descriptors for muscles of different lengths in the same region.", "topic": "Naming criteria", "sec": "", "src": "", "link": "", "qid": "a1bbbd42e6"}, {"q": "An anatomist observes a muscle in the upper arm that attaches to three distinct tendons of origin at its proximal end.", "options": ["Bi; three origins", "Tri; two origins", "Tri; three origins", "Bi; two origins"], "rationales": ["The root 'bi' specifically refers to two origins, not three.", "While 'tri' means three, it would not be used for a muscle that only has two origins.", "The root 'tri' indicates three, which in muscle naming refers to the number of heads or origins a muscle possesses.", "While 'bi' means two, the scenario describes a muscle with three distinct origins."], "correct": 2, "hint": "associate numerical prefixes with the number of anatomical heads.", "topic": "Muscle origins", "sec": "", "src": "", "link": "", "qid": "43d72717ec"}, {"q": "The rectus abdominis muscle is named based on the orientation of its muscle fibers. How do these fibers relate to the midline of the body?", "options": ["At a 45-degree angle to the midline", "Perpendicular to the midline", "Circular around the midline", "Parallel to the midline"], "rationales": ["Fibers at an angle are usually named 'oblique' rather than 'rectus'.", "Fibers running perpendicular to the midline are generally named 'transversus'.", "Circular fibers are typically named 'orbicularis' or 'sphincter' rather than 'rectus'.", "The Latin root 'rectus' means straight, and in anatomy, it refers to fibers that run straight and parallel to the midline."], "correct": 3, "hint": "look for the Latin root that suggests a straight path.", "topic": "Fiber orientation", "sec": "", "src": "", "link": "", "qid": "06e9b8037e"}, {"q": "An anatomist identifies a muscle layer located directly on top of a bone and another located underneath it.", "options": ["Sub (on top); Epi (under)", "Epi (on top); Apo (under)", "Epi (on top); Sub (under)", "Apo (on top); Sub (under)"], "rationales": ["This reverses the meanings of the roots, as 'sub' indicates a position below and 'epi' indicates a position above.", "While 'epi' is correct for on top, 'apo' refers to a side position rather than an underlying one.", "The root 'epi' means 'on top of' and 'sub' means 'under', accurately describing the relative positions of these muscle layers.", "While 'sub' is correct for under, 'apo' means 'to the side of' rather than on top of."], "correct": 2, "hint": "differentiate between structures situated above or below one another.", "topic": "Positional roots", "sec": "", "src": "", "link": "", "qid": "728177ac75"}, {"q": "In the gluteal region, three muscles are categorized by their relative volume and surface area. Which naming convention correctly identifies the largest and smallest?", "options": ["Maximus (largest); Medius (smallest)", "Minimus (largest); Maximus (smallest)", "Maximus (largest); Minimus (smallest)", "Medius (largest); Minimus (smallest)"], "rationales": ["While maximus is the largest, medius refers to the medium-sized muscle in the middle of the group.", "This correctly identifies the labels but completely reverses their anatomical meanings of size.", "The root 'maximus' designates the largest muscle in a group, and 'minimus' designates the smallest or tiny muscle.", "Medius is the middle size, not the largest, which is reserved for the maximus."], "correct": 2, "hint": "rank descriptors from largest to smallest volume.", "topic": "Muscle size", "sec": "", "src": "", "link": "", "qid": "f28a016f22"}, {"q": "A weightlifter performs a bicep curl. The skeletal muscle of the arm contracts to move the forearm and the weight held in the hand.", "options": ["Muscle contraction provides fulcrum; weight provides effort", "Muscle contraction provides effort; weight provides load", "Muscle contraction provides load; weight provides effort", "Muscle contraction provides effort; weight provides fulcrum"], "rationales": ["The joint is the fulcrum, and the muscle provides the effort to move the weight.", "In a biological lever system, the applied force comes from the contracting muscle (effort) to overcome the resistance (load).", "The weight in the hand is the resistance (load), not the force doing the work (effort).", "While muscle provides the effort, the fulcrum is the fixed point at the joint, not the weight being lifted."], "correct": 1, "hint": "distinguish between the source of force and the resistance being overcome.", "topic": "Lever components", "sec": "", "src": "", "link": "", "qid": "c60b2e0600"}, {"q": "A muscle is named the Adductor longus. Based on its etymology, what is the specific role of the ductor portion of the name?", "options": ["It denotes the muscle as a secondary anchor", "It denotes the muscle as an antagonist", "It denotes the muscle as a stabilizer", "It denotes the muscle as a mover"], "rationales": ["The term for movement is 'ductor', whereas anchoring would refer to origin or insertion points.", "An antagonist opposes a movement, but the root 'ductor' simply means a mover, regardless of direction.", "While muscles can stabilize, the etymology of 'ductor' specifically relates to causing movement.", "The root 'ductor' literally means 'something that moves,' identifying the muscle's functional role in the body."], "correct": 3, "hint": "consider the root word for a person or thing that directs movement.", "topic": "Etymology", "sec": "", "src": "", "link": "", "qid": "c46ef781ba"}, {"q": "A patient is asked to bring their arm from a horizontal position back toward the side of their torso. How is this action and its corresponding root classified?", "options": ["Abduction; ab (away from)", "Adduction; ad (to/toward)", "Abduction; ad (to/toward)", "Adduction; ab (away from)"], "rationales": ["While the root 'ab' means away from, the described action is bringing the arm toward the torso.", "Adduction is the act of moving a limb toward the body's midline, which is derived from the root 'ad' meaning 'to' or 'toward'.", "Abduction is the movement away from the midline, so it would not use the root 'ad'.", "The action is adduction, but it is derived from 'ad', not 'ab', which means away from."], "correct": 1, "hint": "choose the prefix that implies movement toward a target.", "topic": "Directional roots", "sec": "", "src": "", "link": "", "qid": "3071af4b70"}, {"q": "Understanding the etymology of skeletal muscles is emphasized as a study strategy. How does this help a student identify the characteristics of the Fibularis longus?", "options": ["Action (fibula) and shape (long)", "Location (fibula) and length (long)", "Attachment (fibula) and width (long)", "Shape (fibula) and depth (long)"], "rationales": ["The root 'fibularis' refers to the bone location, and 'longus' describes its physical length rather than its specific action or overall shape.", "The name indicates the muscle is located near the fibula bone and is the longer of the muscles in that specific area.", "The root 'longus' refers to the long dimension of the muscle, which is its length, not its width.", "While 'longus' refers to length, 'fibularis' refers to the anatomical location near the fibula rather than the muscle's shape."], "correct": 1, "hint": "combine anatomical landmarks with physical descriptions.", "topic": "Naming criteria", "sec": "", "src": "", "link": "", "qid": "a24bb343c5"}, {"q": "Skeletal muscles are arranged in pairs to move the body. What determines the specific force, speed, and range of movement for a bone in this system?", "options": ["The width of the joint surface", "The connection point to the bone", "The length of the skeletal bone", "The thickness of the muscle belly"], "rationales": ["Joint width may influence stability, but the connection point of the muscle is the deciding factor for movement characteristics.", "The physical connection point of the muscle to the bone determines the mechanical leverage, affecting force, speed, and range.", "The bone acts as the lever, but the specific performance of that lever is dictated by where the muscle applies effort.", "While thickness can affect force, the overall mechanics of speed and range are primarily determined by the connection to the skeleton."], "correct": 1, "hint": "evaluate how physical connections influence mechanical output.", "topic": "Lever systems", "sec": "", "src": "", "link": "", "qid": "fa026595a9"}, {"q": "A muscle is identified as having four distinct heads of origin. Based on the Latin roots provided, how would its name likely begin?", "options": ["Bi-", "Multi-", "Tri-", "Quad-"], "rationales": ["The root 'bi' refers to two origins, which is only half of the count described.", "While 'multi' means many, anatomists use the more specific 'quad' to denote exactly four heads.", "The root 'tri' refers to three origins, which does not match the four described.", "The root 'quad' means four, as seen in the term quadruplets, indicating a muscle with four points of origin."], "correct": 3, "hint": "apply numerical roots to count structural attachments.", "topic": "Muscle origins", "sec": "", "src": "", "link": "", "qid": "6c8231c9fd"}, {"q": "A muscle's name begins with the prefix anti-. Based on the mnemonic for social behavior, what does this suggest about the muscle's relationship to a specific action?", "options": ["It works to the side of the action", "It works on top of the action", "It works against the action", "It works alongside the action"], "rationales": ["The root for 'to the side of' is 'apo', whereas 'anti' means against.", "The root for 'on top of' is 'epi', while 'anti' specifically implies opposition.", "The root 'anti' means against, indicating the muscle performs an action that opposes or works against another.", "Working alongside or with an action would typically be described by roots other than 'anti'."], "correct": 2, "hint": "recall the prefix used for actions that are contradictory.", "topic": "Opposition roots", "sec": "", "src": "", "link": "", "qid": "100f7b78b5"}, {"q": "A group of muscles in the back are all relatively long, but one is the longest in the entire group. What suffix or root would distinguish this specific muscle?", "options": ["-issimus", "-imus", "-us", "-is"], "rationales": ["The suffix 'longissimus' is the superlative form meaning 'longest,' used to identify the longest muscle among other long muscles.", "While this is part of the ending, the full comparative root for longest as provided in the text is 'longissimus'.", "The root 'longus' just means long and does not indicate it is the longest member of a group.", "This is a common Latin ending but does not convey the superlative 'longest' meaning required."], "correct": 0, "hint": "identify the superlative form used for the extreme of a category.", "topic": "Length descriptors", "sec": "", "src": "", "link": "", "qid": "11fff06949"}, {"q": "A muscle has several points of origin (many) compared to a muscle with only one origin. Which pair of roots distinguishes these counts?", "options": ["Tri- (three) and Uni- (one)", "Quad- (four) and Di- (two)", "Multi- (many) and Uni- (one)", "Multi- (many) and Di- (two)"], "rationales": ["While 'uni' means one, 'tri' refers specifically to three origins rather than 'many' in general.", "These roots refer specifically to four and two origins, respectively, rather than general multiple and single counts.", "The root 'multi' refers to many, while 'uni' refers to one, accurately distinguishing the number of origins.", "While 'multi' means many, 'di' refers to two origins rather than a single one."], "correct": 2, "hint": "compare prefixes for single versus multiple points of origin.", "topic": "Muscle origins", "sec": "", "src": "", "link": "", "qid": "0510f46ed7"}], "hasSheet": true, "parts": false, "secTitles": {}, "reserve": 2, "tags": false, "frq": [], "notebook": "https://notebooklm.google.com/notebook/99f2f7b9-6991-4040-8c15-5fdd08ac7563/artifact/2c4200d3-bd45-4f3d-a989-8b5ce62f131a", "root": "../index.html", "tab": "quiz", "sheet": "### 1. Lever systems\nThe musculoskeletal system functions as a mechanical lever system in which bones act as stiff levers and synovial joints serve as fixed fulcrums to facilitate bodily movement.\n\n*   **Key terms**\n    *   **Lever:** A stiff component used to move a load; in the human body, **bones** serve as the specific anatomical levers.\n    *   **Fulcrum:** The fixed point in a lever system upon which force is applied; anatomically, these are the **articular endings of bones** encased in synovial joints.\n\n### 2. Muscle action\nThe specific functional arrangement and attachment of muscles to the skeleton determine the mechanical characteristics of force, speed, and range of movement.\n\n*   **Key terms**\n    *   **Abduct:** A movement that carries a limb away from the body or the midline; the **anterior fascicle of the deltoid** performs this action when only that specific fascicle is stimulated.\n    *   **Flex:** A movement occurring in the anterior direction; in the arm, this action takes place at the **shoulder joint**.\n\n### 3. Naming criteria\nAnatomists utilize specific physiological and anatomical criteria to categorize skeletal muscles, creating a nomenclature that helps describe the muscle's shape, location, and actions.\n\n*   **Key terms**\n    *   **Muscle names:** Descriptive indicators used to identify and describe the shapes, locations, and actions of muscles; **location** is a primary criterion in this naming process.\n\n### 4. Muscle origins\nMuscle nomenclature incorporates numerical roots to indicate the number of starting points, or \"heads,\" a specific muscle possesses.\n\n*   **Key terms**\n    *   **Bi/Di:** A numerical root translating to **two**.\n    *   **Tri:** A numerical root translating to **three**.\n    *   **Quad:** A numerical root translating to **four**.\n\n### 5. Fiber orientation\nThe alignment of muscle fascicles relative to the midline or the muscle's long axis is represented through specific anatomical terminology.\n\n*   **Key terms**\n    *   **Rectus:** The anatomical term translating to **straight**, used to describe a specific parallel fiber alignment.\n\n### 6. Positional roots\nPrefixes are employed in muscle naming to denote the specific placement of a muscle relative to other structures or the body surface.\n\n*   **Key terms**\n    *   **Sub:** A prefix translating to **under**.\n    *   **Epi:** A prefix translating to **on top of**.\n    *   **Apo:** A prefix translating to **to the side of**.\n\n### 7. Muscle size\nComparative Latin roots are used within muscle nomenclature to describe the relative mass or dimensions of muscles within a group.\n\n*   **Key terms**\n    *   **Maximus:** A descriptor used to indicate a **large** scale.\n    *   **Medius:** A descriptor used to indicate a **medium** scale.\n    *   **Minimus:** A descriptor used to indicate a **tiny; little** scale.\n\n### 8. Lever components\nThe mechanical function of the musculoskeletal system involves the interaction between a force generated by contraction and the resistance it must overcome.\n\n*   **Key terms**\n    *   **Effort:** The applied force within the system; in the body, this is generated by **contracting skeletal muscle**.\n    *   **Load:** The resistance to movement within the system; **the head** serves as an example of a biological load when a person is lifting it.\n\n### 9. Etymology\nEtymology is the formal study of word origins, focusing on how linguistic roots enter a language and evolve over time to form technical vocabulary.\n\n*   **Key terms**\n    *   **Etymology:** The study of how the roots of particular words enter a language and how the use of the word evolves over time.\n*   **Names and studies**\n    *   **Greeks and Romans:** These civilizations conducted the first formal studies of the human body in Western culture, establishing the Greek and Latin root system that remains the foundation of modern anatomical terminology.\n\n### 10. Directional roots\nSpecific roots are used to describe the path of a muscle's action relative to a target point or the midline of the body.\n\n*   **Key terms**\n    *   **Ad:** A prefix indicating movement **to; toward** a point.\n    *   **Ab:** A prefix indicating movement **away from** a point.\n\n### 11. Opposition roots\nAnatomical terminology includes specific prefixes that indicate a relationship of contrary action or resistance between structures.\n\n*   **Key terms**\n    *   **Anti:** A prefix translating to **against**.\n\n### 12. Length descriptors\nPrecise Latin-derived terms are utilized to identify and compare the longitudinal extent of various skeletal muscles within the body.\n\n*   **Key terms**\n    *   **Longissimus:** The anatomical descriptor translating to **longest**.\n    *   **Longus:** The standard anatomical term for a **long** muscle.\n    *   **Brevis:** The standard anatomical term for a **short** muscle."}</script>
+<script>
+(function(){
+  if(window.lqSync) return;
+  const API = 'https://terp-plate.vercel.app/api/quiz-sync', MK = 'lqsync:meta';
+  const none = {first: Promise.resolve([]), now: async()=>[], listen(){}};
+  let key = '';
+  try{ key = localStorage.getItem('lq:key') || ''; }catch(e){}
+  const hm = /[#&]k=([A-Za-z0-9_-]{40,})/.exec(location.hash);
+  if(hm) key = hm[1];
+  if(!key || !window.crypto || !crypto.subtle){ window.lqSync = none; return; }
+
+  const skip = k => k.indexOf('lq:') !== 0 || k === 'lq:key' || k === 'lq:speech';
+  const rawSet = Storage.prototype.setItem;
+  let meta = {};
+  try{ meta = JSON.parse(localStorage.getItem(MK) || '{}') || {}; }catch(e){}
+  const putMeta = ()=>{ try{ rawSet.call(localStorage, MK, JSON.stringify(meta)); }catch(e){} };
+  const hash = t => { let h = 5381; for(let i=0;i<t.length;i++) h = ((h<<5) + h + t.charCodeAt(i)) | 0; return h; };
+  const isState = k => /^lq:[^:]+$/.test(k) && k !== 'lq:hub';
+  function weight(s){
+    return Object.keys(s.answers||{}).length + Object.keys(s.pass2||{}).length
+         + Object.keys(s.skipped||{}).length + Object.keys(s.starred||{}).length
+         + Object.keys(s.unsure||{}).length + 1000 * (s.history||[]).length + (s.done ? 500 : 0);
+  }
+  // '' = nothing worth sending
+  function sig(k, v){
+    if(isState(k)){
+      try{ const s = JSON.parse(v);
+        if(!s || typeof s !== 'object') return '';
+        if(!weight(s) && !s.only && !s.tagf) return '';
+        const c = Object.assign({}, s); delete c.ms; delete c.qms; delete c.meta; delete c.hintOpen;
+        return JSON.stringify(c);
+      }catch(e){ return ''; }
+    }
+    return (v && v !== '{}' && v !== '[]' && v !== '{"defs":[],"q":{}}') ? v : '';
+  }
+  let frozen = false, applying = false, timer = null, busy = false;
+  function mark(k, v){
+    if(skip(k)) return;
+    const g = sig(k, v), h = hash(g), m = meta[k] || (meta[k] = {t:0});
+    if(m.h === h) return;
+    m.h = h;
+    if(g){ m.t = Date.now(); m.d = 1; clearTimeout(timer); timer = setTimeout(run, 1500); }
+    putMeta();
+  }
+  Storage.prototype.setItem = function(k, v){
+    if(this === localStorage && frozen && String(k).indexOf('lq:') === 0) return;
+    rawSet.call(this, k, v);
+    if(this === localStorage && !applying){ try{ mark(String(k), String(v)); }catch(e){} }
+  };
+  // What was already here before sync existed: age unknown, so it is stamped low, and a real
+  // attempt outranks a thinner one by how much is in it.
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(skip(k) || meta[k]) continue;
+      const v = localStorage.getItem(k), g = sig(k, v);
+      meta[k] = {t: 0, h: hash(g)};
+      if(g){ let w = 1; if(isState(k)){ try{ w = 1 + weight(JSON.parse(v)); }catch(e){} }
+             meta[k].t = w; meta[k].d = 1; }
+    }
+    putMeta();
+  }catch(e){}
+
+  const enc = new TextEncoder(), dec = new TextDecoder();
+  const toB = s => { s = s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length % 4) s += '=';
+                     return Uint8Array.from(atob(s), c => c.charCodeAt(0)); };
+  const fromB = u => { let t = ''; for(let i=0;i<u.length;i+=8192) t += String.fromCharCode.apply(null, u.subarray(i, i+8192));
+                       return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+  const hex = b => Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,'0')).join('');
+  let ck = null, bucket = '';
+  const ready = (async()=>{
+    ck = await crypto.subtle.importKey('raw', toB(key), 'AES-GCM', false, ['encrypt','decrypt']);
+    bucket = hex(await crypto.subtle.digest('SHA-256', enc.encode('lq-sync:' + key))).slice(0, 32);
+  })();
+  const kid = async k => hex(await crypto.subtle.digest('SHA-256', enc.encode(bucket + '|' + k))).slice(0, 32);
+  async function seal(o){
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv}, ck, enc.encode(JSON.stringify(o)));
+    return fromB(iv) + '.' + fromB(new Uint8Array(ct));
+  }
+  async function unseal(t){
+    const p = t.split('.');
+    return JSON.parse(dec.decode(await crypto.subtle.decrypt({name:'AES-GCM', iv:toB(p[0])}, ck, toB(p[1]))));
+  }
+
+  function pageId(){
+    const el = document.getElementById('quiz-data');
+    if(!el) return null;
+    try{ return JSON.parse(el.textContent).id; }catch(e){ return null; }
+  }
+  async function run(){
+    if(busy || frozen) return [];
+    busy = true;
+    const changed = [];
+    try{
+      await ready;
+      const have = {}, puts = [], sent = {};
+      for(const k of Object.keys(meta)){
+        const m = meta[k];
+        if(!m.id) m.id = await kid(k);
+        have[m.id] = m.t || 0;
+        if(m.d){
+          const v = localStorage.getItem(k);
+          if(v === null){ m.d = 0; continue; }
+          puts.push({k: m.id, v: await seal({k, v}), ts: m.t});
+          sent[k] = m.t;
+        }
+      }
+      const r = await fetch(API, {method:'POST', headers:{'content-type':'text/plain'},
+                                  body: JSON.stringify({bucket, have, puts})});
+      if(!r.ok) throw new Error('sync ' + r.status);
+      const j = await r.json();
+      for(const k in sent) if(meta[k].t === sent[k]) meta[k].d = 0;
+      for(const row of j.rows || []){
+        let o; try{ o = await unseal(row.v); }catch(e){ continue; }
+        if(!o || skip(o.k)) continue;
+        const m = meta[o.k] || (meta[o.k] = {t:0});
+        if((m.t || 0) >= row.ts) continue;
+        applying = true;
+        try{ rawSet.call(localStorage, o.k, o.v); }catch(e){}
+        applying = false;
+        m.t = row.ts; m.d = 0; m.h = hash(sig(o.k, o.v)); m.id = row.k;
+        changed.push(o.k);
+      }
+      putMeta();
+    }catch(e){}
+    busy = false;
+    if(changed.length && window.lqSync.live){
+      const id = pageId();
+      const mine = id ? changed.some(k => k === 'lq:' + id || k.indexOf('lq:' + id + ':') === 0)
+                      : !!document.getElementById('manifest');
+      if(mine){ frozen = true; location.reload(); }
+    }
+    return changed;
+  }
+  function wake(){ if(document.visibilityState !== 'hidden') run(); }
+  function leave(){ if(document.visibilityState === 'hidden') run(); }
+  function listen(){
+    document.removeEventListener('visibilitychange', wake); document.addEventListener('visibilitychange', wake);
+    document.removeEventListener('visibilitychange', leave); document.addEventListener('visibilitychange', leave);
+    removeEventListener('focus', wake); addEventListener('focus', wake);
+  }
+  // `live` = this page should reload itself when its own quiz arrives newer. The locked shell
+  // turns it on only after it has drawn the page.
+  window.lqSync = {first: null, now: run, listen, live: true};
+  listen();
+  setInterval(wake, 20000);
+  window.lqSync.first = run();
+})();
+</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -966,7 +1180,7 @@ function qk(i){ return D.questions[i].qid; }
 function blank(){ return {v:2, hash:D.hash, i:0, answers:{}, pass2:{}, skipped:{}, starred:{},
                           unsure:{}, hints:{}, phase:1, p2list:null, done:false, at:null,
                           shuf:{}, history:[], only:null, sat:{}, promoted:{},
-                          ms:0}; }
+                          ms:0, qms:{}}; }
 function migrate(s){
   // v1 keyed every map on the array index. The hash matches, so the indices are still valid
   // and this is a straight re-key — done once, then never again.
@@ -1024,6 +1238,9 @@ function load(){
     // attempt saved before it. Zero and hidden are the right defaults for an attempt that was
     // never timed: it reads as "not measured" rather than as a suspiciously fast paper.
     if(typeof s.ms !== 'number') s.ms = 0;
+    // NEW ON 08-21 and absent from every attempt before it. An empty map means "never
+    // measured", which momentum() reads as "print nothing" rather than as a paper of zeroes.
+    if(!s.qms) s.qms = {};
     return s;
   }catch(e){ return blank(); }
 }
@@ -1068,10 +1285,44 @@ function save(){
    the sitting's subchapters into this one function is what makes a half-paper behave exactly
    like a whole one — one direction, one end card, one second pass — with no branch anywhere
    downstream. `only: null` (not chosen, or a page built without parts) filters nothing. */
+/* ---- TAGS (10-12, his ask) ------------------------------------------------------------
+   *"a text box at first, but it functions like a Notion tag property … once I press enter it
+   creates a tag and that tag stays for this exam and only for this exam."* Its own key, like
+   the research box, so a Retake and a rebuild keep them. `defs` is the order he made them in;
+   a tag no question carries any more is dropped from it. Off unless the page was built with
+   `tags`, so every page built before this is what it was. */
+const TKEY = KEY + ':tags';
+let T = (function(){
+  try{ const t = JSON.parse(localStorage.getItem(TKEY) || '{}') || {};
+       return {defs: t.defs || [], q: t.q || {}}; }
+  catch(e){ return {defs:[], q:{}}; } })();
+function tput(){ try{ localStorage.setItem(TKEY, JSON.stringify(T)); }catch(e){} }
+function tagsOf(i){ return T.q[qk(i)] || []; }
+function hasTag(i, name){ return tagsOf(i).indexOf(name) >= 0; }
+function tagAdd(i, raw){
+  const name = String(raw).trim().replace(/\s+/g, ' ');
+  if(!name) return;
+  const known = T.defs.find(d => d.toLowerCase() === name.toLowerCase()) || name;
+  if(T.defs.indexOf(known) < 0) T.defs.push(known);
+  const l = T.q[qk(i)] || (T.q[qk(i)] = []);
+  if(l.indexOf(known) < 0) l.push(known);
+  tput();
+}
+function tagDrop(i, name){
+  const id = qk(i);
+  T.q[id] = (T.q[id] || []).filter(x => x !== name);
+  if(!T.q[id].length) delete T.q[id];
+  if(!Object.keys(T.q).some(k => T.q[k].indexOf(name) >= 0)) T.defs = T.defs.filter(d => d !== name);
+  tput();
+}
+
 function active(s){
-  const only = D.parts ? (s.only || null) : null;
+  // A TAG RUN ("test only these") rides here for the same reason the section filter does.
+  const tf = D.tags ? (s.tagf || null) : null;
+  const only = (D.parts && !tf) ? (s.only || null) : null;
   return D.questions.map((_,i)=>i).filter(i => onPaper(s, i)
-    && (!only || only.indexOf(D.questions[i].sec) >= 0));
+    && (!only || only.indexOf(D.questions[i].sec) >= 0)
+    && (!tf || hasTag(i, tf)));
 }
 /* ---- THE RESERVES (08-16) ------------------------------------------------------------
    His ask: *"if 1 question is skipped, another one is replaced in that section about it… you
@@ -1339,7 +1590,9 @@ function flushFrq(){
 function drawFrq(){
   const box = $('#frqview');
   if(!box || !(D.frq||[]).length) return;
-  let h = '<p class="say">Three written answers, from the same sources as the paper. Write '
+  const NW = D.frq.length, WORDS = ['No','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'];
+  let h = '<p class="say">' + (WORDS[NW] || NW) + ' written answer' + (NW === 1 ? '' : 's')
+        + ', from the same sources as the paper. Write '
         + 'one, then mark it: every point that can be settled by what you wrote is checked '
         + 'for you, and the ones that need judgement are handed back. Click any row to '
         + 'overrule it.</p>';
@@ -1538,6 +1791,9 @@ function setTab(name){
     // back — the question must be exactly where he left it.
     if(quizPad !== null) $('main').style.paddingTop = quizPad;
   } else {
+    // The sheet, the starred list and the written half are not the question, so his
+    // reading time on them belongs to no question. `draw()` puts it back on the way in.
+    timeOn(null);
     if(name==='starred') drawStarred();
     if(name==='sheet'){ renderScore(); renderSheetExtras(); }
     if(name==='frq') drawFrq();
@@ -1627,7 +1883,7 @@ function draw(){
   // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
   // the rest of the sitting, so nothing about answering, going back or the second pass has
   // to know the picker exists.
-  if(sectioned() && !S.only) return picker();
+  if(sectioned() && !S.only && !S.tagf) return picker();
   const act = runList();
   if(!act.length) return end();
   if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
@@ -1636,6 +1892,61 @@ function draw(){
 
 /* Pure markup, no DOM writes and no state changes — so the same builder can render the
    question and be measured off-screen for the centring reserve. */
+/* The tag box above the question. Chips for what this question carries, then the box: type and
+   Enter makes the tag (or reuses one spelled the same), the ones he already made show under it
+   to click, Backspace on an empty box takes the last one off, Esc leaves. */
+function tagRowInner(i){
+  const mine = tagsOf(i);
+  let h = '';
+  mine.forEach((n,k)=>{ h += '<span class="tchip">' + esc(n) + '<button class="tx" data-drop="' + k
+                           + '" tabindex="-1" aria-label="Remove tag">×</button></span>'; });
+  return h + '<input id="tagin" class="tagin" type="text" autocomplete="off" spellcheck="false" '
+           + 'placeholder="' + (mine.length ? 'Add a tag' : 'Tag this question  ( l )') + '">'
+           + '<div class="tsug hide" id="tsug"></div>';
+}
+function paintSug(i){
+  const inp = $('#tagin'), box = $('#tsug');
+  if(!inp || !box) return;
+  const raw = inp.value.trim(), v = raw.toLowerCase(), mine = tagsOf(i);
+  let h = T.defs.map((d,n)=>({d,n}))
+    .filter(x => mine.indexOf(x.d) < 0 && (!v || x.d.toLowerCase().indexOf(v) >= 0))
+    .map(x => '<button class="tchip pick" data-n="' + x.n + '" tabindex="-1">' + esc(x.d) + '</button>')
+    .join('');
+  if(v && !T.defs.some(d => d.toLowerCase() === v))
+    h += '<span class="tnew">Enter makes “' + esc(raw) + '”</span>';
+  box.innerHTML = h;
+  box.classList.toggle('hide', !h || document.activeElement !== inp);
+  // mousedown, not click: the box must not blur (and hide these) before the pick lands
+  box.querySelectorAll('.pick').forEach(b => { b.onmousedown = e => {
+    e.preventDefault(); tagAdd(i, T.defs[+b.dataset.n]); redrawTags(i, true); }; });
+}
+function redrawTags(i, focus){
+  const row = $('#tagrow');
+  if(!row) return;
+  row.innerHTML = tagRowInner(i);
+  wireTags(i);
+  if(focus) $('#tagin').focus();
+}
+function wireTags(i){
+  const row = $('#tagrow'), inp = $('#tagin');
+  if(!row || !inp) return;
+  row.querySelectorAll('.tx').forEach(b => b.onclick = ()=>{
+    tagDrop(i, tagsOf(i)[+b.dataset.drop]); redrawTags(i, false); });
+  inp.onfocus = ()=> paintSug(i);
+  inp.oninput = ()=> paintSug(i);
+  inp.onblur = ()=> { const b = $('#tsug'); if(b) b.classList.add('hide'); };
+  inp.onkeydown = e => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      if(!inp.value.trim()){ inp.blur(); return; }
+      tagAdd(i, inp.value); redrawTags(i, true);
+    } else if(e.key === 'Escape'){ inp.value = ''; inp.blur(); }
+    else if(e.key === 'Backspace' && !inp.value && tagsOf(i).length){
+      tagDrop(i, tagsOf(i).slice(-1)[0]); redrawTags(i, true);
+    }
+  };
+}
+
 function buildQ(i, picked, fresh, en){
   const q = D.questions[i];
   const answered = picked !== undefined;
@@ -1647,10 +1958,12 @@ function buildQ(i, picked, fresh, en){
   // The counter sits top-left above the question, the way the notebook does it, rather than
   // up in the bar — it belongs with the thing it counts. On a second pass it counts the
   // second pass, so four wrong answers read as "1 / 4" and not as a broken 16.
-  let h = '<div class="qhead' + en + '"><div class="qcol">'
+  let h = (D.tags ? '<div class="tagrow no-read-aloud" id="tagrow">' + tagRowInner(i) + '</div>' : '')
+        + '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta no-read-aloud"><span class="num">' + (pos+1) + ' / '
         + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        + (D.tags && S.tagf ? '<span class="dot">·</span><span>only ' + esc(S.tagf) + '</span>' : '')
         // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
         // 10 reads as the paper having lost his place, which is how he read it.
         + (recycling && S.phase!==2
@@ -1749,6 +2062,9 @@ let justAnswered = null;
 
 function question(fresh){
   const i = S.i, q = D.questions[i], picked = pick(i);
+  // THE CLOCK MOVES WITH HIM. Re-rendering the same question is harmless: timeOn() banks
+  // what is owed and carries on against the same qid.
+  timeOn(q.qid);
   const answered = picked !== undefined;
   const act = runList();
   const pos = act.indexOf(i);
@@ -1843,6 +2159,7 @@ function question(fresh){
   $('#star').onclick = ()=> toggleStar(i);
   $('#qmark').onclick = ()=> toggleUnsure(i);
   $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
+  if(D.tags) wireTags(i);
 
   // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
   // touches it — and nothing above the options ever changes height.
@@ -2333,19 +2650,32 @@ function openMenu(){
   m.className = 'menu';
   // The clock's only other way in. `w` is not written anywhere else on the page, and a key
   // nothing announces is a key he has to remember he asked for.
-  m.innerHTML = '<button id="skipq">Skip this question</button>'
+  m.innerHTML = '<button id="skipq">Skip this question  ( x )</button>'
               // The reader's own two entries. Space and `v` are written nowhere else on the
               // page, and a key nothing announces is a key he has to remember he asked for.
               + '<button id="readtog">' + (sayOn ? 'Stop' : 'Start') + ' read-aloud  ( space )</button>'
               + '<button id="voiceset">Voice, speed and pauses…</button>'
-              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>';
+              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>'
+              // EVERY KEY, WRITTEN DOWN ONCE (10-12). He could not find Redo or remember its key.
+              + '<div class="keys"><kbd>x</kbd><span>Skip</span><kbd>u</kbd><span>Redo your answer</span>'
+              + '<kbd>h</kbd><span>Hint, when the question has one</span>'
+              + '<kbd>s</kbd><span>Star</span><kbd>/</kbd><span>No idea</span>'
+              + '<kbd>r</kbd><span>Research</span><kbd>f</kbd><span>Fix this question</span>'
+              + '<kbd>t</kbd><span>Reflection</span>'
+              + (D.tags ? '<kbd>l</kbd><span>Tag</span>' : '')
+              + '<kbd>↵</kbd><span>Next</span><kbd>←</kbd><span>Back</span></div>';
   host.appendChild(m);
   m.querySelector('#clocktog').onclick = ()=>{ toggleClock(); closeMenu(); };
   m.querySelector('#readtog').onclick = ()=>{ closeMenu(); sayOn ? sayOff() : sayToggle(); };
   m.querySelector('#voiceset').onclick = ()=>{ closeMenu(); openVset(); };
-  m.querySelector('#skipq').onclick = ()=>{
+  m.querySelector('#skipq').onclick = ()=>{ closeMenu(); skipQuestion(); };
+  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
+}
+/* One path for skipping, whether it came from the menu or from `x` (10-12, his ask: a key
+   *"rather than going into the top bar and then pressing skip"*). */
+function skipQuestion(){
     const list = runList(), pos = list.indexOf(S.i);
-    if(list.length <= 1) return closeMenu();        // never skip the last one standing
+    if(list.length <= 1) return;                    // never skip the last one standing
     const sec = bucketOf(S.i);
     S.skipped[qk(S.i)] = true;
     delete S.answers[qk(S.i)];
@@ -2359,7 +2689,6 @@ function openMenu(){
     // have handed him an end card with a question still owed.
     const filled = promoteReserve(sec) >= 0;
     const wasLast = !filled && pos === list.length - 1;
-    closeMenu();
     syncTabs();
     if(wasLast){ finish(); return; }
     // After the removal the list has shrunk, so the item now AT `pos` is the one that
@@ -2368,8 +2697,6 @@ function openMenu(){
     S.hintOpen = false;
     lastShown = -1;
     save(); question(); window.scrollTo(0,0);
-  };
-  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
 }
 function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(); }
 
@@ -2428,6 +2755,7 @@ function group(act, keyOf, head, label){
 let pickSel = null;
 
 function picker(){
+  timeOn(null);
   const p = paperStat();
   if(!pickSel) pickSel = p.left.map(s => s.sec);          // default: what is still outstanding
   const chosen = p.secs.filter(s => pickSel.indexOf(s.sec) >= 0);
@@ -2523,7 +2851,143 @@ function beginSitting(secs){
   save(); draw(); window.scrollTo(0,0);
 }
 
+/* ---- MOMENTUM — the pace half of the end card (08-21, his ask) ------------------------
+   *"once I'm done with the quiz, the same screen that shows the right and wrong answers, I
+   can also see a breakdown of momentum… ranked by correct versus incorrect, and then also
+   time spent. Maybe that'll help me determine a goal and a time per question."*
+
+   THREE THINGS IN ONE BLOCK, because they answer three different questions:
+
+   • THE STRIP is the paper in the order he sat it — where he slowed down, and whether the
+     slow ones cluster at the end (tiring) or the start (warming up). It is the only thing
+     anywhere on this page that is in time order; every other table is sorted by something.
+   • THE TWO MEDIANS are the comparison worth having: how long the ones he got right took
+     against the ones he got wrong. MEDIAN AND NOT MEAN — one question he walked away from
+     mid-paper drags an average off the map, and that is exactly the question a page that
+     only banks visible time is most likely to have.
+   • THE RANKING is what to look at next: slowest first, each one marked, so a slow ✕ sits
+     at the top of the list on its own.
+
+   THE GOAL IS HIS OWN NUMBER, NOT ONE INVENTED HERE — the median of the questions he got
+   RIGHT, rounded to five seconds. A pace he has already answered correctly at is the only
+   pace this page has any business suggesting.
+
+   IT PRINTS NOTHING UNLESS THE QUESTIONS WERE ACTUALLY TIMED. Every attempt saved before
+   today has an empty `qms`, so the block is absent on those rather than reporting a paper
+   of zeroes — the same rule the clock already uses for `ms:0` in the copy markdown. */
+const MOM_CAP = 14, MOM_SHOW = 10;
+let momAll = false;
+function qms(i){ return (S.qms || {})[qk(i)] || 0; }
+function median(a){
+  if(!a.length) return 0;
+  const s = a.slice().sort((x,y)=>x-y), h = s.length >> 1;
+  return s.length % 2 ? s[h] : Math.round((s[h-1] + s[h]) / 2);
+}
+/* What to call a question in one line. The topic tag when the quiz carries one — it is
+   already the name he thinks of it by, and it is what the topics table above uses — and the
+   stem itself when it does not. Through a div because a stem can carry math markup. */
+function momLabel(i){
+  const q = D.questions[i];
+  if(q.topic) return q.topic;
+  const d = document.createElement('div');
+  d.innerHTML = q.q || '';
+  const t = (d.textContent || '').trim();
+  return t.length > 70 ? t.slice(0, 69).trim() + '…' : t;
+}
+function momentum(){
+  const act = active(S), timed = act.filter(i => qms(i) > 0);
+  // One timed question is not a pace, and two is the least that can have a shape.
+  if(timed.length < 2) return '';
+  const rows = timed.map(i => ({i:i, ms:qms(i), ok:finalRight(i), n:act.indexOf(i)+1}));
+  const all = rows.map(r=>r.ms);
+  const max = Math.max.apply(null, all), med = median(all);
+  const okMs = rows.filter(r=>r.ok).map(r=>r.ms);
+  const noMs = rows.filter(r=>!r.ok).map(r=>r.ms);
+
+  let h = '<div class="topics mom"><h3>Momentum</h3>';
+
+  /* THE STRIP IS `aria-hidden` AND `.no-read-aloud`. It is a picture of the list printed
+     underneath it, so a page reader that walked it would read the same paper twice. */
+  h += '<div class="strip no-read-aloud" aria-hidden="true">';
+  h += '<i class="med" style="bottom:' + (max ? med/max*100 : 0) + '%"></i>';
+  rows.forEach(r=>{
+    // A floor of 4%, so a five-second question is a visible mark and not a gap in the row.
+    const pc = Math.max(4, max ? r.ms/max*100 : 0);
+    h += '<i class="sb ' + (r.ok ? 'r' : 'w') + '" style="height:' + pc + '%" title="'
+       + esc(r.n + ' · ' + (r.ok ? 'right' : 'wrong') + ' · ' + fmtMs(r.ms)) + '"></i>';
+  });
+  h += '</div>';
+  h += '<p class="momax no-read-aloud"><span>first</span>'
+     + '<span>median ' + fmtMs(med) + '</span><span>last</span></p>';
+
+  h += '<p class="mline">Median <b>' + fmtMs(med) + '</b> a question'
+     + (okMs.length ? ' · right ones <b>' + fmtMs(median(okMs)) + '</b>' : '')
+     + (noMs.length ? ' · wrong ones <b>' + fmtMs(median(noMs)) + '</b>' : '')
+     + ' · slowest <b>' + fmtMs(max) + '</b></p>';
+
+  /* A QUIZ SHOWS EVERY QUESTION AND A 40-QUESTION EXAM DOES NOT (not without asking).
+     Ranked slowest-first, the rows he needs are the ones at the top; forty of them would
+     bury the tables underneath in a list he scrolls past. `momAll` is a plain module-level
+     flag like `clockOn` — the end card opens short every time, and expanding it is one
+     click that does not survive the page. */
+  const rank = rows.slice().sort((a,b)=> b.ms - a.ms);
+  const shown = (momAll || rank.length <= MOM_CAP) ? rank : rank.slice(0, MOM_SHOW);
+  shown.forEach(r=>{
+    h += '<div class="mrow"><span class="mg">' + (r.ok ? G_OK : G_NO) + '</span>'
+       + '<span class="mn">' + r.n + '</span>'
+       + '<span class="mlab">' + esc(momLabel(r.i)) + '</span>'
+       + '<span class="mt">' + fmtMs(r.ms) + '</span>'
+       + '<span class="tbar"><i class="' + (r.ok ? '' : 'w') + '" style="width:'
+       + (max ? r.ms/max*100 : 0) + '%"></i></span></div>';
+  });
+
+  if(shown.length < rank.length)
+    h += '<p class="note mmore"><button class="link" id="momall">Show all '
+       + rank.length + ' questions</button></p>';
+
+  const base = okMs.length ? median(okMs) : med;
+  const goal = Math.max(5000, Math.round(base/5000)*5000);
+  h += '<p class="mgoal">Your own pace on the ones you got right, to the nearest five '
+     + 'seconds: <b>' + fmtMs(goal) + '</b> a question — <b>' + fmtMs(goal*act.length)
+     + '</b> for a paper this size.</p>';
+  return h + '</div>';
+}
+
+/* THE TAGS ON THE END CARD: how each group went, and a way to sit one group alone. A tag run
+   is a fresh attempt on only those questions (the finished one goes into history first, as a
+   Retake does); Retake, or "every question" here, goes back to the whole paper. Not offered
+   on a sectioned paper, whose picker already owns which questions a sitting holds. */
+function tagTable(){
+  if(!D.tags || !T.defs.length) return '';
+  const all = D.questions.map((_,i)=>i).filter(i => onPaper(S, i));
+  let h = '';
+  T.defs.forEach((d,n)=>{
+    const qs = all.filter(i => hasTag(i, d));
+    if(!qs.length) return;
+    const sat = qs.filter(i => ans(i) !== undefined || ans2(i) !== undefined);
+    const ok = sat.filter(i => finalRight(i)).length;
+    h += '<div class="tagline"><span class="tchip">' + esc(d) + '</span><span class="tn">'
+       + (sat.length ? ok + ' / ' + sat.length + ' right' : qs.length + ' question' + (qs.length>1?'s':''))
+       + '</span>' + (D.parts ? '' : '<button class="link" data-tagrun="' + n + '">Test only these</button>')
+       + '</div>';
+  });
+  if(!h && !S.tagf) return '';
+  if(S.tagf) h += '<p class="note">This run was only “' + esc(S.tagf) + '”. '
+                + '<button class="link" id="tagall">Back to every question</button></p>';
+  return '<div class="tagtable"><h3>By tag</h3>' + h + '</div>';
+}
+function startRun(tag){
+  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length, ms:S.ms,
+                             tag:S.tagf || undefined});
+  const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
+  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  if(tag) S.tagf = tag;
+  pickSel = null; lastShown = -1;
+  save(); syncTabs(); renderScore(); draw(); window.scrollTo(0,0);
+}
+
 function end(){
+  timeOn(null);
   const act = active(S), n = score(S), t = act.length;
   const pct = t ? Math.round(n/t*100) : 0;
   const red = redeemed().length;
@@ -2537,6 +3001,10 @@ function end(){
         // grayscale-safe hatch and would make the one number he reads harder to read; the
         // count says it in words instead.
         + (red ? '<span>+<b>'+red+'</b> on the second pass</span>' : '') + '</p>';
+
+  // BEFORE the topic tables and after the score: it is about this sitting, the way the score
+  // is, where everything below it is about the material.
+  h += momentum();
 
   const by = {};
   act.forEach(i=>{
@@ -2599,6 +3067,7 @@ function end(){
             + 'every one is done; sitting one again replaces its score.</p>';
   }
 
+  h += tagTable();
   const nskip = Object.keys(S.skipped||{}).length;
   if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
               + '<button class="link" id="unskip">put them back</button></p>';
@@ -2609,6 +3078,12 @@ function end(){
   $('#quizview').innerHTML = h;
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  document.querySelectorAll('[data-tagrun]').forEach(b =>
+    b.onclick = ()=> startRun(T.defs[+b.dataset.tagrun]));
+  const tall = $('#tagall');
+  if(tall) tall.onclick = ()=> startRun(null);
+  const ma = $('#momall');
+  if(ma) ma.onclick = ()=>{ momAll = true; end(); };
   const m = $('#more');
   if(m) m.onclick = ()=>{ S.only = null; S.done = false; S.reviewing = false;
                           pickSel = null; save(); draw(); window.scrollTo(0,0); };
@@ -2643,6 +3118,7 @@ function itemHTML(i, n){
   const q = D.questions[i], first = ans(i), second = ans2(i);
   let h = '<div class="item">';
   if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
+  if(D.tags) tagsOf(i).forEach(t => { h += '<span class="tchip sm">'+esc(t)+'</span>'; });
   h += '<p class="qq">'+(n===undefined?'':(n+1)+'. ')+esc(q.q)+'</p>'
      + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
   if(!firstRight(i)){
@@ -2659,11 +3135,26 @@ function itemHTML(i, n){
   return h + '</div>';
 }
 
+let revByTag = false;
 function review(){
+  timeOn(null);
+  const act = active(S), canSort = D.tags && T.defs.length;
   let h = '<div class="rev"><h3>Every question</h3>';
-  active(S).forEach((i,n)=>{ h += itemHTML(i, n); });
+  if(canSort) h += '<p class="note" style="margin:0 0 6px"><button class="link" id="revsort">'
+                 + (revByTag ? 'Sort in order' : 'Sort by tag') + '</button></p>';
+  if(canSort && revByTag){
+    // a question with two tags is listed under both; the untagged ones come last
+    T.defs.concat(['']).forEach(d=>{
+      const qs = act.filter(i => d ? hasTag(i, d) : !tagsOf(i).length);
+      if(!qs.length) return;
+      h += '<h3 class="tgroup">' + (d ? esc(d) : 'No tag') + ' · ' + qs.length + '</h3>';
+      qs.forEach(i => { h += itemHTML(i, act.indexOf(i)); });
+    });
+  } else act.forEach((i,n)=>{ h += itemHTML(i, n); });
   h += '</div>';
   $('#quizview').innerHTML = h;
+  const rs = $('#revsort');
+  if(rs) rs.onclick = ()=>{ revByTag = !revByTag; review(); };
   $('#band').classList.add('off');
   showResearch(false);
   $('#footer').classList.remove('hide');
@@ -2836,12 +3327,29 @@ function paintClock(){
   // not start counting from the moment he looked.
   el.textContent = fmtMs(S.ms);
 }
+/* ---- WHERE THE SECOND WENT (08-21) ---------------------------------------------------
+   The same delta that goes into `S.ms` goes into `S.qms[qid]`, so the total and the
+   per-question times are banked from ONE measurement and can never disagree with each other.
+
+   `qAt` IS THE QUESTION ON SCREEN AND NOTHING ELSE. The end card, the picker, the review
+   list and every other tab set it to null, so twenty minutes spent reading his own study
+   sheet is never filed under whichever question happened to be open last — the number the
+   momentum block reports is time spent on the question, not time the tab was alive. */
+let qAt = null;
+function bankMs(now){
+  const on = !S.done && !document.hidden;
+  if(tickAt && on){
+    const d = now - tickAt;
+    S.ms += d;
+    if(qAt) S.qms[qAt] = (S.qms[qAt] || 0) + d;
+  }
+  tickAt = on ? now : null;
+}
+/* Every renderer calls this, and it flushes BEFORE the switch: without the flush, up to a
+   second of question 3 would be banked against question 2. */
+function timeOn(id){ bankMs(Date.now()); qAt = id || null; }
 function tick(){
-  const now = Date.now();
-  if(!S.done && !document.hidden){
-    if(tickAt) S.ms += now - tickAt;
-    tickAt = now;
-  }else tickAt = null;
+  bankMs(Date.now());
   paintClock();
   // A WRITE A SECOND WOULD BE A WRITE A SECOND. Every answer already saves, and this only has
   // to cover the case of a tab closed mid-question — 15 seconds is the most that can cost.
@@ -3953,6 +4461,10 @@ document.addEventListener('keydown', e=>{
   // `w` FOR WATCH — the clock in the bar, off by default. Past G like every other command
   // key here, so it can never be an option letter.
   if(e.key === 'w' || e.key === 'W'){ toggleClock(); return; }
+  // `x` SKIPS, `l` (label) PUTS THE CARET IN THE TAG BOX. Both past G, so never an option key.
+  if(e.key === 'x' || e.key === 'X'){ e.preventDefault(); skipQuestion(); return; }
+  if((e.key === 'l' || e.key === 'L') && D.tags){
+    const ti = $('#tagin'); if(ti){ e.preventDefault(); ti.focus(); } return; }
   if(e.key === '/' || e.key === '?'){ e.preventDefault(); toggleUnsure(S.i); return; }
   /* THE KEY NAMES A POSITION ON SCREEN, not an option. `2` and `B` mean the second card he
      can see, which is the only thing either of them could mean to him — after a Redo has

@@ -326,6 +326,32 @@ kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid
 .qmark:hover{background:var(--surface);color:var(--text)}
 .qmark.on{color:var(--text);border-color:var(--accent);background:var(--surface-hi)}
 
+/* ---- tags (10-12): his own labels on a question, kept per quiz ---- */
+.tagrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.tchip{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:.78rem;
+ color:var(--text);background:var(--surface-hi);border:1px solid var(--line);
+ border-radius:6px;padding:2px 8px;line-height:1.5}
+.tchip.sm{font-size:.7rem;margin:0 6px 9px 0}
+button.tchip{cursor:pointer}
+button.tchip:hover{border-color:var(--muted)}
+.tx{background:none;border:0;color:var(--muted);font:inherit;padding:0;cursor:pointer;line-height:1}
+.tx:hover{color:var(--text)}
+.tagin{flex:1 1 140px;min-width:120px;background:none;border:0;outline:0;color:var(--text);
+ font:inherit;font-size:.82rem;padding:3px 2px}
+.tagin::placeholder{color:var(--muted);opacity:.75}
+.tsug{flex:1 0 100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tnew{color:var(--muted);font-size:.76rem}
+.tagtable{margin:26px 0 0;text-align:left}
+.tagtable h3{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+ font-weight:500;margin:0 0 6px}
+.tagline{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line);
+ font-size:.88rem}
+.tagline .tn{flex:1;color:var(--muted);font-variant-numeric:tabular-nums}
+.tgroup{margin-top:30px}
+.menu .keys{border-top:1px solid var(--line);margin:5px 0 0;padding:8px 10px 4px;
+ display:grid;grid-template-columns:auto 1fr;gap:5px 10px;font-size:.78rem;color:var(--muted);
+ align-items:center}
+
 /* ---- the ⋮ menu ---- */
 .more{position:relative;flex:0 0 auto}
 .dots{background:none;border:0;color:var(--muted);font-size:1.15rem;line-height:1;
@@ -836,7 +862,157 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "bmgt301-chapter-14-module-exam-2026-09-29-134621", "title": "BMGT301 — Chapter 14 module exam", "subtitle": "5 multiple choice + 3 written · chapter 14 (Rent the Runway: Entrepreneurs Expanding an Industry by Blending Tech with Fashion) · from the slides", "book": "BMGT301", "hash": "ddea8f68ac5c308a", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "A tech startup wants to purchase a high-capacity server for $120,000. They plan to pay 15% as a down payment and finance the rest with a 5-year loan at a fixed APR of 4.8%. Which of the following Excel formulas correctly calculates the monthly payment for this loan?", "options": ["=PMT(0.048, 5, -102000)", "=PMT(0.048/12, 60, -120000)", "=PMT(0.048/12, 5*12, -102000)", "=PMT(4.8/12, 60, -102000)"], "rationales": ["This step fails to convert the annual rate and years into monthly terms, which is required for calculating a monthly payment.", "This step incorrectly uses the total asset cost as the principal, failing to account for the 15% down payment already made by the startup.", "This formula correctly uses the monthly rate (APR/12), total periods (Years*12), and the actual principal amount after subtracting the 15% down payment ($120,000 * 0.85), preceded by a minus sign.", "This step uses the whole number 4.8 instead of the decimal or percentage equivalent 0.048, leading to an extremely inflated interest calculation."], "correct": 2, "hint": "Consider the difference between the total cost of the server and the actual amount borrowed after the down payment.", "topic": "", "sec": "", "src": "", "link": "", "qid": "e54d5a22bc"}, {"q": "A financial analyst is performing a data audit on a 360-month mortgage amortization table. Which of the following conditions must be true for the table to be considered accurate?", "options": ["In the final payment row (month 360), the beginning principal balance must equal the principal payment.", "The interest payment portion must decrease every month throughout the loan term.", "The principal payment portion must increase every month throughout the loan term.", "The total interest paid by the end of the loan must equal the original principal amount."], "rationales": ["For the loan to be fully amortized and reach a zero balance, the final principal payment must cover the entire remaining balance.", "As the principal balance is paid down each month, the interest calculated on that decreasing balance must also decline.", "Since the total monthly payment is constant and the interest portion is decreasing, the remaining portion applied to the principal must increase.", "This step represents a misconception; interest is a cost of borrowing and is not inherently equal to the principal amount."], "correct": 1, "hint": "Think about how the reduction of the remaining balance affects subsequent interest calculations and the allocation of the fixed payment.", "topic": "", "sec": "", "src": "", "link": "", "qid": "b7ec7cc304"}, {"q": "You are leasing a fleet of delivery vans for your business. The total cost of a van is $45,000, and the 48-month lease has a residual value of $18,000. If the lease APR is 6% and payments are due at the start of each month, which formula calculates the correct monthly lease payment?", "options": ["=PMT(0.06, 4, -45000, 18000, 1)", "=PMT(0.06/12, 48, -45000, 18000, 1)", "=PMT(0.06/12, 48, -45000, -18000, 1)", "=PMT(0.06/12, 48, -45000, 18000, 0)"], "rationales": ["This step uses annual values for rate and time (4 years) instead of converting them to the monthly frequency required for a monthly payment calculation.", "This formula correctly handles the monthly rate, the 48-month term, the negative PV for the asset cost, the positive FV for residual value, and the 'Type' argument set to 1 for beginning-of-period payments.", "This step incorrectly includes a minus sign for the 'fv' argument; per the integrity warning, only 'pv' should be negative or the output will be inaccurate.", "This step uses a 'Type' of 0, which assumes payments at the end of the month, failing to meet the requirement for payments at the start of the month."], "correct": 1, "hint": "Pay close attention to the specific warning regarding minus signs for 'pv' versus 'fv' in lease calculations.", "topic": "", "sec": "", "src": "", "link": "", "qid": "516a826118"}, {"q": "An investor wants to have $2,000,000 in a retirement fund in 25 years. They are comparing two different investment accounts: Account A offers a 7% annual return, while Account B offers a 4% annual return. How does the required initial one-time investment change based on these rates?", "options": ["The investor will need to invest significantly more money today if they choose Account B compared to Account A.", "The required investment for Account B will be lower because the time period is 25 years for both.", "The investor will need to invest the same amount regardless of the rate because the future goal is the same.", "Account A requires a higher initial investment because the higher interest rate makes the account more expensive to open."], "rationales": ["A lower rate of return requires a higher initial principal (Present Value) to reach the same future goal because the money grows less quickly over time.", "This step reaches an illogical conclusion; with all other factors equal, a lower return rate always necessitates a larger starting balance to meet a target.", "This step ignores the compounding effect of interest; different rates fundamentally change the growth trajectory of the investment.", "This step confuses 'interest rate' with 'account fees'; conceptually, a higher return rate makes it easier (cheaper) to reach a future goal."], "correct": 0, "hint": "Consider the relationship between the growth rate of money and the amount of money you need to start with to reach a specific destination.", "topic": "", "sec": "", "src": "", "link": "", "qid": "3d09a69179"}, {"q": "When building a dynamic loan amortization schedule that connects multiple worksheets, which of the following spreadsheet practices are recommended?", "options": ["Multiply the annual rate by 12 when linking the APR to the amortization interest payment column.", "Hard-code the monthly payment value in every row of the amortization table to prevent calculation errors.", "Use absolute cell references (e.g., C4) when referring to a fixed starting date while calculating multiple rows using EOMONTH.", "Use the '=' sign to create a link so that changes in the 'Loan' worksheet are automatically reflected in the 'Amortization' worksheet."], "rationales": ["This step is a procedural error; to find the monthly interest, the annual rate must be divided by 12, not multiplied.", "This step makes the table static; instead, the payment should be linked to the calculated PMT value so the table updates if loan terms change.", "Absolute references prevent the reference cell from shifting when the formula is filled down, ensuring every row calculates relative to the same start date.", "External cell references ensure data integrity by having a single source of truth for variables like interest rates or principal amounts."], "correct": 3, "hint": "Focus on methods that allow the entire spreadsheet to update automatically if the user changes the loan amount or interest rate.", "topic": "", "sec": "", "src": "", "link": "", "qid": "350dbf0197"}], "hasSheet": false, "parts": false, "secTitles": {}, "reserve": 0, "frq": [{"ask": "To calculate the interest payment for the first month of a loan in a spreadsheet, you would use the beginning principal balance from cell E7 and multiply it by the monthly interest rate, which is the annual APR (located in cell $G$4) divided by ___.", "rubric": [{"t": "The answer: 12", "judge": false, "k": ["twelve", "12.0"]}], "model": "12\n\nInterest is typically quoted as an Annual Percentage Rate (APR), so to find the interest for a single month, the rate must be converted into a monthly frequency."}, {"ask": "In the Excel PMT function, the optional ___ argument is defined with the number 1 if payments are made at the beginning of each period, or 0 if made at the end.", "rubric": [{"t": "The answer: type", "judge": false, "k": ["Type", "[type]"]}], "model": "type\n\nThe 'Type' argument determines the timing of the payment within the period, which affects the interest calculation logic."}, {"ask": "To display the full name of the month (e.g., 'October') based on a date in cell B7, the correct Excel formula is =TEXT(B7, \"___\").", "rubric": [{"t": "The answer: mmmm", "judge": false, "k": ["MMMM"]}], "model": "mmmm\n\nThe code 'mmmm' in the TEXT function is the specific formatting instruction for a long-form month name."}], "notebook": "https://notebook.google.com/notebook/873a623f-584e-43aa-a1b5-4059031032cd", "root": "../index.html", "tab": "quiz", "sheet": ""}</script>
+<script id="quiz-data" type="application/json">{"id": "bmgt301-chapter-14-module-exam-2026-09-29-134621", "title": "BMGT301 — Chapter 14 module exam", "subtitle": "5 multiple choice + 3 written · chapter 14 (Rent the Runway: Entrepreneurs Expanding an Industry by Blending Tech with Fashion) · from the slides", "book": "BMGT301", "hash": "ddea8f68ac5c308a", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "A tech startup wants to purchase a high-capacity server for $120,000. They plan to pay 15% as a down payment and finance the rest with a 5-year loan at a fixed APR of 4.8%. Which of the following Excel formulas correctly calculates the monthly payment for this loan?", "options": ["=PMT(0.048, 5, -102000)", "=PMT(0.048/12, 60, -120000)", "=PMT(0.048/12, 5*12, -102000)", "=PMT(4.8/12, 60, -102000)"], "rationales": ["This step fails to convert the annual rate and years into monthly terms, which is required for calculating a monthly payment.", "This step incorrectly uses the total asset cost as the principal, failing to account for the 15% down payment already made by the startup.", "This formula correctly uses the monthly rate (APR/12), total periods (Years*12), and the actual principal amount after subtracting the 15% down payment ($120,000 * 0.85), preceded by a minus sign.", "This step uses the whole number 4.8 instead of the decimal or percentage equivalent 0.048, leading to an extremely inflated interest calculation."], "correct": 2, "hint": "Consider the difference between the total cost of the server and the actual amount borrowed after the down payment.", "topic": "", "sec": "", "src": "", "link": "", "qid": "e54d5a22bc"}, {"q": "A financial analyst is performing a data audit on a 360-month mortgage amortization table. Which of the following conditions must be true for the table to be considered accurate?", "options": ["In the final payment row (month 360), the beginning principal balance must equal the principal payment.", "The interest payment portion must decrease every month throughout the loan term.", "The principal payment portion must increase every month throughout the loan term.", "The total interest paid by the end of the loan must equal the original principal amount."], "rationales": ["For the loan to be fully amortized and reach a zero balance, the final principal payment must cover the entire remaining balance.", "As the principal balance is paid down each month, the interest calculated on that decreasing balance must also decline.", "Since the total monthly payment is constant and the interest portion is decreasing, the remaining portion applied to the principal must increase.", "This step represents a misconception; interest is a cost of borrowing and is not inherently equal to the principal amount."], "correct": 1, "hint": "Think about how the reduction of the remaining balance affects subsequent interest calculations and the allocation of the fixed payment.", "topic": "", "sec": "", "src": "", "link": "", "qid": "b7ec7cc304"}, {"q": "You are leasing a fleet of delivery vans for your business. The total cost of a van is $45,000, and the 48-month lease has a residual value of $18,000. If the lease APR is 6% and payments are due at the start of each month, which formula calculates the correct monthly lease payment?", "options": ["=PMT(0.06, 4, -45000, 18000, 1)", "=PMT(0.06/12, 48, -45000, 18000, 1)", "=PMT(0.06/12, 48, -45000, -18000, 1)", "=PMT(0.06/12, 48, -45000, 18000, 0)"], "rationales": ["This step uses annual values for rate and time (4 years) instead of converting them to the monthly frequency required for a monthly payment calculation.", "This formula correctly handles the monthly rate, the 48-month term, the negative PV for the asset cost, the positive FV for residual value, and the 'Type' argument set to 1 for beginning-of-period payments.", "This step incorrectly includes a minus sign for the 'fv' argument; per the integrity warning, only 'pv' should be negative or the output will be inaccurate.", "This step uses a 'Type' of 0, which assumes payments at the end of the month, failing to meet the requirement for payments at the start of the month."], "correct": 1, "hint": "Pay close attention to the specific warning regarding minus signs for 'pv' versus 'fv' in lease calculations.", "topic": "", "sec": "", "src": "", "link": "", "qid": "516a826118"}, {"q": "An investor wants to have $2,000,000 in a retirement fund in 25 years. They are comparing two different investment accounts: Account A offers a 7% annual return, while Account B offers a 4% annual return. How does the required initial one-time investment change based on these rates?", "options": ["The investor will need to invest significantly more money today if they choose Account B compared to Account A.", "The required investment for Account B will be lower because the time period is 25 years for both.", "The investor will need to invest the same amount regardless of the rate because the future goal is the same.", "Account A requires a higher initial investment because the higher interest rate makes the account more expensive to open."], "rationales": ["A lower rate of return requires a higher initial principal (Present Value) to reach the same future goal because the money grows less quickly over time.", "This step reaches an illogical conclusion; with all other factors equal, a lower return rate always necessitates a larger starting balance to meet a target.", "This step ignores the compounding effect of interest; different rates fundamentally change the growth trajectory of the investment.", "This step confuses 'interest rate' with 'account fees'; conceptually, a higher return rate makes it easier (cheaper) to reach a future goal."], "correct": 0, "hint": "Consider the relationship between the growth rate of money and the amount of money you need to start with to reach a specific destination.", "topic": "", "sec": "", "src": "", "link": "", "qid": "3d09a69179"}, {"q": "When building a dynamic loan amortization schedule that connects multiple worksheets, which of the following spreadsheet practices are recommended?", "options": ["Multiply the annual rate by 12 when linking the APR to the amortization interest payment column.", "Hard-code the monthly payment value in every row of the amortization table to prevent calculation errors.", "Use absolute cell references (e.g., C4) when referring to a fixed starting date while calculating multiple rows using EOMONTH.", "Use the '=' sign to create a link so that changes in the 'Loan' worksheet are automatically reflected in the 'Amortization' worksheet."], "rationales": ["This step is a procedural error; to find the monthly interest, the annual rate must be divided by 12, not multiplied.", "This step makes the table static; instead, the payment should be linked to the calculated PMT value so the table updates if loan terms change.", "Absolute references prevent the reference cell from shifting when the formula is filled down, ensuring every row calculates relative to the same start date.", "External cell references ensure data integrity by having a single source of truth for variables like interest rates or principal amounts."], "correct": 3, "hint": "Focus on methods that allow the entire spreadsheet to update automatically if the user changes the loan amount or interest rate.", "topic": "", "sec": "", "src": "", "link": "", "qid": "350dbf0197"}], "hasSheet": false, "parts": false, "secTitles": {}, "reserve": 0, "tags": false, "frq": [{"ask": "To calculate the interest payment for the first month of a loan in a spreadsheet, you would use the beginning principal balance from cell E7 and multiply it by the monthly interest rate, which is the annual APR (located in cell $G$4) divided by ___.", "rubric": [{"t": "The answer: 12", "judge": false, "k": ["twelve", "12.0"]}], "model": "12\n\nInterest is typically quoted as an Annual Percentage Rate (APR), so to find the interest for a single month, the rate must be converted into a monthly frequency."}, {"ask": "In the Excel PMT function, the optional ___ argument is defined with the number 1 if payments are made at the beginning of each period, or 0 if made at the end.", "rubric": [{"t": "The answer: type", "judge": false, "k": ["Type", "[type]"]}], "model": "type\n\nThe 'Type' argument determines the timing of the payment within the period, which affects the interest calculation logic."}, {"ask": "To display the full name of the month (e.g., 'October') based on a date in cell B7, the correct Excel formula is =TEXT(B7, \"___\").", "rubric": [{"t": "The answer: mmmm", "judge": false, "k": ["MMMM"]}], "model": "mmmm\n\nThe code 'mmmm' in the TEXT function is the specific formatting instruction for a long-form month name."}], "notebook": "https://notebook.google.com/notebook/873a623f-584e-43aa-a1b5-4059031032cd", "root": "../index.html", "tab": "quiz", "sheet": ""}</script>
+<script>
+(function(){
+  if(window.lqSync) return;
+  const API = 'https://terp-plate.vercel.app/api/quiz-sync', MK = 'lqsync:meta';
+  const none = {first: Promise.resolve([]), now: async()=>[], listen(){}};
+  let key = '';
+  try{ key = localStorage.getItem('lq:key') || ''; }catch(e){}
+  const hm = /[#&]k=([A-Za-z0-9_-]{40,})/.exec(location.hash);
+  if(hm) key = hm[1];
+  if(!key || !window.crypto || !crypto.subtle){ window.lqSync = none; return; }
+
+  const skip = k => k.indexOf('lq:') !== 0 || k === 'lq:key' || k === 'lq:speech';
+  const rawSet = Storage.prototype.setItem;
+  let meta = {};
+  try{ meta = JSON.parse(localStorage.getItem(MK) || '{}') || {}; }catch(e){}
+  const putMeta = ()=>{ try{ rawSet.call(localStorage, MK, JSON.stringify(meta)); }catch(e){} };
+  const hash = t => { let h = 5381; for(let i=0;i<t.length;i++) h = ((h<<5) + h + t.charCodeAt(i)) | 0; return h; };
+  const isState = k => /^lq:[^:]+$/.test(k) && k !== 'lq:hub';
+  function weight(s){
+    return Object.keys(s.answers||{}).length + Object.keys(s.pass2||{}).length
+         + Object.keys(s.skipped||{}).length + Object.keys(s.starred||{}).length
+         + Object.keys(s.unsure||{}).length + 1000 * (s.history||[]).length + (s.done ? 500 : 0);
+  }
+  // '' = nothing worth sending
+  function sig(k, v){
+    if(isState(k)){
+      try{ const s = JSON.parse(v);
+        if(!s || typeof s !== 'object') return '';
+        if(!weight(s) && !s.only && !s.tagf) return '';
+        const c = Object.assign({}, s); delete c.ms; delete c.qms; delete c.meta; delete c.hintOpen;
+        return JSON.stringify(c);
+      }catch(e){ return ''; }
+    }
+    return (v && v !== '{}' && v !== '[]' && v !== '{"defs":[],"q":{}}') ? v : '';
+  }
+  let frozen = false, applying = false, timer = null, busy = false;
+  function mark(k, v){
+    if(skip(k)) return;
+    const g = sig(k, v), h = hash(g), m = meta[k] || (meta[k] = {t:0});
+    if(m.h === h) return;
+    m.h = h;
+    if(g){ m.t = Date.now(); m.d = 1; clearTimeout(timer); timer = setTimeout(run, 1500); }
+    putMeta();
+  }
+  Storage.prototype.setItem = function(k, v){
+    if(this === localStorage && frozen && String(k).indexOf('lq:') === 0) return;
+    rawSet.call(this, k, v);
+    if(this === localStorage && !applying){ try{ mark(String(k), String(v)); }catch(e){} }
+  };
+  // What was already here before sync existed: age unknown, so it is stamped low, and a real
+  // attempt outranks a thinner one by how much is in it.
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(skip(k) || meta[k]) continue;
+      const v = localStorage.getItem(k), g = sig(k, v);
+      meta[k] = {t: 0, h: hash(g)};
+      if(g){ let w = 1; if(isState(k)){ try{ w = 1 + weight(JSON.parse(v)); }catch(e){} }
+             meta[k].t = w; meta[k].d = 1; }
+    }
+    putMeta();
+  }catch(e){}
+
+  const enc = new TextEncoder(), dec = new TextDecoder();
+  const toB = s => { s = s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length % 4) s += '=';
+                     return Uint8Array.from(atob(s), c => c.charCodeAt(0)); };
+  const fromB = u => { let t = ''; for(let i=0;i<u.length;i+=8192) t += String.fromCharCode.apply(null, u.subarray(i, i+8192));
+                       return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+  const hex = b => Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,'0')).join('');
+  let ck = null, bucket = '';
+  const ready = (async()=>{
+    ck = await crypto.subtle.importKey('raw', toB(key), 'AES-GCM', false, ['encrypt','decrypt']);
+    bucket = hex(await crypto.subtle.digest('SHA-256', enc.encode('lq-sync:' + key))).slice(0, 32);
+  })();
+  const kid = async k => hex(await crypto.subtle.digest('SHA-256', enc.encode(bucket + '|' + k))).slice(0, 32);
+  async function seal(o){
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv}, ck, enc.encode(JSON.stringify(o)));
+    return fromB(iv) + '.' + fromB(new Uint8Array(ct));
+  }
+  async function unseal(t){
+    const p = t.split('.');
+    return JSON.parse(dec.decode(await crypto.subtle.decrypt({name:'AES-GCM', iv:toB(p[0])}, ck, toB(p[1]))));
+  }
+
+  function pageId(){
+    const el = document.getElementById('quiz-data');
+    if(!el) return null;
+    try{ return JSON.parse(el.textContent).id; }catch(e){ return null; }
+  }
+  async function run(){
+    if(busy || frozen) return [];
+    busy = true;
+    const changed = [];
+    try{
+      await ready;
+      const have = {}, puts = [], sent = {};
+      for(const k of Object.keys(meta)){
+        const m = meta[k];
+        if(!m.id) m.id = await kid(k);
+        have[m.id] = m.t || 0;
+        if(m.d){
+          const v = localStorage.getItem(k);
+          if(v === null){ m.d = 0; continue; }
+          puts.push({k: m.id, v: await seal({k, v}), ts: m.t});
+          sent[k] = m.t;
+        }
+      }
+      const r = await fetch(API, {method:'POST', headers:{'content-type':'text/plain'},
+                                  body: JSON.stringify({bucket, have, puts})});
+      if(!r.ok) throw new Error('sync ' + r.status);
+      const j = await r.json();
+      for(const k in sent) if(meta[k].t === sent[k]) meta[k].d = 0;
+      for(const row of j.rows || []){
+        let o; try{ o = await unseal(row.v); }catch(e){ continue; }
+        if(!o || skip(o.k)) continue;
+        const m = meta[o.k] || (meta[o.k] = {t:0});
+        if((m.t || 0) >= row.ts) continue;
+        applying = true;
+        try{ rawSet.call(localStorage, o.k, o.v); }catch(e){}
+        applying = false;
+        m.t = row.ts; m.d = 0; m.h = hash(sig(o.k, o.v)); m.id = row.k;
+        changed.push(o.k);
+      }
+      putMeta();
+    }catch(e){}
+    busy = false;
+    if(changed.length && window.lqSync.live){
+      const id = pageId();
+      const mine = id ? changed.some(k => k === 'lq:' + id || k.indexOf('lq:' + id + ':') === 0)
+                      : !!document.getElementById('manifest');
+      if(mine){ frozen = true; location.reload(); }
+    }
+    return changed;
+  }
+  function wake(){ if(document.visibilityState !== 'hidden') run(); }
+  function leave(){ if(document.visibilityState === 'hidden') run(); }
+  function listen(){
+    document.removeEventListener('visibilitychange', wake); document.addEventListener('visibilitychange', wake);
+    document.removeEventListener('visibilitychange', leave); document.addEventListener('visibilitychange', leave);
+    removeEventListener('focus', wake); addEventListener('focus', wake);
+  }
+  // `live` = this page should reload itself when its own quiz arrives newer. The locked shell
+  // turns it on only after it has drawn the page.
+  window.lqSync = {first: null, now: run, listen, live: true};
+  listen();
+  setInterval(wake, 20000);
+  window.lqSync.first = run();
+})();
+</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -998,10 +1174,44 @@ function save(){
    the sitting's subchapters into this one function is what makes a half-paper behave exactly
    like a whole one — one direction, one end card, one second pass — with no branch anywhere
    downstream. `only: null` (not chosen, or a page built without parts) filters nothing. */
+/* ---- TAGS (10-12, his ask) ------------------------------------------------------------
+   *"a text box at first, but it functions like a Notion tag property … once I press enter it
+   creates a tag and that tag stays for this exam and only for this exam."* Its own key, like
+   the research box, so a Retake and a rebuild keep them. `defs` is the order he made them in;
+   a tag no question carries any more is dropped from it. Off unless the page was built with
+   `tags`, so every page built before this is what it was. */
+const TKEY = KEY + ':tags';
+let T = (function(){
+  try{ const t = JSON.parse(localStorage.getItem(TKEY) || '{}') || {};
+       return {defs: t.defs || [], q: t.q || {}}; }
+  catch(e){ return {defs:[], q:{}}; } })();
+function tput(){ try{ localStorage.setItem(TKEY, JSON.stringify(T)); }catch(e){} }
+function tagsOf(i){ return T.q[qk(i)] || []; }
+function hasTag(i, name){ return tagsOf(i).indexOf(name) >= 0; }
+function tagAdd(i, raw){
+  const name = String(raw).trim().replace(/\s+/g, ' ');
+  if(!name) return;
+  const known = T.defs.find(d => d.toLowerCase() === name.toLowerCase()) || name;
+  if(T.defs.indexOf(known) < 0) T.defs.push(known);
+  const l = T.q[qk(i)] || (T.q[qk(i)] = []);
+  if(l.indexOf(known) < 0) l.push(known);
+  tput();
+}
+function tagDrop(i, name){
+  const id = qk(i);
+  T.q[id] = (T.q[id] || []).filter(x => x !== name);
+  if(!T.q[id].length) delete T.q[id];
+  if(!Object.keys(T.q).some(k => T.q[k].indexOf(name) >= 0)) T.defs = T.defs.filter(d => d !== name);
+  tput();
+}
+
 function active(s){
-  const only = D.parts ? (s.only || null) : null;
+  // A TAG RUN ("test only these") rides here for the same reason the section filter does.
+  const tf = D.tags ? (s.tagf || null) : null;
+  const only = (D.parts && !tf) ? (s.only || null) : null;
   return D.questions.map((_,i)=>i).filter(i => onPaper(s, i)
-    && (!only || only.indexOf(D.questions[i].sec) >= 0));
+    && (!only || only.indexOf(D.questions[i].sec) >= 0)
+    && (!tf || hasTag(i, tf)));
 }
 /* ---- THE RESERVES (08-16) ------------------------------------------------------------
    His ask: *"if 1 question is skipped, another one is replaced in that section about it… you
@@ -1562,7 +1772,7 @@ function draw(){
   // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
   // the rest of the sitting, so nothing about answering, going back or the second pass has
   // to know the picker exists.
-  if(sectioned() && !S.only) return picker();
+  if(sectioned() && !S.only && !S.tagf) return picker();
   const act = runList();
   if(!act.length) return end();
   if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
@@ -1571,6 +1781,61 @@ function draw(){
 
 /* Pure markup, no DOM writes and no state changes — so the same builder can render the
    question and be measured off-screen for the centring reserve. */
+/* The tag box above the question. Chips for what this question carries, then the box: type and
+   Enter makes the tag (or reuses one spelled the same), the ones he already made show under it
+   to click, Backspace on an empty box takes the last one off, Esc leaves. */
+function tagRowInner(i){
+  const mine = tagsOf(i);
+  let h = '';
+  mine.forEach((n,k)=>{ h += '<span class="tchip">' + esc(n) + '<button class="tx" data-drop="' + k
+                           + '" tabindex="-1" aria-label="Remove tag">×</button></span>'; });
+  return h + '<input id="tagin" class="tagin" type="text" autocomplete="off" spellcheck="false" '
+           + 'placeholder="' + (mine.length ? 'Add a tag' : 'Tag this question  ( l )') + '">'
+           + '<div class="tsug hide" id="tsug"></div>';
+}
+function paintSug(i){
+  const inp = $('#tagin'), box = $('#tsug');
+  if(!inp || !box) return;
+  const raw = inp.value.trim(), v = raw.toLowerCase(), mine = tagsOf(i);
+  let h = T.defs.map((d,n)=>({d,n}))
+    .filter(x => mine.indexOf(x.d) < 0 && (!v || x.d.toLowerCase().indexOf(v) >= 0))
+    .map(x => '<button class="tchip pick" data-n="' + x.n + '" tabindex="-1">' + esc(x.d) + '</button>')
+    .join('');
+  if(v && !T.defs.some(d => d.toLowerCase() === v))
+    h += '<span class="tnew">Enter makes “' + esc(raw) + '”</span>';
+  box.innerHTML = h;
+  box.classList.toggle('hide', !h || document.activeElement !== inp);
+  // mousedown, not click: the box must not blur (and hide these) before the pick lands
+  box.querySelectorAll('.pick').forEach(b => { b.onmousedown = e => {
+    e.preventDefault(); tagAdd(i, T.defs[+b.dataset.n]); redrawTags(i, true); }; });
+}
+function redrawTags(i, focus){
+  const row = $('#tagrow');
+  if(!row) return;
+  row.innerHTML = tagRowInner(i);
+  wireTags(i);
+  if(focus) $('#tagin').focus();
+}
+function wireTags(i){
+  const row = $('#tagrow'), inp = $('#tagin');
+  if(!row || !inp) return;
+  row.querySelectorAll('.tx').forEach(b => b.onclick = ()=>{
+    tagDrop(i, tagsOf(i)[+b.dataset.drop]); redrawTags(i, false); });
+  inp.onfocus = ()=> paintSug(i);
+  inp.oninput = ()=> paintSug(i);
+  inp.onblur = ()=> { const b = $('#tsug'); if(b) b.classList.add('hide'); };
+  inp.onkeydown = e => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      if(!inp.value.trim()){ inp.blur(); return; }
+      tagAdd(i, inp.value); redrawTags(i, true);
+    } else if(e.key === 'Escape'){ inp.value = ''; inp.blur(); }
+    else if(e.key === 'Backspace' && !inp.value && tagsOf(i).length){
+      tagDrop(i, tagsOf(i).slice(-1)[0]); redrawTags(i, true);
+    }
+  };
+}
+
 function buildQ(i, picked, fresh, en){
   const q = D.questions[i];
   const answered = picked !== undefined;
@@ -1582,10 +1847,12 @@ function buildQ(i, picked, fresh, en){
   // The counter sits top-left above the question, the way the notebook does it, rather than
   // up in the bar — it belongs with the thing it counts. On a second pass it counts the
   // second pass, so four wrong answers read as "1 / 4" and not as a broken 16.
-  let h = '<div class="qhead' + en + '"><div class="qcol">'
+  let h = (D.tags ? '<div class="tagrow no-read-aloud" id="tagrow">' + tagRowInner(i) + '</div>' : '')
+        + '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta no-read-aloud"><span class="num">' + (pos+1) + ' / '
         + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        + (D.tags && S.tagf ? '<span class="dot">·</span><span>only ' + esc(S.tagf) + '</span>' : '')
         // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
         // 10 reads as the paper having lost his place, which is how he read it.
         + (recycling && S.phase!==2
@@ -1781,6 +2048,7 @@ function question(fresh){
   $('#star').onclick = ()=> toggleStar(i);
   $('#qmark').onclick = ()=> toggleUnsure(i);
   $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
+  if(D.tags) wireTags(i);
 
   // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
   // touches it — and nothing above the options ever changes height.
@@ -2271,19 +2539,32 @@ function openMenu(){
   m.className = 'menu';
   // The clock's only other way in. `w` is not written anywhere else on the page, and a key
   // nothing announces is a key he has to remember he asked for.
-  m.innerHTML = '<button id="skipq">Skip this question</button>'
+  m.innerHTML = '<button id="skipq">Skip this question  ( x )</button>'
               // The reader's own two entries. Space and `v` are written nowhere else on the
               // page, and a key nothing announces is a key he has to remember he asked for.
               + '<button id="readtog">' + (sayOn ? 'Stop' : 'Start') + ' read-aloud  ( space )</button>'
               + '<button id="voiceset">Voice, speed and pauses…</button>'
-              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>';
+              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>'
+              // EVERY KEY, WRITTEN DOWN ONCE (10-12). He could not find Redo or remember its key.
+              + '<div class="keys"><kbd>x</kbd><span>Skip</span><kbd>u</kbd><span>Redo your answer</span>'
+              + '<kbd>h</kbd><span>Hint, when the question has one</span>'
+              + '<kbd>s</kbd><span>Star</span><kbd>/</kbd><span>No idea</span>'
+              + '<kbd>r</kbd><span>Research</span><kbd>f</kbd><span>Fix this question</span>'
+              + '<kbd>t</kbd><span>Reflection</span>'
+              + (D.tags ? '<kbd>l</kbd><span>Tag</span>' : '')
+              + '<kbd>↵</kbd><span>Next</span><kbd>←</kbd><span>Back</span></div>';
   host.appendChild(m);
   m.querySelector('#clocktog').onclick = ()=>{ toggleClock(); closeMenu(); };
   m.querySelector('#readtog').onclick = ()=>{ closeMenu(); sayOn ? sayOff() : sayToggle(); };
   m.querySelector('#voiceset').onclick = ()=>{ closeMenu(); openVset(); };
-  m.querySelector('#skipq').onclick = ()=>{
+  m.querySelector('#skipq').onclick = ()=>{ closeMenu(); skipQuestion(); };
+  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
+}
+/* One path for skipping, whether it came from the menu or from `x` (10-12, his ask: a key
+   *"rather than going into the top bar and then pressing skip"*). */
+function skipQuestion(){
     const list = runList(), pos = list.indexOf(S.i);
-    if(list.length <= 1) return closeMenu();        // never skip the last one standing
+    if(list.length <= 1) return;                    // never skip the last one standing
     const sec = bucketOf(S.i);
     S.skipped[qk(S.i)] = true;
     delete S.answers[qk(S.i)];
@@ -2297,7 +2578,6 @@ function openMenu(){
     // have handed him an end card with a question still owed.
     const filled = promoteReserve(sec) >= 0;
     const wasLast = !filled && pos === list.length - 1;
-    closeMenu();
     syncTabs();
     if(wasLast){ finish(); return; }
     // After the removal the list has shrunk, so the item now AT `pos` is the one that
@@ -2306,8 +2586,6 @@ function openMenu(){
     S.hintOpen = false;
     lastShown = -1;
     save(); question(); window.scrollTo(0,0);
-  };
-  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
 }
 function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(); }
 
@@ -2564,6 +2842,39 @@ function momentum(){
   return h + '</div>';
 }
 
+/* THE TAGS ON THE END CARD: how each group went, and a way to sit one group alone. A tag run
+   is a fresh attempt on only those questions (the finished one goes into history first, as a
+   Retake does); Retake, or "every question" here, goes back to the whole paper. Not offered
+   on a sectioned paper, whose picker already owns which questions a sitting holds. */
+function tagTable(){
+  if(!D.tags || !T.defs.length) return '';
+  const all = D.questions.map((_,i)=>i).filter(i => onPaper(S, i));
+  let h = '';
+  T.defs.forEach((d,n)=>{
+    const qs = all.filter(i => hasTag(i, d));
+    if(!qs.length) return;
+    const sat = qs.filter(i => ans(i) !== undefined || ans2(i) !== undefined);
+    const ok = sat.filter(i => finalRight(i)).length;
+    h += '<div class="tagline"><span class="tchip">' + esc(d) + '</span><span class="tn">'
+       + (sat.length ? ok + ' / ' + sat.length + ' right' : qs.length + ' question' + (qs.length>1?'s':''))
+       + '</span>' + (D.parts ? '' : '<button class="link" data-tagrun="' + n + '">Test only these</button>')
+       + '</div>';
+  });
+  if(!h && !S.tagf) return '';
+  if(S.tagf) h += '<p class="note">This run was only “' + esc(S.tagf) + '”. '
+                + '<button class="link" id="tagall">Back to every question</button></p>';
+  return '<div class="tagtable"><h3>By tag</h3>' + h + '</div>';
+}
+function startRun(tag){
+  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length, ms:S.ms,
+                             tag:S.tagf || undefined});
+  const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
+  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  if(tag) S.tagf = tag;
+  pickSel = null; lastShown = -1;
+  save(); syncTabs(); renderScore(); draw(); window.scrollTo(0,0);
+}
+
 function end(){
   timeOn(null);
   const act = active(S), n = score(S), t = act.length;
@@ -2645,6 +2956,7 @@ function end(){
             + 'every one is done; sitting one again replaces its score.</p>';
   }
 
+  h += tagTable();
   const nskip = Object.keys(S.skipped||{}).length;
   if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
               + '<button class="link" id="unskip">put them back</button></p>';
@@ -2655,6 +2967,10 @@ function end(){
   $('#quizview').innerHTML = h;
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  document.querySelectorAll('[data-tagrun]').forEach(b =>
+    b.onclick = ()=> startRun(T.defs[+b.dataset.tagrun]));
+  const tall = $('#tagall');
+  if(tall) tall.onclick = ()=> startRun(null);
   const ma = $('#momall');
   if(ma) ma.onclick = ()=>{ momAll = true; end(); };
   const m = $('#more');
@@ -2691,6 +3007,7 @@ function itemHTML(i, n){
   const q = D.questions[i], first = ans(i), second = ans2(i);
   let h = '<div class="item">';
   if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
+  if(D.tags) tagsOf(i).forEach(t => { h += '<span class="tchip sm">'+esc(t)+'</span>'; });
   h += '<p class="qq">'+(n===undefined?'':(n+1)+'. ')+esc(q.q)+'</p>'
      + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
   if(!firstRight(i)){
@@ -2707,12 +3024,26 @@ function itemHTML(i, n){
   return h + '</div>';
 }
 
+let revByTag = false;
 function review(){
   timeOn(null);
+  const act = active(S), canSort = D.tags && T.defs.length;
   let h = '<div class="rev"><h3>Every question</h3>';
-  active(S).forEach((i,n)=>{ h += itemHTML(i, n); });
+  if(canSort) h += '<p class="note" style="margin:0 0 6px"><button class="link" id="revsort">'
+                 + (revByTag ? 'Sort in order' : 'Sort by tag') + '</button></p>';
+  if(canSort && revByTag){
+    // a question with two tags is listed under both; the untagged ones come last
+    T.defs.concat(['']).forEach(d=>{
+      const qs = act.filter(i => d ? hasTag(i, d) : !tagsOf(i).length);
+      if(!qs.length) return;
+      h += '<h3 class="tgroup">' + (d ? esc(d) : 'No tag') + ' · ' + qs.length + '</h3>';
+      qs.forEach(i => { h += itemHTML(i, act.indexOf(i)); });
+    });
+  } else act.forEach((i,n)=>{ h += itemHTML(i, n); });
   h += '</div>';
   $('#quizview').innerHTML = h;
+  const rs = $('#revsort');
+  if(rs) rs.onclick = ()=>{ revByTag = !revByTag; review(); };
   $('#band').classList.add('off');
   showResearch(false);
   $('#footer').classList.remove('hide');
@@ -4019,6 +4350,10 @@ document.addEventListener('keydown', e=>{
   // `w` FOR WATCH — the clock in the bar, off by default. Past G like every other command
   // key here, so it can never be an option letter.
   if(e.key === 'w' || e.key === 'W'){ toggleClock(); return; }
+  // `x` SKIPS, `l` (label) PUTS THE CARET IN THE TAG BOX. Both past G, so never an option key.
+  if(e.key === 'x' || e.key === 'X'){ e.preventDefault(); skipQuestion(); return; }
+  if((e.key === 'l' || e.key === 'L') && D.tags){
+    const ti = $('#tagin'); if(ti){ e.preventDefault(); ti.focus(); } return; }
   if(e.key === '/' || e.key === '?'){ e.preventDefault(); toggleUnsure(S.i); return; }
   /* THE KEY NAMES A POSITION ON SCREEN, not an option. `2` and `B` mean the second card he
      can see, which is the only thing either of them could mean to him — after a Redo has

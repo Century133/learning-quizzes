@@ -326,6 +326,32 @@ kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid
 .qmark:hover{background:var(--surface);color:var(--text)}
 .qmark.on{color:var(--text);border-color:var(--accent);background:var(--surface-hi)}
 
+/* ---- tags (10-12): his own labels on a question, kept per quiz ---- */
+.tagrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.tchip{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:.78rem;
+ color:var(--text);background:var(--surface-hi);border:1px solid var(--line);
+ border-radius:6px;padding:2px 8px;line-height:1.5}
+.tchip.sm{font-size:.7rem;margin:0 6px 9px 0}
+button.tchip{cursor:pointer}
+button.tchip:hover{border-color:var(--muted)}
+.tx{background:none;border:0;color:var(--muted);font:inherit;padding:0;cursor:pointer;line-height:1}
+.tx:hover{color:var(--text)}
+.tagin{flex:1 1 140px;min-width:120px;background:none;border:0;outline:0;color:var(--text);
+ font:inherit;font-size:.82rem;padding:3px 2px}
+.tagin::placeholder{color:var(--muted);opacity:.75}
+.tsug{flex:1 0 100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tnew{color:var(--muted);font-size:.76rem}
+.tagtable{margin:26px 0 0;text-align:left}
+.tagtable h3{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+ font-weight:500;margin:0 0 6px}
+.tagline{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line);
+ font-size:.88rem}
+.tagline .tn{flex:1;color:var(--muted);font-variant-numeric:tabular-nums}
+.tgroup{margin-top:30px}
+.menu .keys{border-top:1px solid var(--line);margin:5px 0 0;padding:8px 10px 4px;
+ display:grid;grid-template-columns:auto 1fr;gap:5px 10px;font-size:.78rem;color:var(--muted);
+ align-items:center}
+
 /* ---- the ⋮ menu ---- */
 .more{position:relative;flex:0 0 auto}
 .dots{background:none;border:0;color:var(--muted);font-size:1.15rem;line-height:1;
@@ -452,6 +478,44 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .ptotal{margin:14px 0 0;color:var(--muted);font-size:.88rem}
 .ptotal b{color:var(--text);font-variant-numeric:tabular-nums;font-size:1.05rem;
  font-weight:600;margin-right:8px}
+
+/* ---- MOMENTUM (08-21) ----
+   Same furniture as every other end-card table — same heading, same hairline rows, same
+   rails — because it is one more breakdown of the same sitting and must not read as a
+   dashboard bolted on. The only new shape is the strip, and it is deliberately small: it is
+   there to be glanced at, not measured off.
+
+   IT READS IN GRAYSCALE. A wrong bar is HATCHED as well as coloured, exactly like the wrong
+   half of the score chart above it, so the split survives a screenshot with the colour gone
+   and survives him printing it. */
+.mom .strip{display:flex;align-items:flex-end;gap:2px;height:56px;position:relative;
+ margin:0 0 5px;padding-top:2px}
+.mom .strip .sb{flex:1 1 0;min-width:2px;border-radius:2px 2px 0 0;background:var(--text)}
+.mom .strip .sb.r{background:var(--right)}
+.mom .strip .sb.w{background:var(--wrong);
+ background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,
+ rgba(0,0,0,.45) 3px,rgba(0,0,0,.45) 6px)}
+/* The median, drawn across the strip rather than written under it — the whole question the
+   strip answers is "which of these are the long ones", and a line answers it at a glance. */
+.mom .strip .med{position:absolute;left:0;right:0;height:0;border-top:1px dashed var(--muted);
+ opacity:.55;pointer-events:none}
+.momax{display:flex;justify-content:space-between;color:var(--muted);font-size:.72rem;
+ letter-spacing:.04em;margin:0 0 16px}
+.mline{color:var(--muted);font-size:.88rem;margin:0 0 18px}
+.mline b{color:var(--text);font-variant-numeric:tabular-nums;font-weight:500}
+.mrow{display:grid;grid-template-columns:1.1em 1.7em 1fr auto;gap:5px 10px;align-items:center;
+ padding:8px 0;border-top:1px solid var(--line);font-size:.9rem}
+.mrow .mg{color:var(--muted);font-size:.85rem;user-select:none;-webkit-user-select:none}
+.mrow .mn{color:var(--muted);font-size:.8rem;font-variant-numeric:tabular-nums;text-align:right}
+.mrow .mlab{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mrow .mt{color:var(--muted);font-size:.86rem;font-variant-numeric:tabular-nums}
+/* The rail is `.tbar`, borrowed whole from the tables above. `i.w` is the only addition:
+   time on a question he got wrong gets the same hatch as everything else wrong on the page. */
+.mrow .tbar i.w{background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,
+ rgba(0,0,0,.45) 3px,rgba(0,0,0,.45) 6px)}
+.mmore{margin:12px 0 0;font-size:.85rem}
+.mgoal{margin:16px 0 0;color:var(--muted);font-size:.88rem;max-width:52ch}
+.mgoal b{color:var(--text);font-variant-numeric:tabular-nums;font-weight:500}
 
 /* ---- THE SUBCHAPTER PICKER (08-16) ----
    Deliberately the same furniture as the end card — same heading treatment, same rails, same
@@ -945,7 +1009,157 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "ap2e-10-4", "title": "10.4 Nervous System Control of Muscle Tension", "subtitle": "Chapter 10 · Muscle Tissue", "book": "A&P 2e", "hash": "767adc62fe53b7ee", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "A person performs a bicep curl, moving a hand weight toward the shoulder. This action is compared to the baseline of a resting arm. How do the muscle length and the joint angle change during this movement?", "options": ["Muscle lengthens; joint angle increases", "Muscle shortens; joint angle increases", "Muscle lengthens; joint angle decreases", "Muscle shortens; joint angle decreases"], "rationales": ["This combination describes an eccentric contraction, such as lowering the weight, rather than the concentric contraction used to lift it.", "While the muscle does shorten during the upward phase of a curl, a shortening biceps would decrease the joint angle, not increase it.", "Lengthening under tension occurs during eccentric contractions, but moving the weight toward the shoulder requires muscle shortening.", "In a concentric isotonic contraction, the muscle shortens to move the load, which in this case decreases the angle of the elbow joint."], "correct": 3, "hint": "Think about how the muscle length and the joint angle behave during the upward phase of a curl.", "topic": "Concentric contractions", "sec": "", "src": "", "link": "", "qid": "cd1e963d20"}, {"q": "A person attempts to lift a 500lb stone that remains stationary on the ground. This effort is compared to the resting state before the attempt. What describes the state of the sarcomeres and the joint angle during this effort?", "options": ["Sarcomeres shorten; joint angle remains constant", "Sarcomeres stay the same length; joint angle changes", "Sarcomeres shorten; joint angle changes", "Sarcomeres stay the same length; joint angle remains constant"], "rationales": ["Isometric contractions involve sarcomere shortening and tension generation, but the joint angle does not change because the load is too heavy to move.", "A change in joint angle requires the muscle to change length, which is driven by the shortening of its internal sarcomeres.", "While sarcomeres do shorten, a change in joint angle would define an isotonic contraction rather than an isometric one.", "Tension generation requires sarcomere activation and shortening to a point, even if the overall muscle length and joint angle do not change."], "correct": 0, "hint": "Consider if the sarcomeres can still shorten even if the external load prevents the joint from moving.", "topic": "Isometric contractions", "sec": "", "src": "", "link": "", "qid": "20814d2009"}, {"q": "Contrast the motor units found in the extraocular muscles of the eye with those found in the large muscles of the thigh. Which characteristic defines the motor units in the eye muscles compared to those in the thigh?", "options": ["Large motor units; fine motor control", "Large motor units; gross motor control", "Small motor units; gross motor control", "Small motor units; fine motor control"], "rationales": ["Large motor units, where one neuron branches to thousands of fibers, are incapable of the subtle, fine-tuned movements required by the eyes.", "While large motor units provide gross control, they are characteristic of power-generating muscles like the thigh, not the precision-oriented eye muscles.", "Small motor units are specialized for precision and fine adjustments rather than the simple, powerful movements associated with gross control.", "Small motor units, where one neuron supplies only a few fibers, allow for the exquisite and precise control needed for eye movements."], "correct": 3, "hint": "Contrast the level of precision needed for eye movements against the power needed for leg movements.", "topic": "Motor unit size", "sec": "", "src": "", "link": "", "qid": "09329eaf92"}, {"q": "A person transitions from picking up a single feather to lifting a heavy boulder using the same arm muscle. Compared to the feather, what is the nature of the motor units recruited to lift the boulder?", "options": ["High-threshold neurons; large muscle fibers", "High-threshold neurons; small muscle fibers", "Low-threshold neurons; small muscle fibers", "Low-threshold neurons; large muscle fibers"], "rationales": ["Recruitment involves first activating small, low-threshold units and then enlisting larger, higher-threshold units with bigger fibers for greater strength.", "Higher-threshold neurons are typically connected to larger muscle fibers to produce the significant force needed for heavy loads.", "While these units are activated first, they produce minimal force and are insufficient on their own to lift a heavy boulder.", "Low-threshold neurons are the most excitable and fire first, but they are generally connected to the smallest muscle fibers."], "correct": 0, "hint": "Determine which threshold of neurons and what size of fibers are engaged when force requirements increase.", "topic": "Fiber recruitment", "sec": "", "src": "", "link": "", "qid": "43723f8189"}, {"q": "A patient suffers damage to the cerebellum in the central nervous system. Compared to a healthy individual, how are their skeletal muscles and reflexes affected?", "options": ["Flaccid appearance; weak reflexes", "Flaccid appearance; excessive reflexes", "Rigid appearance; excessive reflexes", "Rigid appearance; weak reflexes"], "rationales": ["Hypotonia, resulting from CNS damage like that to the cerebellum, is characterized by a flaccid muscle appearance and functional impairments like weak reflexes.", "A flaccid appearance is associated with low muscle tone and weak reflexes, whereas excessive reflexes are a hallmark of hypertonia.", "This combination describes hypertonia, which usually results from damage to upper motor neurons rather than the cerebellum damage that causes hypotonia.", "Muscle rigidity is a sign of hypertonia and is typically accompanied by hyperreflexia rather than weak reflex responses."], "correct": 0, "hint": "Identify the relationship between muscle flaccidity and the intensity of reflex responses.", "topic": "Hypotonia characteristics", "sec": "", "src": "", "link": "", "qid": "23b7731db8"}, {"q": "A patient exhibits damage to the upper motor neurons in the central nervous system. Compared to the baseline of a healthy person, what clinical signs does this patient present?", "options": ["Reduced muscle tone; weak reflexes", "Excessive muscle tone; hyperreflexia", "Excessive muscle tone; weak reflexes", "Reduced muscle tone; hyperreflexia"], "rationales": ["Reduced tone and weak reflexes are characteristic of hypotonia, which results from different types of CNS damage or loss of innervation.", "Hypertonia involves excessive muscle tone and hyperreflexia, often following damage to upper motor neurons in the CNS.", "Increased muscle tone in hypertonia is almost always paired with exaggerated reflex responses, not weak ones.", "Hyperreflexia is a clinical indicator of excessive neural influence on muscle tone, which does not occur when muscle tone is reduced."], "correct": 1, "hint": "Consider how excessive tone correlates with the magnitude of reflex actions.", "topic": "Hypertonia characteristics", "sec": "", "src": "", "link": "", "qid": "9d078a5575"}, {"q": "When a muscle contracts against a load that does not move, how is the internal force produced by the shortening sarcomeres categorized?", "options": ["Isotonic force", "Muscle load", "Passive stretch", "Muscle tension"], "rationales": ["Isotonic refers to a contraction where the length of the muscle changes; it is a category of contraction rather than the name of the force.", "The load is the external object or resistance that the muscle is contracting against, not the force the muscle itself generates.", "Passive stretch refers to the lengthening of a muscle by an external force, which is the opposite of the active force generated during contraction.", "Muscle tension is the force generated by the contraction of muscle fibers, regardless of whether the load actually moves."], "correct": 3, "hint": "Distinguish between the force generated internally by the muscle and the external resistance of the object.", "topic": "Muscle tension", "sec": "", "src": "", "link": "", "qid": "afc931011b"}, {"q": "A person lowers a hand weight in a slow and controlled manner. Compared to the upward phase of the movement, how is the nervous system modulating the muscle?", "options": ["Increasing the activation of cross-bridges", "Eliminating all cross-bridge formation", "Decreasing the activation of cross-bridges", "Maintaining constant cross-bridge numbers"], "rationales": ["Increasing cross-bridge activation would generate more tension and cause the muscle to shorten further in a concentric contraction.", "If all cross-bridges were eliminated, there would be no tension, and the weight would fall rapidly due to gravity without control.", "In an eccentric contraction, muscle tension diminishes as the nervous system decreases cross-bridge activation, allowing the muscle to lengthen.", "To allow the muscle to lengthen while still maintaining tension for a controlled descent, the number of active cross-bridges must decrease."], "correct": 2, "hint": "Focus on how the nervous system adjusts the number of active cross-bridges to allow controlled lengthening.", "topic": "Eccentric contractions", "sec": "", "src": "", "link": "", "qid": "b0149d4c6c"}, {"q": "A sarcomere is stretched to 150 percent of its resting length. Compared to its state at 100 percent length, what is the resulting effect on tension?", "options": ["Tension remains constant as long as ATP is present", "Tension drops to zero because the sarcolemma tears", "Tension decreases due to limited filament overlap", "Tension increases due to higher elastic potential"], "rationales": ["Tension is not solely dependent on energy; it requires the physical proximity of actin and myosin, which is lost when the sarcomere is overstretched.", "While extreme stretching is opposed by connective tissue, a sarcomere at 150 percent length simply loses the ability to form cross-bridges before tearing occurs.", "When stretched beyond 120 percent of resting length, thick and thin filaments do not overlap sufficiently, reducing the number of cross-bridges that can form.", "Active muscle tension depends on filament overlap; stretching the sarcomere too far physically prevents the biological machinery from generating force."], "correct": 2, "hint": "Recall how the physical overlap of thick and thin filaments changes when a muscle is pulled significantly.", "topic": "Sarcomere length", "sec": "", "src": "", "link": "", "qid": "99f79c95fb"}, {"q": "During the initial phase of a muscle twitch myogram, the tension has not yet begun to rise. Which event is occurring during this specific period?", "options": ["Pumping of Ca2+ ions back into the sarcoplasmic reticulum", "Shortening of sarcomeres toward peak tension", "Action potential propagation along the sarcolemma", "Binding of Ca2+ ions to troponin to move tropomyosin"], "rationales": ["Calcium ions are pumped back into the sarcoplasmic reticulum during the relaxation phase, which occurs after the peak tension has been reached.", "Sarcomere shortening defines the contraction phase, during which tension actively increases on the myogram.", "During the latent period, the action potential travels along the sarcolemma and Ca2+ ions are released, but physical contraction hasn't started.", "Binding to troponin and the subsequent shifting of tropomyosin are the active steps that initiate the contraction phase following the latent period."], "correct": 2, "hint": "Identify the initial electrochemical events that must occur before the physical shortening of the muscle begins.", "topic": "Muscle twitch phases", "sec": "", "src": "", "link": "", "qid": "6f2fdfb5ce"}, {"q": "A second stimulus is applied to a motor unit while a previous twitch is still occurring. What molecular change causes the resulting contraction to be stronger than the first?", "options": ["Troponin molecules bind more ATP", "Additional Ca2+ ions are released into the sarcoplasm", "Myosin heads increase their individual pulling speed", "The threshold of the motor neuron is lowered"], "rationales": ["Troponin binds to calcium to regulate contraction; it does not bind to ATP, which is used by the myosin heads for energy.", "Wave summation occurs because a second stimulus triggers more calcium release while the muscle is still activated by the first stimulus's calcium.", "The strength of the contraction increases due to the activation of more sarcomeres, not because the individual myosin heads pull faster.", "Wave summation is a mechanical response of the muscle fibers to stimulus frequency, not a change in the electrical properties of the neuron."], "correct": 1, "hint": "Look for the ion that accumulates in the sarcoplasm when stimuli are delivered in rapid succession.", "topic": "Wave summation", "sec": "", "src": "", "link": "", "qid": "f93a1211b5"}, {"q": "A muscle receives high-frequency stimulation that prevents any relaxation phase from occurring. Which term describes this continuous state of contraction?", "options": ["Incomplete tetanus", "Complete tetanus", "Treppe", "Wave summation"], "rationales": ["Incomplete tetanus involves very rapid contraction cycles that still retain a short, discernible relaxation phase for each cycle.", "Complete tetanus occurs when the stimulus frequency is so high that the relaxation phase disappears, resulting in a continuous, uninterrupted contraction.", "Treppe describes the gradual increase in contraction efficiency after a period of rest, often appearing like a set of stairs on a myogram.", "While wave summation is the process of adding twitch effects together, the specific state of continuous contraction is named complete tetanus."], "correct": 1, "hint": "Differentiate between a response with rapid contraction-relaxation cycles and one that is a single smooth contraction.", "topic": "Tetanus states", "sec": "", "src": "", "link": "", "qid": "d2dced126a"}, {"q": "A muscle has been dormant for an extended period and is then stimulated to contract repeatedly. How does the force of the initial contractions compare to those that occur later in the series?", "options": ["Initial contractions are about half as strong as later ones", "Initial contractions are identical in strength to later ones", "Initial contractions cause rapid fatigue", "Initial contractions are twice as strong as later ones"], "rationales": ["Treppe, or the staircase effect, describes how muscle contractions become more efficient and forceful after they have been dormant.", "If a muscle was dormant, the 'staircase effect' ensures that subsequent contractions will show a graded increase in force.", "Treppe is a process of increasing efficiency; fatigue is a different process that occurs after prolonged activity when energy is depleted.", "Contractions generally become stronger over the first few cycles after a period of rest, not weaker."], "correct": 0, "hint": "Determine how the initial lack of activity affects the efficiency of the first few contractions.", "topic": "Treppe effect", "sec": "", "src": "", "link": "", "qid": "3e434a602c"}, {"q": "A person is sitting still and not producing any movement. What mechanism allows their muscles to maintain joint stability without fatiguing?", "options": ["Passive resistance from connective tissues alone", "Cyclical activation of a few motor units at a time", "Continuous activation of all motor units at a low threshold", "Permanent cross-bridge formation in specialized fibers"], "rationales": ["While connective tissue provides support, muscle tone specifically refers to the active, low-level contraction of the muscle fibers.", "Muscle tone is maintained by the nervous system activating different motor units in a cyclical manner, allowing some units to rest while others are active.", "Activating all motor units continuously would quickly lead to energy depletion and complete muscle fatigue.", "Cross-bridges must cycle to produce tension; permanent cross-bridges would result in muscle rigidity rather than functional muscle tone."], "correct": 1, "hint": "Identify the strategy used by the nervous system to maintain tension without exhausting specific muscle cells.", "topic": "Muscle tone activation", "sec": "", "src": "", "link": "", "qid": "e745bf36fc"}], "hasSheet": true, "parts": false, "secTitles": {}, "reserve": 0, "frq": [], "notebook": "https://notebooklm.google.com/notebook/34f6d156-8b69-4746-81dd-42298ab2e3fc/artifact/7c801204-0d99-4750-93bb-885724ff6be2", "root": "../index.html", "tab": "quiz", "sheet": "## Concentric contractions\nConcentric contraction is a sub-type of isotonic movement where muscle length changes to shorten the muscle and move a load.\n\n### Key terms\n1. **Concentric contraction** - A sub-type of isotonic contraction where the muscle shortens to move a load as joint angles decrease.\n   1. 1. The biceps brachii contracting to lift a hand weight toward the body as the elbow angle decreases.\n2. **Isotonic contraction** - A muscle contraction where tension remains constant while the length of the muscle changes.\n\n## Isometric contractions\nIsometric contractions are characterized by the generation of muscle tension while the muscle length and joint angle remain static.\n\n### Key terms\n1. **Isometric contraction** - Muscle activity where tension increases and sarcomeres shorten, but the force cannot overcome the load resistance.\n   1. 1. Active maintenance of posture and joint stability.\n   2. 1. Holding the head in an upright, stationary position.\n   3. 1. Attempting to lift an immovable or excessively heavy weight.\n2. **Load** - The external resistance or object that a muscle must contract against to produce tension.\n\n## Motor unit size\nThe number of muscle fibers per motor neuron dictates the specific relationship between the level of precision and the force of contraction.\n\n### Key terms\n1. **Small motor unit** - An arrangement where a single motor neuron supplies a few muscle fibers to allow for exquisite motor control.\n   1. 1. Extraocular eye muscles where one neuron supplies approximately six fibers for rapid focusing.\n2. **Large motor unit** - An arrangement where a single motor neuron supplies thousands of muscle fibers to facilitate gross, powerful movements.\n   1. 1. Thigh or back muscles where a single motor neuron supplies thousands of fibers for knee extension or spinal stability.\n\n## Fiber recruitment\nThe nervous system increases contraction force by progressively enlisting motor units with different sizes and activation thresholds.\n\n### Key terms\n1. **Recruitment** - The process of increasing the number of active motor units to produce a progressively stronger muscle contraction.\n   1. 1. Lower-threshold motor neurons firing first to activate the smallest, most excitable muscle fibers.\n2. **Graded muscle response** - The modification of muscle tension through changes in stimulation frequency and the number of motor units recruited.\n\n## Hypotonia characteristics\nHypotonia presents as abnormally low muscle tone, resulting in a lack of joint stability and functional impairments.\n\n### Key terms\n1. **Hypotonia** - A condition of diminished muscle tone characterized by a flaccid appearance and weak reflexes.\n   1. 1. Damage to central nervous system structures such as the cerebellum or loss of innervation like poliomyelitis.\n2. **Flaccidity** - A physiological state where muscles are completely relaxed and lack normal resistance to passive stretch.\n\n## Hypertonia characteristics\nHypertonia is the presentation of excessive muscle tone and overactive reflexes usually caused by damage to the central nervous system.\n\n### Key terms\n1. **Hypertonia** - A condition of excessive muscle tone that can lead to muscle rigidity or spasticity.\n   1. 1. Damage to upper motor neurons in the central nervous system.\n2. **Hyperreflexia** - The presentation of excessive or overactive reflex responses associated with high muscle tone.\n3. **Muscle rigidity** - A form of hypertonia characterized by stiffness and resistance to movement, such as in Parkinson's disease.\n4. **Spasticity** - A phasic change in muscle tone where a limb snaps back from passive stretching, often following a stroke.\n\n## Muscle tension\nMuscle tension is the definition of force generation resulting from the shortening of sarcomeres within skeletal muscle fibers.\n\n### Key terms\n1. **Muscle tension** - The force produced by the contraction of a muscle or the active shortening of its constituent sarcomeres.\n   1. 1. Shortening of sarcomeres in skeletal muscle fibers as myosin heads pull actin filaments toward the center.\n2. **Load** - The object or resistance that muscle tension must overcome to move or change muscle length.\n\n## Eccentric contractions\nEccentric contraction is a sub-type of isotonic movement where muscle tension is maintained as the muscle elongates.\n\n### Key terms\n1. **Eccentric contraction** - A contraction where muscle tension diminishes and the muscle lengthens to control the movement of a load.\n   1. 1. Lowering a hand weight in a slow and controlled manner as the elbow joint angle increases.\n\n## Sarcomere length\nThe length-tension relationship dictates how the degree of filament overlap within a sarcomere determines the force of contraction.\n\n### Key terms\n1. **Length-tension relationship** - The principle that the resting length of a sarcomere directly influences the tension generated during shortening.\n2. **Ideal length** - The sarcomere length range that maximizes the overlap of actin-binding sites and myosin heads for peak tension.\n   1. 1. The 80 percent to 120 percent range of resting length, with 100 percent being the state where thin filament medial edges are at the most-medial myosin heads.\n\n## Muscle twitch phases\nA twitch represents the chronological timeline of a single muscle contraction resulting from one motor neuron action potential.\n\n### Key terms\n1. **Twitch** - An isolated contraction and relaxation cycle in the muscle fibers of a motor unit.\n2. **Latent period** - The initial phase where the action potential propagates and excitation-contraction coupling occurs without visible tension.\n   1. 1. Release of Ca++ ions from the sarcoplasmic reticulum into the sarcoplasm.\n3. **Contraction phase** - The period where cross-bridges form and sarcomeres actively shorten toward peak tension.\n4. **Relaxation phase** - The final phase where tension decreases and the muscle fiber returns to its resting state.\n   1. 1. The active pumping of Ca++ ions out of the sarcoplasm and back into the sarcoplasmic reticulum.\n\n## Wave summation\nWave summation is the mechanism where successive motor neuron stimuli arrive before a previous twitch ends to increase contraction strength.\n\n### Key terms\n1. **Wave summation** - The additive effect of successive motor neuron signaling that results in a stronger overall motor unit contraction.\n   1. 1. Triggering the release of additional Ca++ ions while a previous twitch is occurring to activate more sarcomeres.\n\n## Tetanus states\nTetanus refers to states of sustained muscle contraction resulting from high-frequency stimulation that eliminates individual twitch cycles.\n\n### Key terms\n1. **Incomplete tetanus** - A state where the muscle undergoes rapid cycles of contraction with only very short, distinct relaxation phases.\n2. **Complete tetanus** - A continuous, uninterrupted contraction that occurs when the stimulus frequency is so high the relaxation phase disappears.\n   1. 1. High Ca++ concentration allowing virtually all sarcomeres to form cross-bridges simultaneously for continuous contraction.\n\n## Treppe effect\nThe treppe effect is a staircase-like phenomenon where muscle contraction efficiency and force increase following a period of rest.\n\n### Key terms\n1. **Treppe** - The \"staircase effect\" where initial muscle contractions generate less force than subsequent contractions during steady signaling.\n   1. 1. Maintenance of a higher concentration of Ca++ in the sarcoplasm from a steady stream of motor neuron signals.\n\n## Muscle tone activation\nThe nervous system maintains muscle tone through constant low-level activation of motor units to provide stability without causing fatigue.\n\n### Key terms\n1. **Muscle tone** - The constant state of low-level contraction in skeletal muscles that maintains posture and stabilizes joints.\n   1. 1. Cyclical activation of a few motor units at a time to allow resting units to recover and prevent complete fatigue."}</script>
+<script id="quiz-data" type="application/json">{"id": "ap2e-10-4", "title": "10.4 Nervous System Control of Muscle Tension", "subtitle": "Chapter 10 · Muscle Tissue", "book": "A&P 2e", "hash": "767adc62fe53b7ee", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "A person performs a bicep curl, moving a hand weight toward the shoulder. This action is compared to the baseline of a resting arm. How do the muscle length and the joint angle change during this movement?", "options": ["Muscle lengthens; joint angle increases", "Muscle shortens; joint angle increases", "Muscle lengthens; joint angle decreases", "Muscle shortens; joint angle decreases"], "rationales": ["This combination describes an eccentric contraction, such as lowering the weight, rather than the concentric contraction used to lift it.", "While the muscle does shorten during the upward phase of a curl, a shortening biceps would decrease the joint angle, not increase it.", "Lengthening under tension occurs during eccentric contractions, but moving the weight toward the shoulder requires muscle shortening.", "In a concentric isotonic contraction, the muscle shortens to move the load, which in this case decreases the angle of the elbow joint."], "correct": 3, "hint": "Think about how the muscle length and the joint angle behave during the upward phase of a curl.", "topic": "Concentric contractions", "sec": "", "src": "", "link": "", "qid": "cd1e963d20"}, {"q": "A person attempts to lift a 500lb stone that remains stationary on the ground. This effort is compared to the resting state before the attempt. What describes the state of the sarcomeres and the joint angle during this effort?", "options": ["Sarcomeres shorten; joint angle remains constant", "Sarcomeres stay the same length; joint angle changes", "Sarcomeres shorten; joint angle changes", "Sarcomeres stay the same length; joint angle remains constant"], "rationales": ["Isometric contractions involve sarcomere shortening and tension generation, but the joint angle does not change because the load is too heavy to move.", "A change in joint angle requires the muscle to change length, which is driven by the shortening of its internal sarcomeres.", "While sarcomeres do shorten, a change in joint angle would define an isotonic contraction rather than an isometric one.", "Tension generation requires sarcomere activation and shortening to a point, even if the overall muscle length and joint angle do not change."], "correct": 0, "hint": "Consider if the sarcomeres can still shorten even if the external load prevents the joint from moving.", "topic": "Isometric contractions", "sec": "", "src": "", "link": "", "qid": "20814d2009"}, {"q": "Contrast the motor units found in the extraocular muscles of the eye with those found in the large muscles of the thigh. Which characteristic defines the motor units in the eye muscles compared to those in the thigh?", "options": ["Large motor units; fine motor control", "Large motor units; gross motor control", "Small motor units; gross motor control", "Small motor units; fine motor control"], "rationales": ["Large motor units, where one neuron branches to thousands of fibers, are incapable of the subtle, fine-tuned movements required by the eyes.", "While large motor units provide gross control, they are characteristic of power-generating muscles like the thigh, not the precision-oriented eye muscles.", "Small motor units are specialized for precision and fine adjustments rather than the simple, powerful movements associated with gross control.", "Small motor units, where one neuron supplies only a few fibers, allow for the exquisite and precise control needed for eye movements."], "correct": 3, "hint": "Contrast the level of precision needed for eye movements against the power needed for leg movements.", "topic": "Motor unit size", "sec": "", "src": "", "link": "", "qid": "09329eaf92"}, {"q": "A person transitions from picking up a single feather to lifting a heavy boulder using the same arm muscle. Compared to the feather, what is the nature of the motor units recruited to lift the boulder?", "options": ["High-threshold neurons; large muscle fibers", "High-threshold neurons; small muscle fibers", "Low-threshold neurons; small muscle fibers", "Low-threshold neurons; large muscle fibers"], "rationales": ["Recruitment involves first activating small, low-threshold units and then enlisting larger, higher-threshold units with bigger fibers for greater strength.", "Higher-threshold neurons are typically connected to larger muscle fibers to produce the significant force needed for heavy loads.", "While these units are activated first, they produce minimal force and are insufficient on their own to lift a heavy boulder.", "Low-threshold neurons are the most excitable and fire first, but they are generally connected to the smallest muscle fibers."], "correct": 0, "hint": "Determine which threshold of neurons and what size of fibers are engaged when force requirements increase.", "topic": "Fiber recruitment", "sec": "", "src": "", "link": "", "qid": "43723f8189"}, {"q": "A patient suffers damage to the cerebellum in the central nervous system. Compared to a healthy individual, how are their skeletal muscles and reflexes affected?", "options": ["Flaccid appearance; weak reflexes", "Flaccid appearance; excessive reflexes", "Rigid appearance; excessive reflexes", "Rigid appearance; weak reflexes"], "rationales": ["Hypotonia, resulting from CNS damage like that to the cerebellum, is characterized by a flaccid muscle appearance and functional impairments like weak reflexes.", "A flaccid appearance is associated with low muscle tone and weak reflexes, whereas excessive reflexes are a hallmark of hypertonia.", "This combination describes hypertonia, which usually results from damage to upper motor neurons rather than the cerebellum damage that causes hypotonia.", "Muscle rigidity is a sign of hypertonia and is typically accompanied by hyperreflexia rather than weak reflex responses."], "correct": 0, "hint": "Identify the relationship between muscle flaccidity and the intensity of reflex responses.", "topic": "Hypotonia characteristics", "sec": "", "src": "", "link": "", "qid": "23b7731db8"}, {"q": "A patient exhibits damage to the upper motor neurons in the central nervous system. Compared to the baseline of a healthy person, what clinical signs does this patient present?", "options": ["Reduced muscle tone; weak reflexes", "Excessive muscle tone; hyperreflexia", "Excessive muscle tone; weak reflexes", "Reduced muscle tone; hyperreflexia"], "rationales": ["Reduced tone and weak reflexes are characteristic of hypotonia, which results from different types of CNS damage or loss of innervation.", "Hypertonia involves excessive muscle tone and hyperreflexia, often following damage to upper motor neurons in the CNS.", "Increased muscle tone in hypertonia is almost always paired with exaggerated reflex responses, not weak ones.", "Hyperreflexia is a clinical indicator of excessive neural influence on muscle tone, which does not occur when muscle tone is reduced."], "correct": 1, "hint": "Consider how excessive tone correlates with the magnitude of reflex actions.", "topic": "Hypertonia characteristics", "sec": "", "src": "", "link": "", "qid": "9d078a5575"}, {"q": "When a muscle contracts against a load that does not move, how is the internal force produced by the shortening sarcomeres categorized?", "options": ["Isotonic force", "Muscle load", "Passive stretch", "Muscle tension"], "rationales": ["Isotonic refers to a contraction where the length of the muscle changes; it is a category of contraction rather than the name of the force.", "The load is the external object or resistance that the muscle is contracting against, not the force the muscle itself generates.", "Passive stretch refers to the lengthening of a muscle by an external force, which is the opposite of the active force generated during contraction.", "Muscle tension is the force generated by the contraction of muscle fibers, regardless of whether the load actually moves."], "correct": 3, "hint": "Distinguish between the force generated internally by the muscle and the external resistance of the object.", "topic": "Muscle tension", "sec": "", "src": "", "link": "", "qid": "afc931011b"}, {"q": "A person lowers a hand weight in a slow and controlled manner. Compared to the upward phase of the movement, how is the nervous system modulating the muscle?", "options": ["Increasing the activation of cross-bridges", "Eliminating all cross-bridge formation", "Decreasing the activation of cross-bridges", "Maintaining constant cross-bridge numbers"], "rationales": ["Increasing cross-bridge activation would generate more tension and cause the muscle to shorten further in a concentric contraction.", "If all cross-bridges were eliminated, there would be no tension, and the weight would fall rapidly due to gravity without control.", "In an eccentric contraction, muscle tension diminishes as the nervous system decreases cross-bridge activation, allowing the muscle to lengthen.", "To allow the muscle to lengthen while still maintaining tension for a controlled descent, the number of active cross-bridges must decrease."], "correct": 2, "hint": "Focus on how the nervous system adjusts the number of active cross-bridges to allow controlled lengthening.", "topic": "Eccentric contractions", "sec": "", "src": "", "link": "", "qid": "b0149d4c6c"}, {"q": "A sarcomere is stretched to 150 percent of its resting length. Compared to its state at 100 percent length, what is the resulting effect on tension?", "options": ["Tension remains constant as long as ATP is present", "Tension drops to zero because the sarcolemma tears", "Tension decreases due to limited filament overlap", "Tension increases due to higher elastic potential"], "rationales": ["Tension is not solely dependent on energy; it requires the physical proximity of actin and myosin, which is lost when the sarcomere is overstretched.", "While extreme stretching is opposed by connective tissue, a sarcomere at 150 percent length simply loses the ability to form cross-bridges before tearing occurs.", "When stretched beyond 120 percent of resting length, thick and thin filaments do not overlap sufficiently, reducing the number of cross-bridges that can form.", "Active muscle tension depends on filament overlap; stretching the sarcomere too far physically prevents the biological machinery from generating force."], "correct": 2, "hint": "Recall how the physical overlap of thick and thin filaments changes when a muscle is pulled significantly.", "topic": "Sarcomere length", "sec": "", "src": "", "link": "", "qid": "99f79c95fb"}, {"q": "During the initial phase of a muscle twitch myogram, the tension has not yet begun to rise. Which event is occurring during this specific period?", "options": ["Pumping of Ca2+ ions back into the sarcoplasmic reticulum", "Shortening of sarcomeres toward peak tension", "Action potential propagation along the sarcolemma", "Binding of Ca2+ ions to troponin to move tropomyosin"], "rationales": ["Calcium ions are pumped back into the sarcoplasmic reticulum during the relaxation phase, which occurs after the peak tension has been reached.", "Sarcomere shortening defines the contraction phase, during which tension actively increases on the myogram.", "During the latent period, the action potential travels along the sarcolemma and Ca2+ ions are released, but physical contraction hasn't started.", "Binding to troponin and the subsequent shifting of tropomyosin are the active steps that initiate the contraction phase following the latent period."], "correct": 2, "hint": "Identify the initial electrochemical events that must occur before the physical shortening of the muscle begins.", "topic": "Muscle twitch phases", "sec": "", "src": "", "link": "", "qid": "6f2fdfb5ce"}, {"q": "A second stimulus is applied to a motor unit while a previous twitch is still occurring. What molecular change causes the resulting contraction to be stronger than the first?", "options": ["Troponin molecules bind more ATP", "Additional Ca2+ ions are released into the sarcoplasm", "Myosin heads increase their individual pulling speed", "The threshold of the motor neuron is lowered"], "rationales": ["Troponin binds to calcium to regulate contraction; it does not bind to ATP, which is used by the myosin heads for energy.", "Wave summation occurs because a second stimulus triggers more calcium release while the muscle is still activated by the first stimulus's calcium.", "The strength of the contraction increases due to the activation of more sarcomeres, not because the individual myosin heads pull faster.", "Wave summation is a mechanical response of the muscle fibers to stimulus frequency, not a change in the electrical properties of the neuron."], "correct": 1, "hint": "Look for the ion that accumulates in the sarcoplasm when stimuli are delivered in rapid succession.", "topic": "Wave summation", "sec": "", "src": "", "link": "", "qid": "f93a1211b5"}, {"q": "A muscle receives high-frequency stimulation that prevents any relaxation phase from occurring. Which term describes this continuous state of contraction?", "options": ["Incomplete tetanus", "Complete tetanus", "Treppe", "Wave summation"], "rationales": ["Incomplete tetanus involves very rapid contraction cycles that still retain a short, discernible relaxation phase for each cycle.", "Complete tetanus occurs when the stimulus frequency is so high that the relaxation phase disappears, resulting in a continuous, uninterrupted contraction.", "Treppe describes the gradual increase in contraction efficiency after a period of rest, often appearing like a set of stairs on a myogram.", "While wave summation is the process of adding twitch effects together, the specific state of continuous contraction is named complete tetanus."], "correct": 1, "hint": "Differentiate between a response with rapid contraction-relaxation cycles and one that is a single smooth contraction.", "topic": "Tetanus states", "sec": "", "src": "", "link": "", "qid": "d2dced126a"}, {"q": "A muscle has been dormant for an extended period and is then stimulated to contract repeatedly. How does the force of the initial contractions compare to those that occur later in the series?", "options": ["Initial contractions are about half as strong as later ones", "Initial contractions are identical in strength to later ones", "Initial contractions cause rapid fatigue", "Initial contractions are twice as strong as later ones"], "rationales": ["Treppe, or the staircase effect, describes how muscle contractions become more efficient and forceful after they have been dormant.", "If a muscle was dormant, the 'staircase effect' ensures that subsequent contractions will show a graded increase in force.", "Treppe is a process of increasing efficiency; fatigue is a different process that occurs after prolonged activity when energy is depleted.", "Contractions generally become stronger over the first few cycles after a period of rest, not weaker."], "correct": 0, "hint": "Determine how the initial lack of activity affects the efficiency of the first few contractions.", "topic": "Treppe effect", "sec": "", "src": "", "link": "", "qid": "3e434a602c"}, {"q": "A person is sitting still and not producing any movement. What mechanism allows their muscles to maintain joint stability without fatiguing?", "options": ["Passive resistance from connective tissues alone", "Cyclical activation of a few motor units at a time", "Continuous activation of all motor units at a low threshold", "Permanent cross-bridge formation in specialized fibers"], "rationales": ["While connective tissue provides support, muscle tone specifically refers to the active, low-level contraction of the muscle fibers.", "Muscle tone is maintained by the nervous system activating different motor units in a cyclical manner, allowing some units to rest while others are active.", "Activating all motor units continuously would quickly lead to energy depletion and complete muscle fatigue.", "Cross-bridges must cycle to produce tension; permanent cross-bridges would result in muscle rigidity rather than functional muscle tone."], "correct": 1, "hint": "Identify the strategy used by the nervous system to maintain tension without exhausting specific muscle cells.", "topic": "Muscle tone activation", "sec": "", "src": "", "link": "", "qid": "e745bf36fc"}], "hasSheet": true, "parts": false, "secTitles": {}, "reserve": 0, "tags": false, "frq": [], "notebook": "https://notebooklm.google.com/notebook/34f6d156-8b69-4746-81dd-42298ab2e3fc/artifact/7c801204-0d99-4750-93bb-885724ff6be2", "root": "../index.html", "tab": "quiz", "sheet": "## Concentric contractions\nConcentric contraction is a sub-type of isotonic movement where muscle length changes to shorten the muscle and move a load.\n\n### Key terms\n1. **Concentric contraction** - A sub-type of isotonic contraction where the muscle shortens to move a load as joint angles decrease.\n   1. 1. The biceps brachii contracting to lift a hand weight toward the body as the elbow angle decreases.\n2. **Isotonic contraction** - A muscle contraction where tension remains constant while the length of the muscle changes.\n\n## Isometric contractions\nIsometric contractions are characterized by the generation of muscle tension while the muscle length and joint angle remain static.\n\n### Key terms\n1. **Isometric contraction** - Muscle activity where tension increases and sarcomeres shorten, but the force cannot overcome the load resistance.\n   1. 1. Active maintenance of posture and joint stability.\n   2. 1. Holding the head in an upright, stationary position.\n   3. 1. Attempting to lift an immovable or excessively heavy weight.\n2. **Load** - The external resistance or object that a muscle must contract against to produce tension.\n\n## Motor unit size\nThe number of muscle fibers per motor neuron dictates the specific relationship between the level of precision and the force of contraction.\n\n### Key terms\n1. **Small motor unit** - An arrangement where a single motor neuron supplies a few muscle fibers to allow for exquisite motor control.\n   1. 1. Extraocular eye muscles where one neuron supplies approximately six fibers for rapid focusing.\n2. **Large motor unit** - An arrangement where a single motor neuron supplies thousands of muscle fibers to facilitate gross, powerful movements.\n   1. 1. Thigh or back muscles where a single motor neuron supplies thousands of fibers for knee extension or spinal stability.\n\n## Fiber recruitment\nThe nervous system increases contraction force by progressively enlisting motor units with different sizes and activation thresholds.\n\n### Key terms\n1. **Recruitment** - The process of increasing the number of active motor units to produce a progressively stronger muscle contraction.\n   1. 1. Lower-threshold motor neurons firing first to activate the smallest, most excitable muscle fibers.\n2. **Graded muscle response** - The modification of muscle tension through changes in stimulation frequency and the number of motor units recruited.\n\n## Hypotonia characteristics\nHypotonia presents as abnormally low muscle tone, resulting in a lack of joint stability and functional impairments.\n\n### Key terms\n1. **Hypotonia** - A condition of diminished muscle tone characterized by a flaccid appearance and weak reflexes.\n   1. 1. Damage to central nervous system structures such as the cerebellum or loss of innervation like poliomyelitis.\n2. **Flaccidity** - A physiological state where muscles are completely relaxed and lack normal resistance to passive stretch.\n\n## Hypertonia characteristics\nHypertonia is the presentation of excessive muscle tone and overactive reflexes usually caused by damage to the central nervous system.\n\n### Key terms\n1. **Hypertonia** - A condition of excessive muscle tone that can lead to muscle rigidity or spasticity.\n   1. 1. Damage to upper motor neurons in the central nervous system.\n2. **Hyperreflexia** - The presentation of excessive or overactive reflex responses associated with high muscle tone.\n3. **Muscle rigidity** - A form of hypertonia characterized by stiffness and resistance to movement, such as in Parkinson's disease.\n4. **Spasticity** - A phasic change in muscle tone where a limb snaps back from passive stretching, often following a stroke.\n\n## Muscle tension\nMuscle tension is the definition of force generation resulting from the shortening of sarcomeres within skeletal muscle fibers.\n\n### Key terms\n1. **Muscle tension** - The force produced by the contraction of a muscle or the active shortening of its constituent sarcomeres.\n   1. 1. Shortening of sarcomeres in skeletal muscle fibers as myosin heads pull actin filaments toward the center.\n2. **Load** - The object or resistance that muscle tension must overcome to move or change muscle length.\n\n## Eccentric contractions\nEccentric contraction is a sub-type of isotonic movement where muscle tension is maintained as the muscle elongates.\n\n### Key terms\n1. **Eccentric contraction** - A contraction where muscle tension diminishes and the muscle lengthens to control the movement of a load.\n   1. 1. Lowering a hand weight in a slow and controlled manner as the elbow joint angle increases.\n\n## Sarcomere length\nThe length-tension relationship dictates how the degree of filament overlap within a sarcomere determines the force of contraction.\n\n### Key terms\n1. **Length-tension relationship** - The principle that the resting length of a sarcomere directly influences the tension generated during shortening.\n2. **Ideal length** - The sarcomere length range that maximizes the overlap of actin-binding sites and myosin heads for peak tension.\n   1. 1. The 80 percent to 120 percent range of resting length, with 100 percent being the state where thin filament medial edges are at the most-medial myosin heads.\n\n## Muscle twitch phases\nA twitch represents the chronological timeline of a single muscle contraction resulting from one motor neuron action potential.\n\n### Key terms\n1. **Twitch** - An isolated contraction and relaxation cycle in the muscle fibers of a motor unit.\n2. **Latent period** - The initial phase where the action potential propagates and excitation-contraction coupling occurs without visible tension.\n   1. 1. Release of Ca++ ions from the sarcoplasmic reticulum into the sarcoplasm.\n3. **Contraction phase** - The period where cross-bridges form and sarcomeres actively shorten toward peak tension.\n4. **Relaxation phase** - The final phase where tension decreases and the muscle fiber returns to its resting state.\n   1. 1. The active pumping of Ca++ ions out of the sarcoplasm and back into the sarcoplasmic reticulum.\n\n## Wave summation\nWave summation is the mechanism where successive motor neuron stimuli arrive before a previous twitch ends to increase contraction strength.\n\n### Key terms\n1. **Wave summation** - The additive effect of successive motor neuron signaling that results in a stronger overall motor unit contraction.\n   1. 1. Triggering the release of additional Ca++ ions while a previous twitch is occurring to activate more sarcomeres.\n\n## Tetanus states\nTetanus refers to states of sustained muscle contraction resulting from high-frequency stimulation that eliminates individual twitch cycles.\n\n### Key terms\n1. **Incomplete tetanus** - A state where the muscle undergoes rapid cycles of contraction with only very short, distinct relaxation phases.\n2. **Complete tetanus** - A continuous, uninterrupted contraction that occurs when the stimulus frequency is so high the relaxation phase disappears.\n   1. 1. High Ca++ concentration allowing virtually all sarcomeres to form cross-bridges simultaneously for continuous contraction.\n\n## Treppe effect\nThe treppe effect is a staircase-like phenomenon where muscle contraction efficiency and force increase following a period of rest.\n\n### Key terms\n1. **Treppe** - The \"staircase effect\" where initial muscle contractions generate less force than subsequent contractions during steady signaling.\n   1. 1. Maintenance of a higher concentration of Ca++ in the sarcoplasm from a steady stream of motor neuron signals.\n\n## Muscle tone activation\nThe nervous system maintains muscle tone through constant low-level activation of motor units to provide stability without causing fatigue.\n\n### Key terms\n1. **Muscle tone** - The constant state of low-level contraction in skeletal muscles that maintains posture and stabilizes joints.\n   1. 1. Cyclical activation of a few motor units at a time to allow resting units to recover and prevent complete fatigue."}</script>
+<script>
+(function(){
+  if(window.lqSync) return;
+  const API = 'https://terp-plate.vercel.app/api/quiz-sync', MK = 'lqsync:meta';
+  const none = {first: Promise.resolve([]), now: async()=>[], listen(){}};
+  let key = '';
+  try{ key = localStorage.getItem('lq:key') || ''; }catch(e){}
+  const hm = /[#&]k=([A-Za-z0-9_-]{40,})/.exec(location.hash);
+  if(hm) key = hm[1];
+  if(!key || !window.crypto || !crypto.subtle){ window.lqSync = none; return; }
+
+  const skip = k => k.indexOf('lq:') !== 0 || k === 'lq:key' || k === 'lq:speech';
+  const rawSet = Storage.prototype.setItem;
+  let meta = {};
+  try{ meta = JSON.parse(localStorage.getItem(MK) || '{}') || {}; }catch(e){}
+  const putMeta = ()=>{ try{ rawSet.call(localStorage, MK, JSON.stringify(meta)); }catch(e){} };
+  const hash = t => { let h = 5381; for(let i=0;i<t.length;i++) h = ((h<<5) + h + t.charCodeAt(i)) | 0; return h; };
+  const isState = k => /^lq:[^:]+$/.test(k) && k !== 'lq:hub';
+  function weight(s){
+    return Object.keys(s.answers||{}).length + Object.keys(s.pass2||{}).length
+         + Object.keys(s.skipped||{}).length + Object.keys(s.starred||{}).length
+         + Object.keys(s.unsure||{}).length + 1000 * (s.history||[]).length + (s.done ? 500 : 0);
+  }
+  // '' = nothing worth sending
+  function sig(k, v){
+    if(isState(k)){
+      try{ const s = JSON.parse(v);
+        if(!s || typeof s !== 'object') return '';
+        if(!weight(s) && !s.only && !s.tagf) return '';
+        const c = Object.assign({}, s); delete c.ms; delete c.qms; delete c.meta; delete c.hintOpen;
+        return JSON.stringify(c);
+      }catch(e){ return ''; }
+    }
+    return (v && v !== '{}' && v !== '[]' && v !== '{"defs":[],"q":{}}') ? v : '';
+  }
+  let frozen = false, applying = false, timer = null, busy = false;
+  function mark(k, v){
+    if(skip(k)) return;
+    const g = sig(k, v), h = hash(g), m = meta[k] || (meta[k] = {t:0});
+    if(m.h === h) return;
+    m.h = h;
+    if(g){ m.t = Date.now(); m.d = 1; clearTimeout(timer); timer = setTimeout(run, 1500); }
+    putMeta();
+  }
+  Storage.prototype.setItem = function(k, v){
+    if(this === localStorage && frozen && String(k).indexOf('lq:') === 0) return;
+    rawSet.call(this, k, v);
+    if(this === localStorage && !applying){ try{ mark(String(k), String(v)); }catch(e){} }
+  };
+  // What was already here before sync existed: age unknown, so it is stamped low, and a real
+  // attempt outranks a thinner one by how much is in it.
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(skip(k) || meta[k]) continue;
+      const v = localStorage.getItem(k), g = sig(k, v);
+      meta[k] = {t: 0, h: hash(g)};
+      if(g){ let w = 1; if(isState(k)){ try{ w = 1 + weight(JSON.parse(v)); }catch(e){} }
+             meta[k].t = w; meta[k].d = 1; }
+    }
+    putMeta();
+  }catch(e){}
+
+  const enc = new TextEncoder(), dec = new TextDecoder();
+  const toB = s => { s = s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length % 4) s += '=';
+                     return Uint8Array.from(atob(s), c => c.charCodeAt(0)); };
+  const fromB = u => { let t = ''; for(let i=0;i<u.length;i+=8192) t += String.fromCharCode.apply(null, u.subarray(i, i+8192));
+                       return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+  const hex = b => Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,'0')).join('');
+  let ck = null, bucket = '';
+  const ready = (async()=>{
+    ck = await crypto.subtle.importKey('raw', toB(key), 'AES-GCM', false, ['encrypt','decrypt']);
+    bucket = hex(await crypto.subtle.digest('SHA-256', enc.encode('lq-sync:' + key))).slice(0, 32);
+  })();
+  const kid = async k => hex(await crypto.subtle.digest('SHA-256', enc.encode(bucket + '|' + k))).slice(0, 32);
+  async function seal(o){
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv}, ck, enc.encode(JSON.stringify(o)));
+    return fromB(iv) + '.' + fromB(new Uint8Array(ct));
+  }
+  async function unseal(t){
+    const p = t.split('.');
+    return JSON.parse(dec.decode(await crypto.subtle.decrypt({name:'AES-GCM', iv:toB(p[0])}, ck, toB(p[1]))));
+  }
+
+  function pageId(){
+    const el = document.getElementById('quiz-data');
+    if(!el) return null;
+    try{ return JSON.parse(el.textContent).id; }catch(e){ return null; }
+  }
+  async function run(){
+    if(busy || frozen) return [];
+    busy = true;
+    const changed = [];
+    try{
+      await ready;
+      const have = {}, puts = [], sent = {};
+      for(const k of Object.keys(meta)){
+        const m = meta[k];
+        if(!m.id) m.id = await kid(k);
+        have[m.id] = m.t || 0;
+        if(m.d){
+          const v = localStorage.getItem(k);
+          if(v === null){ m.d = 0; continue; }
+          puts.push({k: m.id, v: await seal({k, v}), ts: m.t});
+          sent[k] = m.t;
+        }
+      }
+      const r = await fetch(API, {method:'POST', headers:{'content-type':'text/plain'},
+                                  body: JSON.stringify({bucket, have, puts})});
+      if(!r.ok) throw new Error('sync ' + r.status);
+      const j = await r.json();
+      for(const k in sent) if(meta[k].t === sent[k]) meta[k].d = 0;
+      for(const row of j.rows || []){
+        let o; try{ o = await unseal(row.v); }catch(e){ continue; }
+        if(!o || skip(o.k)) continue;
+        const m = meta[o.k] || (meta[o.k] = {t:0});
+        if((m.t || 0) >= row.ts) continue;
+        applying = true;
+        try{ rawSet.call(localStorage, o.k, o.v); }catch(e){}
+        applying = false;
+        m.t = row.ts; m.d = 0; m.h = hash(sig(o.k, o.v)); m.id = row.k;
+        changed.push(o.k);
+      }
+      putMeta();
+    }catch(e){}
+    busy = false;
+    if(changed.length && window.lqSync.live){
+      const id = pageId();
+      const mine = id ? changed.some(k => k === 'lq:' + id || k.indexOf('lq:' + id + ':') === 0)
+                      : !!document.getElementById('manifest');
+      if(mine){ frozen = true; location.reload(); }
+    }
+    return changed;
+  }
+  function wake(){ if(document.visibilityState !== 'hidden') run(); }
+  function leave(){ if(document.visibilityState === 'hidden') run(); }
+  function listen(){
+    document.removeEventListener('visibilitychange', wake); document.addEventListener('visibilitychange', wake);
+    document.removeEventListener('visibilitychange', leave); document.addEventListener('visibilitychange', leave);
+    removeEventListener('focus', wake); addEventListener('focus', wake);
+  }
+  // `live` = this page should reload itself when its own quiz arrives newer. The locked shell
+  // turns it on only after it has drawn the page.
+  window.lqSync = {first: null, now: run, listen, live: true};
+  listen();
+  setInterval(wake, 20000);
+  window.lqSync.first = run();
+})();
+</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -1002,7 +1216,7 @@ function qk(i){ return D.questions[i].qid; }
 function blank(){ return {v:2, hash:D.hash, i:0, answers:{}, pass2:{}, skipped:{}, starred:{},
                           unsure:{}, hints:{}, phase:1, p2list:null, done:false, at:null,
                           shuf:{}, history:[], only:null, sat:{}, promoted:{},
-                          ms:0}; }
+                          ms:0, qms:{}}; }
 function migrate(s){
   // v1 keyed every map on the array index. The hash matches, so the indices are still valid
   // and this is a straight re-key — done once, then never again.
@@ -1060,6 +1274,9 @@ function load(){
     // attempt saved before it. Zero and hidden are the right defaults for an attempt that was
     // never timed: it reads as "not measured" rather than as a suspiciously fast paper.
     if(typeof s.ms !== 'number') s.ms = 0;
+    // NEW ON 08-21 and absent from every attempt before it. An empty map means "never
+    // measured", which momentum() reads as "print nothing" rather than as a paper of zeroes.
+    if(!s.qms) s.qms = {};
     return s;
   }catch(e){ return blank(); }
 }
@@ -1104,10 +1321,44 @@ function save(){
    the sitting's subchapters into this one function is what makes a half-paper behave exactly
    like a whole one — one direction, one end card, one second pass — with no branch anywhere
    downstream. `only: null` (not chosen, or a page built without parts) filters nothing. */
+/* ---- TAGS (10-12, his ask) ------------------------------------------------------------
+   *"a text box at first, but it functions like a Notion tag property … once I press enter it
+   creates a tag and that tag stays for this exam and only for this exam."* Its own key, like
+   the research box, so a Retake and a rebuild keep them. `defs` is the order he made them in;
+   a tag no question carries any more is dropped from it. Off unless the page was built with
+   `tags`, so every page built before this is what it was. */
+const TKEY = KEY + ':tags';
+let T = (function(){
+  try{ const t = JSON.parse(localStorage.getItem(TKEY) || '{}') || {};
+       return {defs: t.defs || [], q: t.q || {}}; }
+  catch(e){ return {defs:[], q:{}}; } })();
+function tput(){ try{ localStorage.setItem(TKEY, JSON.stringify(T)); }catch(e){} }
+function tagsOf(i){ return T.q[qk(i)] || []; }
+function hasTag(i, name){ return tagsOf(i).indexOf(name) >= 0; }
+function tagAdd(i, raw){
+  const name = String(raw).trim().replace(/\s+/g, ' ');
+  if(!name) return;
+  const known = T.defs.find(d => d.toLowerCase() === name.toLowerCase()) || name;
+  if(T.defs.indexOf(known) < 0) T.defs.push(known);
+  const l = T.q[qk(i)] || (T.q[qk(i)] = []);
+  if(l.indexOf(known) < 0) l.push(known);
+  tput();
+}
+function tagDrop(i, name){
+  const id = qk(i);
+  T.q[id] = (T.q[id] || []).filter(x => x !== name);
+  if(!T.q[id].length) delete T.q[id];
+  if(!Object.keys(T.q).some(k => T.q[k].indexOf(name) >= 0)) T.defs = T.defs.filter(d => d !== name);
+  tput();
+}
+
 function active(s){
-  const only = D.parts ? (s.only || null) : null;
+  // A TAG RUN ("test only these") rides here for the same reason the section filter does.
+  const tf = D.tags ? (s.tagf || null) : null;
+  const only = (D.parts && !tf) ? (s.only || null) : null;
   return D.questions.map((_,i)=>i).filter(i => onPaper(s, i)
-    && (!only || only.indexOf(D.questions[i].sec) >= 0));
+    && (!only || only.indexOf(D.questions[i].sec) >= 0)
+    && (!tf || hasTag(i, tf)));
 }
 /* ---- THE RESERVES (08-16) ------------------------------------------------------------
    His ask: *"if 1 question is skipped, another one is replaced in that section about it… you
@@ -1375,7 +1626,9 @@ function flushFrq(){
 function drawFrq(){
   const box = $('#frqview');
   if(!box || !(D.frq||[]).length) return;
-  let h = '<p class="say">Three written answers, from the same sources as the paper. Write '
+  const NW = D.frq.length, WORDS = ['No','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'];
+  let h = '<p class="say">' + (WORDS[NW] || NW) + ' written answer' + (NW === 1 ? '' : 's')
+        + ', from the same sources as the paper. Write '
         + 'one, then mark it: every point that can be settled by what you wrote is checked '
         + 'for you, and the ones that need judgement are handed back. Click any row to '
         + 'overrule it.</p>';
@@ -1574,6 +1827,9 @@ function setTab(name){
     // back — the question must be exactly where he left it.
     if(quizPad !== null) $('main').style.paddingTop = quizPad;
   } else {
+    // The sheet, the starred list and the written half are not the question, so his
+    // reading time on them belongs to no question. `draw()` puts it back on the way in.
+    timeOn(null);
     if(name==='starred') drawStarred();
     if(name==='sheet'){ renderScore(); renderSheetExtras(); }
     if(name==='frq') drawFrq();
@@ -1663,7 +1919,7 @@ function draw(){
   // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
   // the rest of the sitting, so nothing about answering, going back or the second pass has
   // to know the picker exists.
-  if(sectioned() && !S.only) return picker();
+  if(sectioned() && !S.only && !S.tagf) return picker();
   const act = runList();
   if(!act.length) return end();
   if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
@@ -1672,6 +1928,61 @@ function draw(){
 
 /* Pure markup, no DOM writes and no state changes — so the same builder can render the
    question and be measured off-screen for the centring reserve. */
+/* The tag box above the question. Chips for what this question carries, then the box: type and
+   Enter makes the tag (or reuses one spelled the same), the ones he already made show under it
+   to click, Backspace on an empty box takes the last one off, Esc leaves. */
+function tagRowInner(i){
+  const mine = tagsOf(i);
+  let h = '';
+  mine.forEach((n,k)=>{ h += '<span class="tchip">' + esc(n) + '<button class="tx" data-drop="' + k
+                           + '" tabindex="-1" aria-label="Remove tag">×</button></span>'; });
+  return h + '<input id="tagin" class="tagin" type="text" autocomplete="off" spellcheck="false" '
+           + 'placeholder="' + (mine.length ? 'Add a tag' : 'Tag this question  ( l )') + '">'
+           + '<div class="tsug hide" id="tsug"></div>';
+}
+function paintSug(i){
+  const inp = $('#tagin'), box = $('#tsug');
+  if(!inp || !box) return;
+  const raw = inp.value.trim(), v = raw.toLowerCase(), mine = tagsOf(i);
+  let h = T.defs.map((d,n)=>({d,n}))
+    .filter(x => mine.indexOf(x.d) < 0 && (!v || x.d.toLowerCase().indexOf(v) >= 0))
+    .map(x => '<button class="tchip pick" data-n="' + x.n + '" tabindex="-1">' + esc(x.d) + '</button>')
+    .join('');
+  if(v && !T.defs.some(d => d.toLowerCase() === v))
+    h += '<span class="tnew">Enter makes “' + esc(raw) + '”</span>';
+  box.innerHTML = h;
+  box.classList.toggle('hide', !h || document.activeElement !== inp);
+  // mousedown, not click: the box must not blur (and hide these) before the pick lands
+  box.querySelectorAll('.pick').forEach(b => { b.onmousedown = e => {
+    e.preventDefault(); tagAdd(i, T.defs[+b.dataset.n]); redrawTags(i, true); }; });
+}
+function redrawTags(i, focus){
+  const row = $('#tagrow');
+  if(!row) return;
+  row.innerHTML = tagRowInner(i);
+  wireTags(i);
+  if(focus) $('#tagin').focus();
+}
+function wireTags(i){
+  const row = $('#tagrow'), inp = $('#tagin');
+  if(!row || !inp) return;
+  row.querySelectorAll('.tx').forEach(b => b.onclick = ()=>{
+    tagDrop(i, tagsOf(i)[+b.dataset.drop]); redrawTags(i, false); });
+  inp.onfocus = ()=> paintSug(i);
+  inp.oninput = ()=> paintSug(i);
+  inp.onblur = ()=> { const b = $('#tsug'); if(b) b.classList.add('hide'); };
+  inp.onkeydown = e => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      if(!inp.value.trim()){ inp.blur(); return; }
+      tagAdd(i, inp.value); redrawTags(i, true);
+    } else if(e.key === 'Escape'){ inp.value = ''; inp.blur(); }
+    else if(e.key === 'Backspace' && !inp.value && tagsOf(i).length){
+      tagDrop(i, tagsOf(i).slice(-1)[0]); redrawTags(i, true);
+    }
+  };
+}
+
 function buildQ(i, picked, fresh, en){
   const q = D.questions[i];
   const answered = picked !== undefined;
@@ -1683,10 +1994,12 @@ function buildQ(i, picked, fresh, en){
   // The counter sits top-left above the question, the way the notebook does it, rather than
   // up in the bar — it belongs with the thing it counts. On a second pass it counts the
   // second pass, so four wrong answers read as "1 / 4" and not as a broken 16.
-  let h = '<div class="qhead' + en + '"><div class="qcol">'
+  let h = (D.tags ? '<div class="tagrow no-read-aloud" id="tagrow">' + tagRowInner(i) + '</div>' : '')
+        + '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta no-read-aloud"><span class="num">' + (pos+1) + ' / '
         + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        + (D.tags && S.tagf ? '<span class="dot">·</span><span>only ' + esc(S.tagf) + '</span>' : '')
         // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
         // 10 reads as the paper having lost his place, which is how he read it.
         + (recycling && S.phase!==2
@@ -1785,6 +2098,9 @@ let justAnswered = null;
 
 function question(fresh){
   const i = S.i, q = D.questions[i], picked = pick(i);
+  // THE CLOCK MOVES WITH HIM. Re-rendering the same question is harmless: timeOn() banks
+  // what is owed and carries on against the same qid.
+  timeOn(q.qid);
   const answered = picked !== undefined;
   const act = runList();
   const pos = act.indexOf(i);
@@ -1879,6 +2195,7 @@ function question(fresh){
   $('#star').onclick = ()=> toggleStar(i);
   $('#qmark').onclick = ()=> toggleUnsure(i);
   $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
+  if(D.tags) wireTags(i);
 
   // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
   // touches it — and nothing above the options ever changes height.
@@ -2369,19 +2686,32 @@ function openMenu(){
   m.className = 'menu';
   // The clock's only other way in. `w` is not written anywhere else on the page, and a key
   // nothing announces is a key he has to remember he asked for.
-  m.innerHTML = '<button id="skipq">Skip this question</button>'
+  m.innerHTML = '<button id="skipq">Skip this question  ( x )</button>'
               // The reader's own two entries. Space and `v` are written nowhere else on the
               // page, and a key nothing announces is a key he has to remember he asked for.
               + '<button id="readtog">' + (sayOn ? 'Stop' : 'Start') + ' read-aloud  ( space )</button>'
               + '<button id="voiceset">Voice, speed and pauses…</button>'
-              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>';
+              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>'
+              // EVERY KEY, WRITTEN DOWN ONCE (10-12). He could not find Redo or remember its key.
+              + '<div class="keys"><kbd>x</kbd><span>Skip</span><kbd>u</kbd><span>Redo your answer</span>'
+              + '<kbd>h</kbd><span>Hint, when the question has one</span>'
+              + '<kbd>s</kbd><span>Star</span><kbd>/</kbd><span>No idea</span>'
+              + '<kbd>r</kbd><span>Research</span><kbd>f</kbd><span>Fix this question</span>'
+              + '<kbd>t</kbd><span>Reflection</span>'
+              + (D.tags ? '<kbd>l</kbd><span>Tag</span>' : '')
+              + '<kbd>↵</kbd><span>Next</span><kbd>←</kbd><span>Back</span></div>';
   host.appendChild(m);
   m.querySelector('#clocktog').onclick = ()=>{ toggleClock(); closeMenu(); };
   m.querySelector('#readtog').onclick = ()=>{ closeMenu(); sayOn ? sayOff() : sayToggle(); };
   m.querySelector('#voiceset').onclick = ()=>{ closeMenu(); openVset(); };
-  m.querySelector('#skipq').onclick = ()=>{
+  m.querySelector('#skipq').onclick = ()=>{ closeMenu(); skipQuestion(); };
+  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
+}
+/* One path for skipping, whether it came from the menu or from `x` (10-12, his ask: a key
+   *"rather than going into the top bar and then pressing skip"*). */
+function skipQuestion(){
     const list = runList(), pos = list.indexOf(S.i);
-    if(list.length <= 1) return closeMenu();        // never skip the last one standing
+    if(list.length <= 1) return;                    // never skip the last one standing
     const sec = bucketOf(S.i);
     S.skipped[qk(S.i)] = true;
     delete S.answers[qk(S.i)];
@@ -2395,7 +2725,6 @@ function openMenu(){
     // have handed him an end card with a question still owed.
     const filled = promoteReserve(sec) >= 0;
     const wasLast = !filled && pos === list.length - 1;
-    closeMenu();
     syncTabs();
     if(wasLast){ finish(); return; }
     // After the removal the list has shrunk, so the item now AT `pos` is the one that
@@ -2404,8 +2733,6 @@ function openMenu(){
     S.hintOpen = false;
     lastShown = -1;
     save(); question(); window.scrollTo(0,0);
-  };
-  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
 }
 function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(); }
 
@@ -2464,6 +2791,7 @@ function group(act, keyOf, head, label){
 let pickSel = null;
 
 function picker(){
+  timeOn(null);
   const p = paperStat();
   if(!pickSel) pickSel = p.left.map(s => s.sec);          // default: what is still outstanding
   const chosen = p.secs.filter(s => pickSel.indexOf(s.sec) >= 0);
@@ -2559,7 +2887,143 @@ function beginSitting(secs){
   save(); draw(); window.scrollTo(0,0);
 }
 
+/* ---- MOMENTUM — the pace half of the end card (08-21, his ask) ------------------------
+   *"once I'm done with the quiz, the same screen that shows the right and wrong answers, I
+   can also see a breakdown of momentum… ranked by correct versus incorrect, and then also
+   time spent. Maybe that'll help me determine a goal and a time per question."*
+
+   THREE THINGS IN ONE BLOCK, because they answer three different questions:
+
+   • THE STRIP is the paper in the order he sat it — where he slowed down, and whether the
+     slow ones cluster at the end (tiring) or the start (warming up). It is the only thing
+     anywhere on this page that is in time order; every other table is sorted by something.
+   • THE TWO MEDIANS are the comparison worth having: how long the ones he got right took
+     against the ones he got wrong. MEDIAN AND NOT MEAN — one question he walked away from
+     mid-paper drags an average off the map, and that is exactly the question a page that
+     only banks visible time is most likely to have.
+   • THE RANKING is what to look at next: slowest first, each one marked, so a slow ✕ sits
+     at the top of the list on its own.
+
+   THE GOAL IS HIS OWN NUMBER, NOT ONE INVENTED HERE — the median of the questions he got
+   RIGHT, rounded to five seconds. A pace he has already answered correctly at is the only
+   pace this page has any business suggesting.
+
+   IT PRINTS NOTHING UNLESS THE QUESTIONS WERE ACTUALLY TIMED. Every attempt saved before
+   today has an empty `qms`, so the block is absent on those rather than reporting a paper
+   of zeroes — the same rule the clock already uses for `ms:0` in the copy markdown. */
+const MOM_CAP = 14, MOM_SHOW = 10;
+let momAll = false;
+function qms(i){ return (S.qms || {})[qk(i)] || 0; }
+function median(a){
+  if(!a.length) return 0;
+  const s = a.slice().sort((x,y)=>x-y), h = s.length >> 1;
+  return s.length % 2 ? s[h] : Math.round((s[h-1] + s[h]) / 2);
+}
+/* What to call a question in one line. The topic tag when the quiz carries one — it is
+   already the name he thinks of it by, and it is what the topics table above uses — and the
+   stem itself when it does not. Through a div because a stem can carry math markup. */
+function momLabel(i){
+  const q = D.questions[i];
+  if(q.topic) return q.topic;
+  const d = document.createElement('div');
+  d.innerHTML = q.q || '';
+  const t = (d.textContent || '').trim();
+  return t.length > 70 ? t.slice(0, 69).trim() + '…' : t;
+}
+function momentum(){
+  const act = active(S), timed = act.filter(i => qms(i) > 0);
+  // One timed question is not a pace, and two is the least that can have a shape.
+  if(timed.length < 2) return '';
+  const rows = timed.map(i => ({i:i, ms:qms(i), ok:finalRight(i), n:act.indexOf(i)+1}));
+  const all = rows.map(r=>r.ms);
+  const max = Math.max.apply(null, all), med = median(all);
+  const okMs = rows.filter(r=>r.ok).map(r=>r.ms);
+  const noMs = rows.filter(r=>!r.ok).map(r=>r.ms);
+
+  let h = '<div class="topics mom"><h3>Momentum</h3>';
+
+  /* THE STRIP IS `aria-hidden` AND `.no-read-aloud`. It is a picture of the list printed
+     underneath it, so a page reader that walked it would read the same paper twice. */
+  h += '<div class="strip no-read-aloud" aria-hidden="true">';
+  h += '<i class="med" style="bottom:' + (max ? med/max*100 : 0) + '%"></i>';
+  rows.forEach(r=>{
+    // A floor of 4%, so a five-second question is a visible mark and not a gap in the row.
+    const pc = Math.max(4, max ? r.ms/max*100 : 0);
+    h += '<i class="sb ' + (r.ok ? 'r' : 'w') + '" style="height:' + pc + '%" title="'
+       + esc(r.n + ' · ' + (r.ok ? 'right' : 'wrong') + ' · ' + fmtMs(r.ms)) + '"></i>';
+  });
+  h += '</div>';
+  h += '<p class="momax no-read-aloud"><span>first</span>'
+     + '<span>median ' + fmtMs(med) + '</span><span>last</span></p>';
+
+  h += '<p class="mline">Median <b>' + fmtMs(med) + '</b> a question'
+     + (okMs.length ? ' · right ones <b>' + fmtMs(median(okMs)) + '</b>' : '')
+     + (noMs.length ? ' · wrong ones <b>' + fmtMs(median(noMs)) + '</b>' : '')
+     + ' · slowest <b>' + fmtMs(max) + '</b></p>';
+
+  /* A QUIZ SHOWS EVERY QUESTION AND A 40-QUESTION EXAM DOES NOT (not without asking).
+     Ranked slowest-first, the rows he needs are the ones at the top; forty of them would
+     bury the tables underneath in a list he scrolls past. `momAll` is a plain module-level
+     flag like `clockOn` — the end card opens short every time, and expanding it is one
+     click that does not survive the page. */
+  const rank = rows.slice().sort((a,b)=> b.ms - a.ms);
+  const shown = (momAll || rank.length <= MOM_CAP) ? rank : rank.slice(0, MOM_SHOW);
+  shown.forEach(r=>{
+    h += '<div class="mrow"><span class="mg">' + (r.ok ? G_OK : G_NO) + '</span>'
+       + '<span class="mn">' + r.n + '</span>'
+       + '<span class="mlab">' + esc(momLabel(r.i)) + '</span>'
+       + '<span class="mt">' + fmtMs(r.ms) + '</span>'
+       + '<span class="tbar"><i class="' + (r.ok ? '' : 'w') + '" style="width:'
+       + (max ? r.ms/max*100 : 0) + '%"></i></span></div>';
+  });
+
+  if(shown.length < rank.length)
+    h += '<p class="note mmore"><button class="link" id="momall">Show all '
+       + rank.length + ' questions</button></p>';
+
+  const base = okMs.length ? median(okMs) : med;
+  const goal = Math.max(5000, Math.round(base/5000)*5000);
+  h += '<p class="mgoal">Your own pace on the ones you got right, to the nearest five '
+     + 'seconds: <b>' + fmtMs(goal) + '</b> a question — <b>' + fmtMs(goal*act.length)
+     + '</b> for a paper this size.</p>';
+  return h + '</div>';
+}
+
+/* THE TAGS ON THE END CARD: how each group went, and a way to sit one group alone. A tag run
+   is a fresh attempt on only those questions (the finished one goes into history first, as a
+   Retake does); Retake, or "every question" here, goes back to the whole paper. Not offered
+   on a sectioned paper, whose picker already owns which questions a sitting holds. */
+function tagTable(){
+  if(!D.tags || !T.defs.length) return '';
+  const all = D.questions.map((_,i)=>i).filter(i => onPaper(S, i));
+  let h = '';
+  T.defs.forEach((d,n)=>{
+    const qs = all.filter(i => hasTag(i, d));
+    if(!qs.length) return;
+    const sat = qs.filter(i => ans(i) !== undefined || ans2(i) !== undefined);
+    const ok = sat.filter(i => finalRight(i)).length;
+    h += '<div class="tagline"><span class="tchip">' + esc(d) + '</span><span class="tn">'
+       + (sat.length ? ok + ' / ' + sat.length + ' right' : qs.length + ' question' + (qs.length>1?'s':''))
+       + '</span>' + (D.parts ? '' : '<button class="link" data-tagrun="' + n + '">Test only these</button>')
+       + '</div>';
+  });
+  if(!h && !S.tagf) return '';
+  if(S.tagf) h += '<p class="note">This run was only “' + esc(S.tagf) + '”. '
+                + '<button class="link" id="tagall">Back to every question</button></p>';
+  return '<div class="tagtable"><h3>By tag</h3>' + h + '</div>';
+}
+function startRun(tag){
+  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length, ms:S.ms,
+                             tag:S.tagf || undefined});
+  const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
+  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  if(tag) S.tagf = tag;
+  pickSel = null; lastShown = -1;
+  save(); syncTabs(); renderScore(); draw(); window.scrollTo(0,0);
+}
+
 function end(){
+  timeOn(null);
   const act = active(S), n = score(S), t = act.length;
   const pct = t ? Math.round(n/t*100) : 0;
   const red = redeemed().length;
@@ -2573,6 +3037,10 @@ function end(){
         // grayscale-safe hatch and would make the one number he reads harder to read; the
         // count says it in words instead.
         + (red ? '<span>+<b>'+red+'</b> on the second pass</span>' : '') + '</p>';
+
+  // BEFORE the topic tables and after the score: it is about this sitting, the way the score
+  // is, where everything below it is about the material.
+  h += momentum();
 
   const by = {};
   act.forEach(i=>{
@@ -2635,6 +3103,7 @@ function end(){
             + 'every one is done; sitting one again replaces its score.</p>';
   }
 
+  h += tagTable();
   const nskip = Object.keys(S.skipped||{}).length;
   if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
               + '<button class="link" id="unskip">put them back</button></p>';
@@ -2645,6 +3114,12 @@ function end(){
   $('#quizview').innerHTML = h;
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  document.querySelectorAll('[data-tagrun]').forEach(b =>
+    b.onclick = ()=> startRun(T.defs[+b.dataset.tagrun]));
+  const tall = $('#tagall');
+  if(tall) tall.onclick = ()=> startRun(null);
+  const ma = $('#momall');
+  if(ma) ma.onclick = ()=>{ momAll = true; end(); };
   const m = $('#more');
   if(m) m.onclick = ()=>{ S.only = null; S.done = false; S.reviewing = false;
                           pickSel = null; save(); draw(); window.scrollTo(0,0); };
@@ -2679,6 +3154,7 @@ function itemHTML(i, n){
   const q = D.questions[i], first = ans(i), second = ans2(i);
   let h = '<div class="item">';
   if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
+  if(D.tags) tagsOf(i).forEach(t => { h += '<span class="tchip sm">'+esc(t)+'</span>'; });
   h += '<p class="qq">'+(n===undefined?'':(n+1)+'. ')+esc(q.q)+'</p>'
      + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
   if(!firstRight(i)){
@@ -2695,11 +3171,26 @@ function itemHTML(i, n){
   return h + '</div>';
 }
 
+let revByTag = false;
 function review(){
+  timeOn(null);
+  const act = active(S), canSort = D.tags && T.defs.length;
   let h = '<div class="rev"><h3>Every question</h3>';
-  active(S).forEach((i,n)=>{ h += itemHTML(i, n); });
+  if(canSort) h += '<p class="note" style="margin:0 0 6px"><button class="link" id="revsort">'
+                 + (revByTag ? 'Sort in order' : 'Sort by tag') + '</button></p>';
+  if(canSort && revByTag){
+    // a question with two tags is listed under both; the untagged ones come last
+    T.defs.concat(['']).forEach(d=>{
+      const qs = act.filter(i => d ? hasTag(i, d) : !tagsOf(i).length);
+      if(!qs.length) return;
+      h += '<h3 class="tgroup">' + (d ? esc(d) : 'No tag') + ' · ' + qs.length + '</h3>';
+      qs.forEach(i => { h += itemHTML(i, act.indexOf(i)); });
+    });
+  } else act.forEach((i,n)=>{ h += itemHTML(i, n); });
   h += '</div>';
   $('#quizview').innerHTML = h;
+  const rs = $('#revsort');
+  if(rs) rs.onclick = ()=>{ revByTag = !revByTag; review(); };
   $('#band').classList.add('off');
   showResearch(false);
   $('#footer').classList.remove('hide');
@@ -2872,12 +3363,29 @@ function paintClock(){
   // not start counting from the moment he looked.
   el.textContent = fmtMs(S.ms);
 }
+/* ---- WHERE THE SECOND WENT (08-21) ---------------------------------------------------
+   The same delta that goes into `S.ms` goes into `S.qms[qid]`, so the total and the
+   per-question times are banked from ONE measurement and can never disagree with each other.
+
+   `qAt` IS THE QUESTION ON SCREEN AND NOTHING ELSE. The end card, the picker, the review
+   list and every other tab set it to null, so twenty minutes spent reading his own study
+   sheet is never filed under whichever question happened to be open last — the number the
+   momentum block reports is time spent on the question, not time the tab was alive. */
+let qAt = null;
+function bankMs(now){
+  const on = !S.done && !document.hidden;
+  if(tickAt && on){
+    const d = now - tickAt;
+    S.ms += d;
+    if(qAt) S.qms[qAt] = (S.qms[qAt] || 0) + d;
+  }
+  tickAt = on ? now : null;
+}
+/* Every renderer calls this, and it flushes BEFORE the switch: without the flush, up to a
+   second of question 3 would be banked against question 2. */
+function timeOn(id){ bankMs(Date.now()); qAt = id || null; }
 function tick(){
-  const now = Date.now();
-  if(!S.done && !document.hidden){
-    if(tickAt) S.ms += now - tickAt;
-    tickAt = now;
-  }else tickAt = null;
+  bankMs(Date.now());
   paintClock();
   // A WRITE A SECOND WOULD BE A WRITE A SECOND. Every answer already saves, and this only has
   // to cover the case of a tab closed mid-question — 15 seconds is the most that can cost.
@@ -3989,6 +4497,10 @@ document.addEventListener('keydown', e=>{
   // `w` FOR WATCH — the clock in the bar, off by default. Past G like every other command
   // key here, so it can never be an option letter.
   if(e.key === 'w' || e.key === 'W'){ toggleClock(); return; }
+  // `x` SKIPS, `l` (label) PUTS THE CARET IN THE TAG BOX. Both past G, so never an option key.
+  if(e.key === 'x' || e.key === 'X'){ e.preventDefault(); skipQuestion(); return; }
+  if((e.key === 'l' || e.key === 'L') && D.tags){
+    const ti = $('#tagin'); if(ti){ e.preventDefault(); ti.focus(); } return; }
   if(e.key === '/' || e.key === '?'){ e.preventDefault(); toggleUnsure(S.i); return; }
   /* THE KEY NAMES A POSITION ON SCREEN, not an option. `2` and `B` mean the second card he
      can see, which is the only thing either of them could mean to him — after a Redo has

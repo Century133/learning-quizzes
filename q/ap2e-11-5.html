@@ -326,6 +326,32 @@ kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid
 .qmark:hover{background:var(--surface);color:var(--text)}
 .qmark.on{color:var(--text);border-color:var(--accent);background:var(--surface-hi)}
 
+/* ---- tags (10-12): his own labels on a question, kept per quiz ---- */
+.tagrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.tchip{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:.78rem;
+ color:var(--text);background:var(--surface-hi);border:1px solid var(--line);
+ border-radius:6px;padding:2px 8px;line-height:1.5}
+.tchip.sm{font-size:.7rem;margin:0 6px 9px 0}
+button.tchip{cursor:pointer}
+button.tchip:hover{border-color:var(--muted)}
+.tx{background:none;border:0;color:var(--muted);font:inherit;padding:0;cursor:pointer;line-height:1}
+.tx:hover{color:var(--text)}
+.tagin{flex:1 1 140px;min-width:120px;background:none;border:0;outline:0;color:var(--text);
+ font:inherit;font-size:.82rem;padding:3px 2px}
+.tagin::placeholder{color:var(--muted);opacity:.75}
+.tsug{flex:1 0 100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tnew{color:var(--muted);font-size:.76rem}
+.tagtable{margin:26px 0 0;text-align:left}
+.tagtable h3{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+ font-weight:500;margin:0 0 6px}
+.tagline{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line);
+ font-size:.88rem}
+.tagline .tn{flex:1;color:var(--muted);font-variant-numeric:tabular-nums}
+.tgroup{margin-top:30px}
+.menu .keys{border-top:1px solid var(--line);margin:5px 0 0;padding:8px 10px 4px;
+ display:grid;grid-template-columns:auto 1fr;gap:5px 10px;font-size:.78rem;color:var(--muted);
+ align-items:center}
+
 /* ---- the ⋮ menu ---- */
 .more{position:relative;flex:0 0 auto}
 .dots{background:none;border:0;color:var(--muted);font-size:1.15rem;line-height:1;
@@ -452,6 +478,44 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .ptotal{margin:14px 0 0;color:var(--muted);font-size:.88rem}
 .ptotal b{color:var(--text);font-variant-numeric:tabular-nums;font-size:1.05rem;
  font-weight:600;margin-right:8px}
+
+/* ---- MOMENTUM (08-21) ----
+   Same furniture as every other end-card table — same heading, same hairline rows, same
+   rails — because it is one more breakdown of the same sitting and must not read as a
+   dashboard bolted on. The only new shape is the strip, and it is deliberately small: it is
+   there to be glanced at, not measured off.
+
+   IT READS IN GRAYSCALE. A wrong bar is HATCHED as well as coloured, exactly like the wrong
+   half of the score chart above it, so the split survives a screenshot with the colour gone
+   and survives him printing it. */
+.mom .strip{display:flex;align-items:flex-end;gap:2px;height:56px;position:relative;
+ margin:0 0 5px;padding-top:2px}
+.mom .strip .sb{flex:1 1 0;min-width:2px;border-radius:2px 2px 0 0;background:var(--text)}
+.mom .strip .sb.r{background:var(--right)}
+.mom .strip .sb.w{background:var(--wrong);
+ background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,
+ rgba(0,0,0,.45) 3px,rgba(0,0,0,.45) 6px)}
+/* The median, drawn across the strip rather than written under it — the whole question the
+   strip answers is "which of these are the long ones", and a line answers it at a glance. */
+.mom .strip .med{position:absolute;left:0;right:0;height:0;border-top:1px dashed var(--muted);
+ opacity:.55;pointer-events:none}
+.momax{display:flex;justify-content:space-between;color:var(--muted);font-size:.72rem;
+ letter-spacing:.04em;margin:0 0 16px}
+.mline{color:var(--muted);font-size:.88rem;margin:0 0 18px}
+.mline b{color:var(--text);font-variant-numeric:tabular-nums;font-weight:500}
+.mrow{display:grid;grid-template-columns:1.1em 1.7em 1fr auto;gap:5px 10px;align-items:center;
+ padding:8px 0;border-top:1px solid var(--line);font-size:.9rem}
+.mrow .mg{color:var(--muted);font-size:.85rem;user-select:none;-webkit-user-select:none}
+.mrow .mn{color:var(--muted);font-size:.8rem;font-variant-numeric:tabular-nums;text-align:right}
+.mrow .mlab{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mrow .mt{color:var(--muted);font-size:.86rem;font-variant-numeric:tabular-nums}
+/* The rail is `.tbar`, borrowed whole from the tables above. `i.w` is the only addition:
+   time on a question he got wrong gets the same hatch as everything else wrong on the page. */
+.mrow .tbar i.w{background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,
+ rgba(0,0,0,.45) 3px,rgba(0,0,0,.45) 6px)}
+.mmore{margin:12px 0 0;font-size:.85rem}
+.mgoal{margin:16px 0 0;color:var(--muted);font-size:.88rem;max-width:52ch}
+.mgoal b{color:var(--text);font-variant-numeric:tabular-nums;font-weight:500}
 
 /* ---- THE SUBCHAPTER PICKER (08-16) ----
    Deliberately the same furniture as the end card — same heading treatment, same rails, same
@@ -920,7 +984,157 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "ap2e-11-5", "title": "11.5 Muscles of the Pectoral Girdle and Upper Limbs", "subtitle": "Chapter 11 · The Muscular System", "book": "A&P 2e", "hash": "7d9ca3bd9dc8e685", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "An athlete performs a movement that pulls the shoulder blades medially toward the spine (retraction). Which muscle is primarily responsible for this action, and where is its prime mover located?", "options": ["Rhomboid major located on the anterior thorax", "Pectoralis minor located on the posterior thorax", "Pectoralis minor located on the anterior thorax", "Rhomboid major located on the posterior thorax"], "rationales": ["While the rhomboids do retract the scapula, they are found on the posterior aspect of the body, not the front.", "Pectoralis minor is located on the anterior thorax and primarily acts to depress the scapula or rotate it anteriorly.", "Pectoralis minor is located on the front of the chest and assists with anterior rotation rather than medial retraction.", "The rhomboids are located on the back and pull the scapula toward the vertebral column to retract the shoulder."], "correct": 3, "hint": "think about where the shoulder-stabilizing muscles are found relative to the rib cage.", "topic": "Pectoral girdle", "sec": "", "src": "", "link": "", "qid": "02979216f0"}, {"q": "A person turns their hand palm-down to pick up a coin from a table. Which motion is occurring at the forearm, and in which anatomical compartment is the prime mover located?", "options": ["Supination using muscles in the posterior forearm", "Supination using muscles in the anterior forearm", "Pronation using muscles in the anterior forearm", "Pronation using muscles in the posterior forearm"], "rationales": ["Supination is the act of turning the palm up, and its primary muscle (the supinator) is located in the posterior compartment.", "Supination turns the palm upward, whereas picking up a coin from a flat surface usually requires a palm-down orientation.", "Turning the palm downward is pronation, which is facilitated by the pronator teres and pronator quadratus in the anterior compartment.", "While pronation is the correct movement, the prime movers for this action are found on the palm-side or anterior aspect of the forearm."], "correct": 2, "hint": "consider which compartment of the forearm contains the muscles responsible for turning the palm downward.", "topic": "Forearm rotation", "sec": "", "src": "", "link": "", "qid": "1f7552c860"}, {"q": "A musician feels fatigue in the fleshy base of the thumb after a long session of precise pinching movements. Which muscle group is being utilized for these thumb-specific actions?", "options": ["Thenar muscles acting on the little finger", "Thenar muscles acting on the thumb", "Hypothenar muscles acting on the little finger", "Hypothenar muscles acting on the thumb"], "rationales": ["The thenar group is correctly identified by its location, but it controls the first digit (thumb) rather than the fifth.", "The thenar muscles form the eminence at the base of the thumb and are responsible for its complex, precise movements.", "The hypothenar group does control the little finger, but it is located on the opposite side of the palm from the thumb.", "Hypothenar muscles are located on the medial side of the palm and control the little finger, not the thumb."], "correct": 1, "hint": "look for the group located at the base of the first digit.", "topic": "Hand muscle groups", "sec": "", "src": "", "link": "", "qid": "f3acb91a2b"}, {"q": "A baseball pitcher injures a rotator cuff muscle that originates on the anterior surface of the scapula. Which muscle is likely affected and what is its primary movement?", "options": ["Infraspinatus performing medial rotation", "Subscapularis performing medial rotation", "Infraspinatus performing lateral rotation", "Subscapularis performing lateral rotation"], "rationales": ["The infraspinatus originates on the posterior surface of the scapula and is responsible for lateral rotation.", "The subscapularis originates in the subscapular fossa on the anterior scapula and rotates the arm medially.", "The infraspinatus does laterally rotate the arm, but it originates on the back of the scapula rather than the front.", "Although it originates on the anterior scapula, the subscapularis medially rotates the arm rather than laterally."], "correct": 1, "hint": "recall which rotator cuff muscle sits in the large fossa on the front-facing side of the shoulder blade.", "topic": "Rotator cuff", "sec": "", "src": "", "link": "", "qid": "b2b960c104"}, {"q": "During a vigorous reach, the clavicle is depressed to provide a steady base for shoulder movement. Which muscle is responsible for this stabilization of the clavicle?", "options": ["Pectoralis minor", "Subclavius", "Trapezius", "Serratus anterior"], "rationales": ["Pectoralis minor stabilizes the scapula and assists with inhalation but does not primarily act on the clavicle.", "The subclavius originates on the first rib and inserts into the clavicle to stabilize it by pulling it downward.", "The trapezius can elevate or depress the scapula and extend the head, but it is a large posterior muscle rather than a clavicular stabilizer.", "Serratus anterior is known for protracting the scapula and moving the arm forward rather than depressing the clavicle."], "correct": 1, "hint": "identify the small muscle located directly underneath the collarbone.", "topic": "Pectoral girdle stabilization", "sec": "", "src": "", "link": "", "qid": "d37e33a642"}, {"q": "A student studies the muscles that move the humerus and distinguishes between axial and scapular muscles. Which thick, fan-shaped axial muscle covers the superior portion of the anterior thorax?", "options": ["Coracobrachialis", "Pectoralis major", "Latissimus dorsi", "Deltoid"], "rationales": ["The coracobrachialis is a scapular muscle that flexes the arm but does not have a fan-like shape covering the chest.", "The pectoralis major is an axial muscle because it originates on the sternum and clavicle to move the humerus.", "Latissimus dorsi is an axial muscle that moves the humerus, but it is located on the inferior part of the back.", "The deltoid is a scapular muscle that covers the shoulder joint rather than the superior anterior thorax."], "correct": 1, "hint": "focus on the large chest muscle that originates on the skeleton's central axis.", "topic": "Humerus movers", "sec": "", "src": "", "link": "", "qid": "b2952fe5d7"}, {"q": "A weightlifter performs a slow, heavy bicep curl. Deep to the biceps brachii, which muscle provides additional power for flexing the forearm?", "options": ["Brachioradialis", "Triceps brachii", "Brachialis", "Anconeus"], "rationales": ["While the brachioradialis helps flex the forearm, it is located more laterally in the forearm rather than deep to the biceps.", "The triceps brachii is located on the posterior side of the arm and acts as an antagonist that extends the forearm.", "The brachialis lies underneath the biceps brachii and is a powerful flexor of the forearm at the elbow.", "The anconeus is a small muscle that assists in extending the forearm rather than flexing it."], "correct": 2, "hint": "look for the synergist that is specifically described as being deep to the main arm flexor.", "topic": "Forearm flexion", "sec": "", "src": "", "link": "", "qid": "a1ddf590b3"}, {"q": "A typist experiences numbness due to Carpal Tunnel Syndrome. Which muscle from the superficial anterior compartment of the forearm has a tendon that might be involved in this condition?", "options": ["Supinator", "Extensor digitorum", "Flexor digitorum superficialis", "Brachioradialis"], "rationales": ["The supinator is a deep posterior muscle that acts on the radius to turn the palm up and does not affect finger flexion.", "The extensor digitorum is located in the posterior compartment of the forearm and its tendons do not pass through the carpal tunnel.", "This muscle is part of the superficial anterior compartment and its tendons pass through the carpal tunnel to flex the digits.", "The brachioradialis is a forearm flexor, but its tendon does not enter the carpal tunnel to move the fingers."], "correct": 2, "hint": "identify the muscle responsible for rapid finger movements that originates on the medial epicondyle.", "topic": "Forearm compartments", "sec": "", "src": "", "link": "", "qid": "882667001f"}, {"q": "Which midpalmar muscles allow a person to make a 'bye-bye' waving motion by flexing the fingers at the knuckles while keeping the finger segments straight?", "options": ["Dorsal interossei", "Opponens pollicis", "Palmar interossei", "Lumbricals"], "rationales": ["Dorsal interossei are primarily responsible for abducting the fingers (spreading them apart).", "Opponens pollicis is a thenar muscle that moves the thumb across the palm and does not act on the other four fingers.", "Palmar interossei are primarily used to adduct the fingers (bring them together) rather than just facilitating extension.", "Lumbricals flex the fingers at the metacarpophalangeal joints and extend them at the interphalangeal joints."], "correct": 3, "hint": "identify the intermediate muscles that originate from the tendons of the flexor digitorum profundus.", "topic": "Hand intrinsics", "sec": "", "src": "", "link": "", "qid": "6fa22f4ab7"}, {"q": "Fibrous bands of connective tissue sheath the tendons at the wrist to prevent them from bowing out during movement. What is the name of the specific band that extends over the dorsal surface of the hand?", "options": ["Flexor retinaculum", "Interosseous membrane", "Palmar aponeurosis", "Extensor retinaculum"], "rationales": ["The flexor retinaculum is located on the palmar (anterior) surface of the wrist and forms the roof of the carpal tunnel.", "The interosseous membrane is a fibrous sheet connecting the radius and ulna, not a sheath at the wrist joint.", "The palmar aponeurosis is a thick layer of fascia in the palm, not a band that sheaths tendons at the dorsal wrist.", "The extensor retinaculum is the fibrous band located on the back (dorsal side) of the wrist."], "correct": 3, "hint": "distinguish between the band on the palm side and the band on the back of the hand.", "topic": "Wrist anatomy", "sec": "", "src": "", "link": "", "qid": "4f084295bf"}, {"q": "To move the arm from the side of the body toward the front (protraction), such as when pushing a door open, which muscle must contract to move the scapula?", "options": ["Subclavius", "Serratus anterior", "Trapezius", "Rhomboid major"], "rationales": ["The subclavius acts on the clavicle to stabilize it during movement and does not facilitate scapular protraction.", "The serratus anterior originates on the ribs and inserts on the scapula to protract it, moving the arm forward.", "The trapezius pulls the shoulder blades together (retraction) or elevates them, rather than pushing the scapula forward.", "The rhomboid major is an antagonist to the serratus anterior because it retracts the scapula rather than protracting it."], "correct": 1, "hint": "think of the 'boxer's muscle' that pulls the shoulder blade forward along the rib cage.", "topic": "Scapular movement", "sec": "", "src": "", "link": "", "qid": "881f36bef6"}, {"q": "The deltoid is unique among the muscles of the shoulder because its different fibers allow it to perform various actions. Which primary action is the deltoid most known for as the major mover of the arm?", "options": ["Supination", "Abduction", "Retraction", "Adduction"], "rationales": ["Supination is a movement of the forearm at the radioulnar joints, not a movement of the humerus at the shoulder.", "The deltoid is the major abductor of the arm, lifting it away from the midline of the body.", "Retraction is a movement of the scapula toward the spine, whereas the deltoid acts on the humerus bone.", "Muscles like the pectoralis major and latissimus dorsi are the primary adducters; the deltoid is mainly an abductor."], "correct": 1, "hint": "consider the movement required to lift your arms out to the sides to form a 'T' shape.", "topic": "Deltoid functions", "sec": "", "src": "", "link": "", "qid": "41a675e3c0"}, {"q": "An individual is practicing fine motor skills and needs to extend their little finger independently. Which muscle, originating on the lateral epicondyle of the humerus, facilitates this?", "options": ["Extensor carpi ulnaris", "Flexor digiti minimi brevis", "Extensor indicis", "Extensor digiti minimi"], "rationales": ["While this muscle is in the posterior compartment, its primary job is to extend and adduct the wrist, not the fingers.", "This is an intrinsic hand muscle that flexes the little finger rather than extending it from the forearm.", "The extensor indicis is a deep posterior muscle that specifically extends the index finger (second digit).", "The extensor digiti minimi is a superficial posterior forearm muscle specifically dedicated to extending the fifth digit."], "correct": 3, "hint": "look for a muscle name that specifically mentions the 'smallest' or 'least' finger.", "topic": "Forearm extensors", "sec": "", "src": "", "link": "", "qid": "e41058160d"}, {"q": "A person brings their thumb back to a neutral position after spreading their fingers. Which thenar muscle is responsible for this adduction toward the palm?", "options": ["Abductor pollicis brevis", "Adductor pollicis", "Flexor pollicis brevis", "Opponens pollicis"], "rationales": ["The abductor pollicis brevis moves the thumb toward the body (away from the palm) rather than toward it.", "The adductor pollicis originates on the metacarpals and capitate bone to pull the thumb toward the other fingers.", "This muscle flexes the thumb at the joint but does not primarily pull it medially across the plane of the palm.", "The opponens pollicis moves the thumb across the palm to touch the tips of other fingers, a more complex motion than simple adduction."], "correct": 1, "hint": "distinguish between the muscle that moves the thumb away and the one that brings it back.", "topic": "Thumb muscles", "sec": "", "src": "", "link": "", "qid": "b531d7f297"}, {"q": "During a heavy shrug, a person elevates their shoulders. Which large, superficial muscle of the posterior thorax is the prime mover for this shrugging motion?", "options": ["Rhomboid minor", "Serratus anterior", "Latissimus dorsi", "Trapezius"], "rationales": ["Rhomboids primarily retract and rotate the scapula inferiorly rather than being the prime movers for elevation.", "Serratus anterior is located on the side and front of the ribs and moves the scapula forward, not upward.", "Latissimus dorsi is an inferior back muscle that depresses the shoulder and moves the arm, rather than elevating the shoulders.", "The superior fibers of the trapezius are responsible for elevating the scapula during a shrug."], "correct": 3, "hint": "identify the diamond-shaped muscle that spans from the skull down to the lower thoracic vertebrae.", "topic": "Posterior thorax", "sec": "", "src": "", "link": "", "qid": "de64df32de"}, {"q": "To perform a rapid punching motion, the forearm must be extended at the elbow. Which three-headed muscle serves as the prime mover for this extension?", "options": ["Brachioradialis", "Brachialis", "Triceps brachii", "Biceps brachii"], "rationales": ["The brachioradialis is a flexor located in the forearm that assists with lifting loads rather than extending the arm.", "The brachialis is a deep flexor of the forearm and does not contribute to extension.", "The triceps brachii is the large muscle on the back of the arm responsible for extending the forearm.", "The biceps brachii is a flexor of the forearm and would act as an antagonist during a punching extension."], "correct": 2, "hint": "name the posterior arm muscle whose three heads originate from the scapula and the humerus.", "topic": "Elbow extension", "sec": "", "src": "", "link": "", "qid": "c82d7690c0"}], "hasSheet": true, "parts": false, "secTitles": {}, "reserve": 2, "frq": [], "notebook": "https://notebooklm.google.com/notebook/99f2f7b9-6991-4040-8c15-5fdd08ac7563/artifact/57859e52-f56e-4227-9bde-8916d6c85add", "root": "../index.html", "tab": "quiz", "sheet": "### 1. Pectoral Girdle\nThe pectoral girdle serves as the essential structural base for the upper limb, anchoring the arm to the axial skeleton while allowing for a vast range of motion.\n\n*   **Pectoral girdle:** Also known as the shoulder girdle, this complex consists of the bones and overlying muscles that stabilize the shoulder joint, specifically where the head of the humerus articulates with the glenoid fossa of the scapula.\n   Clavicle (lateral ends)\n   Scapula\n   Proximal humerus (specifically the head of the humerus)\n\n### 2. Forearm Rotation\nThe radius and ulna perform two primary rotational movements—supination and pronation—which occur at the radioulnar joints.\n\n*   **Supination:** The anatomical orientation where the forearm and hand face anteriorly, as seen in the standard anatomical position.\n*   **Pronation:** The orientation where the forearm and hand face posteriorly, resulting in the palm facing downward or backward.\n*   **Pronator teres:** The prime mover muscle responsible for turning the hand to the palm-down (posterior) position.\n*   **Pronator quadratus:** A deep muscle of the forearm that assists the prime mover in turning the hand downward.\n*   **Supinator:** The only muscle specifically dedicated to turning the forearm to an anterior orientation at the radioulnar joints.\n\n### 3. Hand Muscle Groups\nThe intrinsic muscles located within the palm are organized into three distinct regional classifications that facilitate complex manual tasks.\n\n*   **Thenar:** A group of muscles located on the radial aspect (lateral side) of the palm, forming the base of the thumb.\n*   **Hypothenar:** A group of muscles located on the medial aspect of the palm, associated with the movements of the little finger.\n*   **Intermediate:** Muscles situated in the midpalmar region that act on all the fingers.\n\n### 4. Rotator Cuff\nThe rotator cuff is a critical musculotendinous circle that reinforces the joint capsule and provides dynamic stability to the shoulder.\n\n*   **Rotator cuff:** A structural cuff formed by the fusion of four deep muscle tendons that connect the scapula to the humerus.\n   Subscapularis\n   Supraspinatus\n   Infraspinatus\n   Teres minor\n*   **Clinical Applications:** Baseball pitchers frequently suffer from rotator cuff injuries because the repetitive, high-velocity overhead throwing motion can cause the tendons to become pinched and inflamed, eventually leading them to tear away from the bone, often requiring surgical intervention.\n\n### 5. Pectoral Girdle Stabilization\nMuscles of the thoracic cage provide a steady, functional base for the arm by positioning and stabilizing the scapula and clavicle.\n\n*   **Subclavius:** A muscle that stabilizes the clavicle by depressing it during various upper limb movements.\n*   **Pectoralis minor:** A muscle that rotates the shoulder anteriorly (essential for a throwing motion) and assists in inhalation by elevating the ribs.\n*   **Serratus anterior:** A muscle that protracts the scapula (moves the arm from the side to the front of the body) and assists in inhalation.\n\n### 6. Humerus Movers\nA combination of axial and scapular muscles cross the glenohumeral joint to execute the diverse range of arm movements.\n\n*   **Pectoralis major:** A thick, fan-shaped axial muscle that performs flexion, adduction, and medial rotation of the humerus.\n*   **Latissimus dorsi:** A broad, triangular muscle of the inferior back that extends, adducts, and medially rotates the arm while also depressing the scapula.\n   **Aponeurosis:** The thick, flat connective tissue sheath into which the latissimus dorsi inserts.\n*   **Coracobrachialis:** A scapular muscle that primarily functions to flex and adduct the arm at the shoulder.\n\n### 7. Forearm Flexion\nThe power and speed required to bend the elbow are provided by a trio of muscles located in the anterior compartment of the arm.\n\n*   **Biceps brachii:** A two-headed muscle that crosses the shoulder and elbow; it flexes the forearm, supinates the forearm at the radioulnar joints, and flexes the arm at the shoulder.\n*   **Brachialis:** A muscle situated deep to the biceps brachii that serves as the primary powerhouse for forearm flexion.\n*   **Brachioradialis:** A muscle of the forearm used for quick flexion or for assisting in lifting heavy loads slowly.\n\n### 8. Forearm Compartments\nThe musculature of the upper limb is organized into anatomical compartments that group muscles by function and shared neurovascular supply.\n\n*   **Anterior compartment of the arm:** A functional group containing the flexors of the forearm, along with the musculocutaneous nerve and associated vessels.\n*   **Superficial anterior compartment of the forearm:** A group originating from the medial epicondyle of the humerus that includes the flexor carpi radialis and palmaris longus.\n*   **Deep anterior compartment of the forearm:** A group including the flexor digitorum profundus that produces powerful flexion and allows the fingers to bend into a fist.\n\n### 9. Hand Intrinsics\nFine motor control, such as the dexterity needed for writing, is provided by muscles that both originate and insert within the hand.\n\n*   **Intrinsic muscles of the hand:** Small muscles located entirely within the hand that allow for precise, coordinated movements of the digits.\n*   **Lumbrical:** An intermediate muscle that flexes the fingers at the metacarpo-phalangeal joints and extends them at the interphalangeal joints.\n*   **Palmar interossei:** Intermediate muscles that adduct and flex the fingers at the metacarpo-phalangeal joints.\n*   **Dorsal interossei:** Intermediate muscles that provide fine motor control by abducting the fingers.\n\n### 10. Wrist Anatomy\nThe wrist is stabilized by specialized fibrous bands that form tunnels to guide and protect the long tendons of the forearm muscles.\n\n*   **Retinacula:** Strong fibrous bands of connective tissue that sheath and hold the tendons of the forearm muscles in place at the wrist.\n*   **Flexor retinaculum:** A palmar fibrous band that forms the roof of the carpal tunnel.\n*   **Extensor retinaculum:** A dorsal fibrous band that secures the extensor tendons.\n*   **Clinical Findings:** Carpal Tunnel Syndrome occurs when poor ergonomics lead to the irritation of tendons—including those of the *flexor digitorum superficialis*—causing inflammation that pinches the median nerve within the carpal tunnel.\n\n### 11. Scapular Movement\nSpecific muscles of the posterior thorax are responsible for the precise positioning and stabilization of the shoulder blade.\n\n*   **Rhomboid major:** A muscle that stabilizes the scapula during pectoral girdle movement and retracts it medially toward the vertebral column.\n*   **Rhomboid minor:** A muscle that stabilizes the scapula, retracts it, and rotates it inferiorly.\n\n### 12. Deltoid Functions\nThe deltoid is a versatile, multi-functional muscle capable of moving the arm in nearly every plane of motion.\n\n*   **Deltoid:** The large, multipennate muscle that creates the rounded contour of the shoulder.\n   **Abduction:** The primary function of the deltoid, specifically the middle fibers, which lift the arm away from the body.\n   **Medial/Lateral rotation:** Secondary functions performed by the anterior and posterior fibers, respectively, to rotate the humerus.\n\n### 13. Forearm Extensors\nThe muscles of the posterior arm and forearm act in concert to straighten the elbow and extend the wrist and digits.\n\n*   **Triceps brachii:** The primary three-headed muscle of the posterior arm responsible for forearm extension.\n*   **Anconeus:** A small posterior muscle that assists in forearm extension and performs abduction of the ulna.\n*   **Extensor digitorum:** A muscle that opens the fingers and moves them sideways (abduction) away from the midline of the hand.\n\n### 14. Thumb Muscles\nThe thumb's unique ability for opposition and precision is facilitated by a specialized group of muscles at its base.\n\n*   **Thenar eminence:** The fleshy, rounded contour at the base of the thumb formed by the thenar muscles.\n*   **Abductor pollicis brevis:** A muscle that performs abduction, moving the thumb toward the body in the sagittal plane.\n*   **Opponens pollicis:** A critical muscle that moves the thumb across the palm to touch the tips of the other fingers (opposition).\n*   **Flexor pollicis longus:** A muscle of the deep anterior compartment of the forearm that flexes the distal phalanx of the thumb.\n\n### 15. Posterior Thorax\nLarge, superficial muscles of the back are responsible for shrugging the shoulders and retracting the pectoral girdle.\n\n*   **Trapezius:** A broad muscle that elevates the shoulders (shrugging), retracts the scapulae, rotates them inferiorly, depresses them, and tilts the head backward.\n*   **Rhomboids:** Posterior thoracic muscles that contract to pull the scapula medially toward the spine (retraction).\n\n### 16. Elbow Extension\n फोर्सफुल extension of the elbow joint is achieved through posterior arm muscles that insert onto the proximal ulna.\n\n*   **Triceps brachii:** The powerful posterior muscle used for rapid extension, such as the motion used in an uppercut punch.\n*   **Olecranon process:** The prominent bony projection of the ulna that serves as the primary insertion point for the triceps brachii."}</script>
+<script id="quiz-data" type="application/json">{"id": "ap2e-11-5", "title": "11.5 Muscles of the Pectoral Girdle and Upper Limbs", "subtitle": "Chapter 11 · The Muscular System", "book": "A&P 2e", "hash": "7d9ca3bd9dc8e685", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "An athlete performs a movement that pulls the shoulder blades medially toward the spine (retraction). Which muscle is primarily responsible for this action, and where is its prime mover located?", "options": ["Rhomboid major located on the anterior thorax", "Pectoralis minor located on the posterior thorax", "Pectoralis minor located on the anterior thorax", "Rhomboid major located on the posterior thorax"], "rationales": ["While the rhomboids do retract the scapula, they are found on the posterior aspect of the body, not the front.", "Pectoralis minor is located on the anterior thorax and primarily acts to depress the scapula or rotate it anteriorly.", "Pectoralis minor is located on the front of the chest and assists with anterior rotation rather than medial retraction.", "The rhomboids are located on the back and pull the scapula toward the vertebral column to retract the shoulder."], "correct": 3, "hint": "think about where the shoulder-stabilizing muscles are found relative to the rib cage.", "topic": "Pectoral girdle", "sec": "", "src": "", "link": "", "qid": "02979216f0"}, {"q": "A person turns their hand palm-down to pick up a coin from a table. Which motion is occurring at the forearm, and in which anatomical compartment is the prime mover located?", "options": ["Supination using muscles in the posterior forearm", "Supination using muscles in the anterior forearm", "Pronation using muscles in the anterior forearm", "Pronation using muscles in the posterior forearm"], "rationales": ["Supination is the act of turning the palm up, and its primary muscle (the supinator) is located in the posterior compartment.", "Supination turns the palm upward, whereas picking up a coin from a flat surface usually requires a palm-down orientation.", "Turning the palm downward is pronation, which is facilitated by the pronator teres and pronator quadratus in the anterior compartment.", "While pronation is the correct movement, the prime movers for this action are found on the palm-side or anterior aspect of the forearm."], "correct": 2, "hint": "consider which compartment of the forearm contains the muscles responsible for turning the palm downward.", "topic": "Forearm rotation", "sec": "", "src": "", "link": "", "qid": "1f7552c860"}, {"q": "A musician feels fatigue in the fleshy base of the thumb after a long session of precise pinching movements. Which muscle group is being utilized for these thumb-specific actions?", "options": ["Thenar muscles acting on the little finger", "Thenar muscles acting on the thumb", "Hypothenar muscles acting on the little finger", "Hypothenar muscles acting on the thumb"], "rationales": ["The thenar group is correctly identified by its location, but it controls the first digit (thumb) rather than the fifth.", "The thenar muscles form the eminence at the base of the thumb and are responsible for its complex, precise movements.", "The hypothenar group does control the little finger, but it is located on the opposite side of the palm from the thumb.", "Hypothenar muscles are located on the medial side of the palm and control the little finger, not the thumb."], "correct": 1, "hint": "look for the group located at the base of the first digit.", "topic": "Hand muscle groups", "sec": "", "src": "", "link": "", "qid": "f3acb91a2b"}, {"q": "A baseball pitcher injures a rotator cuff muscle that originates on the anterior surface of the scapula. Which muscle is likely affected and what is its primary movement?", "options": ["Infraspinatus performing medial rotation", "Subscapularis performing medial rotation", "Infraspinatus performing lateral rotation", "Subscapularis performing lateral rotation"], "rationales": ["The infraspinatus originates on the posterior surface of the scapula and is responsible for lateral rotation.", "The subscapularis originates in the subscapular fossa on the anterior scapula and rotates the arm medially.", "The infraspinatus does laterally rotate the arm, but it originates on the back of the scapula rather than the front.", "Although it originates on the anterior scapula, the subscapularis medially rotates the arm rather than laterally."], "correct": 1, "hint": "recall which rotator cuff muscle sits in the large fossa on the front-facing side of the shoulder blade.", "topic": "Rotator cuff", "sec": "", "src": "", "link": "", "qid": "b2b960c104"}, {"q": "During a vigorous reach, the clavicle is depressed to provide a steady base for shoulder movement. Which muscle is responsible for this stabilization of the clavicle?", "options": ["Pectoralis minor", "Subclavius", "Trapezius", "Serratus anterior"], "rationales": ["Pectoralis minor stabilizes the scapula and assists with inhalation but does not primarily act on the clavicle.", "The subclavius originates on the first rib and inserts into the clavicle to stabilize it by pulling it downward.", "The trapezius can elevate or depress the scapula and extend the head, but it is a large posterior muscle rather than a clavicular stabilizer.", "Serratus anterior is known for protracting the scapula and moving the arm forward rather than depressing the clavicle."], "correct": 1, "hint": "identify the small muscle located directly underneath the collarbone.", "topic": "Pectoral girdle stabilization", "sec": "", "src": "", "link": "", "qid": "d37e33a642"}, {"q": "A student studies the muscles that move the humerus and distinguishes between axial and scapular muscles. Which thick, fan-shaped axial muscle covers the superior portion of the anterior thorax?", "options": ["Coracobrachialis", "Pectoralis major", "Latissimus dorsi", "Deltoid"], "rationales": ["The coracobrachialis is a scapular muscle that flexes the arm but does not have a fan-like shape covering the chest.", "The pectoralis major is an axial muscle because it originates on the sternum and clavicle to move the humerus.", "Latissimus dorsi is an axial muscle that moves the humerus, but it is located on the inferior part of the back.", "The deltoid is a scapular muscle that covers the shoulder joint rather than the superior anterior thorax."], "correct": 1, "hint": "focus on the large chest muscle that originates on the skeleton's central axis.", "topic": "Humerus movers", "sec": "", "src": "", "link": "", "qid": "b2952fe5d7"}, {"q": "A weightlifter performs a slow, heavy bicep curl. Deep to the biceps brachii, which muscle provides additional power for flexing the forearm?", "options": ["Brachioradialis", "Triceps brachii", "Brachialis", "Anconeus"], "rationales": ["While the brachioradialis helps flex the forearm, it is located more laterally in the forearm rather than deep to the biceps.", "The triceps brachii is located on the posterior side of the arm and acts as an antagonist that extends the forearm.", "The brachialis lies underneath the biceps brachii and is a powerful flexor of the forearm at the elbow.", "The anconeus is a small muscle that assists in extending the forearm rather than flexing it."], "correct": 2, "hint": "look for the synergist that is specifically described as being deep to the main arm flexor.", "topic": "Forearm flexion", "sec": "", "src": "", "link": "", "qid": "a1ddf590b3"}, {"q": "A typist experiences numbness due to Carpal Tunnel Syndrome. Which muscle from the superficial anterior compartment of the forearm has a tendon that might be involved in this condition?", "options": ["Supinator", "Extensor digitorum", "Flexor digitorum superficialis", "Brachioradialis"], "rationales": ["The supinator is a deep posterior muscle that acts on the radius to turn the palm up and does not affect finger flexion.", "The extensor digitorum is located in the posterior compartment of the forearm and its tendons do not pass through the carpal tunnel.", "This muscle is part of the superficial anterior compartment and its tendons pass through the carpal tunnel to flex the digits.", "The brachioradialis is a forearm flexor, but its tendon does not enter the carpal tunnel to move the fingers."], "correct": 2, "hint": "identify the muscle responsible for rapid finger movements that originates on the medial epicondyle.", "topic": "Forearm compartments", "sec": "", "src": "", "link": "", "qid": "882667001f"}, {"q": "Which midpalmar muscles allow a person to make a 'bye-bye' waving motion by flexing the fingers at the knuckles while keeping the finger segments straight?", "options": ["Dorsal interossei", "Opponens pollicis", "Palmar interossei", "Lumbricals"], "rationales": ["Dorsal interossei are primarily responsible for abducting the fingers (spreading them apart).", "Opponens pollicis is a thenar muscle that moves the thumb across the palm and does not act on the other four fingers.", "Palmar interossei are primarily used to adduct the fingers (bring them together) rather than just facilitating extension.", "Lumbricals flex the fingers at the metacarpophalangeal joints and extend them at the interphalangeal joints."], "correct": 3, "hint": "identify the intermediate muscles that originate from the tendons of the flexor digitorum profundus.", "topic": "Hand intrinsics", "sec": "", "src": "", "link": "", "qid": "6fa22f4ab7"}, {"q": "Fibrous bands of connective tissue sheath the tendons at the wrist to prevent them from bowing out during movement. What is the name of the specific band that extends over the dorsal surface of the hand?", "options": ["Flexor retinaculum", "Interosseous membrane", "Palmar aponeurosis", "Extensor retinaculum"], "rationales": ["The flexor retinaculum is located on the palmar (anterior) surface of the wrist and forms the roof of the carpal tunnel.", "The interosseous membrane is a fibrous sheet connecting the radius and ulna, not a sheath at the wrist joint.", "The palmar aponeurosis is a thick layer of fascia in the palm, not a band that sheaths tendons at the dorsal wrist.", "The extensor retinaculum is the fibrous band located on the back (dorsal side) of the wrist."], "correct": 3, "hint": "distinguish between the band on the palm side and the band on the back of the hand.", "topic": "Wrist anatomy", "sec": "", "src": "", "link": "", "qid": "4f084295bf"}, {"q": "To move the arm from the side of the body toward the front (protraction), such as when pushing a door open, which muscle must contract to move the scapula?", "options": ["Subclavius", "Serratus anterior", "Trapezius", "Rhomboid major"], "rationales": ["The subclavius acts on the clavicle to stabilize it during movement and does not facilitate scapular protraction.", "The serratus anterior originates on the ribs and inserts on the scapula to protract it, moving the arm forward.", "The trapezius pulls the shoulder blades together (retraction) or elevates them, rather than pushing the scapula forward.", "The rhomboid major is an antagonist to the serratus anterior because it retracts the scapula rather than protracting it."], "correct": 1, "hint": "think of the 'boxer's muscle' that pulls the shoulder blade forward along the rib cage.", "topic": "Scapular movement", "sec": "", "src": "", "link": "", "qid": "881f36bef6"}, {"q": "The deltoid is unique among the muscles of the shoulder because its different fibers allow it to perform various actions. Which primary action is the deltoid most known for as the major mover of the arm?", "options": ["Supination", "Abduction", "Retraction", "Adduction"], "rationales": ["Supination is a movement of the forearm at the radioulnar joints, not a movement of the humerus at the shoulder.", "The deltoid is the major abductor of the arm, lifting it away from the midline of the body.", "Retraction is a movement of the scapula toward the spine, whereas the deltoid acts on the humerus bone.", "Muscles like the pectoralis major and latissimus dorsi are the primary adducters; the deltoid is mainly an abductor."], "correct": 1, "hint": "consider the movement required to lift your arms out to the sides to form a 'T' shape.", "topic": "Deltoid functions", "sec": "", "src": "", "link": "", "qid": "41a675e3c0"}, {"q": "An individual is practicing fine motor skills and needs to extend their little finger independently. Which muscle, originating on the lateral epicondyle of the humerus, facilitates this?", "options": ["Extensor carpi ulnaris", "Flexor digiti minimi brevis", "Extensor indicis", "Extensor digiti minimi"], "rationales": ["While this muscle is in the posterior compartment, its primary job is to extend and adduct the wrist, not the fingers.", "This is an intrinsic hand muscle that flexes the little finger rather than extending it from the forearm.", "The extensor indicis is a deep posterior muscle that specifically extends the index finger (second digit).", "The extensor digiti minimi is a superficial posterior forearm muscle specifically dedicated to extending the fifth digit."], "correct": 3, "hint": "look for a muscle name that specifically mentions the 'smallest' or 'least' finger.", "topic": "Forearm extensors", "sec": "", "src": "", "link": "", "qid": "e41058160d"}, {"q": "A person brings their thumb back to a neutral position after spreading their fingers. Which thenar muscle is responsible for this adduction toward the palm?", "options": ["Abductor pollicis brevis", "Adductor pollicis", "Flexor pollicis brevis", "Opponens pollicis"], "rationales": ["The abductor pollicis brevis moves the thumb toward the body (away from the palm) rather than toward it.", "The adductor pollicis originates on the metacarpals and capitate bone to pull the thumb toward the other fingers.", "This muscle flexes the thumb at the joint but does not primarily pull it medially across the plane of the palm.", "The opponens pollicis moves the thumb across the palm to touch the tips of other fingers, a more complex motion than simple adduction."], "correct": 1, "hint": "distinguish between the muscle that moves the thumb away and the one that brings it back.", "topic": "Thumb muscles", "sec": "", "src": "", "link": "", "qid": "b531d7f297"}, {"q": "During a heavy shrug, a person elevates their shoulders. Which large, superficial muscle of the posterior thorax is the prime mover for this shrugging motion?", "options": ["Rhomboid minor", "Serratus anterior", "Latissimus dorsi", "Trapezius"], "rationales": ["Rhomboids primarily retract and rotate the scapula inferiorly rather than being the prime movers for elevation.", "Serratus anterior is located on the side and front of the ribs and moves the scapula forward, not upward.", "Latissimus dorsi is an inferior back muscle that depresses the shoulder and moves the arm, rather than elevating the shoulders.", "The superior fibers of the trapezius are responsible for elevating the scapula during a shrug."], "correct": 3, "hint": "identify the diamond-shaped muscle that spans from the skull down to the lower thoracic vertebrae.", "topic": "Posterior thorax", "sec": "", "src": "", "link": "", "qid": "de64df32de"}, {"q": "To perform a rapid punching motion, the forearm must be extended at the elbow. Which three-headed muscle serves as the prime mover for this extension?", "options": ["Brachioradialis", "Brachialis", "Triceps brachii", "Biceps brachii"], "rationales": ["The brachioradialis is a flexor located in the forearm that assists with lifting loads rather than extending the arm.", "The brachialis is a deep flexor of the forearm and does not contribute to extension.", "The triceps brachii is the large muscle on the back of the arm responsible for extending the forearm.", "The biceps brachii is a flexor of the forearm and would act as an antagonist during a punching extension."], "correct": 2, "hint": "name the posterior arm muscle whose three heads originate from the scapula and the humerus.", "topic": "Elbow extension", "sec": "", "src": "", "link": "", "qid": "c82d7690c0"}], "hasSheet": true, "parts": false, "secTitles": {}, "reserve": 2, "tags": false, "frq": [], "notebook": "https://notebooklm.google.com/notebook/99f2f7b9-6991-4040-8c15-5fdd08ac7563/artifact/57859e52-f56e-4227-9bde-8916d6c85add", "root": "../index.html", "tab": "quiz", "sheet": "### 1. Pectoral Girdle\nThe pectoral girdle serves as the essential structural base for the upper limb, anchoring the arm to the axial skeleton while allowing for a vast range of motion.\n\n*   **Pectoral girdle:** Also known as the shoulder girdle, this complex consists of the bones and overlying muscles that stabilize the shoulder joint, specifically where the head of the humerus articulates with the glenoid fossa of the scapula.\n   Clavicle (lateral ends)\n   Scapula\n   Proximal humerus (specifically the head of the humerus)\n\n### 2. Forearm Rotation\nThe radius and ulna perform two primary rotational movements—supination and pronation—which occur at the radioulnar joints.\n\n*   **Supination:** The anatomical orientation where the forearm and hand face anteriorly, as seen in the standard anatomical position.\n*   **Pronation:** The orientation where the forearm and hand face posteriorly, resulting in the palm facing downward or backward.\n*   **Pronator teres:** The prime mover muscle responsible for turning the hand to the palm-down (posterior) position.\n*   **Pronator quadratus:** A deep muscle of the forearm that assists the prime mover in turning the hand downward.\n*   **Supinator:** The only muscle specifically dedicated to turning the forearm to an anterior orientation at the radioulnar joints.\n\n### 3. Hand Muscle Groups\nThe intrinsic muscles located within the palm are organized into three distinct regional classifications that facilitate complex manual tasks.\n\n*   **Thenar:** A group of muscles located on the radial aspect (lateral side) of the palm, forming the base of the thumb.\n*   **Hypothenar:** A group of muscles located on the medial aspect of the palm, associated with the movements of the little finger.\n*   **Intermediate:** Muscles situated in the midpalmar region that act on all the fingers.\n\n### 4. Rotator Cuff\nThe rotator cuff is a critical musculotendinous circle that reinforces the joint capsule and provides dynamic stability to the shoulder.\n\n*   **Rotator cuff:** A structural cuff formed by the fusion of four deep muscle tendons that connect the scapula to the humerus.\n   Subscapularis\n   Supraspinatus\n   Infraspinatus\n   Teres minor\n*   **Clinical Applications:** Baseball pitchers frequently suffer from rotator cuff injuries because the repetitive, high-velocity overhead throwing motion can cause the tendons to become pinched and inflamed, eventually leading them to tear away from the bone, often requiring surgical intervention.\n\n### 5. Pectoral Girdle Stabilization\nMuscles of the thoracic cage provide a steady, functional base for the arm by positioning and stabilizing the scapula and clavicle.\n\n*   **Subclavius:** A muscle that stabilizes the clavicle by depressing it during various upper limb movements.\n*   **Pectoralis minor:** A muscle that rotates the shoulder anteriorly (essential for a throwing motion) and assists in inhalation by elevating the ribs.\n*   **Serratus anterior:** A muscle that protracts the scapula (moves the arm from the side to the front of the body) and assists in inhalation.\n\n### 6. Humerus Movers\nA combination of axial and scapular muscles cross the glenohumeral joint to execute the diverse range of arm movements.\n\n*   **Pectoralis major:** A thick, fan-shaped axial muscle that performs flexion, adduction, and medial rotation of the humerus.\n*   **Latissimus dorsi:** A broad, triangular muscle of the inferior back that extends, adducts, and medially rotates the arm while also depressing the scapula.\n   **Aponeurosis:** The thick, flat connective tissue sheath into which the latissimus dorsi inserts.\n*   **Coracobrachialis:** A scapular muscle that primarily functions to flex and adduct the arm at the shoulder.\n\n### 7. Forearm Flexion\nThe power and speed required to bend the elbow are provided by a trio of muscles located in the anterior compartment of the arm.\n\n*   **Biceps brachii:** A two-headed muscle that crosses the shoulder and elbow; it flexes the forearm, supinates the forearm at the radioulnar joints, and flexes the arm at the shoulder.\n*   **Brachialis:** A muscle situated deep to the biceps brachii that serves as the primary powerhouse for forearm flexion.\n*   **Brachioradialis:** A muscle of the forearm used for quick flexion or for assisting in lifting heavy loads slowly.\n\n### 8. Forearm Compartments\nThe musculature of the upper limb is organized into anatomical compartments that group muscles by function and shared neurovascular supply.\n\n*   **Anterior compartment of the arm:** A functional group containing the flexors of the forearm, along with the musculocutaneous nerve and associated vessels.\n*   **Superficial anterior compartment of the forearm:** A group originating from the medial epicondyle of the humerus that includes the flexor carpi radialis and palmaris longus.\n*   **Deep anterior compartment of the forearm:** A group including the flexor digitorum profundus that produces powerful flexion and allows the fingers to bend into a fist.\n\n### 9. Hand Intrinsics\nFine motor control, such as the dexterity needed for writing, is provided by muscles that both originate and insert within the hand.\n\n*   **Intrinsic muscles of the hand:** Small muscles located entirely within the hand that allow for precise, coordinated movements of the digits.\n*   **Lumbrical:** An intermediate muscle that flexes the fingers at the metacarpo-phalangeal joints and extends them at the interphalangeal joints.\n*   **Palmar interossei:** Intermediate muscles that adduct and flex the fingers at the metacarpo-phalangeal joints.\n*   **Dorsal interossei:** Intermediate muscles that provide fine motor control by abducting the fingers.\n\n### 10. Wrist Anatomy\nThe wrist is stabilized by specialized fibrous bands that form tunnels to guide and protect the long tendons of the forearm muscles.\n\n*   **Retinacula:** Strong fibrous bands of connective tissue that sheath and hold the tendons of the forearm muscles in place at the wrist.\n*   **Flexor retinaculum:** A palmar fibrous band that forms the roof of the carpal tunnel.\n*   **Extensor retinaculum:** A dorsal fibrous band that secures the extensor tendons.\n*   **Clinical Findings:** Carpal Tunnel Syndrome occurs when poor ergonomics lead to the irritation of tendons—including those of the *flexor digitorum superficialis*—causing inflammation that pinches the median nerve within the carpal tunnel.\n\n### 11. Scapular Movement\nSpecific muscles of the posterior thorax are responsible for the precise positioning and stabilization of the shoulder blade.\n\n*   **Rhomboid major:** A muscle that stabilizes the scapula during pectoral girdle movement and retracts it medially toward the vertebral column.\n*   **Rhomboid minor:** A muscle that stabilizes the scapula, retracts it, and rotates it inferiorly.\n\n### 12. Deltoid Functions\nThe deltoid is a versatile, multi-functional muscle capable of moving the arm in nearly every plane of motion.\n\n*   **Deltoid:** The large, multipennate muscle that creates the rounded contour of the shoulder.\n   **Abduction:** The primary function of the deltoid, specifically the middle fibers, which lift the arm away from the body.\n   **Medial/Lateral rotation:** Secondary functions performed by the anterior and posterior fibers, respectively, to rotate the humerus.\n\n### 13. Forearm Extensors\nThe muscles of the posterior arm and forearm act in concert to straighten the elbow and extend the wrist and digits.\n\n*   **Triceps brachii:** The primary three-headed muscle of the posterior arm responsible for forearm extension.\n*   **Anconeus:** A small posterior muscle that assists in forearm extension and performs abduction of the ulna.\n*   **Extensor digitorum:** A muscle that opens the fingers and moves them sideways (abduction) away from the midline of the hand.\n\n### 14. Thumb Muscles\nThe thumb's unique ability for opposition and precision is facilitated by a specialized group of muscles at its base.\n\n*   **Thenar eminence:** The fleshy, rounded contour at the base of the thumb formed by the thenar muscles.\n*   **Abductor pollicis brevis:** A muscle that performs abduction, moving the thumb toward the body in the sagittal plane.\n*   **Opponens pollicis:** A critical muscle that moves the thumb across the palm to touch the tips of the other fingers (opposition).\n*   **Flexor pollicis longus:** A muscle of the deep anterior compartment of the forearm that flexes the distal phalanx of the thumb.\n\n### 15. Posterior Thorax\nLarge, superficial muscles of the back are responsible for shrugging the shoulders and retracting the pectoral girdle.\n\n*   **Trapezius:** A broad muscle that elevates the shoulders (shrugging), retracts the scapulae, rotates them inferiorly, depresses them, and tilts the head backward.\n*   **Rhomboids:** Posterior thoracic muscles that contract to pull the scapula medially toward the spine (retraction).\n\n### 16. Elbow Extension\n फोर्सफुल extension of the elbow joint is achieved through posterior arm muscles that insert onto the proximal ulna.\n\n*   **Triceps brachii:** The powerful posterior muscle used for rapid extension, such as the motion used in an uppercut punch.\n*   **Olecranon process:** The prominent bony projection of the ulna that serves as the primary insertion point for the triceps brachii."}</script>
+<script>
+(function(){
+  if(window.lqSync) return;
+  const API = 'https://terp-plate.vercel.app/api/quiz-sync', MK = 'lqsync:meta';
+  const none = {first: Promise.resolve([]), now: async()=>[], listen(){}};
+  let key = '';
+  try{ key = localStorage.getItem('lq:key') || ''; }catch(e){}
+  const hm = /[#&]k=([A-Za-z0-9_-]{40,})/.exec(location.hash);
+  if(hm) key = hm[1];
+  if(!key || !window.crypto || !crypto.subtle){ window.lqSync = none; return; }
+
+  const skip = k => k.indexOf('lq:') !== 0 || k === 'lq:key' || k === 'lq:speech';
+  const rawSet = Storage.prototype.setItem;
+  let meta = {};
+  try{ meta = JSON.parse(localStorage.getItem(MK) || '{}') || {}; }catch(e){}
+  const putMeta = ()=>{ try{ rawSet.call(localStorage, MK, JSON.stringify(meta)); }catch(e){} };
+  const hash = t => { let h = 5381; for(let i=0;i<t.length;i++) h = ((h<<5) + h + t.charCodeAt(i)) | 0; return h; };
+  const isState = k => /^lq:[^:]+$/.test(k) && k !== 'lq:hub';
+  function weight(s){
+    return Object.keys(s.answers||{}).length + Object.keys(s.pass2||{}).length
+         + Object.keys(s.skipped||{}).length + Object.keys(s.starred||{}).length
+         + Object.keys(s.unsure||{}).length + 1000 * (s.history||[]).length + (s.done ? 500 : 0);
+  }
+  // '' = nothing worth sending
+  function sig(k, v){
+    if(isState(k)){
+      try{ const s = JSON.parse(v);
+        if(!s || typeof s !== 'object') return '';
+        if(!weight(s) && !s.only && !s.tagf) return '';
+        const c = Object.assign({}, s); delete c.ms; delete c.qms; delete c.meta; delete c.hintOpen;
+        return JSON.stringify(c);
+      }catch(e){ return ''; }
+    }
+    return (v && v !== '{}' && v !== '[]' && v !== '{"defs":[],"q":{}}') ? v : '';
+  }
+  let frozen = false, applying = false, timer = null, busy = false;
+  function mark(k, v){
+    if(skip(k)) return;
+    const g = sig(k, v), h = hash(g), m = meta[k] || (meta[k] = {t:0});
+    if(m.h === h) return;
+    m.h = h;
+    if(g){ m.t = Date.now(); m.d = 1; clearTimeout(timer); timer = setTimeout(run, 1500); }
+    putMeta();
+  }
+  Storage.prototype.setItem = function(k, v){
+    if(this === localStorage && frozen && String(k).indexOf('lq:') === 0) return;
+    rawSet.call(this, k, v);
+    if(this === localStorage && !applying){ try{ mark(String(k), String(v)); }catch(e){} }
+  };
+  // What was already here before sync existed: age unknown, so it is stamped low, and a real
+  // attempt outranks a thinner one by how much is in it.
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(skip(k) || meta[k]) continue;
+      const v = localStorage.getItem(k), g = sig(k, v);
+      meta[k] = {t: 0, h: hash(g)};
+      if(g){ let w = 1; if(isState(k)){ try{ w = 1 + weight(JSON.parse(v)); }catch(e){} }
+             meta[k].t = w; meta[k].d = 1; }
+    }
+    putMeta();
+  }catch(e){}
+
+  const enc = new TextEncoder(), dec = new TextDecoder();
+  const toB = s => { s = s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length % 4) s += '=';
+                     return Uint8Array.from(atob(s), c => c.charCodeAt(0)); };
+  const fromB = u => { let t = ''; for(let i=0;i<u.length;i+=8192) t += String.fromCharCode.apply(null, u.subarray(i, i+8192));
+                       return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+  const hex = b => Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,'0')).join('');
+  let ck = null, bucket = '';
+  const ready = (async()=>{
+    ck = await crypto.subtle.importKey('raw', toB(key), 'AES-GCM', false, ['encrypt','decrypt']);
+    bucket = hex(await crypto.subtle.digest('SHA-256', enc.encode('lq-sync:' + key))).slice(0, 32);
+  })();
+  const kid = async k => hex(await crypto.subtle.digest('SHA-256', enc.encode(bucket + '|' + k))).slice(0, 32);
+  async function seal(o){
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv}, ck, enc.encode(JSON.stringify(o)));
+    return fromB(iv) + '.' + fromB(new Uint8Array(ct));
+  }
+  async function unseal(t){
+    const p = t.split('.');
+    return JSON.parse(dec.decode(await crypto.subtle.decrypt({name:'AES-GCM', iv:toB(p[0])}, ck, toB(p[1]))));
+  }
+
+  function pageId(){
+    const el = document.getElementById('quiz-data');
+    if(!el) return null;
+    try{ return JSON.parse(el.textContent).id; }catch(e){ return null; }
+  }
+  async function run(){
+    if(busy || frozen) return [];
+    busy = true;
+    const changed = [];
+    try{
+      await ready;
+      const have = {}, puts = [], sent = {};
+      for(const k of Object.keys(meta)){
+        const m = meta[k];
+        if(!m.id) m.id = await kid(k);
+        have[m.id] = m.t || 0;
+        if(m.d){
+          const v = localStorage.getItem(k);
+          if(v === null){ m.d = 0; continue; }
+          puts.push({k: m.id, v: await seal({k, v}), ts: m.t});
+          sent[k] = m.t;
+        }
+      }
+      const r = await fetch(API, {method:'POST', headers:{'content-type':'text/plain'},
+                                  body: JSON.stringify({bucket, have, puts})});
+      if(!r.ok) throw new Error('sync ' + r.status);
+      const j = await r.json();
+      for(const k in sent) if(meta[k].t === sent[k]) meta[k].d = 0;
+      for(const row of j.rows || []){
+        let o; try{ o = await unseal(row.v); }catch(e){ continue; }
+        if(!o || skip(o.k)) continue;
+        const m = meta[o.k] || (meta[o.k] = {t:0});
+        if((m.t || 0) >= row.ts) continue;
+        applying = true;
+        try{ rawSet.call(localStorage, o.k, o.v); }catch(e){}
+        applying = false;
+        m.t = row.ts; m.d = 0; m.h = hash(sig(o.k, o.v)); m.id = row.k;
+        changed.push(o.k);
+      }
+      putMeta();
+    }catch(e){}
+    busy = false;
+    if(changed.length && window.lqSync.live){
+      const id = pageId();
+      const mine = id ? changed.some(k => k === 'lq:' + id || k.indexOf('lq:' + id + ':') === 0)
+                      : !!document.getElementById('manifest');
+      if(mine){ frozen = true; location.reload(); }
+    }
+    return changed;
+  }
+  function wake(){ if(document.visibilityState !== 'hidden') run(); }
+  function leave(){ if(document.visibilityState === 'hidden') run(); }
+  function listen(){
+    document.removeEventListener('visibilitychange', wake); document.addEventListener('visibilitychange', wake);
+    document.removeEventListener('visibilitychange', leave); document.addEventListener('visibilitychange', leave);
+    removeEventListener('focus', wake); addEventListener('focus', wake);
+  }
+  // `live` = this page should reload itself when its own quiz arrives newer. The locked shell
+  // turns it on only after it has drawn the page.
+  window.lqSync = {first: null, now: run, listen, live: true};
+  listen();
+  setInterval(wake, 20000);
+  window.lqSync.first = run();
+})();
+</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -977,7 +1191,7 @@ function qk(i){ return D.questions[i].qid; }
 function blank(){ return {v:2, hash:D.hash, i:0, answers:{}, pass2:{}, skipped:{}, starred:{},
                           unsure:{}, hints:{}, phase:1, p2list:null, done:false, at:null,
                           shuf:{}, history:[], only:null, sat:{}, promoted:{},
-                          ms:0}; }
+                          ms:0, qms:{}}; }
 function migrate(s){
   // v1 keyed every map on the array index. The hash matches, so the indices are still valid
   // and this is a straight re-key — done once, then never again.
@@ -1035,6 +1249,9 @@ function load(){
     // attempt saved before it. Zero and hidden are the right defaults for an attempt that was
     // never timed: it reads as "not measured" rather than as a suspiciously fast paper.
     if(typeof s.ms !== 'number') s.ms = 0;
+    // NEW ON 08-21 and absent from every attempt before it. An empty map means "never
+    // measured", which momentum() reads as "print nothing" rather than as a paper of zeroes.
+    if(!s.qms) s.qms = {};
     return s;
   }catch(e){ return blank(); }
 }
@@ -1079,10 +1296,44 @@ function save(){
    the sitting's subchapters into this one function is what makes a half-paper behave exactly
    like a whole one — one direction, one end card, one second pass — with no branch anywhere
    downstream. `only: null` (not chosen, or a page built without parts) filters nothing. */
+/* ---- TAGS (10-12, his ask) ------------------------------------------------------------
+   *"a text box at first, but it functions like a Notion tag property … once I press enter it
+   creates a tag and that tag stays for this exam and only for this exam."* Its own key, like
+   the research box, so a Retake and a rebuild keep them. `defs` is the order he made them in;
+   a tag no question carries any more is dropped from it. Off unless the page was built with
+   `tags`, so every page built before this is what it was. */
+const TKEY = KEY + ':tags';
+let T = (function(){
+  try{ const t = JSON.parse(localStorage.getItem(TKEY) || '{}') || {};
+       return {defs: t.defs || [], q: t.q || {}}; }
+  catch(e){ return {defs:[], q:{}}; } })();
+function tput(){ try{ localStorage.setItem(TKEY, JSON.stringify(T)); }catch(e){} }
+function tagsOf(i){ return T.q[qk(i)] || []; }
+function hasTag(i, name){ return tagsOf(i).indexOf(name) >= 0; }
+function tagAdd(i, raw){
+  const name = String(raw).trim().replace(/\s+/g, ' ');
+  if(!name) return;
+  const known = T.defs.find(d => d.toLowerCase() === name.toLowerCase()) || name;
+  if(T.defs.indexOf(known) < 0) T.defs.push(known);
+  const l = T.q[qk(i)] || (T.q[qk(i)] = []);
+  if(l.indexOf(known) < 0) l.push(known);
+  tput();
+}
+function tagDrop(i, name){
+  const id = qk(i);
+  T.q[id] = (T.q[id] || []).filter(x => x !== name);
+  if(!T.q[id].length) delete T.q[id];
+  if(!Object.keys(T.q).some(k => T.q[k].indexOf(name) >= 0)) T.defs = T.defs.filter(d => d !== name);
+  tput();
+}
+
 function active(s){
-  const only = D.parts ? (s.only || null) : null;
+  // A TAG RUN ("test only these") rides here for the same reason the section filter does.
+  const tf = D.tags ? (s.tagf || null) : null;
+  const only = (D.parts && !tf) ? (s.only || null) : null;
   return D.questions.map((_,i)=>i).filter(i => onPaper(s, i)
-    && (!only || only.indexOf(D.questions[i].sec) >= 0));
+    && (!only || only.indexOf(D.questions[i].sec) >= 0)
+    && (!tf || hasTag(i, tf)));
 }
 /* ---- THE RESERVES (08-16) ------------------------------------------------------------
    His ask: *"if 1 question is skipped, another one is replaced in that section about it… you
@@ -1350,7 +1601,9 @@ function flushFrq(){
 function drawFrq(){
   const box = $('#frqview');
   if(!box || !(D.frq||[]).length) return;
-  let h = '<p class="say">Three written answers, from the same sources as the paper. Write '
+  const NW = D.frq.length, WORDS = ['No','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'];
+  let h = '<p class="say">' + (WORDS[NW] || NW) + ' written answer' + (NW === 1 ? '' : 's')
+        + ', from the same sources as the paper. Write '
         + 'one, then mark it: every point that can be settled by what you wrote is checked '
         + 'for you, and the ones that need judgement are handed back. Click any row to '
         + 'overrule it.</p>';
@@ -1549,6 +1802,9 @@ function setTab(name){
     // back — the question must be exactly where he left it.
     if(quizPad !== null) $('main').style.paddingTop = quizPad;
   } else {
+    // The sheet, the starred list and the written half are not the question, so his
+    // reading time on them belongs to no question. `draw()` puts it back on the way in.
+    timeOn(null);
     if(name==='starred') drawStarred();
     if(name==='sheet'){ renderScore(); renderSheetExtras(); }
     if(name==='frq') drawFrq();
@@ -1638,7 +1894,7 @@ function draw(){
   // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
   // the rest of the sitting, so nothing about answering, going back or the second pass has
   // to know the picker exists.
-  if(sectioned() && !S.only) return picker();
+  if(sectioned() && !S.only && !S.tagf) return picker();
   const act = runList();
   if(!act.length) return end();
   if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
@@ -1647,6 +1903,61 @@ function draw(){
 
 /* Pure markup, no DOM writes and no state changes — so the same builder can render the
    question and be measured off-screen for the centring reserve. */
+/* The tag box above the question. Chips for what this question carries, then the box: type and
+   Enter makes the tag (or reuses one spelled the same), the ones he already made show under it
+   to click, Backspace on an empty box takes the last one off, Esc leaves. */
+function tagRowInner(i){
+  const mine = tagsOf(i);
+  let h = '';
+  mine.forEach((n,k)=>{ h += '<span class="tchip">' + esc(n) + '<button class="tx" data-drop="' + k
+                           + '" tabindex="-1" aria-label="Remove tag">×</button></span>'; });
+  return h + '<input id="tagin" class="tagin" type="text" autocomplete="off" spellcheck="false" '
+           + 'placeholder="' + (mine.length ? 'Add a tag' : 'Tag this question  ( l )') + '">'
+           + '<div class="tsug hide" id="tsug"></div>';
+}
+function paintSug(i){
+  const inp = $('#tagin'), box = $('#tsug');
+  if(!inp || !box) return;
+  const raw = inp.value.trim(), v = raw.toLowerCase(), mine = tagsOf(i);
+  let h = T.defs.map((d,n)=>({d,n}))
+    .filter(x => mine.indexOf(x.d) < 0 && (!v || x.d.toLowerCase().indexOf(v) >= 0))
+    .map(x => '<button class="tchip pick" data-n="' + x.n + '" tabindex="-1">' + esc(x.d) + '</button>')
+    .join('');
+  if(v && !T.defs.some(d => d.toLowerCase() === v))
+    h += '<span class="tnew">Enter makes “' + esc(raw) + '”</span>';
+  box.innerHTML = h;
+  box.classList.toggle('hide', !h || document.activeElement !== inp);
+  // mousedown, not click: the box must not blur (and hide these) before the pick lands
+  box.querySelectorAll('.pick').forEach(b => { b.onmousedown = e => {
+    e.preventDefault(); tagAdd(i, T.defs[+b.dataset.n]); redrawTags(i, true); }; });
+}
+function redrawTags(i, focus){
+  const row = $('#tagrow');
+  if(!row) return;
+  row.innerHTML = tagRowInner(i);
+  wireTags(i);
+  if(focus) $('#tagin').focus();
+}
+function wireTags(i){
+  const row = $('#tagrow'), inp = $('#tagin');
+  if(!row || !inp) return;
+  row.querySelectorAll('.tx').forEach(b => b.onclick = ()=>{
+    tagDrop(i, tagsOf(i)[+b.dataset.drop]); redrawTags(i, false); });
+  inp.onfocus = ()=> paintSug(i);
+  inp.oninput = ()=> paintSug(i);
+  inp.onblur = ()=> { const b = $('#tsug'); if(b) b.classList.add('hide'); };
+  inp.onkeydown = e => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      if(!inp.value.trim()){ inp.blur(); return; }
+      tagAdd(i, inp.value); redrawTags(i, true);
+    } else if(e.key === 'Escape'){ inp.value = ''; inp.blur(); }
+    else if(e.key === 'Backspace' && !inp.value && tagsOf(i).length){
+      tagDrop(i, tagsOf(i).slice(-1)[0]); redrawTags(i, true);
+    }
+  };
+}
+
 function buildQ(i, picked, fresh, en){
   const q = D.questions[i];
   const answered = picked !== undefined;
@@ -1658,10 +1969,12 @@ function buildQ(i, picked, fresh, en){
   // The counter sits top-left above the question, the way the notebook does it, rather than
   // up in the bar — it belongs with the thing it counts. On a second pass it counts the
   // second pass, so four wrong answers read as "1 / 4" and not as a broken 16.
-  let h = '<div class="qhead' + en + '"><div class="qcol">'
+  let h = (D.tags ? '<div class="tagrow no-read-aloud" id="tagrow">' + tagRowInner(i) + '</div>' : '')
+        + '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta no-read-aloud"><span class="num">' + (pos+1) + ' / '
         + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        + (D.tags && S.tagf ? '<span class="dot">·</span><span>only ' + esc(S.tagf) + '</span>' : '')
         // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
         // 10 reads as the paper having lost his place, which is how he read it.
         + (recycling && S.phase!==2
@@ -1760,6 +2073,9 @@ let justAnswered = null;
 
 function question(fresh){
   const i = S.i, q = D.questions[i], picked = pick(i);
+  // THE CLOCK MOVES WITH HIM. Re-rendering the same question is harmless: timeOn() banks
+  // what is owed and carries on against the same qid.
+  timeOn(q.qid);
   const answered = picked !== undefined;
   const act = runList();
   const pos = act.indexOf(i);
@@ -1854,6 +2170,7 @@ function question(fresh){
   $('#star').onclick = ()=> toggleStar(i);
   $('#qmark').onclick = ()=> toggleUnsure(i);
   $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
+  if(D.tags) wireTags(i);
 
   // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
   // touches it — and nothing above the options ever changes height.
@@ -2344,19 +2661,32 @@ function openMenu(){
   m.className = 'menu';
   // The clock's only other way in. `w` is not written anywhere else on the page, and a key
   // nothing announces is a key he has to remember he asked for.
-  m.innerHTML = '<button id="skipq">Skip this question</button>'
+  m.innerHTML = '<button id="skipq">Skip this question  ( x )</button>'
               // The reader's own two entries. Space and `v` are written nowhere else on the
               // page, and a key nothing announces is a key he has to remember he asked for.
               + '<button id="readtog">' + (sayOn ? 'Stop' : 'Start') + ' read-aloud  ( space )</button>'
               + '<button id="voiceset">Voice, speed and pauses…</button>'
-              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>';
+              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>'
+              // EVERY KEY, WRITTEN DOWN ONCE (10-12). He could not find Redo or remember its key.
+              + '<div class="keys"><kbd>x</kbd><span>Skip</span><kbd>u</kbd><span>Redo your answer</span>'
+              + '<kbd>h</kbd><span>Hint, when the question has one</span>'
+              + '<kbd>s</kbd><span>Star</span><kbd>/</kbd><span>No idea</span>'
+              + '<kbd>r</kbd><span>Research</span><kbd>f</kbd><span>Fix this question</span>'
+              + '<kbd>t</kbd><span>Reflection</span>'
+              + (D.tags ? '<kbd>l</kbd><span>Tag</span>' : '')
+              + '<kbd>↵</kbd><span>Next</span><kbd>←</kbd><span>Back</span></div>';
   host.appendChild(m);
   m.querySelector('#clocktog').onclick = ()=>{ toggleClock(); closeMenu(); };
   m.querySelector('#readtog').onclick = ()=>{ closeMenu(); sayOn ? sayOff() : sayToggle(); };
   m.querySelector('#voiceset').onclick = ()=>{ closeMenu(); openVset(); };
-  m.querySelector('#skipq').onclick = ()=>{
+  m.querySelector('#skipq').onclick = ()=>{ closeMenu(); skipQuestion(); };
+  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
+}
+/* One path for skipping, whether it came from the menu or from `x` (10-12, his ask: a key
+   *"rather than going into the top bar and then pressing skip"*). */
+function skipQuestion(){
     const list = runList(), pos = list.indexOf(S.i);
-    if(list.length <= 1) return closeMenu();        // never skip the last one standing
+    if(list.length <= 1) return;                    // never skip the last one standing
     const sec = bucketOf(S.i);
     S.skipped[qk(S.i)] = true;
     delete S.answers[qk(S.i)];
@@ -2370,7 +2700,6 @@ function openMenu(){
     // have handed him an end card with a question still owed.
     const filled = promoteReserve(sec) >= 0;
     const wasLast = !filled && pos === list.length - 1;
-    closeMenu();
     syncTabs();
     if(wasLast){ finish(); return; }
     // After the removal the list has shrunk, so the item now AT `pos` is the one that
@@ -2379,8 +2708,6 @@ function openMenu(){
     S.hintOpen = false;
     lastShown = -1;
     save(); question(); window.scrollTo(0,0);
-  };
-  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
 }
 function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(); }
 
@@ -2439,6 +2766,7 @@ function group(act, keyOf, head, label){
 let pickSel = null;
 
 function picker(){
+  timeOn(null);
   const p = paperStat();
   if(!pickSel) pickSel = p.left.map(s => s.sec);          // default: what is still outstanding
   const chosen = p.secs.filter(s => pickSel.indexOf(s.sec) >= 0);
@@ -2534,7 +2862,143 @@ function beginSitting(secs){
   save(); draw(); window.scrollTo(0,0);
 }
 
+/* ---- MOMENTUM — the pace half of the end card (08-21, his ask) ------------------------
+   *"once I'm done with the quiz, the same screen that shows the right and wrong answers, I
+   can also see a breakdown of momentum… ranked by correct versus incorrect, and then also
+   time spent. Maybe that'll help me determine a goal and a time per question."*
+
+   THREE THINGS IN ONE BLOCK, because they answer three different questions:
+
+   • THE STRIP is the paper in the order he sat it — where he slowed down, and whether the
+     slow ones cluster at the end (tiring) or the start (warming up). It is the only thing
+     anywhere on this page that is in time order; every other table is sorted by something.
+   • THE TWO MEDIANS are the comparison worth having: how long the ones he got right took
+     against the ones he got wrong. MEDIAN AND NOT MEAN — one question he walked away from
+     mid-paper drags an average off the map, and that is exactly the question a page that
+     only banks visible time is most likely to have.
+   • THE RANKING is what to look at next: slowest first, each one marked, so a slow ✕ sits
+     at the top of the list on its own.
+
+   THE GOAL IS HIS OWN NUMBER, NOT ONE INVENTED HERE — the median of the questions he got
+   RIGHT, rounded to five seconds. A pace he has already answered correctly at is the only
+   pace this page has any business suggesting.
+
+   IT PRINTS NOTHING UNLESS THE QUESTIONS WERE ACTUALLY TIMED. Every attempt saved before
+   today has an empty `qms`, so the block is absent on those rather than reporting a paper
+   of zeroes — the same rule the clock already uses for `ms:0` in the copy markdown. */
+const MOM_CAP = 14, MOM_SHOW = 10;
+let momAll = false;
+function qms(i){ return (S.qms || {})[qk(i)] || 0; }
+function median(a){
+  if(!a.length) return 0;
+  const s = a.slice().sort((x,y)=>x-y), h = s.length >> 1;
+  return s.length % 2 ? s[h] : Math.round((s[h-1] + s[h]) / 2);
+}
+/* What to call a question in one line. The topic tag when the quiz carries one — it is
+   already the name he thinks of it by, and it is what the topics table above uses — and the
+   stem itself when it does not. Through a div because a stem can carry math markup. */
+function momLabel(i){
+  const q = D.questions[i];
+  if(q.topic) return q.topic;
+  const d = document.createElement('div');
+  d.innerHTML = q.q || '';
+  const t = (d.textContent || '').trim();
+  return t.length > 70 ? t.slice(0, 69).trim() + '…' : t;
+}
+function momentum(){
+  const act = active(S), timed = act.filter(i => qms(i) > 0);
+  // One timed question is not a pace, and two is the least that can have a shape.
+  if(timed.length < 2) return '';
+  const rows = timed.map(i => ({i:i, ms:qms(i), ok:finalRight(i), n:act.indexOf(i)+1}));
+  const all = rows.map(r=>r.ms);
+  const max = Math.max.apply(null, all), med = median(all);
+  const okMs = rows.filter(r=>r.ok).map(r=>r.ms);
+  const noMs = rows.filter(r=>!r.ok).map(r=>r.ms);
+
+  let h = '<div class="topics mom"><h3>Momentum</h3>';
+
+  /* THE STRIP IS `aria-hidden` AND `.no-read-aloud`. It is a picture of the list printed
+     underneath it, so a page reader that walked it would read the same paper twice. */
+  h += '<div class="strip no-read-aloud" aria-hidden="true">';
+  h += '<i class="med" style="bottom:' + (max ? med/max*100 : 0) + '%"></i>';
+  rows.forEach(r=>{
+    // A floor of 4%, so a five-second question is a visible mark and not a gap in the row.
+    const pc = Math.max(4, max ? r.ms/max*100 : 0);
+    h += '<i class="sb ' + (r.ok ? 'r' : 'w') + '" style="height:' + pc + '%" title="'
+       + esc(r.n + ' · ' + (r.ok ? 'right' : 'wrong') + ' · ' + fmtMs(r.ms)) + '"></i>';
+  });
+  h += '</div>';
+  h += '<p class="momax no-read-aloud"><span>first</span>'
+     + '<span>median ' + fmtMs(med) + '</span><span>last</span></p>';
+
+  h += '<p class="mline">Median <b>' + fmtMs(med) + '</b> a question'
+     + (okMs.length ? ' · right ones <b>' + fmtMs(median(okMs)) + '</b>' : '')
+     + (noMs.length ? ' · wrong ones <b>' + fmtMs(median(noMs)) + '</b>' : '')
+     + ' · slowest <b>' + fmtMs(max) + '</b></p>';
+
+  /* A QUIZ SHOWS EVERY QUESTION AND A 40-QUESTION EXAM DOES NOT (not without asking).
+     Ranked slowest-first, the rows he needs are the ones at the top; forty of them would
+     bury the tables underneath in a list he scrolls past. `momAll` is a plain module-level
+     flag like `clockOn` — the end card opens short every time, and expanding it is one
+     click that does not survive the page. */
+  const rank = rows.slice().sort((a,b)=> b.ms - a.ms);
+  const shown = (momAll || rank.length <= MOM_CAP) ? rank : rank.slice(0, MOM_SHOW);
+  shown.forEach(r=>{
+    h += '<div class="mrow"><span class="mg">' + (r.ok ? G_OK : G_NO) + '</span>'
+       + '<span class="mn">' + r.n + '</span>'
+       + '<span class="mlab">' + esc(momLabel(r.i)) + '</span>'
+       + '<span class="mt">' + fmtMs(r.ms) + '</span>'
+       + '<span class="tbar"><i class="' + (r.ok ? '' : 'w') + '" style="width:'
+       + (max ? r.ms/max*100 : 0) + '%"></i></span></div>';
+  });
+
+  if(shown.length < rank.length)
+    h += '<p class="note mmore"><button class="link" id="momall">Show all '
+       + rank.length + ' questions</button></p>';
+
+  const base = okMs.length ? median(okMs) : med;
+  const goal = Math.max(5000, Math.round(base/5000)*5000);
+  h += '<p class="mgoal">Your own pace on the ones you got right, to the nearest five '
+     + 'seconds: <b>' + fmtMs(goal) + '</b> a question — <b>' + fmtMs(goal*act.length)
+     + '</b> for a paper this size.</p>';
+  return h + '</div>';
+}
+
+/* THE TAGS ON THE END CARD: how each group went, and a way to sit one group alone. A tag run
+   is a fresh attempt on only those questions (the finished one goes into history first, as a
+   Retake does); Retake, or "every question" here, goes back to the whole paper. Not offered
+   on a sectioned paper, whose picker already owns which questions a sitting holds. */
+function tagTable(){
+  if(!D.tags || !T.defs.length) return '';
+  const all = D.questions.map((_,i)=>i).filter(i => onPaper(S, i));
+  let h = '';
+  T.defs.forEach((d,n)=>{
+    const qs = all.filter(i => hasTag(i, d));
+    if(!qs.length) return;
+    const sat = qs.filter(i => ans(i) !== undefined || ans2(i) !== undefined);
+    const ok = sat.filter(i => finalRight(i)).length;
+    h += '<div class="tagline"><span class="tchip">' + esc(d) + '</span><span class="tn">'
+       + (sat.length ? ok + ' / ' + sat.length + ' right' : qs.length + ' question' + (qs.length>1?'s':''))
+       + '</span>' + (D.parts ? '' : '<button class="link" data-tagrun="' + n + '">Test only these</button>')
+       + '</div>';
+  });
+  if(!h && !S.tagf) return '';
+  if(S.tagf) h += '<p class="note">This run was only “' + esc(S.tagf) + '”. '
+                + '<button class="link" id="tagall">Back to every question</button></p>';
+  return '<div class="tagtable"><h3>By tag</h3>' + h + '</div>';
+}
+function startRun(tag){
+  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length, ms:S.ms,
+                             tag:S.tagf || undefined});
+  const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
+  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  if(tag) S.tagf = tag;
+  pickSel = null; lastShown = -1;
+  save(); syncTabs(); renderScore(); draw(); window.scrollTo(0,0);
+}
+
 function end(){
+  timeOn(null);
   const act = active(S), n = score(S), t = act.length;
   const pct = t ? Math.round(n/t*100) : 0;
   const red = redeemed().length;
@@ -2548,6 +3012,10 @@ function end(){
         // grayscale-safe hatch and would make the one number he reads harder to read; the
         // count says it in words instead.
         + (red ? '<span>+<b>'+red+'</b> on the second pass</span>' : '') + '</p>';
+
+  // BEFORE the topic tables and after the score: it is about this sitting, the way the score
+  // is, where everything below it is about the material.
+  h += momentum();
 
   const by = {};
   act.forEach(i=>{
@@ -2610,6 +3078,7 @@ function end(){
             + 'every one is done; sitting one again replaces its score.</p>';
   }
 
+  h += tagTable();
   const nskip = Object.keys(S.skipped||{}).length;
   if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
               + '<button class="link" id="unskip">put them back</button></p>';
@@ -2620,6 +3089,12 @@ function end(){
   $('#quizview').innerHTML = h;
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  document.querySelectorAll('[data-tagrun]').forEach(b =>
+    b.onclick = ()=> startRun(T.defs[+b.dataset.tagrun]));
+  const tall = $('#tagall');
+  if(tall) tall.onclick = ()=> startRun(null);
+  const ma = $('#momall');
+  if(ma) ma.onclick = ()=>{ momAll = true; end(); };
   const m = $('#more');
   if(m) m.onclick = ()=>{ S.only = null; S.done = false; S.reviewing = false;
                           pickSel = null; save(); draw(); window.scrollTo(0,0); };
@@ -2654,6 +3129,7 @@ function itemHTML(i, n){
   const q = D.questions[i], first = ans(i), second = ans2(i);
   let h = '<div class="item">';
   if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
+  if(D.tags) tagsOf(i).forEach(t => { h += '<span class="tchip sm">'+esc(t)+'</span>'; });
   h += '<p class="qq">'+(n===undefined?'':(n+1)+'. ')+esc(q.q)+'</p>'
      + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
   if(!firstRight(i)){
@@ -2670,11 +3146,26 @@ function itemHTML(i, n){
   return h + '</div>';
 }
 
+let revByTag = false;
 function review(){
+  timeOn(null);
+  const act = active(S), canSort = D.tags && T.defs.length;
   let h = '<div class="rev"><h3>Every question</h3>';
-  active(S).forEach((i,n)=>{ h += itemHTML(i, n); });
+  if(canSort) h += '<p class="note" style="margin:0 0 6px"><button class="link" id="revsort">'
+                 + (revByTag ? 'Sort in order' : 'Sort by tag') + '</button></p>';
+  if(canSort && revByTag){
+    // a question with two tags is listed under both; the untagged ones come last
+    T.defs.concat(['']).forEach(d=>{
+      const qs = act.filter(i => d ? hasTag(i, d) : !tagsOf(i).length);
+      if(!qs.length) return;
+      h += '<h3 class="tgroup">' + (d ? esc(d) : 'No tag') + ' · ' + qs.length + '</h3>';
+      qs.forEach(i => { h += itemHTML(i, act.indexOf(i)); });
+    });
+  } else act.forEach((i,n)=>{ h += itemHTML(i, n); });
   h += '</div>';
   $('#quizview').innerHTML = h;
+  const rs = $('#revsort');
+  if(rs) rs.onclick = ()=>{ revByTag = !revByTag; review(); };
   $('#band').classList.add('off');
   showResearch(false);
   $('#footer').classList.remove('hide');
@@ -2847,12 +3338,29 @@ function paintClock(){
   // not start counting from the moment he looked.
   el.textContent = fmtMs(S.ms);
 }
+/* ---- WHERE THE SECOND WENT (08-21) ---------------------------------------------------
+   The same delta that goes into `S.ms` goes into `S.qms[qid]`, so the total and the
+   per-question times are banked from ONE measurement and can never disagree with each other.
+
+   `qAt` IS THE QUESTION ON SCREEN AND NOTHING ELSE. The end card, the picker, the review
+   list and every other tab set it to null, so twenty minutes spent reading his own study
+   sheet is never filed under whichever question happened to be open last — the number the
+   momentum block reports is time spent on the question, not time the tab was alive. */
+let qAt = null;
+function bankMs(now){
+  const on = !S.done && !document.hidden;
+  if(tickAt && on){
+    const d = now - tickAt;
+    S.ms += d;
+    if(qAt) S.qms[qAt] = (S.qms[qAt] || 0) + d;
+  }
+  tickAt = on ? now : null;
+}
+/* Every renderer calls this, and it flushes BEFORE the switch: without the flush, up to a
+   second of question 3 would be banked against question 2. */
+function timeOn(id){ bankMs(Date.now()); qAt = id || null; }
 function tick(){
-  const now = Date.now();
-  if(!S.done && !document.hidden){
-    if(tickAt) S.ms += now - tickAt;
-    tickAt = now;
-  }else tickAt = null;
+  bankMs(Date.now());
   paintClock();
   // A WRITE A SECOND WOULD BE A WRITE A SECOND. Every answer already saves, and this only has
   // to cover the case of a tab closed mid-question — 15 seconds is the most that can cost.
@@ -3964,6 +4472,10 @@ document.addEventListener('keydown', e=>{
   // `w` FOR WATCH — the clock in the bar, off by default. Past G like every other command
   // key here, so it can never be an option letter.
   if(e.key === 'w' || e.key === 'W'){ toggleClock(); return; }
+  // `x` SKIPS, `l` (label) PUTS THE CARET IN THE TAG BOX. Both past G, so never an option key.
+  if(e.key === 'x' || e.key === 'X'){ e.preventDefault(); skipQuestion(); return; }
+  if((e.key === 'l' || e.key === 'L') && D.tags){
+    const ti = $('#tagin'); if(ti){ e.preventDefault(); ti.focus(); } return; }
   if(e.key === '/' || e.key === '?'){ e.preventDefault(); toggleUnsure(S.i); return; }
   /* THE KEY NAMES A POSITION ON SCREEN, not an option. `2` and `B` mean the second card he
      can see, which is the only thing either of them could mean to him — after a Redo has

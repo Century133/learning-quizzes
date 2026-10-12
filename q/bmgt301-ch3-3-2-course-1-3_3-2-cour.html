@@ -326,6 +326,32 @@ kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid
 .qmark:hover{background:var(--surface);color:var(--text)}
 .qmark.on{color:var(--text);border-color:var(--accent);background:var(--surface-hi)}
 
+/* ---- tags (10-12): his own labels on a question, kept per quiz ---- */
+.tagrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.tchip{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:.78rem;
+ color:var(--text);background:var(--surface-hi);border:1px solid var(--line);
+ border-radius:6px;padding:2px 8px;line-height:1.5}
+.tchip.sm{font-size:.7rem;margin:0 6px 9px 0}
+button.tchip{cursor:pointer}
+button.tchip:hover{border-color:var(--muted)}
+.tx{background:none;border:0;color:var(--muted);font:inherit;padding:0;cursor:pointer;line-height:1}
+.tx:hover{color:var(--text)}
+.tagin{flex:1 1 140px;min-width:120px;background:none;border:0;outline:0;color:var(--text);
+ font:inherit;font-size:.82rem;padding:3px 2px}
+.tagin::placeholder{color:var(--muted);opacity:.75}
+.tsug{flex:1 0 100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tnew{color:var(--muted);font-size:.76rem}
+.tagtable{margin:26px 0 0;text-align:left}
+.tagtable h3{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+ font-weight:500;margin:0 0 6px}
+.tagline{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line);
+ font-size:.88rem}
+.tagline .tn{flex:1;color:var(--muted);font-variant-numeric:tabular-nums}
+.tgroup{margin-top:30px}
+.menu .keys{border-top:1px solid var(--line);margin:5px 0 0;padding:8px 10px 4px;
+ display:grid;grid-template-columns:auto 1fr;gap:5px 10px;font-size:.78rem;color:var(--muted);
+ align-items:center}
+
 /* ---- the ⋮ menu ---- */
 .more{position:relative;flex:0 0 auto}
 .dots{background:none;border:0;color:var(--muted);font-size:1.15rem;line-height:1;
@@ -975,7 +1001,157 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "bmgt301-ch3-3-2-course-1-3_3-2-cour", "title": "Ch3 Exam · 3.2", "subtitle": "Zara- Fast Fashion from Savvy Systems", "book": "BMGT301", "hash": "8fbaea252fc0e57b", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "A retail analyst observes that Zara produces thirty thousand unique items annually while spending significantly less on advertising than rivals. Compared to traditional fashion models, how does this combination affect Zara's operational outcomes?", "options": ["Higher profit margins and higher failure rates", "Lower profit margins and lower failure rates", "Higher profit margins and lower failure rates", "Lower profit margins and higher failure rates"], "rationales": ["High failure rates would necessitate heavy markdowns, which would inevitably erode profit margins.", "Lower failure rates generally preserve margins by reducing the need for the industry-standard 50 percent markdown.", "Zara's data-driven model results in fewer failed products and higher full-price sales, leading to superior margins despite higher manufacturing costs.", "This represents the failure of traditional models like Gap, whereas Zara's counterintuitive approach achieves the opposite."], "correct": 2, "hint": "Consider how efficiency in design choice relates to the necessity of clearance sales.", "topic": "Counterintuitive model", "sec": "3.2", "src": "+", "link": "", "qid": "75ea728d3a"}, {"q": "Zara uses software to schedule staff based on forecasted sales volume and receives store layout orders directly from a central staging area. Which two management disciplines are primarily being optimized through these specific information system applications?", "options": ["Human Resources and Marketing", "Logistics and Finance", "Human Resources and Finance", "Logistics and Marketing"], "rationales": ["Scheduling staff for peak times addresses HR efficiency, while directing window displays and soundtracks from a central hub is a Marketing function.", "These disciplines deal with the supply chain and capital, which are separate from the in-store personnel and branding activities mentioned.", "While scheduling affects labor costs, the central direction of store layouts is a customer-facing brand decision rather than a financial one.", "Store layouts fall under marketing, but staff scheduling is a personnel management task rather than a movement of goods."], "correct": 0, "hint": "Identify the department responsible for staff shifts and the department responsible for the brand look.", "topic": "Management disciplines", "sec": "3.2", "src": "+", "link": "", "qid": "fd7e5e66af"}, {"q": "A Zara store manager notices several customers asking for a specific round-neck design not currently in stock. The manager uses a handheld device to record this feedback. Which outcome is the most direct result of this specific intelligence-gathering action?", "options": ["A third-party contract manufacturer in Asia begins tooling for a new production run.", "The store's POS system automatically generates a rebuy order for existing inventory.", "The manager receives a commission-based salary increase for the next month.", "The design team in La Coruna receives feedback to create a new version within days."], "rationales": ["Contract manufacturers are primarily used for staples with longer shelf lives, not for rapid-response trend items.", "POS systems track what was already sold, but the manager's PDA is used to capture qualitative insights about what is not yet in the store.", "While commissions are high, they are tied to sales success rather than the act of recording a single customer request.", "Zara's system is designed to bypass hunches by sending real-time customer preferences directly to the designers for rapid production."], "correct": 3, "hint": "Look for the link between front-line feedback and the design headquarters.", "topic": "PDA usage", "sec": "3.2", "src": "+", "link": "", "qid": "e2733b00d9"}, {"q": "Industry rivals typically require six months to design a collection and three months to manufacture it. Zara achieves a ten-to-fifteen day cycle from concept to store shelf. What organizational mechanism primarily enables this specific reduction in cycle time?", "options": ["High expenditures on television and print advertising campaigns", "Vertical integration of factories and fabric production", "Utilization of celebrity collaborations to drive design inspiration", "Heavy reliance on low-cost contract manufacturers in Asia"], "rationales": ["Advertising stimulates demand but has no impact on the speed at which a firm can manufacture and deliver goods.", "By owning its own factories and fabric production, Zara avoids the delays inherent in coordinating with external contract manufacturers.", "Zara avoids celebrity 'prima donnas' to focus on rapid data-driven design by young designers.", "Outsourcing to distant locations actually increases lead times due to shipping and logistics complexity, which is why Zara uses it only for staples."], "correct": 1, "hint": "Think about the advantages of controlling the supply chain from fabric to finish.", "topic": "Cycle time", "sec": "3.2", "src": "+", "link": "", "qid": "7247fe77ab"}, {"q": "A shopper in Milwaukee notices that a Gap store carries identical items to the one in Los Angeles. In contrast, a Zara shopper in Madrid observes that their local store's stock is unique. Which principle explains the difference in these two retail outcomes?", "options": ["Mass production of global staples to reduce costs", "Long-term contracts with fixed-volume manufacturers", "Limited production runs tailored to local tastes", "Standardized inventory models based on national averages"], "rationales": ["This is the traditional Gap model, which results in uniform stock across different cities and regions.", "Fixed volumes prevent the flexibility needed to provide unique, limited-run items for specific stores.", "Zara uses small batches to ensure exclusivity and to match the specific fashion preferences of different geographic locations.", "Standardization leads to the 'everything is the same' complaint associated with Gap rather than Zara's local customization."], "correct": 2, "hint": "Focus on the benefit of producing fewer items per style for specific locations.", "topic": "Inventory strategy", "sec": "3.2", "src": "+", "link": "", "qid": "9d59bc9083"}, {"q": "Zara store managers use Point-of-Sale (POS) systems to track business performance. Which of the following best describes the primary role of the POS system in Zara's value chain?", "options": ["Determining the schedule for store employees during peak hours", "Recording casual customer requests for different colors or styles", "Automating the cutting and dyeing process in the factories", "Capturing hard data on what items are actually being purchased"], "rationales": ["While POS data might inform schedules, the scheduling itself is handled by specialized workforce management software.", "This qualitative data is captured by staff using PDAs, not by the transaction processing system at the counter.", "Factory automation is part of the manufacturing segment of the value chain, not the retail point-of-sale.", "The POS system records the transaction at the cash register, providing the quantitative proof of sales rankings."], "correct": 3, "hint": "Differentiate between a record of a sale and a record of a suggestion.", "topic": "POS systems", "sec": "3.2", "src": "+", "link": "", "qid": "9654b925e5"}, {"q": "According to the case, an information system (IS) is composed of five critical components. Besides hardware and software, what else must be integrated to execute a successful system rollout?", "options": ["RFID tags, foot pedals, and cameras", "Robots, factories, and logistics", "Data, procedures, and people", "Advertising, marketing, and sales"], "rationales": ["These are examples of hardware, which is only one of the five required components of an information system.", "These are physical assets or business functions, not the constitutive components of an information system itself.", "The case highlights that Prada failed because it focused on technology (hardware/software) while ignoring how people and procedures would interact with it.", "These are departments or activities that use information systems, but they are not the components of the system."], "correct": 2, "hint": "Consider the human and organizational elements that accompany technology.", "topic": "Information Systems", "sec": "3.2", "src": "+", "link": "", "qid": "6212b478ef"}, {"q": "A new design team is formed within 'The Cube' to develop a summer collection. To be successful at Zara, how must these designers interact compared to 'prima donna' designers at traditional fashion houses?", "options": ["They must specialize in a single clothing line for their entire career.", "They must focus on creating unique trends through catwalk fashion shows.", "They must accept frequent feedback and share credit for winning ideas.", "They must work independently to protect their creative intellectual property."], "rationales": ["Teams are regularly rotated to encourage innovation and cross-pollinate experience across the firm.", "Zara designs follow evidence of customer demand rather than trying to push new trends via the catwalk.", "Zara's culture emphasizes humility and cross-pollination over individual stardom to maintain a high-volume, data-driven output.", "Bonuses are tied to the success of the team, which discourages independent work and encourages collaboration."], "correct": 2, "hint": "Think about the difference between a celebrity collaborator and a hungry design student.", "topic": "Design philosophy", "sec": "3.2", "src": "+", "link": "", "qid": "97e38a94c0"}, {"q": "Industry data shows that fashion retailers typically book a 50 percent markdown ratio. Zara, however, books 85 percent of its products at full price. What specific consumer behavior is triggered by Zara's logistics model to cause this result?", "options": ["Preference for buying staple items like jeans in bulk", "Wait for seasonal sales because of high initial prices", "Sense of urgency to buy immediately before stock is gone", "Loyalty to celebrity designers associated with the brand"], "rationales": ["While Zara sells staples, the high full-price booking is driven by the 'buy it now' nature of its trendier, limited-run pieces.", "Customers know that waiting for sales at Zara is risky because items are moved out quickly to make room for new inventory.", "Limited production runs and frequent stock turnover teach customers that items they see today will likely be sold out within weeks.", "Zara avoids celebrity designers, relying instead on its rapid supply chain to attract customers."], "correct": 2, "hint": "Consider how limited supply affects the timing of a customer's purchase.", "topic": "Markdowns", "sec": "3.2", "src": "+", "link": "", "qid": "f204f35c8b"}, {"q": "Prada invested heavily in high-tech dressing rooms with RFID tags and foot-pedal doors, yet the Manhattan flagship store underperformed. Zara spends less than one-fourth of the industry average on IT but achieves higher margins. What explains Zara's superior return on technology investment?", "options": ["Targeting technology at points in the value chain where it has the most impact", "Using technology primarily for customer-facing aesthetic features", "Replacing all human staff with automated PDAs and robots", "Hiring famous architects to design technologically integrated stores"], "rationales": ["Zara ensures every dollar spent on tech has a clear payoff, such as inventory optimization, rather than spending for the sake of being 'fashionable'.", "This was Prada's mistake; Zara focuses on back-end efficiencies like logistics and data gathering.", "People are a critical component of Zara's Information Systems; technology assists staff rather than replacing them.", "Prada hired a Pritzker-winning architect for this purpose, but the technology failed in execution because it was over-designed."], "correct": 0, "hint": "Differentiate between technology as a showpiece versus technology as a functional tool.", "topic": "IT investment", "sec": "3.2", "src": "+", "link": "", "qid": "18a9fce308"}, {"q": "Zara manages its supply chain by producing different types of goods through different channels. Based on the case, which combination correctly identifies the item type and its primary manufacturing source?", "options": ["Staple items / Local cooperatives with no contracts", "Staple items / Internal factories in Spain", "Trend items / Internal factories in Spain", "Trend items / Contract manufacturers in Asia"], "rationales": ["Local cooperatives are generally used for stitching the items cut and dyed in the Spanish factories, often for trend-based inventory.", "Internal capacity is reserved for high-speed trend items; staples with longer shelf lives are outsourced to lower-cost regions.", "Items with high fashion risk and short shelf lives are produced in-house to ensure the fastest possible delivery to stores.", "Outsourcing trends to Asia would take too long, missing the window of customer demand."], "correct": 2, "hint": "Match the need for speed with the control of local versus distant production.", "topic": "Vertical integration", "sec": "3.2", "src": "+", "link": "", "qid": "9a66b79513"}, {"q": "At the headquarters outside La Coruna, Zara maintains a basement area called 'Fashion Street.' What is the primary purpose of this 'Potemkin village' within Zara's operational model?", "options": ["Training new designers in catwalk fashion show techniques", "Serving as a distribution center for online orders", "Testing and fine-tuning window displays and store layouts", "Providing a retail space for local employees to purchase samples"], "rationales": ["Zara does not focus on catwalk shows, preferring to follow customer data instead.", "The distribution centers are massive five-million-square-foot facilities, separate from the design-focused Fashion Street.", "Headquarters uses these bogus storefronts to determine exactly how every store in the world should look and sound before sending orders to managers.", "Fashion Street is a staging area for testing layouts, not a functional retail store for sales."], "correct": 2, "hint": "Think about how a global chain ensures consistent branding across all locations.", "topic": "The Cube layout", "sec": "3.2", "src": "+", "link": "", "qid": "1f22f38033"}, {"q": "A Zara customer notices that new inventory arrives on black plastic hangers, which are later replaced by wooden ones. Which operational reality does this hanger change signify to the savvy shopper?", "options": ["New arrival / High risk of selling out quickly", "Old stock / Item is being prepared for a rebuy order", "Old stock / High risk of selling out quickly", "New arrival / Item is moving to the clearance rack"], "rationales": ["Black hangers indicate the newest, limited-run items that shoppers know they must buy immediately or lose forever.", "Rebuy orders are based on data trends, but the wooden hanger simply means the item is no longer part of the most recent shipment.", "Old stock (on wooden hangers) has already been in the store for some time, making it less of an 'immediate' find than new arrivals.", "Black hangers are for the newest items at full price, not for markdowns."], "correct": 0, "hint": "Link the color of the hanger to the timing of the shipment arrival.", "topic": "Stocking frequency", "sec": "3.2", "src": "+", "link": "", "qid": "46db11f59f"}, {"q": "The average Zara customer visits a store seventeen times per year, whereas competitors see only three visits annually. What specific supply chain outcome directly generates this high frequency of return visits?", "options": ["Consistent availability of the same staple items year-round", "Frequent store-wide clearance sales and deep discounts", "Aggressive monthly advertising in fashion magazines", "The continuous rotation of new, limited-run items"], "rationales": ["Consistency (like at Gap) actually leads to fewer visits, as customers don't feel the need to check for changes.", "Zara has significantly fewer markdowns than the industry average, as 85 percent of goods are sold at full price.", "Zara spends almost nothing on advertising, relying on the store experience itself to drive traffic.", "Because stores receive new styles twice weekly and items are produced in small batches, customers feel they must visit often to see what's new."], "correct": 3, "hint": "Consider how 'newness' affects the customer's desire to return.", "topic": "Store visit frequency", "sec": "3.2", "src": "+", "link": "", "qid": "2a0201a33b"}, {"q": "Zara uses a mix of shipping methods to serve its global network. Based on the distance and type of items, which logistics combination is most likely used for trend items being sent from Spain to the United States?", "options": ["Trend items / Overnight trucking fleet", "Staple items / Biodiesel trucking fleet", "Trend items / Chartered cargo flights", "Staple items / Chartered cargo flights"], "rationales": ["Trucking is used for destinations that can be reached overnight, which is impossible for trans-Atlantic shipments.", "While Zara uses biodiesel trucks, they cannot reach locations like the US from Spain.", "Farther destinations are served within 48 hours by air to maintain the high-speed turnover essential for trend items.", "Staples have longer shelf lives and lower margins, making expensive air freight less necessary compared to time-sensitive trends."], "correct": 2, "hint": "Match the urgency of the fashion item with the speed of the transport method.", "topic": "Logistics", "sec": "3.2", "src": "+", "link": "", "qid": "bbdf2e7147"}, {"q": "Zara's founder has described traditional advertising as a 'pointless distraction.' How does Zara's lack of advertising spend impact its overall business model compared to a firm like Gap?", "options": ["It offsets the higher costs of manufacturing in Europe and using air freight.", "It forces the firm to rely on celebrity endorsements to build brand awareness.", "It necessitates keeping items in stock longer to ensure customers find them.", "It results in lower brand loyalty than competitors who advertise heavily."], "rationales": ["By saving on advertising, Zara can afford more expensive, high-speed logistics and local manufacturing while maintaining high margins.", "Zara explicitly avoids celebrity collaborations and 'prima donnas' in its design and marketing.", "Zara does the opposite, moving items through the distribution center in less than 72 hours.", "Zara's customer visit frequency is nearly six times higher than rivals, indicating very high brand engagement."], "correct": 0, "hint": "Think about where the money saved on commercials is being reinvested.", "topic": "Advertising strategy", "sec": "3.2", "src": "+", "link": "", "qid": "56a1279a78"}, {"q": "Zara's distribution centers move approximately two and a half million items weekly. Which technology-driven process ensures that store employees spend more time helping customers rather than managing inventory upon delivery?", "options": ["Deploying robots in every retail store to unpack shipping boxes", "Using RFID tags to allow customers to check their own inventory", "Ironing, hanging, and tagging items before they leave the warehouse", "Allowing store managers to choose their own price tags and security sensors"], "rationales": ["Robots are used in the factories and distribution centers (for cutting/sorting), not in the retail stores for unpacking.", "The case mentions RFID in the context of Prada's failure; Zara's efficiency comes from pre-shipment preparation.", "Items arrive at stores ready for the rack, saving store staff up to three hours of prime selling time per shipment.", "These are affixed at the distribution center to ensure items are move-to-rack ready."], "correct": 2, "hint": "Consider what tasks are performed centrally to save time at the retail level.", "topic": "Logistics automation", "sec": "3.2", "src": "+", "link": "", "qid": "c4ec7c3adb"}, {"q": "After a store closes, staff perform a 'forensics' unit analysis by examining items left in fitting rooms. How does the data from this 'trendspotting' activity differ from the data captured by the POS system?", "options": ["Qualitative insights from unpurchased items vs Quantitative data from sales", "Qualitative insights from unpurchased items vs Qualitative insights from customer chats", "Quantitative data from unpurchased items vs Quantitative data from sales", "Quantitative data from sales vs Quantitative data from fabric waste"], "rationales": ["Forensics look at why customers didn't buy (color, cloth, style), while POS systems simply record what was bought.", "Both of these are qualitative; the POS system is the source of quantitative sales rankings.", "While you can count unpurchased items, 'forensics' is described as looking for preferences in cloth and style, which provides qualitative context.", "This ignores the Fitting Room 'forensics' and the manager's PDA input entirely."], "correct": 0, "hint": "Distinguish between knowing what happened and understanding why it happened.", "topic": "Trendspotting forensics", "sec": "3.2", "src": "+", "link": "", "qid": "259c88af33"}], "hasSheet": true, "parts": true, "secTitles": {"3.2": "Don't Guess, Gather Data"}, "reserve": 2, "frq": [], "notebook": "https://notebooklm.google.com/notebook/873a623f-584e-43aa-a1b5-4059031032cd/artifact/a7e2f908-0ac4-4c49-a90f-8c3365351175", "root": "../index.html", "tab": "quiz", "sheet": "## 1. Counterintuitive model\nZara circumvents the fashion industry’s reliance on catwalk-driven trends by utilizing a responsive, data-centric model that prioritizes actual customer demand over designer \"hunches.\"\n### Key terms\n1. **Conventional wisdom** — the industry standard of using catwalk shows to push new lines and trends to consumers.\n### Names and studies\n1. **Zara** — replaced industry \"hunches\" with data-gathering, showing that responsiveness to customer demand leads to higher profitability.\n\n## 2. Management disciplines\nStrategic human resource management at Zara aligns employee incentives with sales performance and leverages algorithmic scheduling to optimize floor coverage.\n### Key terms\n1. **Commission-based salary** — a compensation structure where a high percentage of pay is tied to sales success.\n   1. up to 70 percent — the specific portion of Zara salaries that can come from commissions.\n2. **Flexible scheduling** — using software to coordinate staff hours based on forecasted sales volume peaks.\n### Names and studies\n1. **Zara Management** — implemented store-level data gathering and flexible scheduling, which reduced total staff work hours by 2 percent.\n\n## 3. PDA usage\nHandheld PDAs serve as the primary conduit for qualitative intelligence, transforming frontline staff into data-gathering agents who inform global design decisions.\n### Key terms\n1. **Personal digital assistants (PDAs)** — handheld computing devices used by staff to capture customer feedback and preferences.\n### Names and studies\n1. **Store Managers** — used PDAs to chat with customers and relay design suggestions, allowing the firm to plan styles based on evidence.\n\n## 4. Cycle time\nZara achieves a competitive advantage by compressing \"concept-to-store\" cycles to be 12 times faster than Gap while offering ten times more unique products.\n### Key terms\n1. **Concept-to-store** — the duration of the entire process from an initial idea or sketch to the item appearing on shelves.\n### Names and studies\n1. **Zara vs. Rivals** — benchmarked Zara's 15-day cycle against competitors, showing Zara is 12 times faster than Gap.\n2. **J. Jill** — utilized a traditional model, showing it takes a full year to move from concept to store shelves.\n\n## 5. Inventory strategy\nZara utilizes limited production runs and mathematical optimization models to create artificial scarcity, driving immediate full-price purchases and minimizing inventory risk.\n### Key terms\n1. **Limited production runs** — manufacturing a small amount of a specific item to encourage immediate purchase and exclusivity.\n2. **Inventory optimization models** — mathematical frameworks used to determine the exact quantity and sizes for specific store deliveries.\n\n## 6. POS systems\nReal-time sales data captured via POS systems is integrated with qualitative PDA insights to provide a holistic view of garment performance and market demand.\n### Key terms\n1. **Point-of-sale (POS) system** — a transaction process that captures customer purchase information and ranks garments by sales.\n\n## 7. Information Systems\nAn effective Information System (IS) requires the strategic orchestration of hardware, software, data, procedures, and people to drive operational excellence.\n### Key terms\n1. **Information system (IS)** — a five-component system consisting of hardware, software, data, procedures, and people.\n2. **Return on investment (ROI)** — the financial metric used to forecast the amount earned from a technology expenditure.\n\n## 8. Design philosophy\nThe \"no prima donna\" design culture emphasizes collective output and high-volume cross-pollination, resulting in a production rate of 30,000 items per year.\n### Key terms\n1. **Cross-pollination** — the practice of rotating teams to share experience and encourage innovation.\n### Names and studies\n1. **The Design Team** — used a \"no prima donna\" approach with 300 designers, showing that collective feedback results in 30,000 items per year.\n\n## 9. Markdowns\nBy aligning production with empirical demand data, Zara achieves an 85 percent full-price sell-through rate, nearly doubling the industry average.\n### Names and studies\n1. **Bain & Company** — estimated that Zara sells 85 percent of items at full price, while the industry average markdown ratio is 50 percent.\n\n## 10. IT investment\nZara maximizes ROI by spending less than one-fourth the industry average on IT, prioritizing \"functional\" value-chain impact over the \"fashionable\" but impractical tech seen in Prada's failures.\n### Names and studies\n1. **Sull & Turconi** — discovered Zara's IT expenditure is less than one-fourth the industry average because they target specific value chain points.\n2. **Prada Manhattan Flagship** — invested in expensive, non-functional in-store tech, resulting in a failed rollout and poor ROI.\n\n## 11. Vertical integration\nVertical ownership of 40 percent of fabric production and most dyeing processes enables Zara to maintain extreme agility and responsiveness to mid-season shifts.\n### Key terms\n1. **Vertical integration** — when a single firm owns several layers of its value chain.\n   1. 40 percent of fabric — the amount Zara produces in-house to maintain control.\n\n## 12. The Cube layout\n\"The Cube\" serves as a centralized strategic hub where retail environments and soundtracks are perfected in \"Fashion Street\" before global implementation.\n### Key terms\n1. **Fashion Street** — a basement staging area at headquarters used to test window displays and store layouts.\n2. **The Cube** — the nickname for Zara's highly centralized headquarters in La Coruña, Spain.\n\n## 13. Stocking frequency\nThe twice-weekly shipment schedule ensures a constantly evolving inventory that encourages high-frequency customer visits and reinforces the brand's exclusivity.\n### Key terms\n1. **Twice-weekly shipments** — the regular schedule for delivering fresh, optimized inventory to every Zara location.\n\n## 14. Store visit frequency\nZara’s scarcity-driven model generates superior brand engagement, with customers visiting 17 times per year—nearly six times more frequently than at competing retailers.\n### Names and studies\n1. **Kumar & Linguri** — found that Zara customers visit 17 times per year, compared to only 3 annual visits for competitors.\n\n## 15. Logistics\nEfficient logistics are maintained through chartered flights and \"return leg\" coordination via Air France–KLM Cargo and Emirates Air to optimize global material flow.\n### Key terms\n1. **Chartered cargo flights** — used to serve distant destinations within a 48-hour window.\n\n## 16. Advertising strategy\nZara reallocates traditional marketing budgets into prime real-estate locations and rapid product turnover to generate organic traffic and brand urgency.\n### Key terms\n1. **Pointless distraction** — the term used by Zara’s founder to describe the firm’s view on traditional advertising.\n\n## 17. Logistics automation\nHigh-speed automation in distribution centers pre-tags and irons garments, reallocating three hours of store staff time daily toward high-value customer service functions.\n### Key terms\n1. **Toyota-designed logistics** — a system of ceiling-mounted racks and sorting machines that whisk items to staging areas.\n\n## 18. Trendspotting forensics\nPost-hours forensic analysis of unsold garments provides critical intelligence on customer preferences that traditional sales data often fails to capture.\n### Key terms\n1. **Unsold item forensics** — inspecting rejected clothing to identify specific customer preferences in cloth or color."}</script>
+<script id="quiz-data" type="application/json">{"id": "bmgt301-ch3-3-2-course-1-3_3-2-cour", "title": "Ch3 Exam · 3.2", "subtitle": "Zara- Fast Fashion from Savvy Systems", "book": "BMGT301", "hash": "8fbaea252fc0e57b", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "A retail analyst observes that Zara produces thirty thousand unique items annually while spending significantly less on advertising than rivals. Compared to traditional fashion models, how does this combination affect Zara's operational outcomes?", "options": ["Higher profit margins and higher failure rates", "Lower profit margins and lower failure rates", "Higher profit margins and lower failure rates", "Lower profit margins and higher failure rates"], "rationales": ["High failure rates would necessitate heavy markdowns, which would inevitably erode profit margins.", "Lower failure rates generally preserve margins by reducing the need for the industry-standard 50 percent markdown.", "Zara's data-driven model results in fewer failed products and higher full-price sales, leading to superior margins despite higher manufacturing costs.", "This represents the failure of traditional models like Gap, whereas Zara's counterintuitive approach achieves the opposite."], "correct": 2, "hint": "Consider how efficiency in design choice relates to the necessity of clearance sales.", "topic": "Counterintuitive model", "sec": "3.2", "src": "+", "link": "", "qid": "75ea728d3a"}, {"q": "Zara uses software to schedule staff based on forecasted sales volume and receives store layout orders directly from a central staging area. Which two management disciplines are primarily being optimized through these specific information system applications?", "options": ["Human Resources and Marketing", "Logistics and Finance", "Human Resources and Finance", "Logistics and Marketing"], "rationales": ["Scheduling staff for peak times addresses HR efficiency, while directing window displays and soundtracks from a central hub is a Marketing function.", "These disciplines deal with the supply chain and capital, which are separate from the in-store personnel and branding activities mentioned.", "While scheduling affects labor costs, the central direction of store layouts is a customer-facing brand decision rather than a financial one.", "Store layouts fall under marketing, but staff scheduling is a personnel management task rather than a movement of goods."], "correct": 0, "hint": "Identify the department responsible for staff shifts and the department responsible for the brand look.", "topic": "Management disciplines", "sec": "3.2", "src": "+", "link": "", "qid": "fd7e5e66af"}, {"q": "A Zara store manager notices several customers asking for a specific round-neck design not currently in stock. The manager uses a handheld device to record this feedback. Which outcome is the most direct result of this specific intelligence-gathering action?", "options": ["A third-party contract manufacturer in Asia begins tooling for a new production run.", "The store's POS system automatically generates a rebuy order for existing inventory.", "The manager receives a commission-based salary increase for the next month.", "The design team in La Coruna receives feedback to create a new version within days."], "rationales": ["Contract manufacturers are primarily used for staples with longer shelf lives, not for rapid-response trend items.", "POS systems track what was already sold, but the manager's PDA is used to capture qualitative insights about what is not yet in the store.", "While commissions are high, they are tied to sales success rather than the act of recording a single customer request.", "Zara's system is designed to bypass hunches by sending real-time customer preferences directly to the designers for rapid production."], "correct": 3, "hint": "Look for the link between front-line feedback and the design headquarters.", "topic": "PDA usage", "sec": "3.2", "src": "+", "link": "", "qid": "e2733b00d9"}, {"q": "Industry rivals typically require six months to design a collection and three months to manufacture it. Zara achieves a ten-to-fifteen day cycle from concept to store shelf. What organizational mechanism primarily enables this specific reduction in cycle time?", "options": ["High expenditures on television and print advertising campaigns", "Vertical integration of factories and fabric production", "Utilization of celebrity collaborations to drive design inspiration", "Heavy reliance on low-cost contract manufacturers in Asia"], "rationales": ["Advertising stimulates demand but has no impact on the speed at which a firm can manufacture and deliver goods.", "By owning its own factories and fabric production, Zara avoids the delays inherent in coordinating with external contract manufacturers.", "Zara avoids celebrity 'prima donnas' to focus on rapid data-driven design by young designers.", "Outsourcing to distant locations actually increases lead times due to shipping and logistics complexity, which is why Zara uses it only for staples."], "correct": 1, "hint": "Think about the advantages of controlling the supply chain from fabric to finish.", "topic": "Cycle time", "sec": "3.2", "src": "+", "link": "", "qid": "7247fe77ab"}, {"q": "A shopper in Milwaukee notices that a Gap store carries identical items to the one in Los Angeles. In contrast, a Zara shopper in Madrid observes that their local store's stock is unique. Which principle explains the difference in these two retail outcomes?", "options": ["Mass production of global staples to reduce costs", "Long-term contracts with fixed-volume manufacturers", "Limited production runs tailored to local tastes", "Standardized inventory models based on national averages"], "rationales": ["This is the traditional Gap model, which results in uniform stock across different cities and regions.", "Fixed volumes prevent the flexibility needed to provide unique, limited-run items for specific stores.", "Zara uses small batches to ensure exclusivity and to match the specific fashion preferences of different geographic locations.", "Standardization leads to the 'everything is the same' complaint associated with Gap rather than Zara's local customization."], "correct": 2, "hint": "Focus on the benefit of producing fewer items per style for specific locations.", "topic": "Inventory strategy", "sec": "3.2", "src": "+", "link": "", "qid": "9d59bc9083"}, {"q": "Zara store managers use Point-of-Sale (POS) systems to track business performance. Which of the following best describes the primary role of the POS system in Zara's value chain?", "options": ["Determining the schedule for store employees during peak hours", "Recording casual customer requests for different colors or styles", "Automating the cutting and dyeing process in the factories", "Capturing hard data on what items are actually being purchased"], "rationales": ["While POS data might inform schedules, the scheduling itself is handled by specialized workforce management software.", "This qualitative data is captured by staff using PDAs, not by the transaction processing system at the counter.", "Factory automation is part of the manufacturing segment of the value chain, not the retail point-of-sale.", "The POS system records the transaction at the cash register, providing the quantitative proof of sales rankings."], "correct": 3, "hint": "Differentiate between a record of a sale and a record of a suggestion.", "topic": "POS systems", "sec": "3.2", "src": "+", "link": "", "qid": "9654b925e5"}, {"q": "According to the case, an information system (IS) is composed of five critical components. Besides hardware and software, what else must be integrated to execute a successful system rollout?", "options": ["RFID tags, foot pedals, and cameras", "Robots, factories, and logistics", "Data, procedures, and people", "Advertising, marketing, and sales"], "rationales": ["These are examples of hardware, which is only one of the five required components of an information system.", "These are physical assets or business functions, not the constitutive components of an information system itself.", "The case highlights that Prada failed because it focused on technology (hardware/software) while ignoring how people and procedures would interact with it.", "These are departments or activities that use information systems, but they are not the components of the system."], "correct": 2, "hint": "Consider the human and organizational elements that accompany technology.", "topic": "Information Systems", "sec": "3.2", "src": "+", "link": "", "qid": "6212b478ef"}, {"q": "A new design team is formed within 'The Cube' to develop a summer collection. To be successful at Zara, how must these designers interact compared to 'prima donna' designers at traditional fashion houses?", "options": ["They must specialize in a single clothing line for their entire career.", "They must focus on creating unique trends through catwalk fashion shows.", "They must accept frequent feedback and share credit for winning ideas.", "They must work independently to protect their creative intellectual property."], "rationales": ["Teams are regularly rotated to encourage innovation and cross-pollinate experience across the firm.", "Zara designs follow evidence of customer demand rather than trying to push new trends via the catwalk.", "Zara's culture emphasizes humility and cross-pollination over individual stardom to maintain a high-volume, data-driven output.", "Bonuses are tied to the success of the team, which discourages independent work and encourages collaboration."], "correct": 2, "hint": "Think about the difference between a celebrity collaborator and a hungry design student.", "topic": "Design philosophy", "sec": "3.2", "src": "+", "link": "", "qid": "97e38a94c0"}, {"q": "Industry data shows that fashion retailers typically book a 50 percent markdown ratio. Zara, however, books 85 percent of its products at full price. What specific consumer behavior is triggered by Zara's logistics model to cause this result?", "options": ["Preference for buying staple items like jeans in bulk", "Wait for seasonal sales because of high initial prices", "Sense of urgency to buy immediately before stock is gone", "Loyalty to celebrity designers associated with the brand"], "rationales": ["While Zara sells staples, the high full-price booking is driven by the 'buy it now' nature of its trendier, limited-run pieces.", "Customers know that waiting for sales at Zara is risky because items are moved out quickly to make room for new inventory.", "Limited production runs and frequent stock turnover teach customers that items they see today will likely be sold out within weeks.", "Zara avoids celebrity designers, relying instead on its rapid supply chain to attract customers."], "correct": 2, "hint": "Consider how limited supply affects the timing of a customer's purchase.", "topic": "Markdowns", "sec": "3.2", "src": "+", "link": "", "qid": "f204f35c8b"}, {"q": "Prada invested heavily in high-tech dressing rooms with RFID tags and foot-pedal doors, yet the Manhattan flagship store underperformed. Zara spends less than one-fourth of the industry average on IT but achieves higher margins. What explains Zara's superior return on technology investment?", "options": ["Targeting technology at points in the value chain where it has the most impact", "Using technology primarily for customer-facing aesthetic features", "Replacing all human staff with automated PDAs and robots", "Hiring famous architects to design technologically integrated stores"], "rationales": ["Zara ensures every dollar spent on tech has a clear payoff, such as inventory optimization, rather than spending for the sake of being 'fashionable'.", "This was Prada's mistake; Zara focuses on back-end efficiencies like logistics and data gathering.", "People are a critical component of Zara's Information Systems; technology assists staff rather than replacing them.", "Prada hired a Pritzker-winning architect for this purpose, but the technology failed in execution because it was over-designed."], "correct": 0, "hint": "Differentiate between technology as a showpiece versus technology as a functional tool.", "topic": "IT investment", "sec": "3.2", "src": "+", "link": "", "qid": "18a9fce308"}, {"q": "Zara manages its supply chain by producing different types of goods through different channels. Based on the case, which combination correctly identifies the item type and its primary manufacturing source?", "options": ["Staple items / Local cooperatives with no contracts", "Staple items / Internal factories in Spain", "Trend items / Internal factories in Spain", "Trend items / Contract manufacturers in Asia"], "rationales": ["Local cooperatives are generally used for stitching the items cut and dyed in the Spanish factories, often for trend-based inventory.", "Internal capacity is reserved for high-speed trend items; staples with longer shelf lives are outsourced to lower-cost regions.", "Items with high fashion risk and short shelf lives are produced in-house to ensure the fastest possible delivery to stores.", "Outsourcing trends to Asia would take too long, missing the window of customer demand."], "correct": 2, "hint": "Match the need for speed with the control of local versus distant production.", "topic": "Vertical integration", "sec": "3.2", "src": "+", "link": "", "qid": "9a66b79513"}, {"q": "At the headquarters outside La Coruna, Zara maintains a basement area called 'Fashion Street.' What is the primary purpose of this 'Potemkin village' within Zara's operational model?", "options": ["Training new designers in catwalk fashion show techniques", "Serving as a distribution center for online orders", "Testing and fine-tuning window displays and store layouts", "Providing a retail space for local employees to purchase samples"], "rationales": ["Zara does not focus on catwalk shows, preferring to follow customer data instead.", "The distribution centers are massive five-million-square-foot facilities, separate from the design-focused Fashion Street.", "Headquarters uses these bogus storefronts to determine exactly how every store in the world should look and sound before sending orders to managers.", "Fashion Street is a staging area for testing layouts, not a functional retail store for sales."], "correct": 2, "hint": "Think about how a global chain ensures consistent branding across all locations.", "topic": "The Cube layout", "sec": "3.2", "src": "+", "link": "", "qid": "1f22f38033"}, {"q": "A Zara customer notices that new inventory arrives on black plastic hangers, which are later replaced by wooden ones. Which operational reality does this hanger change signify to the savvy shopper?", "options": ["New arrival / High risk of selling out quickly", "Old stock / Item is being prepared for a rebuy order", "Old stock / High risk of selling out quickly", "New arrival / Item is moving to the clearance rack"], "rationales": ["Black hangers indicate the newest, limited-run items that shoppers know they must buy immediately or lose forever.", "Rebuy orders are based on data trends, but the wooden hanger simply means the item is no longer part of the most recent shipment.", "Old stock (on wooden hangers) has already been in the store for some time, making it less of an 'immediate' find than new arrivals.", "Black hangers are for the newest items at full price, not for markdowns."], "correct": 0, "hint": "Link the color of the hanger to the timing of the shipment arrival.", "topic": "Stocking frequency", "sec": "3.2", "src": "+", "link": "", "qid": "46db11f59f"}, {"q": "The average Zara customer visits a store seventeen times per year, whereas competitors see only three visits annually. What specific supply chain outcome directly generates this high frequency of return visits?", "options": ["Consistent availability of the same staple items year-round", "Frequent store-wide clearance sales and deep discounts", "Aggressive monthly advertising in fashion magazines", "The continuous rotation of new, limited-run items"], "rationales": ["Consistency (like at Gap) actually leads to fewer visits, as customers don't feel the need to check for changes.", "Zara has significantly fewer markdowns than the industry average, as 85 percent of goods are sold at full price.", "Zara spends almost nothing on advertising, relying on the store experience itself to drive traffic.", "Because stores receive new styles twice weekly and items are produced in small batches, customers feel they must visit often to see what's new."], "correct": 3, "hint": "Consider how 'newness' affects the customer's desire to return.", "topic": "Store visit frequency", "sec": "3.2", "src": "+", "link": "", "qid": "2a0201a33b"}, {"q": "Zara uses a mix of shipping methods to serve its global network. Based on the distance and type of items, which logistics combination is most likely used for trend items being sent from Spain to the United States?", "options": ["Trend items / Overnight trucking fleet", "Staple items / Biodiesel trucking fleet", "Trend items / Chartered cargo flights", "Staple items / Chartered cargo flights"], "rationales": ["Trucking is used for destinations that can be reached overnight, which is impossible for trans-Atlantic shipments.", "While Zara uses biodiesel trucks, they cannot reach locations like the US from Spain.", "Farther destinations are served within 48 hours by air to maintain the high-speed turnover essential for trend items.", "Staples have longer shelf lives and lower margins, making expensive air freight less necessary compared to time-sensitive trends."], "correct": 2, "hint": "Match the urgency of the fashion item with the speed of the transport method.", "topic": "Logistics", "sec": "3.2", "src": "+", "link": "", "qid": "bbdf2e7147"}, {"q": "Zara's founder has described traditional advertising as a 'pointless distraction.' How does Zara's lack of advertising spend impact its overall business model compared to a firm like Gap?", "options": ["It offsets the higher costs of manufacturing in Europe and using air freight.", "It forces the firm to rely on celebrity endorsements to build brand awareness.", "It necessitates keeping items in stock longer to ensure customers find them.", "It results in lower brand loyalty than competitors who advertise heavily."], "rationales": ["By saving on advertising, Zara can afford more expensive, high-speed logistics and local manufacturing while maintaining high margins.", "Zara explicitly avoids celebrity collaborations and 'prima donnas' in its design and marketing.", "Zara does the opposite, moving items through the distribution center in less than 72 hours.", "Zara's customer visit frequency is nearly six times higher than rivals, indicating very high brand engagement."], "correct": 0, "hint": "Think about where the money saved on commercials is being reinvested.", "topic": "Advertising strategy", "sec": "3.2", "src": "+", "link": "", "qid": "56a1279a78"}, {"q": "Zara's distribution centers move approximately two and a half million items weekly. Which technology-driven process ensures that store employees spend more time helping customers rather than managing inventory upon delivery?", "options": ["Deploying robots in every retail store to unpack shipping boxes", "Using RFID tags to allow customers to check their own inventory", "Ironing, hanging, and tagging items before they leave the warehouse", "Allowing store managers to choose their own price tags and security sensors"], "rationales": ["Robots are used in the factories and distribution centers (for cutting/sorting), not in the retail stores for unpacking.", "The case mentions RFID in the context of Prada's failure; Zara's efficiency comes from pre-shipment preparation.", "Items arrive at stores ready for the rack, saving store staff up to three hours of prime selling time per shipment.", "These are affixed at the distribution center to ensure items are move-to-rack ready."], "correct": 2, "hint": "Consider what tasks are performed centrally to save time at the retail level.", "topic": "Logistics automation", "sec": "3.2", "src": "+", "link": "", "qid": "c4ec7c3adb"}, {"q": "After a store closes, staff perform a 'forensics' unit analysis by examining items left in fitting rooms. How does the data from this 'trendspotting' activity differ from the data captured by the POS system?", "options": ["Qualitative insights from unpurchased items vs Quantitative data from sales", "Qualitative insights from unpurchased items vs Qualitative insights from customer chats", "Quantitative data from unpurchased items vs Quantitative data from sales", "Quantitative data from sales vs Quantitative data from fabric waste"], "rationales": ["Forensics look at why customers didn't buy (color, cloth, style), while POS systems simply record what was bought.", "Both of these are qualitative; the POS system is the source of quantitative sales rankings.", "While you can count unpurchased items, 'forensics' is described as looking for preferences in cloth and style, which provides qualitative context.", "This ignores the Fitting Room 'forensics' and the manager's PDA input entirely."], "correct": 0, "hint": "Distinguish between knowing what happened and understanding why it happened.", "topic": "Trendspotting forensics", "sec": "3.2", "src": "+", "link": "", "qid": "259c88af33"}], "hasSheet": true, "parts": true, "secTitles": {"3.2": "Don't Guess, Gather Data"}, "reserve": 2, "tags": false, "frq": [], "notebook": "https://notebooklm.google.com/notebook/873a623f-584e-43aa-a1b5-4059031032cd/artifact/a7e2f908-0ac4-4c49-a90f-8c3365351175", "root": "../index.html", "tab": "quiz", "sheet": "## 1. Counterintuitive model\nZara circumvents the fashion industry’s reliance on catwalk-driven trends by utilizing a responsive, data-centric model that prioritizes actual customer demand over designer \"hunches.\"\n### Key terms\n1. **Conventional wisdom** — the industry standard of using catwalk shows to push new lines and trends to consumers.\n### Names and studies\n1. **Zara** — replaced industry \"hunches\" with data-gathering, showing that responsiveness to customer demand leads to higher profitability.\n\n## 2. Management disciplines\nStrategic human resource management at Zara aligns employee incentives with sales performance and leverages algorithmic scheduling to optimize floor coverage.\n### Key terms\n1. **Commission-based salary** — a compensation structure where a high percentage of pay is tied to sales success.\n   1. up to 70 percent — the specific portion of Zara salaries that can come from commissions.\n2. **Flexible scheduling** — using software to coordinate staff hours based on forecasted sales volume peaks.\n### Names and studies\n1. **Zara Management** — implemented store-level data gathering and flexible scheduling, which reduced total staff work hours by 2 percent.\n\n## 3. PDA usage\nHandheld PDAs serve as the primary conduit for qualitative intelligence, transforming frontline staff into data-gathering agents who inform global design decisions.\n### Key terms\n1. **Personal digital assistants (PDAs)** — handheld computing devices used by staff to capture customer feedback and preferences.\n### Names and studies\n1. **Store Managers** — used PDAs to chat with customers and relay design suggestions, allowing the firm to plan styles based on evidence.\n\n## 4. Cycle time\nZara achieves a competitive advantage by compressing \"concept-to-store\" cycles to be 12 times faster than Gap while offering ten times more unique products.\n### Key terms\n1. **Concept-to-store** — the duration of the entire process from an initial idea or sketch to the item appearing on shelves.\n### Names and studies\n1. **Zara vs. Rivals** — benchmarked Zara's 15-day cycle against competitors, showing Zara is 12 times faster than Gap.\n2. **J. Jill** — utilized a traditional model, showing it takes a full year to move from concept to store shelves.\n\n## 5. Inventory strategy\nZara utilizes limited production runs and mathematical optimization models to create artificial scarcity, driving immediate full-price purchases and minimizing inventory risk.\n### Key terms\n1. **Limited production runs** — manufacturing a small amount of a specific item to encourage immediate purchase and exclusivity.\n2. **Inventory optimization models** — mathematical frameworks used to determine the exact quantity and sizes for specific store deliveries.\n\n## 6. POS systems\nReal-time sales data captured via POS systems is integrated with qualitative PDA insights to provide a holistic view of garment performance and market demand.\n### Key terms\n1. **Point-of-sale (POS) system** — a transaction process that captures customer purchase information and ranks garments by sales.\n\n## 7. Information Systems\nAn effective Information System (IS) requires the strategic orchestration of hardware, software, data, procedures, and people to drive operational excellence.\n### Key terms\n1. **Information system (IS)** — a five-component system consisting of hardware, software, data, procedures, and people.\n2. **Return on investment (ROI)** — the financial metric used to forecast the amount earned from a technology expenditure.\n\n## 8. Design philosophy\nThe \"no prima donna\" design culture emphasizes collective output and high-volume cross-pollination, resulting in a production rate of 30,000 items per year.\n### Key terms\n1. **Cross-pollination** — the practice of rotating teams to share experience and encourage innovation.\n### Names and studies\n1. **The Design Team** — used a \"no prima donna\" approach with 300 designers, showing that collective feedback results in 30,000 items per year.\n\n## 9. Markdowns\nBy aligning production with empirical demand data, Zara achieves an 85 percent full-price sell-through rate, nearly doubling the industry average.\n### Names and studies\n1. **Bain & Company** — estimated that Zara sells 85 percent of items at full price, while the industry average markdown ratio is 50 percent.\n\n## 10. IT investment\nZara maximizes ROI by spending less than one-fourth the industry average on IT, prioritizing \"functional\" value-chain impact over the \"fashionable\" but impractical tech seen in Prada's failures.\n### Names and studies\n1. **Sull & Turconi** — discovered Zara's IT expenditure is less than one-fourth the industry average because they target specific value chain points.\n2. **Prada Manhattan Flagship** — invested in expensive, non-functional in-store tech, resulting in a failed rollout and poor ROI.\n\n## 11. Vertical integration\nVertical ownership of 40 percent of fabric production and most dyeing processes enables Zara to maintain extreme agility and responsiveness to mid-season shifts.\n### Key terms\n1. **Vertical integration** — when a single firm owns several layers of its value chain.\n   1. 40 percent of fabric — the amount Zara produces in-house to maintain control.\n\n## 12. The Cube layout\n\"The Cube\" serves as a centralized strategic hub where retail environments and soundtracks are perfected in \"Fashion Street\" before global implementation.\n### Key terms\n1. **Fashion Street** — a basement staging area at headquarters used to test window displays and store layouts.\n2. **The Cube** — the nickname for Zara's highly centralized headquarters in La Coruña, Spain.\n\n## 13. Stocking frequency\nThe twice-weekly shipment schedule ensures a constantly evolving inventory that encourages high-frequency customer visits and reinforces the brand's exclusivity.\n### Key terms\n1. **Twice-weekly shipments** — the regular schedule for delivering fresh, optimized inventory to every Zara location.\n\n## 14. Store visit frequency\nZara’s scarcity-driven model generates superior brand engagement, with customers visiting 17 times per year—nearly six times more frequently than at competing retailers.\n### Names and studies\n1. **Kumar & Linguri** — found that Zara customers visit 17 times per year, compared to only 3 annual visits for competitors.\n\n## 15. Logistics\nEfficient logistics are maintained through chartered flights and \"return leg\" coordination via Air France–KLM Cargo and Emirates Air to optimize global material flow.\n### Key terms\n1. **Chartered cargo flights** — used to serve distant destinations within a 48-hour window.\n\n## 16. Advertising strategy\nZara reallocates traditional marketing budgets into prime real-estate locations and rapid product turnover to generate organic traffic and brand urgency.\n### Key terms\n1. **Pointless distraction** — the term used by Zara’s founder to describe the firm’s view on traditional advertising.\n\n## 17. Logistics automation\nHigh-speed automation in distribution centers pre-tags and irons garments, reallocating three hours of store staff time daily toward high-value customer service functions.\n### Key terms\n1. **Toyota-designed logistics** — a system of ceiling-mounted racks and sorting machines that whisk items to staging areas.\n\n## 18. Trendspotting forensics\nPost-hours forensic analysis of unsold garments provides critical intelligence on customer preferences that traditional sales data often fails to capture.\n### Key terms\n1. **Unsold item forensics** — inspecting rejected clothing to identify specific customer preferences in cloth or color."}</script>
+<script>
+(function(){
+  if(window.lqSync) return;
+  const API = 'https://terp-plate.vercel.app/api/quiz-sync', MK = 'lqsync:meta';
+  const none = {first: Promise.resolve([]), now: async()=>[], listen(){}};
+  let key = '';
+  try{ key = localStorage.getItem('lq:key') || ''; }catch(e){}
+  const hm = /[#&]k=([A-Za-z0-9_-]{40,})/.exec(location.hash);
+  if(hm) key = hm[1];
+  if(!key || !window.crypto || !crypto.subtle){ window.lqSync = none; return; }
+
+  const skip = k => k.indexOf('lq:') !== 0 || k === 'lq:key' || k === 'lq:speech';
+  const rawSet = Storage.prototype.setItem;
+  let meta = {};
+  try{ meta = JSON.parse(localStorage.getItem(MK) || '{}') || {}; }catch(e){}
+  const putMeta = ()=>{ try{ rawSet.call(localStorage, MK, JSON.stringify(meta)); }catch(e){} };
+  const hash = t => { let h = 5381; for(let i=0;i<t.length;i++) h = ((h<<5) + h + t.charCodeAt(i)) | 0; return h; };
+  const isState = k => /^lq:[^:]+$/.test(k) && k !== 'lq:hub';
+  function weight(s){
+    return Object.keys(s.answers||{}).length + Object.keys(s.pass2||{}).length
+         + Object.keys(s.skipped||{}).length + Object.keys(s.starred||{}).length
+         + Object.keys(s.unsure||{}).length + 1000 * (s.history||[]).length + (s.done ? 500 : 0);
+  }
+  // '' = nothing worth sending
+  function sig(k, v){
+    if(isState(k)){
+      try{ const s = JSON.parse(v);
+        if(!s || typeof s !== 'object') return '';
+        if(!weight(s) && !s.only && !s.tagf) return '';
+        const c = Object.assign({}, s); delete c.ms; delete c.qms; delete c.meta; delete c.hintOpen;
+        return JSON.stringify(c);
+      }catch(e){ return ''; }
+    }
+    return (v && v !== '{}' && v !== '[]' && v !== '{"defs":[],"q":{}}') ? v : '';
+  }
+  let frozen = false, applying = false, timer = null, busy = false;
+  function mark(k, v){
+    if(skip(k)) return;
+    const g = sig(k, v), h = hash(g), m = meta[k] || (meta[k] = {t:0});
+    if(m.h === h) return;
+    m.h = h;
+    if(g){ m.t = Date.now(); m.d = 1; clearTimeout(timer); timer = setTimeout(run, 1500); }
+    putMeta();
+  }
+  Storage.prototype.setItem = function(k, v){
+    if(this === localStorage && frozen && String(k).indexOf('lq:') === 0) return;
+    rawSet.call(this, k, v);
+    if(this === localStorage && !applying){ try{ mark(String(k), String(v)); }catch(e){} }
+  };
+  // What was already here before sync existed: age unknown, so it is stamped low, and a real
+  // attempt outranks a thinner one by how much is in it.
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(skip(k) || meta[k]) continue;
+      const v = localStorage.getItem(k), g = sig(k, v);
+      meta[k] = {t: 0, h: hash(g)};
+      if(g){ let w = 1; if(isState(k)){ try{ w = 1 + weight(JSON.parse(v)); }catch(e){} }
+             meta[k].t = w; meta[k].d = 1; }
+    }
+    putMeta();
+  }catch(e){}
+
+  const enc = new TextEncoder(), dec = new TextDecoder();
+  const toB = s => { s = s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length % 4) s += '=';
+                     return Uint8Array.from(atob(s), c => c.charCodeAt(0)); };
+  const fromB = u => { let t = ''; for(let i=0;i<u.length;i+=8192) t += String.fromCharCode.apply(null, u.subarray(i, i+8192));
+                       return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+  const hex = b => Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,'0')).join('');
+  let ck = null, bucket = '';
+  const ready = (async()=>{
+    ck = await crypto.subtle.importKey('raw', toB(key), 'AES-GCM', false, ['encrypt','decrypt']);
+    bucket = hex(await crypto.subtle.digest('SHA-256', enc.encode('lq-sync:' + key))).slice(0, 32);
+  })();
+  const kid = async k => hex(await crypto.subtle.digest('SHA-256', enc.encode(bucket + '|' + k))).slice(0, 32);
+  async function seal(o){
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv}, ck, enc.encode(JSON.stringify(o)));
+    return fromB(iv) + '.' + fromB(new Uint8Array(ct));
+  }
+  async function unseal(t){
+    const p = t.split('.');
+    return JSON.parse(dec.decode(await crypto.subtle.decrypt({name:'AES-GCM', iv:toB(p[0])}, ck, toB(p[1]))));
+  }
+
+  function pageId(){
+    const el = document.getElementById('quiz-data');
+    if(!el) return null;
+    try{ return JSON.parse(el.textContent).id; }catch(e){ return null; }
+  }
+  async function run(){
+    if(busy || frozen) return [];
+    busy = true;
+    const changed = [];
+    try{
+      await ready;
+      const have = {}, puts = [], sent = {};
+      for(const k of Object.keys(meta)){
+        const m = meta[k];
+        if(!m.id) m.id = await kid(k);
+        have[m.id] = m.t || 0;
+        if(m.d){
+          const v = localStorage.getItem(k);
+          if(v === null){ m.d = 0; continue; }
+          puts.push({k: m.id, v: await seal({k, v}), ts: m.t});
+          sent[k] = m.t;
+        }
+      }
+      const r = await fetch(API, {method:'POST', headers:{'content-type':'text/plain'},
+                                  body: JSON.stringify({bucket, have, puts})});
+      if(!r.ok) throw new Error('sync ' + r.status);
+      const j = await r.json();
+      for(const k in sent) if(meta[k].t === sent[k]) meta[k].d = 0;
+      for(const row of j.rows || []){
+        let o; try{ o = await unseal(row.v); }catch(e){ continue; }
+        if(!o || skip(o.k)) continue;
+        const m = meta[o.k] || (meta[o.k] = {t:0});
+        if((m.t || 0) >= row.ts) continue;
+        applying = true;
+        try{ rawSet.call(localStorage, o.k, o.v); }catch(e){}
+        applying = false;
+        m.t = row.ts; m.d = 0; m.h = hash(sig(o.k, o.v)); m.id = row.k;
+        changed.push(o.k);
+      }
+      putMeta();
+    }catch(e){}
+    busy = false;
+    if(changed.length && window.lqSync.live){
+      const id = pageId();
+      const mine = id ? changed.some(k => k === 'lq:' + id || k.indexOf('lq:' + id + ':') === 0)
+                      : !!document.getElementById('manifest');
+      if(mine){ frozen = true; location.reload(); }
+    }
+    return changed;
+  }
+  function wake(){ if(document.visibilityState !== 'hidden') run(); }
+  function leave(){ if(document.visibilityState === 'hidden') run(); }
+  function listen(){
+    document.removeEventListener('visibilitychange', wake); document.addEventListener('visibilitychange', wake);
+    document.removeEventListener('visibilitychange', leave); document.addEventListener('visibilitychange', leave);
+    removeEventListener('focus', wake); addEventListener('focus', wake);
+  }
+  // `live` = this page should reload itself when its own quiz arrives newer. The locked shell
+  // turns it on only after it has drawn the page.
+  window.lqSync = {first: null, now: run, listen, live: true};
+  listen();
+  setInterval(wake, 20000);
+  window.lqSync.first = run();
+})();
+</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -1137,10 +1313,44 @@ function save(){
    the sitting's subchapters into this one function is what makes a half-paper behave exactly
    like a whole one — one direction, one end card, one second pass — with no branch anywhere
    downstream. `only: null` (not chosen, or a page built without parts) filters nothing. */
+/* ---- TAGS (10-12, his ask) ------------------------------------------------------------
+   *"a text box at first, but it functions like a Notion tag property … once I press enter it
+   creates a tag and that tag stays for this exam and only for this exam."* Its own key, like
+   the research box, so a Retake and a rebuild keep them. `defs` is the order he made them in;
+   a tag no question carries any more is dropped from it. Off unless the page was built with
+   `tags`, so every page built before this is what it was. */
+const TKEY = KEY + ':tags';
+let T = (function(){
+  try{ const t = JSON.parse(localStorage.getItem(TKEY) || '{}') || {};
+       return {defs: t.defs || [], q: t.q || {}}; }
+  catch(e){ return {defs:[], q:{}}; } })();
+function tput(){ try{ localStorage.setItem(TKEY, JSON.stringify(T)); }catch(e){} }
+function tagsOf(i){ return T.q[qk(i)] || []; }
+function hasTag(i, name){ return tagsOf(i).indexOf(name) >= 0; }
+function tagAdd(i, raw){
+  const name = String(raw).trim().replace(/\s+/g, ' ');
+  if(!name) return;
+  const known = T.defs.find(d => d.toLowerCase() === name.toLowerCase()) || name;
+  if(T.defs.indexOf(known) < 0) T.defs.push(known);
+  const l = T.q[qk(i)] || (T.q[qk(i)] = []);
+  if(l.indexOf(known) < 0) l.push(known);
+  tput();
+}
+function tagDrop(i, name){
+  const id = qk(i);
+  T.q[id] = (T.q[id] || []).filter(x => x !== name);
+  if(!T.q[id].length) delete T.q[id];
+  if(!Object.keys(T.q).some(k => T.q[k].indexOf(name) >= 0)) T.defs = T.defs.filter(d => d !== name);
+  tput();
+}
+
 function active(s){
-  const only = D.parts ? (s.only || null) : null;
+  // A TAG RUN ("test only these") rides here for the same reason the section filter does.
+  const tf = D.tags ? (s.tagf || null) : null;
+  const only = (D.parts && !tf) ? (s.only || null) : null;
   return D.questions.map((_,i)=>i).filter(i => onPaper(s, i)
-    && (!only || only.indexOf(D.questions[i].sec) >= 0));
+    && (!only || only.indexOf(D.questions[i].sec) >= 0)
+    && (!tf || hasTag(i, tf)));
 }
 /* ---- THE RESERVES (08-16) ------------------------------------------------------------
    His ask: *"if 1 question is skipped, another one is replaced in that section about it… you
@@ -1408,7 +1618,9 @@ function flushFrq(){
 function drawFrq(){
   const box = $('#frqview');
   if(!box || !(D.frq||[]).length) return;
-  let h = '<p class="say">Three written answers, from the same sources as the paper. Write '
+  const NW = D.frq.length, WORDS = ['No','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'];
+  let h = '<p class="say">' + (WORDS[NW] || NW) + ' written answer' + (NW === 1 ? '' : 's')
+        + ', from the same sources as the paper. Write '
         + 'one, then mark it: every point that can be settled by what you wrote is checked '
         + 'for you, and the ones that need judgement are handed back. Click any row to '
         + 'overrule it.</p>';
@@ -1699,7 +1911,7 @@ function draw(){
   // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
   // the rest of the sitting, so nothing about answering, going back or the second pass has
   // to know the picker exists.
-  if(sectioned() && !S.only) return picker();
+  if(sectioned() && !S.only && !S.tagf) return picker();
   const act = runList();
   if(!act.length) return end();
   if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
@@ -1708,6 +1920,61 @@ function draw(){
 
 /* Pure markup, no DOM writes and no state changes — so the same builder can render the
    question and be measured off-screen for the centring reserve. */
+/* The tag box above the question. Chips for what this question carries, then the box: type and
+   Enter makes the tag (or reuses one spelled the same), the ones he already made show under it
+   to click, Backspace on an empty box takes the last one off, Esc leaves. */
+function tagRowInner(i){
+  const mine = tagsOf(i);
+  let h = '';
+  mine.forEach((n,k)=>{ h += '<span class="tchip">' + esc(n) + '<button class="tx" data-drop="' + k
+                           + '" tabindex="-1" aria-label="Remove tag">×</button></span>'; });
+  return h + '<input id="tagin" class="tagin" type="text" autocomplete="off" spellcheck="false" '
+           + 'placeholder="' + (mine.length ? 'Add a tag' : 'Tag this question  ( l )') + '">'
+           + '<div class="tsug hide" id="tsug"></div>';
+}
+function paintSug(i){
+  const inp = $('#tagin'), box = $('#tsug');
+  if(!inp || !box) return;
+  const raw = inp.value.trim(), v = raw.toLowerCase(), mine = tagsOf(i);
+  let h = T.defs.map((d,n)=>({d,n}))
+    .filter(x => mine.indexOf(x.d) < 0 && (!v || x.d.toLowerCase().indexOf(v) >= 0))
+    .map(x => '<button class="tchip pick" data-n="' + x.n + '" tabindex="-1">' + esc(x.d) + '</button>')
+    .join('');
+  if(v && !T.defs.some(d => d.toLowerCase() === v))
+    h += '<span class="tnew">Enter makes “' + esc(raw) + '”</span>';
+  box.innerHTML = h;
+  box.classList.toggle('hide', !h || document.activeElement !== inp);
+  // mousedown, not click: the box must not blur (and hide these) before the pick lands
+  box.querySelectorAll('.pick').forEach(b => { b.onmousedown = e => {
+    e.preventDefault(); tagAdd(i, T.defs[+b.dataset.n]); redrawTags(i, true); }; });
+}
+function redrawTags(i, focus){
+  const row = $('#tagrow');
+  if(!row) return;
+  row.innerHTML = tagRowInner(i);
+  wireTags(i);
+  if(focus) $('#tagin').focus();
+}
+function wireTags(i){
+  const row = $('#tagrow'), inp = $('#tagin');
+  if(!row || !inp) return;
+  row.querySelectorAll('.tx').forEach(b => b.onclick = ()=>{
+    tagDrop(i, tagsOf(i)[+b.dataset.drop]); redrawTags(i, false); });
+  inp.onfocus = ()=> paintSug(i);
+  inp.oninput = ()=> paintSug(i);
+  inp.onblur = ()=> { const b = $('#tsug'); if(b) b.classList.add('hide'); };
+  inp.onkeydown = e => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      if(!inp.value.trim()){ inp.blur(); return; }
+      tagAdd(i, inp.value); redrawTags(i, true);
+    } else if(e.key === 'Escape'){ inp.value = ''; inp.blur(); }
+    else if(e.key === 'Backspace' && !inp.value && tagsOf(i).length){
+      tagDrop(i, tagsOf(i).slice(-1)[0]); redrawTags(i, true);
+    }
+  };
+}
+
 function buildQ(i, picked, fresh, en){
   const q = D.questions[i];
   const answered = picked !== undefined;
@@ -1719,10 +1986,12 @@ function buildQ(i, picked, fresh, en){
   // The counter sits top-left above the question, the way the notebook does it, rather than
   // up in the bar — it belongs with the thing it counts. On a second pass it counts the
   // second pass, so four wrong answers read as "1 / 4" and not as a broken 16.
-  let h = '<div class="qhead' + en + '"><div class="qcol">'
+  let h = (D.tags ? '<div class="tagrow no-read-aloud" id="tagrow">' + tagRowInner(i) + '</div>' : '')
+        + '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta no-read-aloud"><span class="num">' + (pos+1) + ' / '
         + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        + (D.tags && S.tagf ? '<span class="dot">·</span><span>only ' + esc(S.tagf) + '</span>' : '')
         // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
         // 10 reads as the paper having lost his place, which is how he read it.
         + (recycling && S.phase!==2
@@ -1918,6 +2187,7 @@ function question(fresh){
   $('#star').onclick = ()=> toggleStar(i);
   $('#qmark').onclick = ()=> toggleUnsure(i);
   $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
+  if(D.tags) wireTags(i);
 
   // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
   // touches it — and nothing above the options ever changes height.
@@ -2408,19 +2678,32 @@ function openMenu(){
   m.className = 'menu';
   // The clock's only other way in. `w` is not written anywhere else on the page, and a key
   // nothing announces is a key he has to remember he asked for.
-  m.innerHTML = '<button id="skipq">Skip this question</button>'
+  m.innerHTML = '<button id="skipq">Skip this question  ( x )</button>'
               // The reader's own two entries. Space and `v` are written nowhere else on the
               // page, and a key nothing announces is a key he has to remember he asked for.
               + '<button id="readtog">' + (sayOn ? 'Stop' : 'Start') + ' read-aloud  ( space )</button>'
               + '<button id="voiceset">Voice, speed and pauses…</button>'
-              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>';
+              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>'
+              // EVERY KEY, WRITTEN DOWN ONCE (10-12). He could not find Redo or remember its key.
+              + '<div class="keys"><kbd>x</kbd><span>Skip</span><kbd>u</kbd><span>Redo your answer</span>'
+              + '<kbd>h</kbd><span>Hint, when the question has one</span>'
+              + '<kbd>s</kbd><span>Star</span><kbd>/</kbd><span>No idea</span>'
+              + '<kbd>r</kbd><span>Research</span><kbd>f</kbd><span>Fix this question</span>'
+              + '<kbd>t</kbd><span>Reflection</span>'
+              + (D.tags ? '<kbd>l</kbd><span>Tag</span>' : '')
+              + '<kbd>↵</kbd><span>Next</span><kbd>←</kbd><span>Back</span></div>';
   host.appendChild(m);
   m.querySelector('#clocktog').onclick = ()=>{ toggleClock(); closeMenu(); };
   m.querySelector('#readtog').onclick = ()=>{ closeMenu(); sayOn ? sayOff() : sayToggle(); };
   m.querySelector('#voiceset').onclick = ()=>{ closeMenu(); openVset(); };
-  m.querySelector('#skipq').onclick = ()=>{
+  m.querySelector('#skipq').onclick = ()=>{ closeMenu(); skipQuestion(); };
+  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
+}
+/* One path for skipping, whether it came from the menu or from `x` (10-12, his ask: a key
+   *"rather than going into the top bar and then pressing skip"*). */
+function skipQuestion(){
     const list = runList(), pos = list.indexOf(S.i);
-    if(list.length <= 1) return closeMenu();        // never skip the last one standing
+    if(list.length <= 1) return;                    // never skip the last one standing
     const sec = bucketOf(S.i);
     S.skipped[qk(S.i)] = true;
     delete S.answers[qk(S.i)];
@@ -2434,7 +2717,6 @@ function openMenu(){
     // have handed him an end card with a question still owed.
     const filled = promoteReserve(sec) >= 0;
     const wasLast = !filled && pos === list.length - 1;
-    closeMenu();
     syncTabs();
     if(wasLast){ finish(); return; }
     // After the removal the list has shrunk, so the item now AT `pos` is the one that
@@ -2443,8 +2725,6 @@ function openMenu(){
     S.hintOpen = false;
     lastShown = -1;
     save(); question(); window.scrollTo(0,0);
-  };
-  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
 }
 function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(); }
 
@@ -2701,6 +2981,39 @@ function momentum(){
   return h + '</div>';
 }
 
+/* THE TAGS ON THE END CARD: how each group went, and a way to sit one group alone. A tag run
+   is a fresh attempt on only those questions (the finished one goes into history first, as a
+   Retake does); Retake, or "every question" here, goes back to the whole paper. Not offered
+   on a sectioned paper, whose picker already owns which questions a sitting holds. */
+function tagTable(){
+  if(!D.tags || !T.defs.length) return '';
+  const all = D.questions.map((_,i)=>i).filter(i => onPaper(S, i));
+  let h = '';
+  T.defs.forEach((d,n)=>{
+    const qs = all.filter(i => hasTag(i, d));
+    if(!qs.length) return;
+    const sat = qs.filter(i => ans(i) !== undefined || ans2(i) !== undefined);
+    const ok = sat.filter(i => finalRight(i)).length;
+    h += '<div class="tagline"><span class="tchip">' + esc(d) + '</span><span class="tn">'
+       + (sat.length ? ok + ' / ' + sat.length + ' right' : qs.length + ' question' + (qs.length>1?'s':''))
+       + '</span>' + (D.parts ? '' : '<button class="link" data-tagrun="' + n + '">Test only these</button>')
+       + '</div>';
+  });
+  if(!h && !S.tagf) return '';
+  if(S.tagf) h += '<p class="note">This run was only “' + esc(S.tagf) + '”. '
+                + '<button class="link" id="tagall">Back to every question</button></p>';
+  return '<div class="tagtable"><h3>By tag</h3>' + h + '</div>';
+}
+function startRun(tag){
+  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length, ms:S.ms,
+                             tag:S.tagf || undefined});
+  const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
+  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  if(tag) S.tagf = tag;
+  pickSel = null; lastShown = -1;
+  save(); syncTabs(); renderScore(); draw(); window.scrollTo(0,0);
+}
+
 function end(){
   timeOn(null);
   const act = active(S), n = score(S), t = act.length;
@@ -2782,6 +3095,7 @@ function end(){
             + 'every one is done; sitting one again replaces its score.</p>';
   }
 
+  h += tagTable();
   const nskip = Object.keys(S.skipped||{}).length;
   if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
               + '<button class="link" id="unskip">put them back</button></p>';
@@ -2792,6 +3106,10 @@ function end(){
   $('#quizview').innerHTML = h;
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  document.querySelectorAll('[data-tagrun]').forEach(b =>
+    b.onclick = ()=> startRun(T.defs[+b.dataset.tagrun]));
+  const tall = $('#tagall');
+  if(tall) tall.onclick = ()=> startRun(null);
   const ma = $('#momall');
   if(ma) ma.onclick = ()=>{ momAll = true; end(); };
   const m = $('#more');
@@ -2828,6 +3146,7 @@ function itemHTML(i, n){
   const q = D.questions[i], first = ans(i), second = ans2(i);
   let h = '<div class="item">';
   if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
+  if(D.tags) tagsOf(i).forEach(t => { h += '<span class="tchip sm">'+esc(t)+'</span>'; });
   h += '<p class="qq">'+(n===undefined?'':(n+1)+'. ')+esc(q.q)+'</p>'
      + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
   if(!firstRight(i)){
@@ -2844,12 +3163,26 @@ function itemHTML(i, n){
   return h + '</div>';
 }
 
+let revByTag = false;
 function review(){
   timeOn(null);
+  const act = active(S), canSort = D.tags && T.defs.length;
   let h = '<div class="rev"><h3>Every question</h3>';
-  active(S).forEach((i,n)=>{ h += itemHTML(i, n); });
+  if(canSort) h += '<p class="note" style="margin:0 0 6px"><button class="link" id="revsort">'
+                 + (revByTag ? 'Sort in order' : 'Sort by tag') + '</button></p>';
+  if(canSort && revByTag){
+    // a question with two tags is listed under both; the untagged ones come last
+    T.defs.concat(['']).forEach(d=>{
+      const qs = act.filter(i => d ? hasTag(i, d) : !tagsOf(i).length);
+      if(!qs.length) return;
+      h += '<h3 class="tgroup">' + (d ? esc(d) : 'No tag') + ' · ' + qs.length + '</h3>';
+      qs.forEach(i => { h += itemHTML(i, act.indexOf(i)); });
+    });
+  } else act.forEach((i,n)=>{ h += itemHTML(i, n); });
   h += '</div>';
   $('#quizview').innerHTML = h;
+  const rs = $('#revsort');
+  if(rs) rs.onclick = ()=>{ revByTag = !revByTag; review(); };
   $('#band').classList.add('off');
   showResearch(false);
   $('#footer').classList.remove('hide');
@@ -4156,6 +4489,10 @@ document.addEventListener('keydown', e=>{
   // `w` FOR WATCH — the clock in the bar, off by default. Past G like every other command
   // key here, so it can never be an option letter.
   if(e.key === 'w' || e.key === 'W'){ toggleClock(); return; }
+  // `x` SKIPS, `l` (label) PUTS THE CARET IN THE TAG BOX. Both past G, so never an option key.
+  if(e.key === 'x' || e.key === 'X'){ e.preventDefault(); skipQuestion(); return; }
+  if((e.key === 'l' || e.key === 'L') && D.tags){
+    const ti = $('#tagin'); if(ti){ e.preventDefault(); ti.focus(); } return; }
   if(e.key === '/' || e.key === '?'){ e.preventDefault(); toggleUnsure(S.i); return; }
   /* THE KEY NAMES A POSITION ON SCREEN, not an option. `2` and `B` mean the second card he
      can see, which is the only thing either of them could mean to him — after a Redo has

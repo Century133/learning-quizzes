@@ -326,6 +326,32 @@ kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid
 .qmark:hover{background:var(--surface);color:var(--text)}
 .qmark.on{color:var(--text);border-color:var(--accent);background:var(--surface-hi)}
 
+/* ---- tags (10-12): his own labels on a question, kept per quiz ---- */
+.tagrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.tchip{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:.78rem;
+ color:var(--text);background:var(--surface-hi);border:1px solid var(--line);
+ border-radius:6px;padding:2px 8px;line-height:1.5}
+.tchip.sm{font-size:.7rem;margin:0 6px 9px 0}
+button.tchip{cursor:pointer}
+button.tchip:hover{border-color:var(--muted)}
+.tx{background:none;border:0;color:var(--muted);font:inherit;padding:0;cursor:pointer;line-height:1}
+.tx:hover{color:var(--text)}
+.tagin{flex:1 1 140px;min-width:120px;background:none;border:0;outline:0;color:var(--text);
+ font:inherit;font-size:.82rem;padding:3px 2px}
+.tagin::placeholder{color:var(--muted);opacity:.75}
+.tsug{flex:1 0 100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tnew{color:var(--muted);font-size:.76rem}
+.tagtable{margin:26px 0 0;text-align:left}
+.tagtable h3{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+ font-weight:500;margin:0 0 6px}
+.tagline{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line);
+ font-size:.88rem}
+.tagline .tn{flex:1;color:var(--muted);font-variant-numeric:tabular-nums}
+.tgroup{margin-top:30px}
+.menu .keys{border-top:1px solid var(--line);margin:5px 0 0;padding:8px 10px 4px;
+ display:grid;grid-template-columns:auto 1fr;gap:5px 10px;font-size:.78rem;color:var(--muted);
+ align-items:center}
+
 /* ---- the ⋮ menu ---- */
 .more{position:relative;flex:0 0 auto}
 .dots{background:none;border:0;color:var(--muted);font-size:1.15rem;line-height:1;
@@ -452,6 +478,44 @@ button.pill.ghost{border-color:transparent;color:var(--muted)}
 .ptotal{margin:14px 0 0;color:var(--muted);font-size:.88rem}
 .ptotal b{color:var(--text);font-variant-numeric:tabular-nums;font-size:1.05rem;
  font-weight:600;margin-right:8px}
+
+/* ---- MOMENTUM (08-21) ----
+   Same furniture as every other end-card table — same heading, same hairline rows, same
+   rails — because it is one more breakdown of the same sitting and must not read as a
+   dashboard bolted on. The only new shape is the strip, and it is deliberately small: it is
+   there to be glanced at, not measured off.
+
+   IT READS IN GRAYSCALE. A wrong bar is HATCHED as well as coloured, exactly like the wrong
+   half of the score chart above it, so the split survives a screenshot with the colour gone
+   and survives him printing it. */
+.mom .strip{display:flex;align-items:flex-end;gap:2px;height:56px;position:relative;
+ margin:0 0 5px;padding-top:2px}
+.mom .strip .sb{flex:1 1 0;min-width:2px;border-radius:2px 2px 0 0;background:var(--text)}
+.mom .strip .sb.r{background:var(--right)}
+.mom .strip .sb.w{background:var(--wrong);
+ background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,
+ rgba(0,0,0,.45) 3px,rgba(0,0,0,.45) 6px)}
+/* The median, drawn across the strip rather than written under it — the whole question the
+   strip answers is "which of these are the long ones", and a line answers it at a glance. */
+.mom .strip .med{position:absolute;left:0;right:0;height:0;border-top:1px dashed var(--muted);
+ opacity:.55;pointer-events:none}
+.momax{display:flex;justify-content:space-between;color:var(--muted);font-size:.72rem;
+ letter-spacing:.04em;margin:0 0 16px}
+.mline{color:var(--muted);font-size:.88rem;margin:0 0 18px}
+.mline b{color:var(--text);font-variant-numeric:tabular-nums;font-weight:500}
+.mrow{display:grid;grid-template-columns:1.1em 1.7em 1fr auto;gap:5px 10px;align-items:center;
+ padding:8px 0;border-top:1px solid var(--line);font-size:.9rem}
+.mrow .mg{color:var(--muted);font-size:.85rem;user-select:none;-webkit-user-select:none}
+.mrow .mn{color:var(--muted);font-size:.8rem;font-variant-numeric:tabular-nums;text-align:right}
+.mrow .mlab{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mrow .mt{color:var(--muted);font-size:.86rem;font-variant-numeric:tabular-nums}
+/* The rail is `.tbar`, borrowed whole from the tables above. `i.w` is the only addition:
+   time on a question he got wrong gets the same hatch as everything else wrong on the page. */
+.mrow .tbar i.w{background-image:repeating-linear-gradient(45deg,transparent,transparent 3px,
+ rgba(0,0,0,.45) 3px,rgba(0,0,0,.45) 6px)}
+.mmore{margin:12px 0 0;font-size:.85rem}
+.mgoal{margin:16px 0 0;color:var(--muted);font-size:.88rem;max-width:52ch}
+.mgoal b{color:var(--text);font-variant-numeric:tabular-nums;font-weight:500}
 
 /* ---- THE SUBCHAPTER PICKER (08-16) ----
    Deliberately the same furniture as the end card — same heading treatment, same rails, same
@@ -1093,7 +1157,157 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
   </div>
 </footer>
 
-<script id="quiz-data" type="application/json">{"id": "ap2e-ch9-9-4_9-5", "title": "Ch9 Exam · 9.4–9.5", "subtitle": "Joints", "book": "A&P 2e", "hash": "8837d78b412d16cf", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "Regarding the functional role of ligaments in supporting synovial joints, which of the following statements is the odd one out?", "options": ["Ligaments are categorized as extrinsic, intrinsic, or intracapsular depending on their location relative to the articular capsule.", "The strength of supporting ligaments at the hip joint specifically serves to constrain the extension of the femur.", "Ligaments are highly elastic connective tissues that readily stretch to allow for regular hyperextension of limbs.", "Ligaments anchor bones together to prevent their separation during various body movements."], "rationales": ["This is the standard structural classification for ligaments associated with synovial joints.", "This accurately describes a trade-off where stability provided by ligaments limits the range of motion.", "Ligaments are strong, non-elastic bands designed to limit range of motion and prevent injury; excessive stretching leads to damage rather than being a normal functional feature.", "This is a primary function of ligaments, providing structural integrity to the joint."], "correct": 2, "hint": "Consider how these structures interact with the range of motion limits discussed in section 9.5.", "topic": "Ligamentous support", "sec": "9.4", "src": "$", "link": "9.5", "qid": "8412ac4544"}, {"q": "Which of the following articulations is characterized as a plane joint where flat or slightly curved surfaces allow for small gliding movements?", "options": ["The joint between the trapezium carpal bone and the first metacarpal bone.", "The articulation between the distal radius and the scaphoid bone.", "The articulation between the humerus and the ulna.", "The joints between the carpal bones of the wrist."], "rationales": ["This is a saddle joint, which allows for biaxial movement at the base of the thumb.", "This is a condyloid joint, which involves a rounded surface fitting into a shallow depression.", "This is a hinge joint, characterized by uniaxial movement like a door hinge.", "Intercarpal joints consist of small bones with flat surfaces that slide against each other, defining the plane joint type."], "correct": 3, "hint": "Look for an example where the bones simply slide past one another rather than rotating or bending on a fixed axis.", "topic": "Plane joints", "sec": "9.4", "src": "$", "link": "", "qid": "49a8306727"}, {"q": "A bursa serves to reduce friction by separating adjacent structures, such as skin and bone, through a thin connective tissue sac filled with _______.", "options": ["hyaline cartilage", "lubricating liquid", "dense regular connective tissue", "fibrocartilage"], "rationales": ["Hyaline cartilage covers the articulating surfaces of bones as articular cartilage, not the interior of a bursa.", "Bursae are specifically designed as fluid-filled cushions to prevent direct rubbing between tissues.", "This tissue type forms ligaments and tendons rather than the lubricating liquid found in bursae.", "Fibrocartilage provides shock absorption and strength within a joint cavity, but is not the filling of a bursa."], "correct": 1, "hint": "Think about the specific physical state of the substance required to provide lubrication and reduce friction.", "topic": "Bursa locations", "sec": "9.4", "src": "$", "link": "", "qid": "db89b2ea4d"}, {"q": "A physical therapist is explaining the mechanics of the neck to a patient. Which structural arrangement would the therapist describe to explain how the head can rotate from side to side in a 'no' motion?", "options": ["The flat surfaces of the superior and inferior articular processes sliding against each other.", "The upward projecting dens of the axis articulating with the inner aspect of the atlas.", "The condyle of the occipital bone articulating with the shallow depressions of the atlas.", "The convex end of the dens fitting into the concave trochlear notch of the atlas."], "rationales": ["These are plane joints that allow for limited gliding but do not form the primary axis for head rotation.", "This specific pivot joint arrangement allows the C1 vertebra to rotate around the axis provided by the C2 vertebra.", "This articulation allows for nodding 'yes' but does not facilitate the rotation required for shaking the head 'no'.", "The trochlear notch is located in the ulna of the elbow, not the vertebrae of the neck."], "correct": 1, "hint": "Rotation requires one bone to act as a stationary axis or ring for another to turn within.", "topic": "Pivot joints", "sec": "9.4", "src": "$", "link": "", "qid": "16d65979d7"}, {"q": "The radiocarpal joint of the wrist is functionally classified as a biaxial joint, allowing for both bending and side-to-side movements. What underlying structural shape allows for these two distinct planes of motion?", "options": ["A cylinder-shaped bone end fitting into a ring formed by a ligament.", "An oval-shaped shallow depression receiving a rounded bone surface.", "Two flat bone surfaces of approximately the same size sliding against each other.", "A convex bone surface articulating with a deep, concave socket."], "rationales": ["This describes a pivot joint, which is uniaxial and only allows for rotation.", "This elliptical or condyloid shape facilitates movement along two axes while preventing rotation.", "This describes a plane joint, which allows for gliding rather than the specific angular biaxial motions of the wrist.", "This describes a ball-and-socket joint, which is multiaxial rather than biaxial."], "correct": 1, "hint": "Consider how an elliptical or 'egg-like' fit differs from a perfect sphere.", "topic": "Condyloid joints", "sec": "9.4", "src": "$", "link": "", "qid": "c9ebc2851f"}, {"q": "Regarding structures that facilitate smooth movement where muscles or tendons cross joints, which of the following is NOT true?", "options": ["Subtendinous bursae specifically protect tendons from rubbing directly against underlying bone.", "Tendon sheaths contain a lubricating fluid that allows for smooth motion during muscle contraction.", "Tendon sheaths are large, C-shaped fibrocartilage pads that provide shock absorption for the entire joint cavity.", "Bursae are located in regions where skin, muscles, or tendons rub against each other."], "rationales": ["This is a correct functional definition of a subtendinous bursa.", "This is the primary function of a tendon sheath as it surrounds a muscle tendon.", "This description refers to a meniscus; tendon sheaths are small sacs that specifically wrap around tendons to prevent friction.", "This correctly identifies the general location and purpose of bursae in reducing friction."], "correct": 2, "hint": "Distinguish between structures that protect specific tendons and those that cushion the entire bone-to-bone contact area.", "topic": "Tendon protection", "sec": "9.4", "src": "$", "link": "", "qid": "d103b475a0"}, {"q": "The glenohumeral joint is capable of a much wider range of motion than the hip joint. Which structural difference accounts for the hip joint's more restricted movement?", "options": ["The hip joint lacks an articular capsule, relying entirely on extracapsular ligaments for stability.", "The hip features a deep socket (acetabulum) and stronger supporting ligaments compared to the shallow glenoid cavity.", "The shoulder joint uses synovial fluid for lubrication while the hip joint relies primarily on fat pads.", "The shoulder joint is a ball-and-socket joint while the hip is technically classified as a condyloid joint."], "rationales": ["All synovial joints, including the hip, possess an articular capsule that defines the joint cavity.", "The deeper socket and robust ligaments provide necessary stability for weight-bearing but sacrifice mobility.", "Both are synovial joints and use synovial fluid as their primary lubricant.", "Both the shoulder and hip are ball-and-socket joints; they differ in depth and ligamentous support, not basic classification."], "correct": 1, "hint": "Consider the trade-off between the depth of a socket and the freedom of the bone within it.", "topic": "Ball-and-socket joints", "sec": "9.4", "src": "$", "link": "", "qid": "777759bd52"}, {"q": "In the knee joint, the primary functional requirement for the menisci is to provide _______ between the femur and the tibia.", "options": ["secretion of synovial fluid", "cushioning and shock absorption", "direct blood supply to the bones", "a rigid barrier to prevent any rotation"], "rationales": ["Synovial fluid is secreted by the synovial membrane, not by fibrocartilage structures like the menisci.", "The C-shaped menisci act as specialized pads to absorb the impact of weight-bearing and movement.", "Cartilage structures like the menisci are avascular and do not provide blood to the joint.", "While they provide stability, the menisci do not act as a rigid barrier to all motion."], "correct": 1, "hint": "Think about the mechanical stresses placed on the knee during high-impact activities like jumping.", "topic": "Fibrocartilage structures", "sec": "9.4", "src": "$", "link": "", "qid": "6860d7e52d"}, {"q": "A researcher is studying the evolution of the human hand and focuses on the first carpometacarpal joint. What unique capability does this specific saddle joint provide to the thumb?", "options": ["The ability to glide linearly against the carpal bones without changing angle.", "The ability to rotate 360 degrees around its own long axis.", "The ability to move away from the palm and across to touch the tips of other fingers.", "The ability to lock into a rigid position to prevent any medial-lateral motion."], "rationales": ["Gliding without angular change is a feature of plane joints, not the more complex saddle joint.", "Saddle joints are biaxial and do not allow for full multiaxial rotation like a ball-and-socket joint.", "This opposability is enabled by the biaxial movement allowed by the saddle shape of the articulating bones.", "The saddle joint is designed for increased mobility in two planes, not for absolute rigidity."], "correct": 2, "hint": "This joint allows the thumb to act as a versatile tool for grasping and manipulation.", "topic": "Saddle joints", "sec": "9.4", "src": "$", "link": "", "qid": "94014e7dae"}, {"q": "Which of the following describes the initial pathological trigger that distinguishes rheumatoid arthritis from osteoarthritis?", "options": ["A bacterial infection directly invades the joint, destroying the articular disc.", "Age-related erosion of the articular cartilage leads to bone-on-bone contact.", "The accumulation of uric acid crystals within the joint cavity causes sudden swelling.", "The immune system attacks the joint capsule and the synovial membrane, causing inflammation."], "rationales": ["While infections can cause arthritis, rheumatoid arthritis is specifically caused by the body's own immune system.", "This is the primary trigger for osteoarthritis, not the autoimmune-driven rheumatoid arthritis.", "This is the defining characteristic of gout, a metabolic form of arthritis.", "Rheumatoid arthritis is an autoimmune disorder, whereas osteoarthritis begins with physical 'wear and tear' of the cartilage."], "correct": 3, "hint": "Consider the difference between a mechanical failure of tissues and a systemic malfunction of the body's defenses.", "topic": "Rheumatoid arthritis", "sec": "9.4", "src": "$", "link": "", "qid": "512c2d211c"}, {"q": "The synovial membrane is a vital component of the articular capsule. Which of the following is NOT a characteristic or function of this tissue?", "options": ["It lines the inner surface of the fibrous articular capsule.", "It acts as a Teflon-like coating that directly covers the articulating surfaces of the bones.", "It provides nourishment to the avascular articular cartilage through its secretions.", "It secretes a thick, slimy fluid that provides lubrication for the joint."], "rationales": ["This correctly identifies the structural location of the synovial membrane.", "This describes the articular cartilage, not the synovial membrane which lines the inner surface of the capsule.", "Since cartilage lacks blood vessels, it depends on the synovial fluid for nutrients.", "This is a key function of the cells within the synovial membrane."], "correct": 1, "hint": "Distinguish between the tissue that produces the lubricant and the tissue that actually covers the ends of the bones.", "topic": "Synovial membranes", "sec": "9.4", "src": "$", "link": "", "qid": "3af84cc539"}, {"q": "Why are the interphalangeal joints and the elbow joint functionally classified together despite their different locations in the limbs?", "options": ["Both permit movement along only a single axis, functioning like a door hinge.", "Both rely on a central pivot point that allows for rotation around a long axis.", "Both allow for biaxial movement, including side-to-side motion.", "Both are classified as amphiarthrosis joints because they allow only limited gliding."], "rationales": ["Hinge joints are uniaxial, restricted to bending and straightening motions in one plane.", "Rotation around an axis is the hallmark of a pivot joint, not a hinge joint.", "Hinge joints do not allow side-to-side motion; that is a characteristic of condyloid or saddle joints.", "Synovial joints like these are classified as diarthrosis, and hinge joints allow more than just gliding."], "correct": 0, "hint": "Think about the restricted directionality of movement allowed by these joints.", "topic": "Hinge joints", "sec": "9.4", "src": "$", "link": "", "qid": "6749dfc8f9"}, {"q": "In the clinical progression of osteoarthritis, the thinning of articular cartilage triggers a response where the joint cavity swells and the underlying bone tissue eventually _______.", "options": ["becomes highly vascularized to increase nutrient flow", "thickens and becomes rough or bumpy", "softens and dissolves into the synovial fluid", "reverts to hyaline cartilage to repair the damage"], "rationales": ["While the bone has blood vessels, the thickening process is a structural response to stress, not a change in vascularity for the cartilage.", "Bone tissue responds to the increased pressure of damaged cartilage by thickening, which unfortunately creates irregular articulating surfaces.", "The bone does not dissolve; rather, it increases production and thickens in response to stress.", "Bone tissue cannot revert to cartilage; once the articular cartilage is gone, the bone itself responds pathologically."], "correct": 1, "hint": "Consider how the bone itself adapts to the loss of its protective 'Teflon' coating.", "topic": "Osteoarthritis pathology", "sec": "9.4", "src": "$", "link": "", "qid": "a4132da877"}, {"q": "A patient undergoing hip arthroplasty is concerned about how the new joint will stay in place. How would the surgeon describe the installation of the femoral component?", "options": ["The femoral head is replaced with a flat plate that slides against the ilium.", "A new acetabulum is grown from stem cells within the joint cavity.", "A replacement head and shaft are inserted directly into the diaphysis of the femur.", "The artificial ball is glued to the outside of the greater trochanter using ligaments."], "rationales": ["The hip replacement mimics the original ball-and-socket structure to maintain mobility.", "Arthroplasty uses artificial prostheses, not biological regrowth of the socket.", "Arthroplasty involves anchoring the prosthetic shaft into the existing bone shaft of the femur.", "The component is inserted internally into the bone, not just glued to the outside surface."], "correct": 2, "hint": "Think about how an artificial 'ball' would be anchored to the long bone of the thigh.", "topic": "Joint replacement", "sec": "9.4", "src": "$", "link": "", "qid": "19e1a3f5b9"}, {"q": "A patient with gout experiences intense pain in their big toe. What metabolic failure is the underlying cause of this specific inflammatory condition?", "options": ["The kidneys produce too much synovial fluid, which spills into the bloodstream.", "The body overproduces or fails to properly excrete uric acid.", "The immune system fails to recognize the synovial membrane as 'self'.", "The body lacks the ability to produce hyaline cartilage after a certain age."], "rationales": ["Synovial fluid is produced in the joints, not the kidneys, and is not related to gout.", "Gout is caused by the deposition of uric acid crystals resulting from high levels of uric acid in the blood.", "This is the cause of rheumatoid arthritis, which is an autoimmune disorder.", "The loss of cartilage is associated with osteoarthritis, but it is not the metabolic cause of gout."], "correct": 1, "hint": "Look for a chemical byproduct that can crystallize when levels are too high.", "topic": "Gouty arthritis", "sec": "9.4", "src": "$", "link": "", "qid": "39023e01fd"}, {"q": "Regarding the characteristics of articular cartilage in synovial joints, which of the following is NOT a functional consequence of its design?", "options": ["It relies on synovial fluid for nourishment because it lacks its own blood vessels.", "It allows the articulating surfaces of two bones to be directly connected by continuous fibrous tissue.", "It provides a smooth, low-friction surface for bones to move against each other.", "It protects the underlying bone tissue from damage during joint movement."], "rationales": ["Because articular cartilage is avascular, the lubricating fluid is essential for its survival.", "In synovial joints, the articular cartilages are specifically not continuous with each other; this separation allows for mobility.", "This is the primary 'Teflon coating' role of the hyaline cartilage layer.", "By acting as a protective layer, it prevents the abrasive effects of bone-on-bone contact."], "correct": 1, "hint": "Recall the structural characteristic that distinguishes synovial joints from cartilaginous joints like a symphysis.", "topic": "Articular cartilage", "sec": "9.4", "src": "$", "link": "", "qid": "9a26d57542"}, {"q": "During medial rotation of the lower limb, the _______ of the thigh is turned toward the midline of the body.", "options": ["anterior surface", "distal end", "posterior surface", "lateral condyle"], "rationales": ["Rotation is defined by the direction in which the front surface of the limb moves relative to the body's midline.", "The distal end moves in all rotations; medial rotation specifically refers to the inward turning of the anterior face.", "Medial rotation turns the front (anterior) surface toward the midline; the posterior surface would move away from it.", "While the condyles move, the overall movement is defined by the orientation of the anterior surface."], "correct": 0, "hint": "Consider the anatomical position of the kneecap during this movement.", "topic": "Limb rotation", "sec": "9.5", "src": "$", "link": "", "qid": "7e2cc5aa51"}, {"q": "A person is sitting at a desk and pulls their shoulders back to improve their posture, bringing the shoulder blades closer to the spine. Which scapular movement is being performed?", "options": ["elevation", "inferior rotation", "retraction", "protraction"], "rationales": ["Elevation is the upward shrugging motion of the scapula and shoulder.", "Inferior rotation involves the downward motion of the glenoid cavity during limb adduction.", "Retraction involves moving the scapula posteriorly and medially toward the vertebral column.", "Protraction is the forward motion of the scapula, such as when pushing an object."], "correct": 2, "hint": "Think about the difference between pushing forward and pulling backward.", "topic": "Scapular movements", "sec": "9.5", "src": "$", "link": "", "qid": "758af58fab"}, {"q": "Circumduction is a complex motion where the distal end of a limb describes a circle. What sequential combination of simpler movements produces this result?", "options": ["rotation, inversion, and eversion", "flexion, abduction, extension, and adduction", "supination, pronation, and lateral flexion", "protraction, retraction, elevation, and depression"], "rationales": ["Inversion and eversion are specific to the foot and are not part of the circumduction sequence.", "These four motions must occur in sequence to move a body region in a circular pattern.", "These involve rotation of the forearm and bending of the spine, not the circular path of a limb.", "These are linear scapular or mandibular movements rather than the angular components of circumduction."], "correct": 1, "hint": "This movement requires moving through multiple planes in a continuous loop.", "topic": "Complex movements", "sec": "9.5", "src": "$", "link": "", "qid": "651b866b41"}, {"q": "Regarding movements of the mandible, which of the following is NOT a standard anatomical motion for the lower jaw?", "options": ["supination", "lateral excursion", "protraction", "depression"], "rationales": ["Supination is a specific movement of the forearm that turns the palm forward, not a movement of the jaw.", "Lateral excursion is the side-to-side movement used for grinding food.", "Protraction is the forward movement of the mandible to stick out the chin.", "Depression is the downward movement of the mandible used to open the mouth."], "correct": 0, "hint": "One of these terms is exclusively reserved for the orientation of the radius and ulna.", "topic": "Mandible movements", "sec": "9.5", "src": "$", "link": "", "qid": "c0f696090f"}, {"q": "When a person moves their forearm from the palm-forward position to the palm-backward position, what physical change occurs between the radius and the ulna?", "options": ["The radius crosses over the ulna to form an X-shape.", "The bones fuse together temporarily at the distal radioulnar joint.", "The radius and ulna move apart to become perfectly parallel.", "The distal end of the ulna rotates around a stationary radius."], "rationales": ["This crossing of the bones defines the pronated position of the forearm.", "The bones remain separate articulations; they simply overlap during the movement.", "Parallel alignment is the characteristic of the supinated (anatomical) position.", "In the forearm, it is the radius that rotates and crosses over the relatively stationary ulna."], "correct": 0, "hint": "Visualize the skeletal structure of the forearm when the palm is facing toward the rear.", "topic": "Supination and pronation", "sec": "9.5", "src": "$", "link": "", "qid": "3ed258c04e"}, {"q": "To perform a full abduction of the arm above shoulder height, the scapula must undergo _______ so that the glenoid cavity faces upward.", "options": ["plantar flexion", "lateral rotation", "medial excursion", "superior rotation"], "rationales": ["Plantar flexion is a movement of the foot at the ankle joint.", "While the arm rotates, the specific upward movement of the scapular socket is called superior rotation.", "Medial excursion is a movement of the mandible, not the scapula.", "This rotation of the scapula is necessary to prevent the humerus from hitting the acromion during high arm movements."], "correct": 3, "hint": "Consider how the orientation of the 'socket' of the shoulder must change to allow the arm to point toward the sky.", "topic": "Scapular rotation", "sec": "9.5", "src": "$", "link": "", "qid": "e56c1b00da"}, {"q": "Which specific joint allows for the 'no' movement of the head where the C1 vertebra rotates around the C2 vertebra?", "options": ["radiocarpal joint", "temporomandibular joint", "zygapophysial joint", "atlantoaxial joint"], "rationales": ["The radiocarpal joint is in the wrist and is a condyloid joint.", "This is the jaw joint, not involved in rotating the head on the spine.", "These are plane joints between adjacent vertebrae that allow for gliding but not the primary rotation of the head.", "This pivot joint between the atlas and axis is the dedicated site for side-to-side head rotation."], "correct": 3, "hint": "Identify the joint named for the first two cervical vertebrae.", "topic": "Rotational movements", "sec": "9.5", "src": "$", "link": "", "qid": "f7e9790995"}, {"q": "A sudden forceful rear-end collision causes a passenger's head to move backward excessively beyond its normal range. What is the anatomical term for this potentially injurious movement?", "options": ["lateral flexion", "superior rotation", "hyperflexion", "hyperextension"], "rationales": ["Lateral flexion is bending to the side, not the anterior-posterior movement seen in whiplash.", "Superior rotation refers to the movement of the scapula, not the backward motion of the neck.", "Hyperflexion is the excessive bending forward; the backward motion in whiplash is hyperextension.", "Extension beyond the normal physiological limits is defined as hyperextension."], "correct": 3, "hint": "Consider the term for 'going beyond' the straightening motion of a joint.", "topic": "Excessive movement", "sec": "9.5", "src": "$", "link": "", "qid": "81820ffb08"}, {"q": "The vertebral column allows for several types of movement through the summation of small motions. Which of the following is NOT typically a motion associated with the vertebral column?", "options": ["abduction", "extension", "flexion", "lateral flexion"], "rationales": ["Abduction is a medial-lateral movement of limbs or fingers away from the midline, not a motion of the central vertebral axis.", "Straightening or bending backward is a standard extension movement of the spine.", "Anterior bending of the neck or body is a standard flexion movement of the spine.", "Bending the body to the right or left side is known as lateral flexion."], "correct": 0, "hint": "One of these terms applies specifically to the limbs and digits moving away from the body's midline.", "topic": "Vertebral column", "sec": "9.5", "src": "$", "link": "", "qid": "9d7123ad34"}, {"q": "Lifting the front of the foot so that the toes move toward the anterior leg is a specific movement occurring at the ankle hinge joint. What is this motion called?", "options": ["dorsiflexion", "plantar flexion", "inversion", "eversion"], "rationales": ["This movement decreases the angle between the top of the foot and the leg.", "Plantar flexion involves pointing the toes downward or lifting the heel.", "Inversion turns the sole of the foot inward and does not occur at the ankle hinge joint.", "Eversion is a complex foot movement turning the sole outward, not a simple hinge motion at the ankle."], "correct": 0, "hint": "Think of the term for moving the 'dorsum' (top) of the foot.", "topic": "Ankle movements", "sec": "9.5", "src": "$", "link": "", "qid": "bcc9dbcb5f"}, {"q": "Raising the arm laterally away from the body is an example of _______ occurring within the coronal plane.", "options": ["rotation", "adduction", "circumduction", "abduction"], "rationales": ["Rotation involves turning the limb around its own axis, not moving it away from the midline.", "Adduction brings the limb back toward the body's midline.", "While it involves abduction, circumduction is a circular motion combining four different movements.", "Moving a limb laterally away from the midline is the definition of abduction."], "correct": 3, "hint": "Remember that this movement involves 'taking away' from the center.", "topic": "Abduction and adduction", "sec": "9.5", "src": "$", "link": "", "qid": "32d1cf578c"}, {"q": "A student notices that they can easily touch their toes (hip flexion), but find it very difficult to move their leg far behind them while standing. What structural feature primarily limits this posterior movement?", "options": ["The lack of an articular capsule at the posterior of the hip.", "The accumulation of bursae that physically block the head of the femur.", "The strong ligaments that support and stabilize the hip joint.", "The presence of a large meniscus between the femur and the acetabulum."], "rationales": ["The hip is a synovial joint and is entirely surrounded by an articular capsule.", "Bursae are fluid-filled sacs that facilitate movement, not physical obstructions to normal motion.", "Ligaments are designed to constrain the range of motion to provide stability and weight-bearing ability.", "The hip joint does not contain a meniscus; it relies on its socket depth and ligaments."], "correct": 2, "hint": "Consider the tissues responsible for anchoring bones and resisting abnormal motions.", "topic": "Joint structural limits", "sec": "9.5", "src": "$", "link": "", "qid": "d93b5af287"}, {"q": "Opposition is a unique movement where the thumb contacts the tips of the fingers. What is the name of the movement that returns the thumb to its anatomical position?", "options": ["adduction", "medial rotation", "retraction", "reposition"], "rationales": ["While the thumb adducts, the specific term for returning from the 'opposed' state is reposition.", "Opposition involves multiple planes of movement; rotation is only one small part of the complex thumb mechanics.", "Retraction is an anterior-posterior movement of the scapula or mandible.", "Reposition is the specific term for moving the thumb back next to the index finger after opposition."], "correct": 3, "hint": "This term describes the 're-placing' of the thumb in its starting alignment.", "topic": "Thumb movements", "sec": "9.5", "src": "$", "link": "", "qid": "a1beaa8ed8"}, {"q": "Inversion and eversion are complex foot movements used to stabilize the body on uneven ground. Which of the following is NOT true regarding these motions?", "options": ["These motions occur solely at the hinge joint of the ankle.", "Inversion involves turning the bottom of the foot toward the midline.", "The foot generally has a greater range of inversion than eversion.", "Eversion involves turning the sole of the foot away from the midline."], "rationales": ["Inversion and eversion take place at the intertarsal plane joints of the foot, not at the ankle joint itself.", "This is the correct definition of foot inversion.", "Anatomically, the foot can tilt inward more significantly than it can tilt outward.", "This is the correct definition of foot eversion."], "correct": 0, "hint": "Recall which specific joints among the tarsal bones facilitate these side-to-side stabilization movements.", "topic": "Inversion and eversion", "sec": "9.5", "src": "$", "link": "", "qid": "586826c982"}, {"q": "The mandible can perform lateral and medial excursion. Which of the following best describes these movements?", "options": ["Rotating the mandible around its own long axis.", "Moving the lower jaw side-to-side away from and back to the midline.", "Pushing the chin forward and pulling it back.", "Opening and closing the mouth by moving the jaw up and down."], "rationales": ["The mandible does not rotate around a long axis; it glides and hinges at the temporomandibular joint.", "Excursion refers specifically to the horizontal side-to-side grinding motions of the jaw.", "This describes protraction and retraction, not excursion.", "This describes depression and elevation, not excursion."], "correct": 1, "hint": "Consider the type of motion required to grind food between the teeth.", "topic": "Mandible excursion", "sec": "9.5", "src": "$", "link": "", "qid": "2693173d12"}, {"q": "The vertebral column achieves flexion and extension through the combined action of the intervertebral symphysis and the _______ joints located between the articular processes of adjacent vertebrae.", "options": ["hinge", "plane", "pivot", "saddle"], "rationales": ["While the spine bends, it does not use a single hinge; it uses multiple plane joints in sequence.", "Small gliding movements at these plane joints, along with the symphysis, allow for the overall bending of the spine.", "Pivot joints in the spine are restricted to the atlantoaxial joint for rotation, not for general flexion/extension.", "Saddle joints are located in the thumb and sternum, not between the articular processes of vertebrae."], "correct": 1, "hint": "Consider the structural type of joint that allows superior and inferior articular processes to slide against one another.", "topic": "Flexion and extension", "sec": "9.5", "src": "$", "link": "9.4", "qid": "a9a807605e"}], "hasSheet": true, "parts": false, "secTitles": {}, "reserve": 0, "frq": [{"tag": "Shoulder joint-scapula coordination", "secs": "9.4, 9.5", "prompt": "\"An individual attempts to lift a heavy weight laterally from their side to a position high above their head, but they feel a sharp 'pinch' in the shoulder as the arm reaches shoulder height.\"", "ask": "Identify the specific joint type involved, then describe the necessary scapular motion and structural clearance required to complete the movement without impingement.", "words": "120", "rubric": [{"t": "Identify the functional category of the glenohumeral articulation", "judge": false, "k": ["ball* socket*"]}, {"t": "Provide the formal anatomical designation for the glenoid-humeral contact", "judge": false, "k": ["glenohumeral"]}, {"t": "Name the bony scapular process causing the mechanical interference", "judge": false, "k": ["acromion"]}, {"t": "Label the vital upward-tilted displacement of the glenoid fossa", "judge": false, "k": ["superior* rotat*"]}, {"t": "Logical association established between the blade's reorientation and the prevention of osseous contact", "judge": true, "k": []}, {"t": "Cogent explanation of how the humeral tubercle successfully traverses past the upper process", "judge": true, "k": []}], "model": "The articulation involved in this action is the glenohumeral joint, which is anatomically classified as a multiaxial ball-and-socket joint. During the lateral abduction required to elevate a load, the head of the humerus revolves within the shallow glenoid cavity. As the limb reaches a horizontal orientation, superior rotation of the scapula becomes functionally mandatory. In this biomechanical coordination, the glenoid cavity tilts upward while the medial end of the scapular spine descends. This specific reorientation moves the acromion out of the path of the greater tubercle of the humerus. Without this structural clearance, the humeral tubercle would physically strike the acromion, resulting in the mechanical impingement or \"pinch\" described in the scenario. This essential interplay between the ball-and-socket articulation and the shoulder blade is what permits the upper limb to achieve its full multiaxial range of motion without osseous interference."}, {"tag": "Pivot joint rotation mechanics", "secs": "9.4, 9.5", "prompt": "\"A person holding a coin in their palm with the thumb pointing laterally moves their hand so the coin faces the floor and the thumb points medially.\"", "ask": "Name the specific movement that occurred, identify the joint type and specific bones involved, and account for the change in the physical relationship between the two forearm bones.", "words": "120", "rubric": [{"t": "Label the antebrachial displacement turning the hand backward", "judge": false, "k": ["pronat*"]}, {"t": "Classify the uniaxial synovial category allowing axial spin", "judge": false, "k": ["pivot*"]}, {"t": "Recognize the lateral antebrachial element that revolves", "judge": false, "k": ["radius"]}, {"t": "Portray the resulting intersecting alignment of the distal segments", "judge": false, "k": ["X-shape*"]}, {"t": "Sound rationale describing the radial element traversing over the fixed medial partner", "judge": true, "k": []}], "model": "The action described is pronation of the forearm. This biomechanical transition takes place at the proximal radioulnar joint, which is functionally classified as a uniaxial pivot joint. This articulation involves the head of the radius revolving within a ligamentous ring and the radial notch of the ulna. In the initial anatomical position, where the palm is forward, the radius and ulna lie parallel to one another. During the shift to a palm-backward orientation, the radial head rotates along its long axis at the proximal articulation. Because the shaft of the radius possesses a slight curvature, this rotation causes its distal segment to swing across the stationary ulna. This crossing transforms the physical alignment of the two elements from a parallel state into an X-shape. This structural crossover is the mechanical basis for internal hand rotation, moving the thumb from a lateral to a medial orientation."}, {"tag": "Osteoarthritis and joint friction", "secs": "9.4, 9.5", "prompt": "\"A retired marathon runner experiences knee stiffness that improves slightly with 'warming up' but results in swelling and a 'gritty' sensation after significant activity.\"", "ask": "Predict the specific tissue changes occurring at the articulating surfaces and account for why the joint responds with increased fluid production and reduced mobility.", "words": "120", "rubric": [{"t": "Note the erosion of the protective hyaline surface", "judge": false, "k": ["cartilag*"]}, {"t": "Label the distinct histological variety of this protective layer", "judge": false, "k": ["hyaline"]}, {"t": "Highlight the mechanical resistance elevated by surface degradation", "judge": false, "k": ["friction"]}, {"t": "Detail the reactive osseous development creating surface irregularities", "judge": false, "k": ["thickening", "rough*", "bumpy"]}, {"t": "Distinguish the lubricating lubricant generated by the inner capsule", "judge": false, "k": ["synovial*"]}, {"t": "Coherent causal sequence from surface breakdown to inflammatory distension and restricted range", "judge": true, "k": []}], "model": "This condition represents osteoarthritis, a degenerative \"wear and tear\" pathology of the knee hinge joint. The primary structural change involves the gradual erosion and thinning of the articular cartilage, which is composed of hyaline tissue. This layer normally provides a low-friction coating for the bones; its degradation increases mechanical resistance during locomotion. In response to this damage and increased pressure, the synovial membrane hyper-secretes synovial fluid. This excess lubricant causes the joint cavity to distend, stretching the articular capsule and resulting in the reported swelling and restricted range of motion. Furthermore, the underlying bone tissue reacts to the loss of protection by thickening, which creates rough or bumpy irregularities on the osseous surfaces. These surface irregularities cause the \"gritty\" sensation as the bones rub together without their Teflon-like coating. While light activity may provide temporary relief by distributing lubricant, excessive stress further exacerbates the inflammatory cycle."}], "notebook": "https://notebooklm.google.com/notebook/7195586f-1cfe-4068-9c74-b067dc43f0b1/artifact/5e9d0219-db5c-4339-a17e-75613bbebf07", "root": "../index.html", "tab": "quiz", "sheet": "## Ligamentous support\nFibrous connective tissues structurally stabilize diarthroses by anchoring bones together and restricting supraphysiological ranges.\n\n### Key terms\n*   **Ligaments** — strong bands of fibrous connective tissue that hold bones together and limit the range of joint motion.\n*   **Extrinsic ligament** — a supporting fibrous band located outside of the articular capsule.\n*   **Intrinsic ligament** — a supporting band that is fused to or incorporated into the wall of the articular capsule.\n*   **Intracapsular ligament** — a supporting band located inside of the articular capsule.\n\n## Plane joints\nThese multiaxial articulations facilitate small-scale gliding where movement is primarily restricted by tight ligamentous constraints.\n\n### Key terms\n*   **Plane joint (gliding joint)** — a joint with flat or slightly curved articulating surfaces of similar size.\n    *   Intercarpal joints\n    *   Intertarsal joints\n    *   Zygapophysial joints\n\n## Bursa locations\nFluid-filled synovial sacs strategically interface between bone and soft tissues to mitigate frictional shear during movement.\n\n### Key terms\n*   **Bursa** — a thin connective tissue sac filled with lubricating fluid that reduces friction by separating adjacent structures.\n*   **Subcutaneous bursa** — a sac located between the skin and an underlying bone.\n    *   Prepatellar bursa\n    *   Olecranon bursa\n*   **Submuscular bursa** — a sac found between a muscle and bone, or between adjacent muscles.\n    *   Trochanteric bursa\n*   **Subtendinous bursa** — a sac located between a muscle tendon and bone.\n    *   Subacromial bursa\n    *   Suprapatellar bursa\n\n## Pivot joints\nUniaxial rotation occurs where a cylindrically shaped bone is harnessed within a ring of bone and ligament.\n\n### Key terms\n*   **Pivot joint** — a uniaxial diarthrosis where a bone rotates within a ring formed by another bone and a ligament.\n    *   Atlantoaxial joint\n    *   Proximal radioulnar joint\n\n## Condyloid joints\nBiaxial elliptical articulations permit flexion-extension and medial-lateral movements at the knuckles and wrists.\n\n### Key terms\n*   **Condyloid joint (ellipsoid joint)** — a biaxial joint where a rounded structure articulates with a shallow depression.\n    *   Radiocarpal joint\n    *   Metacarpophalangeal joints\n\n## Tendon protection\nDynamic stability is enhanced by dense connective tissues protected by synovial sheaths as they traverse joint interfaces.\n\n### Key terms\n*   **Tendon** — a dense connective tissue structure that serves to attach a muscle to a bone.\n*   **Tendon sheath** — a lubricating fluid-filled sac that surrounds a tendon where it crosses a joint.\n\n## Ball-and-socket joints\nHighly mobile multiaxial articulations utilize a hemispherical head and concave socket to provide maximal global range.\n\n### Key terms\n*   **Ball-and-socket joint** — a multiaxial joint providing anterior-posterior, medial-lateral, and rotational movements.\n    *   Glenohumeral joint\n    *   Hip joint\n\n## Fibrocartilage structures\nIntracapsular fibrocartilage pads optimize articular congruency and dissipate high-impact compressive forces.\n\n### Key terms\n*   **Articular disc** — a small, oval-shaped fibrocartilage structure that unites bones or smooths movements.\n    *   Sternoclavicular joint\n*   **Meniscus** — a large, C-shaped fibrocartilage structure providing shock absorption and cushioning.\n    *   Knee joint\n\n## Saddle joints\nReciprocal concave-convex surfaces allow for specialized biaxial mobility, notably enabling human thumb opposability.\n\n### Key terms\n*   **Saddle joint** — a biaxial joint where articulating surfaces are concave in one direction and convex in the other.\n    *   First carpometacarpal joint\n    *   Sternoclavicular joint\n\n## Rheumatoid arthritis\nSystemic autoimmune pathology initiates chronic synovial inflammation leading to articular destruction and multi-organ complications.\n\n### Key terms\n*   **Rheumatoid arthritis** — an autoimmune disorder causing inflammation, cartilage destruction, and severe joint disability.\n    *   Joint deformation\n    *   Lung fibrosis\n    *   Vasculitis (inflammation of blood vessels)\n    *   Coronary heart disease\n    *   Premature mortality\n\n## Synovial membranes\nThe specialized vascular lining of the articular capsule synthesizes a lubricative filtrate essential for joint health.\n\n### Key terms\n*   **Synovial membrane** — a thin tissue layer lining the inner surface of the articular capsule of a synovial joint.\n*   **Synovial fluid** — a thick, slimy lubricating liquid secreted by the synovial membrane.\n*   **Nourishment** — the process by which synovial fluid provides nutrients to the avascular articular cartilage.\n\n## Hinge joints\nUniaxial diarthroses utilize a convex-concave interface to limit motion strictly to the sagittal plane.\n\n### Key terms\n*   **Hinge joint** — a uniaxial joint where the convex end of one bone meets the concave end of another.\n    *   Elbow joint\n    *   Knee joint\n    *   Ankle joint\n    *   Interphalangeal joints\n\n## Osteoarthritis pathology\nAging-related degradation involves cartilage loss, bone thickening, and compensatory synovial fluid overproduction that stretches the capsule.\n\n### Key terms\n*   **Osteoarthritis** — a joint disorder characterized by the gradual thinning and erosion of articular cartilage.\n*   **Bone thickening** — a physiological response to cartilage loss that creates rough, bumpy irregularities on the bone surface.\n\n## Joint replacement\nArthroplasty serves as a definitive surgical intervention to restore mobility by resurfacing damaged joints with synthetic prostheses.\n\n### Key terms\n*   **Arthroplasty** — a surgical procedure where the articulating surfaces of a joint are replaced with artificial components.\n*   **Prosthesis** — the metal or plastic artificial components used to replace damaged bone parts.\n\n## Gouty arthritis\nMetabolic dysregulation leads to the intra-articular crystallization of uric acid, triggering acute inflammatory responses.\n\n### Key terms\n*   **Gout** — an inflammatory condition resulting from the deposition of uric acid crystals within a body joint.\n    *   Uric acid overproduction\n    *   Renal excretion failure\n    *   Dietary fructose\n\n## Articular cartilage\nAvascular hyaline tissue provides a low-friction surface that protects underlying subchondral bone from mechanical damage.\n\n### Key terms\n*   **Articular cartilage** — a hyaline cartilage layer covering the articulating surface of a bone within a synovial joint.\n*   **Teflon® coating** — a comparison describing how cartilage allows bones to glide smoothly without damaging bone tissue.\n\n## Limb rotation\nLong-axis rotation of a limb occurs at multiaxial joints, orienting the anterior surface toward or away from the midline.\n\n### Key terms\n*   **Medial (internal) rotation** — turning the anterior surface of a limb toward the midline of the body.\n*   **Lateral (external) rotation** — turning the anterior surface of a limb away from the midline of the body.\n\n## Scapular movements\nThe functional scapulothoracic interface allows the shoulder blade to glide across the ribs to reposition the glenoid cavity.\n\n### Key terms\n*   **Protraction** — moving the scapula forward and away from the midline.\n*   **Retraction** — pulling the scapula posteriorly and medially toward the vertebral column.\n*   **Elevation** — moving the scapula and shoulder upward, as when shrugging.\n*   **Depression** — moving the scapula and shoulder downward.\n\n## Complex movements\nCircumduction integrates multiple planes of motion to move the distal extremity in a conical path while the proximal end remains fixed.\n\n### Key terms\n*   **Circumduction** — the movement of a body region in a circular manner using a combination of planes.\n    *   Sequence: Flexion → Abduction → Extension → Adduction\n\n## Mandible movements\nThe temporomandibular joint utilizes vertical and horizontal translations to facilitate masticatory and speech functions.\n\n### Key terms\n*   **Protraction** — pushing the lower jaw forward to stick out the chin.\n*   **Retraction** — pulling the lower jaw backward.\n*   **Elevation** — upward movement of the lower jaw to close the mouth.\n*   **Depression** — downward movement of the lower jaw to open the mouth.\n\n## Supination and pronation\nForearm rotation at the radioulnar joints determines the anatomical orientation of the palm and the crossing of long bones.\n\n### Key terms\n*   **Supination** — forearm rotation that turns the palm anteriorly and makes the radius and ulna parallel.\n*   **Pronation** — forearm rotation that turns the palm posteriorly and crosses the radius over the ulna.\n\n## Scapular rotation\nUpward and downward rotation of the scapula is required to orient the glenoid cavity for full upper limb excursion.\n\n### Key terms\n*   **Superior rotation** — upward motion of the glenoid cavity allowing for full abduction of the arm.\n*   **Inferior rotation** — downward motion of the glenoid cavity occurring during adduction of the upper limb.\n\n## Rotational movements\nAxial rotation involves a bone twisting around its longitudinal axis, occurring at pivot joints or within the vertebral column.\n\n### Key terms\n*   **Rotation** — the twisting of a body part around its central axis.\n    *   Atlantoaxial joint\n\n## Excessive movement\nTraumatic forces can drive joints beyond physiological limits, resulting in ligamentous strain or articular damage.\n\n### Key terms\n*   **Hyperextension** — abnormal extension of a joint beyond its normal range of motion.\n*   **Hyperflexion** — abnormal or excessive flexion of a joint beyond its normal range.\n    *   Whiplash\n\n## Vertebral column\nSpinal mobility relies on the summation of small movements across intervertebral symphyses and synovial plane joints.\n\n### Key terms\n*   **Symphysis** — the cartilaginous joint formed by the fibrocartilage intervertebral disc.\n*   **Plane joint** — the synovial joint located between the superior and inferior articular processes of vertebrae.\n*   **Flexion** — anterior bending of the neck or body.\n*   **Extension** — posterior-directed motion or straightening from a flexed position.\n*   **Lateral flexion** — bending the neck or body toward the right or left side.\n\n## Ankle movements\nThe uniaxial talocrural hinge joint restricts foot motion exclusively to sagittal plane vertical adjustments.\n\n### Key terms\n*   **Dorsiflexion** — lifting the front of the foot so the top moves toward the anterior leg.\n*   **Plantar flexion** — lifting the heel of the foot or pointing the toes downward.\n\n## Abduction and adduction\nCoronal plane movements involve lateral departure from or medial return toward the body's central longitudinal axis.\n\n### Key terms\n*   **Abduction** — moving a limb or hand laterally away from the midline or spreading digits.\n*   **Adduction** — moving a limb or hand toward or across the midline or bringing digits together.\n\n## Joint structural limits\nRange of motion is dictated by the intrinsic morphology of articulating surfaces and the extrinsic tension of ligaments.\n\n### Key terms\n*   **Ligaments** — fibrous bands that constrain range of motion and prevent movements beyond anatomical limits.\n*   **Structural type** — the physical classification of a joint which dictates the available types of motion.\n\n## Thumb movements\nThe unique saddle joint at the base of the first digit allows for specialized multi-planar grasping and opposability.\n\n### Key terms\n*   **Opposition** — combination of flexion and abduction bringing the thumb tip to a finger tip.\n*   **Reposition** — returning the thumb to its anatomical position next to the index finger.\n*   **Flexion** — bringing the thumb against the index finger or into the palm.\n*   **Extension** — moving the thumb away from the palm within the plane of the palm.\n*   **Abduction** — anterior movement of the thumb to a position perpendicular to the palm.\n*   **Adduction** — moving the thumb back to the anatomical position next to the index finger.\n\n## Inversion and eversion\nSubtalar and intertarsal plane joints enable the tilting of the sole to maintain stability on irregular topography.\n\n### Key terms\n*   **Inversion** — turning the foot to angle the bottom toward the midline of the body.\n*   **Eversion** — turning the foot to angle the bottom away from the midline of the body.\n\n## Mandible excursion\nLateral translation of the lower jaw facilitates the grinding action necessary for effective food processing.\n\n### Key terms\n*   **Lateral excursion** — moving the mandible away from the midline toward the right or left side.\n*   **Medial excursion** — returning the mandible to its resting position at the midline.\n\n## Flexion and extension\nSagittal plane angular changes occur when bones move anteriorly or posteriorly relative to the anatomical position.\n\n### Key terms\n*   **Flexion** — movement that decreases the angle between bones at a joint.\n*   **Extension** — movement that increases the angle and straightens a joint from a flexed position.\n*   **Lateral flexion** — bending of the neck or body toward the right or left side."}</script>
+<script id="quiz-data" type="application/json">{"id": "ap2e-ch9-9-4_9-5", "title": "Ch9 Exam · 9.4–9.5", "subtitle": "Joints", "book": "A&P 2e", "hash": "8837d78b412d16cf", "letters": ["A", "B", "C", "D", "E", "F", "G", "H"], "questions": [{"q": "Regarding the functional role of ligaments in supporting synovial joints, which of the following statements is the odd one out?", "options": ["Ligaments are categorized as extrinsic, intrinsic, or intracapsular depending on their location relative to the articular capsule.", "The strength of supporting ligaments at the hip joint specifically serves to constrain the extension of the femur.", "Ligaments are highly elastic connective tissues that readily stretch to allow for regular hyperextension of limbs.", "Ligaments anchor bones together to prevent their separation during various body movements."], "rationales": ["This is the standard structural classification for ligaments associated with synovial joints.", "This accurately describes a trade-off where stability provided by ligaments limits the range of motion.", "Ligaments are strong, non-elastic bands designed to limit range of motion and prevent injury; excessive stretching leads to damage rather than being a normal functional feature.", "This is a primary function of ligaments, providing structural integrity to the joint."], "correct": 2, "hint": "Consider how these structures interact with the range of motion limits discussed in section 9.5.", "topic": "Ligamentous support", "sec": "9.4", "src": "$", "link": "9.5", "qid": "8412ac4544"}, {"q": "Which of the following articulations is characterized as a plane joint where flat or slightly curved surfaces allow for small gliding movements?", "options": ["The joint between the trapezium carpal bone and the first metacarpal bone.", "The articulation between the distal radius and the scaphoid bone.", "The articulation between the humerus and the ulna.", "The joints between the carpal bones of the wrist."], "rationales": ["This is a saddle joint, which allows for biaxial movement at the base of the thumb.", "This is a condyloid joint, which involves a rounded surface fitting into a shallow depression.", "This is a hinge joint, characterized by uniaxial movement like a door hinge.", "Intercarpal joints consist of small bones with flat surfaces that slide against each other, defining the plane joint type."], "correct": 3, "hint": "Look for an example where the bones simply slide past one another rather than rotating or bending on a fixed axis.", "topic": "Plane joints", "sec": "9.4", "src": "$", "link": "", "qid": "49a8306727"}, {"q": "A bursa serves to reduce friction by separating adjacent structures, such as skin and bone, through a thin connective tissue sac filled with _______.", "options": ["hyaline cartilage", "lubricating liquid", "dense regular connective tissue", "fibrocartilage"], "rationales": ["Hyaline cartilage covers the articulating surfaces of bones as articular cartilage, not the interior of a bursa.", "Bursae are specifically designed as fluid-filled cushions to prevent direct rubbing between tissues.", "This tissue type forms ligaments and tendons rather than the lubricating liquid found in bursae.", "Fibrocartilage provides shock absorption and strength within a joint cavity, but is not the filling of a bursa."], "correct": 1, "hint": "Think about the specific physical state of the substance required to provide lubrication and reduce friction.", "topic": "Bursa locations", "sec": "9.4", "src": "$", "link": "", "qid": "db89b2ea4d"}, {"q": "A physical therapist is explaining the mechanics of the neck to a patient. Which structural arrangement would the therapist describe to explain how the head can rotate from side to side in a 'no' motion?", "options": ["The flat surfaces of the superior and inferior articular processes sliding against each other.", "The upward projecting dens of the axis articulating with the inner aspect of the atlas.", "The condyle of the occipital bone articulating with the shallow depressions of the atlas.", "The convex end of the dens fitting into the concave trochlear notch of the atlas."], "rationales": ["These are plane joints that allow for limited gliding but do not form the primary axis for head rotation.", "This specific pivot joint arrangement allows the C1 vertebra to rotate around the axis provided by the C2 vertebra.", "This articulation allows for nodding 'yes' but does not facilitate the rotation required for shaking the head 'no'.", "The trochlear notch is located in the ulna of the elbow, not the vertebrae of the neck."], "correct": 1, "hint": "Rotation requires one bone to act as a stationary axis or ring for another to turn within.", "topic": "Pivot joints", "sec": "9.4", "src": "$", "link": "", "qid": "16d65979d7"}, {"q": "The radiocarpal joint of the wrist is functionally classified as a biaxial joint, allowing for both bending and side-to-side movements. What underlying structural shape allows for these two distinct planes of motion?", "options": ["A cylinder-shaped bone end fitting into a ring formed by a ligament.", "An oval-shaped shallow depression receiving a rounded bone surface.", "Two flat bone surfaces of approximately the same size sliding against each other.", "A convex bone surface articulating with a deep, concave socket."], "rationales": ["This describes a pivot joint, which is uniaxial and only allows for rotation.", "This elliptical or condyloid shape facilitates movement along two axes while preventing rotation.", "This describes a plane joint, which allows for gliding rather than the specific angular biaxial motions of the wrist.", "This describes a ball-and-socket joint, which is multiaxial rather than biaxial."], "correct": 1, "hint": "Consider how an elliptical or 'egg-like' fit differs from a perfect sphere.", "topic": "Condyloid joints", "sec": "9.4", "src": "$", "link": "", "qid": "c9ebc2851f"}, {"q": "Regarding structures that facilitate smooth movement where muscles or tendons cross joints, which of the following is NOT true?", "options": ["Subtendinous bursae specifically protect tendons from rubbing directly against underlying bone.", "Tendon sheaths contain a lubricating fluid that allows for smooth motion during muscle contraction.", "Tendon sheaths are large, C-shaped fibrocartilage pads that provide shock absorption for the entire joint cavity.", "Bursae are located in regions where skin, muscles, or tendons rub against each other."], "rationales": ["This is a correct functional definition of a subtendinous bursa.", "This is the primary function of a tendon sheath as it surrounds a muscle tendon.", "This description refers to a meniscus; tendon sheaths are small sacs that specifically wrap around tendons to prevent friction.", "This correctly identifies the general location and purpose of bursae in reducing friction."], "correct": 2, "hint": "Distinguish between structures that protect specific tendons and those that cushion the entire bone-to-bone contact area.", "topic": "Tendon protection", "sec": "9.4", "src": "$", "link": "", "qid": "d103b475a0"}, {"q": "The glenohumeral joint is capable of a much wider range of motion than the hip joint. Which structural difference accounts for the hip joint's more restricted movement?", "options": ["The hip joint lacks an articular capsule, relying entirely on extracapsular ligaments for stability.", "The hip features a deep socket (acetabulum) and stronger supporting ligaments compared to the shallow glenoid cavity.", "The shoulder joint uses synovial fluid for lubrication while the hip joint relies primarily on fat pads.", "The shoulder joint is a ball-and-socket joint while the hip is technically classified as a condyloid joint."], "rationales": ["All synovial joints, including the hip, possess an articular capsule that defines the joint cavity.", "The deeper socket and robust ligaments provide necessary stability for weight-bearing but sacrifice mobility.", "Both are synovial joints and use synovial fluid as their primary lubricant.", "Both the shoulder and hip are ball-and-socket joints; they differ in depth and ligamentous support, not basic classification."], "correct": 1, "hint": "Consider the trade-off between the depth of a socket and the freedom of the bone within it.", "topic": "Ball-and-socket joints", "sec": "9.4", "src": "$", "link": "", "qid": "777759bd52"}, {"q": "In the knee joint, the primary functional requirement for the menisci is to provide _______ between the femur and the tibia.", "options": ["secretion of synovial fluid", "cushioning and shock absorption", "direct blood supply to the bones", "a rigid barrier to prevent any rotation"], "rationales": ["Synovial fluid is secreted by the synovial membrane, not by fibrocartilage structures like the menisci.", "The C-shaped menisci act as specialized pads to absorb the impact of weight-bearing and movement.", "Cartilage structures like the menisci are avascular and do not provide blood to the joint.", "While they provide stability, the menisci do not act as a rigid barrier to all motion."], "correct": 1, "hint": "Think about the mechanical stresses placed on the knee during high-impact activities like jumping.", "topic": "Fibrocartilage structures", "sec": "9.4", "src": "$", "link": "", "qid": "6860d7e52d"}, {"q": "A researcher is studying the evolution of the human hand and focuses on the first carpometacarpal joint. What unique capability does this specific saddle joint provide to the thumb?", "options": ["The ability to glide linearly against the carpal bones without changing angle.", "The ability to rotate 360 degrees around its own long axis.", "The ability to move away from the palm and across to touch the tips of other fingers.", "The ability to lock into a rigid position to prevent any medial-lateral motion."], "rationales": ["Gliding without angular change is a feature of plane joints, not the more complex saddle joint.", "Saddle joints are biaxial and do not allow for full multiaxial rotation like a ball-and-socket joint.", "This opposability is enabled by the biaxial movement allowed by the saddle shape of the articulating bones.", "The saddle joint is designed for increased mobility in two planes, not for absolute rigidity."], "correct": 2, "hint": "This joint allows the thumb to act as a versatile tool for grasping and manipulation.", "topic": "Saddle joints", "sec": "9.4", "src": "$", "link": "", "qid": "94014e7dae"}, {"q": "Which of the following describes the initial pathological trigger that distinguishes rheumatoid arthritis from osteoarthritis?", "options": ["A bacterial infection directly invades the joint, destroying the articular disc.", "Age-related erosion of the articular cartilage leads to bone-on-bone contact.", "The accumulation of uric acid crystals within the joint cavity causes sudden swelling.", "The immune system attacks the joint capsule and the synovial membrane, causing inflammation."], "rationales": ["While infections can cause arthritis, rheumatoid arthritis is specifically caused by the body's own immune system.", "This is the primary trigger for osteoarthritis, not the autoimmune-driven rheumatoid arthritis.", "This is the defining characteristic of gout, a metabolic form of arthritis.", "Rheumatoid arthritis is an autoimmune disorder, whereas osteoarthritis begins with physical 'wear and tear' of the cartilage."], "correct": 3, "hint": "Consider the difference between a mechanical failure of tissues and a systemic malfunction of the body's defenses.", "topic": "Rheumatoid arthritis", "sec": "9.4", "src": "$", "link": "", "qid": "512c2d211c"}, {"q": "The synovial membrane is a vital component of the articular capsule. Which of the following is NOT a characteristic or function of this tissue?", "options": ["It lines the inner surface of the fibrous articular capsule.", "It acts as a Teflon-like coating that directly covers the articulating surfaces of the bones.", "It provides nourishment to the avascular articular cartilage through its secretions.", "It secretes a thick, slimy fluid that provides lubrication for the joint."], "rationales": ["This correctly identifies the structural location of the synovial membrane.", "This describes the articular cartilage, not the synovial membrane which lines the inner surface of the capsule.", "Since cartilage lacks blood vessels, it depends on the synovial fluid for nutrients.", "This is a key function of the cells within the synovial membrane."], "correct": 1, "hint": "Distinguish between the tissue that produces the lubricant and the tissue that actually covers the ends of the bones.", "topic": "Synovial membranes", "sec": "9.4", "src": "$", "link": "", "qid": "3af84cc539"}, {"q": "Why are the interphalangeal joints and the elbow joint functionally classified together despite their different locations in the limbs?", "options": ["Both permit movement along only a single axis, functioning like a door hinge.", "Both rely on a central pivot point that allows for rotation around a long axis.", "Both allow for biaxial movement, including side-to-side motion.", "Both are classified as amphiarthrosis joints because they allow only limited gliding."], "rationales": ["Hinge joints are uniaxial, restricted to bending and straightening motions in one plane.", "Rotation around an axis is the hallmark of a pivot joint, not a hinge joint.", "Hinge joints do not allow side-to-side motion; that is a characteristic of condyloid or saddle joints.", "Synovial joints like these are classified as diarthrosis, and hinge joints allow more than just gliding."], "correct": 0, "hint": "Think about the restricted directionality of movement allowed by these joints.", "topic": "Hinge joints", "sec": "9.4", "src": "$", "link": "", "qid": "6749dfc8f9"}, {"q": "In the clinical progression of osteoarthritis, the thinning of articular cartilage triggers a response where the joint cavity swells and the underlying bone tissue eventually _______.", "options": ["becomes highly vascularized to increase nutrient flow", "thickens and becomes rough or bumpy", "softens and dissolves into the synovial fluid", "reverts to hyaline cartilage to repair the damage"], "rationales": ["While the bone has blood vessels, the thickening process is a structural response to stress, not a change in vascularity for the cartilage.", "Bone tissue responds to the increased pressure of damaged cartilage by thickening, which unfortunately creates irregular articulating surfaces.", "The bone does not dissolve; rather, it increases production and thickens in response to stress.", "Bone tissue cannot revert to cartilage; once the articular cartilage is gone, the bone itself responds pathologically."], "correct": 1, "hint": "Consider how the bone itself adapts to the loss of its protective 'Teflon' coating.", "topic": "Osteoarthritis pathology", "sec": "9.4", "src": "$", "link": "", "qid": "a4132da877"}, {"q": "A patient undergoing hip arthroplasty is concerned about how the new joint will stay in place. How would the surgeon describe the installation of the femoral component?", "options": ["The femoral head is replaced with a flat plate that slides against the ilium.", "A new acetabulum is grown from stem cells within the joint cavity.", "A replacement head and shaft are inserted directly into the diaphysis of the femur.", "The artificial ball is glued to the outside of the greater trochanter using ligaments."], "rationales": ["The hip replacement mimics the original ball-and-socket structure to maintain mobility.", "Arthroplasty uses artificial prostheses, not biological regrowth of the socket.", "Arthroplasty involves anchoring the prosthetic shaft into the existing bone shaft of the femur.", "The component is inserted internally into the bone, not just glued to the outside surface."], "correct": 2, "hint": "Think about how an artificial 'ball' would be anchored to the long bone of the thigh.", "topic": "Joint replacement", "sec": "9.4", "src": "$", "link": "", "qid": "19e1a3f5b9"}, {"q": "A patient with gout experiences intense pain in their big toe. What metabolic failure is the underlying cause of this specific inflammatory condition?", "options": ["The kidneys produce too much synovial fluid, which spills into the bloodstream.", "The body overproduces or fails to properly excrete uric acid.", "The immune system fails to recognize the synovial membrane as 'self'.", "The body lacks the ability to produce hyaline cartilage after a certain age."], "rationales": ["Synovial fluid is produced in the joints, not the kidneys, and is not related to gout.", "Gout is caused by the deposition of uric acid crystals resulting from high levels of uric acid in the blood.", "This is the cause of rheumatoid arthritis, which is an autoimmune disorder.", "The loss of cartilage is associated with osteoarthritis, but it is not the metabolic cause of gout."], "correct": 1, "hint": "Look for a chemical byproduct that can crystallize when levels are too high.", "topic": "Gouty arthritis", "sec": "9.4", "src": "$", "link": "", "qid": "39023e01fd"}, {"q": "Regarding the characteristics of articular cartilage in synovial joints, which of the following is NOT a functional consequence of its design?", "options": ["It relies on synovial fluid for nourishment because it lacks its own blood vessels.", "It allows the articulating surfaces of two bones to be directly connected by continuous fibrous tissue.", "It provides a smooth, low-friction surface for bones to move against each other.", "It protects the underlying bone tissue from damage during joint movement."], "rationales": ["Because articular cartilage is avascular, the lubricating fluid is essential for its survival.", "In synovial joints, the articular cartilages are specifically not continuous with each other; this separation allows for mobility.", "This is the primary 'Teflon coating' role of the hyaline cartilage layer.", "By acting as a protective layer, it prevents the abrasive effects of bone-on-bone contact."], "correct": 1, "hint": "Recall the structural characteristic that distinguishes synovial joints from cartilaginous joints like a symphysis.", "topic": "Articular cartilage", "sec": "9.4", "src": "$", "link": "", "qid": "9a26d57542"}, {"q": "During medial rotation of the lower limb, the _______ of the thigh is turned toward the midline of the body.", "options": ["anterior surface", "distal end", "posterior surface", "lateral condyle"], "rationales": ["Rotation is defined by the direction in which the front surface of the limb moves relative to the body's midline.", "The distal end moves in all rotations; medial rotation specifically refers to the inward turning of the anterior face.", "Medial rotation turns the front (anterior) surface toward the midline; the posterior surface would move away from it.", "While the condyles move, the overall movement is defined by the orientation of the anterior surface."], "correct": 0, "hint": "Consider the anatomical position of the kneecap during this movement.", "topic": "Limb rotation", "sec": "9.5", "src": "$", "link": "", "qid": "7e2cc5aa51"}, {"q": "A person is sitting at a desk and pulls their shoulders back to improve their posture, bringing the shoulder blades closer to the spine. Which scapular movement is being performed?", "options": ["elevation", "inferior rotation", "retraction", "protraction"], "rationales": ["Elevation is the upward shrugging motion of the scapula and shoulder.", "Inferior rotation involves the downward motion of the glenoid cavity during limb adduction.", "Retraction involves moving the scapula posteriorly and medially toward the vertebral column.", "Protraction is the forward motion of the scapula, such as when pushing an object."], "correct": 2, "hint": "Think about the difference between pushing forward and pulling backward.", "topic": "Scapular movements", "sec": "9.5", "src": "$", "link": "", "qid": "758af58fab"}, {"q": "Circumduction is a complex motion where the distal end of a limb describes a circle. What sequential combination of simpler movements produces this result?", "options": ["rotation, inversion, and eversion", "flexion, abduction, extension, and adduction", "supination, pronation, and lateral flexion", "protraction, retraction, elevation, and depression"], "rationales": ["Inversion and eversion are specific to the foot and are not part of the circumduction sequence.", "These four motions must occur in sequence to move a body region in a circular pattern.", "These involve rotation of the forearm and bending of the spine, not the circular path of a limb.", "These are linear scapular or mandibular movements rather than the angular components of circumduction."], "correct": 1, "hint": "This movement requires moving through multiple planes in a continuous loop.", "topic": "Complex movements", "sec": "9.5", "src": "$", "link": "", "qid": "651b866b41"}, {"q": "Regarding movements of the mandible, which of the following is NOT a standard anatomical motion for the lower jaw?", "options": ["supination", "lateral excursion", "protraction", "depression"], "rationales": ["Supination is a specific movement of the forearm that turns the palm forward, not a movement of the jaw.", "Lateral excursion is the side-to-side movement used for grinding food.", "Protraction is the forward movement of the mandible to stick out the chin.", "Depression is the downward movement of the mandible used to open the mouth."], "correct": 0, "hint": "One of these terms is exclusively reserved for the orientation of the radius and ulna.", "topic": "Mandible movements", "sec": "9.5", "src": "$", "link": "", "qid": "c0f696090f"}, {"q": "When a person moves their forearm from the palm-forward position to the palm-backward position, what physical change occurs between the radius and the ulna?", "options": ["The radius crosses over the ulna to form an X-shape.", "The bones fuse together temporarily at the distal radioulnar joint.", "The radius and ulna move apart to become perfectly parallel.", "The distal end of the ulna rotates around a stationary radius."], "rationales": ["This crossing of the bones defines the pronated position of the forearm.", "The bones remain separate articulations; they simply overlap during the movement.", "Parallel alignment is the characteristic of the supinated (anatomical) position.", "In the forearm, it is the radius that rotates and crosses over the relatively stationary ulna."], "correct": 0, "hint": "Visualize the skeletal structure of the forearm when the palm is facing toward the rear.", "topic": "Supination and pronation", "sec": "9.5", "src": "$", "link": "", "qid": "3ed258c04e"}, {"q": "To perform a full abduction of the arm above shoulder height, the scapula must undergo _______ so that the glenoid cavity faces upward.", "options": ["plantar flexion", "lateral rotation", "medial excursion", "superior rotation"], "rationales": ["Plantar flexion is a movement of the foot at the ankle joint.", "While the arm rotates, the specific upward movement of the scapular socket is called superior rotation.", "Medial excursion is a movement of the mandible, not the scapula.", "This rotation of the scapula is necessary to prevent the humerus from hitting the acromion during high arm movements."], "correct": 3, "hint": "Consider how the orientation of the 'socket' of the shoulder must change to allow the arm to point toward the sky.", "topic": "Scapular rotation", "sec": "9.5", "src": "$", "link": "", "qid": "e56c1b00da"}, {"q": "Which specific joint allows for the 'no' movement of the head where the C1 vertebra rotates around the C2 vertebra?", "options": ["radiocarpal joint", "temporomandibular joint", "zygapophysial joint", "atlantoaxial joint"], "rationales": ["The radiocarpal joint is in the wrist and is a condyloid joint.", "This is the jaw joint, not involved in rotating the head on the spine.", "These are plane joints between adjacent vertebrae that allow for gliding but not the primary rotation of the head.", "This pivot joint between the atlas and axis is the dedicated site for side-to-side head rotation."], "correct": 3, "hint": "Identify the joint named for the first two cervical vertebrae.", "topic": "Rotational movements", "sec": "9.5", "src": "$", "link": "", "qid": "f7e9790995"}, {"q": "A sudden forceful rear-end collision causes a passenger's head to move backward excessively beyond its normal range. What is the anatomical term for this potentially injurious movement?", "options": ["lateral flexion", "superior rotation", "hyperflexion", "hyperextension"], "rationales": ["Lateral flexion is bending to the side, not the anterior-posterior movement seen in whiplash.", "Superior rotation refers to the movement of the scapula, not the backward motion of the neck.", "Hyperflexion is the excessive bending forward; the backward motion in whiplash is hyperextension.", "Extension beyond the normal physiological limits is defined as hyperextension."], "correct": 3, "hint": "Consider the term for 'going beyond' the straightening motion of a joint.", "topic": "Excessive movement", "sec": "9.5", "src": "$", "link": "", "qid": "81820ffb08"}, {"q": "The vertebral column allows for several types of movement through the summation of small motions. Which of the following is NOT typically a motion associated with the vertebral column?", "options": ["abduction", "extension", "flexion", "lateral flexion"], "rationales": ["Abduction is a medial-lateral movement of limbs or fingers away from the midline, not a motion of the central vertebral axis.", "Straightening or bending backward is a standard extension movement of the spine.", "Anterior bending of the neck or body is a standard flexion movement of the spine.", "Bending the body to the right or left side is known as lateral flexion."], "correct": 0, "hint": "One of these terms applies specifically to the limbs and digits moving away from the body's midline.", "topic": "Vertebral column", "sec": "9.5", "src": "$", "link": "", "qid": "9d7123ad34"}, {"q": "Lifting the front of the foot so that the toes move toward the anterior leg is a specific movement occurring at the ankle hinge joint. What is this motion called?", "options": ["dorsiflexion", "plantar flexion", "inversion", "eversion"], "rationales": ["This movement decreases the angle between the top of the foot and the leg.", "Plantar flexion involves pointing the toes downward or lifting the heel.", "Inversion turns the sole of the foot inward and does not occur at the ankle hinge joint.", "Eversion is a complex foot movement turning the sole outward, not a simple hinge motion at the ankle."], "correct": 0, "hint": "Think of the term for moving the 'dorsum' (top) of the foot.", "topic": "Ankle movements", "sec": "9.5", "src": "$", "link": "", "qid": "bcc9dbcb5f"}, {"q": "Raising the arm laterally away from the body is an example of _______ occurring within the coronal plane.", "options": ["rotation", "adduction", "circumduction", "abduction"], "rationales": ["Rotation involves turning the limb around its own axis, not moving it away from the midline.", "Adduction brings the limb back toward the body's midline.", "While it involves abduction, circumduction is a circular motion combining four different movements.", "Moving a limb laterally away from the midline is the definition of abduction."], "correct": 3, "hint": "Remember that this movement involves 'taking away' from the center.", "topic": "Abduction and adduction", "sec": "9.5", "src": "$", "link": "", "qid": "32d1cf578c"}, {"q": "A student notices that they can easily touch their toes (hip flexion), but find it very difficult to move their leg far behind them while standing. What structural feature primarily limits this posterior movement?", "options": ["The lack of an articular capsule at the posterior of the hip.", "The accumulation of bursae that physically block the head of the femur.", "The strong ligaments that support and stabilize the hip joint.", "The presence of a large meniscus between the femur and the acetabulum."], "rationales": ["The hip is a synovial joint and is entirely surrounded by an articular capsule.", "Bursae are fluid-filled sacs that facilitate movement, not physical obstructions to normal motion.", "Ligaments are designed to constrain the range of motion to provide stability and weight-bearing ability.", "The hip joint does not contain a meniscus; it relies on its socket depth and ligaments."], "correct": 2, "hint": "Consider the tissues responsible for anchoring bones and resisting abnormal motions.", "topic": "Joint structural limits", "sec": "9.5", "src": "$", "link": "", "qid": "d93b5af287"}, {"q": "Opposition is a unique movement where the thumb contacts the tips of the fingers. What is the name of the movement that returns the thumb to its anatomical position?", "options": ["adduction", "medial rotation", "retraction", "reposition"], "rationales": ["While the thumb adducts, the specific term for returning from the 'opposed' state is reposition.", "Opposition involves multiple planes of movement; rotation is only one small part of the complex thumb mechanics.", "Retraction is an anterior-posterior movement of the scapula or mandible.", "Reposition is the specific term for moving the thumb back next to the index finger after opposition."], "correct": 3, "hint": "This term describes the 're-placing' of the thumb in its starting alignment.", "topic": "Thumb movements", "sec": "9.5", "src": "$", "link": "", "qid": "a1beaa8ed8"}, {"q": "Inversion and eversion are complex foot movements used to stabilize the body on uneven ground. Which of the following is NOT true regarding these motions?", "options": ["These motions occur solely at the hinge joint of the ankle.", "Inversion involves turning the bottom of the foot toward the midline.", "The foot generally has a greater range of inversion than eversion.", "Eversion involves turning the sole of the foot away from the midline."], "rationales": ["Inversion and eversion take place at the intertarsal plane joints of the foot, not at the ankle joint itself.", "This is the correct definition of foot inversion.", "Anatomically, the foot can tilt inward more significantly than it can tilt outward.", "This is the correct definition of foot eversion."], "correct": 0, "hint": "Recall which specific joints among the tarsal bones facilitate these side-to-side stabilization movements.", "topic": "Inversion and eversion", "sec": "9.5", "src": "$", "link": "", "qid": "586826c982"}, {"q": "The mandible can perform lateral and medial excursion. Which of the following best describes these movements?", "options": ["Rotating the mandible around its own long axis.", "Moving the lower jaw side-to-side away from and back to the midline.", "Pushing the chin forward and pulling it back.", "Opening and closing the mouth by moving the jaw up and down."], "rationales": ["The mandible does not rotate around a long axis; it glides and hinges at the temporomandibular joint.", "Excursion refers specifically to the horizontal side-to-side grinding motions of the jaw.", "This describes protraction and retraction, not excursion.", "This describes depression and elevation, not excursion."], "correct": 1, "hint": "Consider the type of motion required to grind food between the teeth.", "topic": "Mandible excursion", "sec": "9.5", "src": "$", "link": "", "qid": "2693173d12"}, {"q": "The vertebral column achieves flexion and extension through the combined action of the intervertebral symphysis and the _______ joints located between the articular processes of adjacent vertebrae.", "options": ["hinge", "plane", "pivot", "saddle"], "rationales": ["While the spine bends, it does not use a single hinge; it uses multiple plane joints in sequence.", "Small gliding movements at these plane joints, along with the symphysis, allow for the overall bending of the spine.", "Pivot joints in the spine are restricted to the atlantoaxial joint for rotation, not for general flexion/extension.", "Saddle joints are located in the thumb and sternum, not between the articular processes of vertebrae."], "correct": 1, "hint": "Consider the structural type of joint that allows superior and inferior articular processes to slide against one another.", "topic": "Flexion and extension", "sec": "9.5", "src": "$", "link": "9.4", "qid": "a9a807605e"}], "hasSheet": true, "parts": false, "secTitles": {}, "reserve": 0, "tags": false, "frq": [{"tag": "Shoulder joint-scapula coordination", "secs": "9.4, 9.5", "prompt": "\"An individual attempts to lift a heavy weight laterally from their side to a position high above their head, but they feel a sharp 'pinch' in the shoulder as the arm reaches shoulder height.\"", "ask": "Identify the specific joint type involved, then describe the necessary scapular motion and structural clearance required to complete the movement without impingement.", "words": "120", "rubric": [{"t": "Identify the functional category of the glenohumeral articulation", "judge": false, "k": ["ball* socket*"]}, {"t": "Provide the formal anatomical designation for the glenoid-humeral contact", "judge": false, "k": ["glenohumeral"]}, {"t": "Name the bony scapular process causing the mechanical interference", "judge": false, "k": ["acromion"]}, {"t": "Label the vital upward-tilted displacement of the glenoid fossa", "judge": false, "k": ["superior* rotat*"]}, {"t": "Logical association established between the blade's reorientation and the prevention of osseous contact", "judge": true, "k": []}, {"t": "Cogent explanation of how the humeral tubercle successfully traverses past the upper process", "judge": true, "k": []}], "model": "The articulation involved in this action is the glenohumeral joint, which is anatomically classified as a multiaxial ball-and-socket joint. During the lateral abduction required to elevate a load, the head of the humerus revolves within the shallow glenoid cavity. As the limb reaches a horizontal orientation, superior rotation of the scapula becomes functionally mandatory. In this biomechanical coordination, the glenoid cavity tilts upward while the medial end of the scapular spine descends. This specific reorientation moves the acromion out of the path of the greater tubercle of the humerus. Without this structural clearance, the humeral tubercle would physically strike the acromion, resulting in the mechanical impingement or \"pinch\" described in the scenario. This essential interplay between the ball-and-socket articulation and the shoulder blade is what permits the upper limb to achieve its full multiaxial range of motion without osseous interference."}, {"tag": "Pivot joint rotation mechanics", "secs": "9.4, 9.5", "prompt": "\"A person holding a coin in their palm with the thumb pointing laterally moves their hand so the coin faces the floor and the thumb points medially.\"", "ask": "Name the specific movement that occurred, identify the joint type and specific bones involved, and account for the change in the physical relationship between the two forearm bones.", "words": "120", "rubric": [{"t": "Label the antebrachial displacement turning the hand backward", "judge": false, "k": ["pronat*"]}, {"t": "Classify the uniaxial synovial category allowing axial spin", "judge": false, "k": ["pivot*"]}, {"t": "Recognize the lateral antebrachial element that revolves", "judge": false, "k": ["radius"]}, {"t": "Portray the resulting intersecting alignment of the distal segments", "judge": false, "k": ["X-shape*"]}, {"t": "Sound rationale describing the radial element traversing over the fixed medial partner", "judge": true, "k": []}], "model": "The action described is pronation of the forearm. This biomechanical transition takes place at the proximal radioulnar joint, which is functionally classified as a uniaxial pivot joint. This articulation involves the head of the radius revolving within a ligamentous ring and the radial notch of the ulna. In the initial anatomical position, where the palm is forward, the radius and ulna lie parallel to one another. During the shift to a palm-backward orientation, the radial head rotates along its long axis at the proximal articulation. Because the shaft of the radius possesses a slight curvature, this rotation causes its distal segment to swing across the stationary ulna. This crossing transforms the physical alignment of the two elements from a parallel state into an X-shape. This structural crossover is the mechanical basis for internal hand rotation, moving the thumb from a lateral to a medial orientation."}, {"tag": "Osteoarthritis and joint friction", "secs": "9.4, 9.5", "prompt": "\"A retired marathon runner experiences knee stiffness that improves slightly with 'warming up' but results in swelling and a 'gritty' sensation after significant activity.\"", "ask": "Predict the specific tissue changes occurring at the articulating surfaces and account for why the joint responds with increased fluid production and reduced mobility.", "words": "120", "rubric": [{"t": "Note the erosion of the protective hyaline surface", "judge": false, "k": ["cartilag*"]}, {"t": "Label the distinct histological variety of this protective layer", "judge": false, "k": ["hyaline"]}, {"t": "Highlight the mechanical resistance elevated by surface degradation", "judge": false, "k": ["friction"]}, {"t": "Detail the reactive osseous development creating surface irregularities", "judge": false, "k": ["thickening", "rough*", "bumpy"]}, {"t": "Distinguish the lubricating lubricant generated by the inner capsule", "judge": false, "k": ["synovial*"]}, {"t": "Coherent causal sequence from surface breakdown to inflammatory distension and restricted range", "judge": true, "k": []}], "model": "This condition represents osteoarthritis, a degenerative \"wear and tear\" pathology of the knee hinge joint. The primary structural change involves the gradual erosion and thinning of the articular cartilage, which is composed of hyaline tissue. This layer normally provides a low-friction coating for the bones; its degradation increases mechanical resistance during locomotion. In response to this damage and increased pressure, the synovial membrane hyper-secretes synovial fluid. This excess lubricant causes the joint cavity to distend, stretching the articular capsule and resulting in the reported swelling and restricted range of motion. Furthermore, the underlying bone tissue reacts to the loss of protection by thickening, which creates rough or bumpy irregularities on the osseous surfaces. These surface irregularities cause the \"gritty\" sensation as the bones rub together without their Teflon-like coating. While light activity may provide temporary relief by distributing lubricant, excessive stress further exacerbates the inflammatory cycle."}], "notebook": "https://notebooklm.google.com/notebook/7195586f-1cfe-4068-9c74-b067dc43f0b1/artifact/5e9d0219-db5c-4339-a17e-75613bbebf07", "root": "../index.html", "tab": "quiz", "sheet": "## Ligamentous support\nFibrous connective tissues structurally stabilize diarthroses by anchoring bones together and restricting supraphysiological ranges.\n\n### Key terms\n*   **Ligaments** — strong bands of fibrous connective tissue that hold bones together and limit the range of joint motion.\n*   **Extrinsic ligament** — a supporting fibrous band located outside of the articular capsule.\n*   **Intrinsic ligament** — a supporting band that is fused to or incorporated into the wall of the articular capsule.\n*   **Intracapsular ligament** — a supporting band located inside of the articular capsule.\n\n## Plane joints\nThese multiaxial articulations facilitate small-scale gliding where movement is primarily restricted by tight ligamentous constraints.\n\n### Key terms\n*   **Plane joint (gliding joint)** — a joint with flat or slightly curved articulating surfaces of similar size.\n    *   Intercarpal joints\n    *   Intertarsal joints\n    *   Zygapophysial joints\n\n## Bursa locations\nFluid-filled synovial sacs strategically interface between bone and soft tissues to mitigate frictional shear during movement.\n\n### Key terms\n*   **Bursa** — a thin connective tissue sac filled with lubricating fluid that reduces friction by separating adjacent structures.\n*   **Subcutaneous bursa** — a sac located between the skin and an underlying bone.\n    *   Prepatellar bursa\n    *   Olecranon bursa\n*   **Submuscular bursa** — a sac found between a muscle and bone, or between adjacent muscles.\n    *   Trochanteric bursa\n*   **Subtendinous bursa** — a sac located between a muscle tendon and bone.\n    *   Subacromial bursa\n    *   Suprapatellar bursa\n\n## Pivot joints\nUniaxial rotation occurs where a cylindrically shaped bone is harnessed within a ring of bone and ligament.\n\n### Key terms\n*   **Pivot joint** — a uniaxial diarthrosis where a bone rotates within a ring formed by another bone and a ligament.\n    *   Atlantoaxial joint\n    *   Proximal radioulnar joint\n\n## Condyloid joints\nBiaxial elliptical articulations permit flexion-extension and medial-lateral movements at the knuckles and wrists.\n\n### Key terms\n*   **Condyloid joint (ellipsoid joint)** — a biaxial joint where a rounded structure articulates with a shallow depression.\n    *   Radiocarpal joint\n    *   Metacarpophalangeal joints\n\n## Tendon protection\nDynamic stability is enhanced by dense connective tissues protected by synovial sheaths as they traverse joint interfaces.\n\n### Key terms\n*   **Tendon** — a dense connective tissue structure that serves to attach a muscle to a bone.\n*   **Tendon sheath** — a lubricating fluid-filled sac that surrounds a tendon where it crosses a joint.\n\n## Ball-and-socket joints\nHighly mobile multiaxial articulations utilize a hemispherical head and concave socket to provide maximal global range.\n\n### Key terms\n*   **Ball-and-socket joint** — a multiaxial joint providing anterior-posterior, medial-lateral, and rotational movements.\n    *   Glenohumeral joint\n    *   Hip joint\n\n## Fibrocartilage structures\nIntracapsular fibrocartilage pads optimize articular congruency and dissipate high-impact compressive forces.\n\n### Key terms\n*   **Articular disc** — a small, oval-shaped fibrocartilage structure that unites bones or smooths movements.\n    *   Sternoclavicular joint\n*   **Meniscus** — a large, C-shaped fibrocartilage structure providing shock absorption and cushioning.\n    *   Knee joint\n\n## Saddle joints\nReciprocal concave-convex surfaces allow for specialized biaxial mobility, notably enabling human thumb opposability.\n\n### Key terms\n*   **Saddle joint** — a biaxial joint where articulating surfaces are concave in one direction and convex in the other.\n    *   First carpometacarpal joint\n    *   Sternoclavicular joint\n\n## Rheumatoid arthritis\nSystemic autoimmune pathology initiates chronic synovial inflammation leading to articular destruction and multi-organ complications.\n\n### Key terms\n*   **Rheumatoid arthritis** — an autoimmune disorder causing inflammation, cartilage destruction, and severe joint disability.\n    *   Joint deformation\n    *   Lung fibrosis\n    *   Vasculitis (inflammation of blood vessels)\n    *   Coronary heart disease\n    *   Premature mortality\n\n## Synovial membranes\nThe specialized vascular lining of the articular capsule synthesizes a lubricative filtrate essential for joint health.\n\n### Key terms\n*   **Synovial membrane** — a thin tissue layer lining the inner surface of the articular capsule of a synovial joint.\n*   **Synovial fluid** — a thick, slimy lubricating liquid secreted by the synovial membrane.\n*   **Nourishment** — the process by which synovial fluid provides nutrients to the avascular articular cartilage.\n\n## Hinge joints\nUniaxial diarthroses utilize a convex-concave interface to limit motion strictly to the sagittal plane.\n\n### Key terms\n*   **Hinge joint** — a uniaxial joint where the convex end of one bone meets the concave end of another.\n    *   Elbow joint\n    *   Knee joint\n    *   Ankle joint\n    *   Interphalangeal joints\n\n## Osteoarthritis pathology\nAging-related degradation involves cartilage loss, bone thickening, and compensatory synovial fluid overproduction that stretches the capsule.\n\n### Key terms\n*   **Osteoarthritis** — a joint disorder characterized by the gradual thinning and erosion of articular cartilage.\n*   **Bone thickening** — a physiological response to cartilage loss that creates rough, bumpy irregularities on the bone surface.\n\n## Joint replacement\nArthroplasty serves as a definitive surgical intervention to restore mobility by resurfacing damaged joints with synthetic prostheses.\n\n### Key terms\n*   **Arthroplasty** — a surgical procedure where the articulating surfaces of a joint are replaced with artificial components.\n*   **Prosthesis** — the metal or plastic artificial components used to replace damaged bone parts.\n\n## Gouty arthritis\nMetabolic dysregulation leads to the intra-articular crystallization of uric acid, triggering acute inflammatory responses.\n\n### Key terms\n*   **Gout** — an inflammatory condition resulting from the deposition of uric acid crystals within a body joint.\n    *   Uric acid overproduction\n    *   Renal excretion failure\n    *   Dietary fructose\n\n## Articular cartilage\nAvascular hyaline tissue provides a low-friction surface that protects underlying subchondral bone from mechanical damage.\n\n### Key terms\n*   **Articular cartilage** — a hyaline cartilage layer covering the articulating surface of a bone within a synovial joint.\n*   **Teflon® coating** — a comparison describing how cartilage allows bones to glide smoothly without damaging bone tissue.\n\n## Limb rotation\nLong-axis rotation of a limb occurs at multiaxial joints, orienting the anterior surface toward or away from the midline.\n\n### Key terms\n*   **Medial (internal) rotation** — turning the anterior surface of a limb toward the midline of the body.\n*   **Lateral (external) rotation** — turning the anterior surface of a limb away from the midline of the body.\n\n## Scapular movements\nThe functional scapulothoracic interface allows the shoulder blade to glide across the ribs to reposition the glenoid cavity.\n\n### Key terms\n*   **Protraction** — moving the scapula forward and away from the midline.\n*   **Retraction** — pulling the scapula posteriorly and medially toward the vertebral column.\n*   **Elevation** — moving the scapula and shoulder upward, as when shrugging.\n*   **Depression** — moving the scapula and shoulder downward.\n\n## Complex movements\nCircumduction integrates multiple planes of motion to move the distal extremity in a conical path while the proximal end remains fixed.\n\n### Key terms\n*   **Circumduction** — the movement of a body region in a circular manner using a combination of planes.\n    *   Sequence: Flexion → Abduction → Extension → Adduction\n\n## Mandible movements\nThe temporomandibular joint utilizes vertical and horizontal translations to facilitate masticatory and speech functions.\n\n### Key terms\n*   **Protraction** — pushing the lower jaw forward to stick out the chin.\n*   **Retraction** — pulling the lower jaw backward.\n*   **Elevation** — upward movement of the lower jaw to close the mouth.\n*   **Depression** — downward movement of the lower jaw to open the mouth.\n\n## Supination and pronation\nForearm rotation at the radioulnar joints determines the anatomical orientation of the palm and the crossing of long bones.\n\n### Key terms\n*   **Supination** — forearm rotation that turns the palm anteriorly and makes the radius and ulna parallel.\n*   **Pronation** — forearm rotation that turns the palm posteriorly and crosses the radius over the ulna.\n\n## Scapular rotation\nUpward and downward rotation of the scapula is required to orient the glenoid cavity for full upper limb excursion.\n\n### Key terms\n*   **Superior rotation** — upward motion of the glenoid cavity allowing for full abduction of the arm.\n*   **Inferior rotation** — downward motion of the glenoid cavity occurring during adduction of the upper limb.\n\n## Rotational movements\nAxial rotation involves a bone twisting around its longitudinal axis, occurring at pivot joints or within the vertebral column.\n\n### Key terms\n*   **Rotation** — the twisting of a body part around its central axis.\n    *   Atlantoaxial joint\n\n## Excessive movement\nTraumatic forces can drive joints beyond physiological limits, resulting in ligamentous strain or articular damage.\n\n### Key terms\n*   **Hyperextension** — abnormal extension of a joint beyond its normal range of motion.\n*   **Hyperflexion** — abnormal or excessive flexion of a joint beyond its normal range.\n    *   Whiplash\n\n## Vertebral column\nSpinal mobility relies on the summation of small movements across intervertebral symphyses and synovial plane joints.\n\n### Key terms\n*   **Symphysis** — the cartilaginous joint formed by the fibrocartilage intervertebral disc.\n*   **Plane joint** — the synovial joint located between the superior and inferior articular processes of vertebrae.\n*   **Flexion** — anterior bending of the neck or body.\n*   **Extension** — posterior-directed motion or straightening from a flexed position.\n*   **Lateral flexion** — bending the neck or body toward the right or left side.\n\n## Ankle movements\nThe uniaxial talocrural hinge joint restricts foot motion exclusively to sagittal plane vertical adjustments.\n\n### Key terms\n*   **Dorsiflexion** — lifting the front of the foot so the top moves toward the anterior leg.\n*   **Plantar flexion** — lifting the heel of the foot or pointing the toes downward.\n\n## Abduction and adduction\nCoronal plane movements involve lateral departure from or medial return toward the body's central longitudinal axis.\n\n### Key terms\n*   **Abduction** — moving a limb or hand laterally away from the midline or spreading digits.\n*   **Adduction** — moving a limb or hand toward or across the midline or bringing digits together.\n\n## Joint structural limits\nRange of motion is dictated by the intrinsic morphology of articulating surfaces and the extrinsic tension of ligaments.\n\n### Key terms\n*   **Ligaments** — fibrous bands that constrain range of motion and prevent movements beyond anatomical limits.\n*   **Structural type** — the physical classification of a joint which dictates the available types of motion.\n\n## Thumb movements\nThe unique saddle joint at the base of the first digit allows for specialized multi-planar grasping and opposability.\n\n### Key terms\n*   **Opposition** — combination of flexion and abduction bringing the thumb tip to a finger tip.\n*   **Reposition** — returning the thumb to its anatomical position next to the index finger.\n*   **Flexion** — bringing the thumb against the index finger or into the palm.\n*   **Extension** — moving the thumb away from the palm within the plane of the palm.\n*   **Abduction** — anterior movement of the thumb to a position perpendicular to the palm.\n*   **Adduction** — moving the thumb back to the anatomical position next to the index finger.\n\n## Inversion and eversion\nSubtalar and intertarsal plane joints enable the tilting of the sole to maintain stability on irregular topography.\n\n### Key terms\n*   **Inversion** — turning the foot to angle the bottom toward the midline of the body.\n*   **Eversion** — turning the foot to angle the bottom away from the midline of the body.\n\n## Mandible excursion\nLateral translation of the lower jaw facilitates the grinding action necessary for effective food processing.\n\n### Key terms\n*   **Lateral excursion** — moving the mandible away from the midline toward the right or left side.\n*   **Medial excursion** — returning the mandible to its resting position at the midline.\n\n## Flexion and extension\nSagittal plane angular changes occur when bones move anteriorly or posteriorly relative to the anatomical position.\n\n### Key terms\n*   **Flexion** — movement that decreases the angle between bones at a joint.\n*   **Extension** — movement that increases the angle and straightens a joint from a flexed position.\n*   **Lateral flexion** — bending of the neck or body toward the right or left side."}</script>
+<script>
+(function(){
+  if(window.lqSync) return;
+  const API = 'https://terp-plate.vercel.app/api/quiz-sync', MK = 'lqsync:meta';
+  const none = {first: Promise.resolve([]), now: async()=>[], listen(){}};
+  let key = '';
+  try{ key = localStorage.getItem('lq:key') || ''; }catch(e){}
+  const hm = /[#&]k=([A-Za-z0-9_-]{40,})/.exec(location.hash);
+  if(hm) key = hm[1];
+  if(!key || !window.crypto || !crypto.subtle){ window.lqSync = none; return; }
+
+  const skip = k => k.indexOf('lq:') !== 0 || k === 'lq:key' || k === 'lq:speech';
+  const rawSet = Storage.prototype.setItem;
+  let meta = {};
+  try{ meta = JSON.parse(localStorage.getItem(MK) || '{}') || {}; }catch(e){}
+  const putMeta = ()=>{ try{ rawSet.call(localStorage, MK, JSON.stringify(meta)); }catch(e){} };
+  const hash = t => { let h = 5381; for(let i=0;i<t.length;i++) h = ((h<<5) + h + t.charCodeAt(i)) | 0; return h; };
+  const isState = k => /^lq:[^:]+$/.test(k) && k !== 'lq:hub';
+  function weight(s){
+    return Object.keys(s.answers||{}).length + Object.keys(s.pass2||{}).length
+         + Object.keys(s.skipped||{}).length + Object.keys(s.starred||{}).length
+         + Object.keys(s.unsure||{}).length + 1000 * (s.history||[]).length + (s.done ? 500 : 0);
+  }
+  // '' = nothing worth sending
+  function sig(k, v){
+    if(isState(k)){
+      try{ const s = JSON.parse(v);
+        if(!s || typeof s !== 'object') return '';
+        if(!weight(s) && !s.only && !s.tagf) return '';
+        const c = Object.assign({}, s); delete c.ms; delete c.qms; delete c.meta; delete c.hintOpen;
+        return JSON.stringify(c);
+      }catch(e){ return ''; }
+    }
+    return (v && v !== '{}' && v !== '[]' && v !== '{"defs":[],"q":{}}') ? v : '';
+  }
+  let frozen = false, applying = false, timer = null, busy = false;
+  function mark(k, v){
+    if(skip(k)) return;
+    const g = sig(k, v), h = hash(g), m = meta[k] || (meta[k] = {t:0});
+    if(m.h === h) return;
+    m.h = h;
+    if(g){ m.t = Date.now(); m.d = 1; clearTimeout(timer); timer = setTimeout(run, 1500); }
+    putMeta();
+  }
+  Storage.prototype.setItem = function(k, v){
+    if(this === localStorage && frozen && String(k).indexOf('lq:') === 0) return;
+    rawSet.call(this, k, v);
+    if(this === localStorage && !applying){ try{ mark(String(k), String(v)); }catch(e){} }
+  };
+  // What was already here before sync existed: age unknown, so it is stamped low, and a real
+  // attempt outranks a thinner one by how much is in it.
+  try{
+    for(let i=0;i<localStorage.length;i++){
+      const k = localStorage.key(i);
+      if(skip(k) || meta[k]) continue;
+      const v = localStorage.getItem(k), g = sig(k, v);
+      meta[k] = {t: 0, h: hash(g)};
+      if(g){ let w = 1; if(isState(k)){ try{ w = 1 + weight(JSON.parse(v)); }catch(e){} }
+             meta[k].t = w; meta[k].d = 1; }
+    }
+    putMeta();
+  }catch(e){}
+
+  const enc = new TextEncoder(), dec = new TextDecoder();
+  const toB = s => { s = s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length % 4) s += '=';
+                     return Uint8Array.from(atob(s), c => c.charCodeAt(0)); };
+  const fromB = u => { let t = ''; for(let i=0;i<u.length;i+=8192) t += String.fromCharCode.apply(null, u.subarray(i, i+8192));
+                       return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,''); };
+  const hex = b => Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2,'0')).join('');
+  let ck = null, bucket = '';
+  const ready = (async()=>{
+    ck = await crypto.subtle.importKey('raw', toB(key), 'AES-GCM', false, ['encrypt','decrypt']);
+    bucket = hex(await crypto.subtle.digest('SHA-256', enc.encode('lq-sync:' + key))).slice(0, 32);
+  })();
+  const kid = async k => hex(await crypto.subtle.digest('SHA-256', enc.encode(bucket + '|' + k))).slice(0, 32);
+  async function seal(o){
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const ct = await crypto.subtle.encrypt({name:'AES-GCM', iv}, ck, enc.encode(JSON.stringify(o)));
+    return fromB(iv) + '.' + fromB(new Uint8Array(ct));
+  }
+  async function unseal(t){
+    const p = t.split('.');
+    return JSON.parse(dec.decode(await crypto.subtle.decrypt({name:'AES-GCM', iv:toB(p[0])}, ck, toB(p[1]))));
+  }
+
+  function pageId(){
+    const el = document.getElementById('quiz-data');
+    if(!el) return null;
+    try{ return JSON.parse(el.textContent).id; }catch(e){ return null; }
+  }
+  async function run(){
+    if(busy || frozen) return [];
+    busy = true;
+    const changed = [];
+    try{
+      await ready;
+      const have = {}, puts = [], sent = {};
+      for(const k of Object.keys(meta)){
+        const m = meta[k];
+        if(!m.id) m.id = await kid(k);
+        have[m.id] = m.t || 0;
+        if(m.d){
+          const v = localStorage.getItem(k);
+          if(v === null){ m.d = 0; continue; }
+          puts.push({k: m.id, v: await seal({k, v}), ts: m.t});
+          sent[k] = m.t;
+        }
+      }
+      const r = await fetch(API, {method:'POST', headers:{'content-type':'text/plain'},
+                                  body: JSON.stringify({bucket, have, puts})});
+      if(!r.ok) throw new Error('sync ' + r.status);
+      const j = await r.json();
+      for(const k in sent) if(meta[k].t === sent[k]) meta[k].d = 0;
+      for(const row of j.rows || []){
+        let o; try{ o = await unseal(row.v); }catch(e){ continue; }
+        if(!o || skip(o.k)) continue;
+        const m = meta[o.k] || (meta[o.k] = {t:0});
+        if((m.t || 0) >= row.ts) continue;
+        applying = true;
+        try{ rawSet.call(localStorage, o.k, o.v); }catch(e){}
+        applying = false;
+        m.t = row.ts; m.d = 0; m.h = hash(sig(o.k, o.v)); m.id = row.k;
+        changed.push(o.k);
+      }
+      putMeta();
+    }catch(e){}
+    busy = false;
+    if(changed.length && window.lqSync.live){
+      const id = pageId();
+      const mine = id ? changed.some(k => k === 'lq:' + id || k.indexOf('lq:' + id + ':') === 0)
+                      : !!document.getElementById('manifest');
+      if(mine){ frozen = true; location.reload(); }
+    }
+    return changed;
+  }
+  function wake(){ if(document.visibilityState !== 'hidden') run(); }
+  function leave(){ if(document.visibilityState === 'hidden') run(); }
+  function listen(){
+    document.removeEventListener('visibilitychange', wake); document.addEventListener('visibilitychange', wake);
+    document.removeEventListener('visibilitychange', leave); document.addEventListener('visibilitychange', leave);
+    removeEventListener('focus', wake); addEventListener('focus', wake);
+  }
+  // `live` = this page should reload itself when its own quiz arrives newer. The locked shell
+  // turns it on only after it has drawn the page.
+  window.lqSync = {first: null, now: run, listen, live: true};
+  listen();
+  setInterval(wake, 20000);
+  window.lqSync.first = run();
+})();
+</script>
 <script>
 const D = JSON.parse(document.getElementById('quiz-data').textContent);
 const KEY = 'lq:' + D.id;
@@ -1150,7 +1364,7 @@ function qk(i){ return D.questions[i].qid; }
 function blank(){ return {v:2, hash:D.hash, i:0, answers:{}, pass2:{}, skipped:{}, starred:{},
                           unsure:{}, hints:{}, phase:1, p2list:null, done:false, at:null,
                           shuf:{}, history:[], only:null, sat:{}, promoted:{},
-                          ms:0}; }
+                          ms:0, qms:{}}; }
 function migrate(s){
   // v1 keyed every map on the array index. The hash matches, so the indices are still valid
   // and this is a straight re-key — done once, then never again.
@@ -1208,6 +1422,9 @@ function load(){
     // attempt saved before it. Zero and hidden are the right defaults for an attempt that was
     // never timed: it reads as "not measured" rather than as a suspiciously fast paper.
     if(typeof s.ms !== 'number') s.ms = 0;
+    // NEW ON 08-21 and absent from every attempt before it. An empty map means "never
+    // measured", which momentum() reads as "print nothing" rather than as a paper of zeroes.
+    if(!s.qms) s.qms = {};
     return s;
   }catch(e){ return blank(); }
 }
@@ -1252,10 +1469,44 @@ function save(){
    the sitting's subchapters into this one function is what makes a half-paper behave exactly
    like a whole one — one direction, one end card, one second pass — with no branch anywhere
    downstream. `only: null` (not chosen, or a page built without parts) filters nothing. */
+/* ---- TAGS (10-12, his ask) ------------------------------------------------------------
+   *"a text box at first, but it functions like a Notion tag property … once I press enter it
+   creates a tag and that tag stays for this exam and only for this exam."* Its own key, like
+   the research box, so a Retake and a rebuild keep them. `defs` is the order he made them in;
+   a tag no question carries any more is dropped from it. Off unless the page was built with
+   `tags`, so every page built before this is what it was. */
+const TKEY = KEY + ':tags';
+let T = (function(){
+  try{ const t = JSON.parse(localStorage.getItem(TKEY) || '{}') || {};
+       return {defs: t.defs || [], q: t.q || {}}; }
+  catch(e){ return {defs:[], q:{}}; } })();
+function tput(){ try{ localStorage.setItem(TKEY, JSON.stringify(T)); }catch(e){} }
+function tagsOf(i){ return T.q[qk(i)] || []; }
+function hasTag(i, name){ return tagsOf(i).indexOf(name) >= 0; }
+function tagAdd(i, raw){
+  const name = String(raw).trim().replace(/\s+/g, ' ');
+  if(!name) return;
+  const known = T.defs.find(d => d.toLowerCase() === name.toLowerCase()) || name;
+  if(T.defs.indexOf(known) < 0) T.defs.push(known);
+  const l = T.q[qk(i)] || (T.q[qk(i)] = []);
+  if(l.indexOf(known) < 0) l.push(known);
+  tput();
+}
+function tagDrop(i, name){
+  const id = qk(i);
+  T.q[id] = (T.q[id] || []).filter(x => x !== name);
+  if(!T.q[id].length) delete T.q[id];
+  if(!Object.keys(T.q).some(k => T.q[k].indexOf(name) >= 0)) T.defs = T.defs.filter(d => d !== name);
+  tput();
+}
+
 function active(s){
-  const only = D.parts ? (s.only || null) : null;
+  // A TAG RUN ("test only these") rides here for the same reason the section filter does.
+  const tf = D.tags ? (s.tagf || null) : null;
+  const only = (D.parts && !tf) ? (s.only || null) : null;
   return D.questions.map((_,i)=>i).filter(i => onPaper(s, i)
-    && (!only || only.indexOf(D.questions[i].sec) >= 0));
+    && (!only || only.indexOf(D.questions[i].sec) >= 0)
+    && (!tf || hasTag(i, tf)));
 }
 /* ---- THE RESERVES (08-16) ------------------------------------------------------------
    His ask: *"if 1 question is skipped, another one is replaced in that section about it… you
@@ -1523,7 +1774,9 @@ function flushFrq(){
 function drawFrq(){
   const box = $('#frqview');
   if(!box || !(D.frq||[]).length) return;
-  let h = '<p class="say">Three written answers, from the same sources as the paper. Write '
+  const NW = D.frq.length, WORDS = ['No','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten'];
+  let h = '<p class="say">' + (WORDS[NW] || NW) + ' written answer' + (NW === 1 ? '' : 's')
+        + ', from the same sources as the paper. Write '
         + 'one, then mark it: every point that can be settled by what you wrote is checked '
         + 'for you, and the ones that need judgement are handed back. Click any row to '
         + 'overrule it.</p>';
@@ -1722,6 +1975,9 @@ function setTab(name){
     // back — the question must be exactly where he left it.
     if(quizPad !== null) $('main').style.paddingTop = quizPad;
   } else {
+    // The sheet, the starred list and the written half are not the question, so his
+    // reading time on them belongs to no question. `draw()` puts it back on the way in.
+    timeOn(null);
     if(name==='starred') drawStarred();
     if(name==='sheet'){ renderScore(); renderSheetExtras(); }
     if(name==='frq') drawFrq();
@@ -1811,7 +2067,7 @@ function draw(){
   // BEFORE THE FIRST QUESTION AND NOT INSIDE THE RUN. Once `only` is set this is false for
   // the rest of the sitting, so nothing about answering, going back or the second pass has
   // to know the picker exists.
-  if(sectioned() && !S.only) return picker();
+  if(sectioned() && !S.only && !S.tagf) return picker();
   const act = runList();
   if(!act.length) return end();
   if(act.indexOf(S.i) < 0) S.i = nextFrom(act, S.i);
@@ -1820,6 +2076,61 @@ function draw(){
 
 /* Pure markup, no DOM writes and no state changes — so the same builder can render the
    question and be measured off-screen for the centring reserve. */
+/* The tag box above the question. Chips for what this question carries, then the box: type and
+   Enter makes the tag (or reuses one spelled the same), the ones he already made show under it
+   to click, Backspace on an empty box takes the last one off, Esc leaves. */
+function tagRowInner(i){
+  const mine = tagsOf(i);
+  let h = '';
+  mine.forEach((n,k)=>{ h += '<span class="tchip">' + esc(n) + '<button class="tx" data-drop="' + k
+                           + '" tabindex="-1" aria-label="Remove tag">×</button></span>'; });
+  return h + '<input id="tagin" class="tagin" type="text" autocomplete="off" spellcheck="false" '
+           + 'placeholder="' + (mine.length ? 'Add a tag' : 'Tag this question  ( l )') + '">'
+           + '<div class="tsug hide" id="tsug"></div>';
+}
+function paintSug(i){
+  const inp = $('#tagin'), box = $('#tsug');
+  if(!inp || !box) return;
+  const raw = inp.value.trim(), v = raw.toLowerCase(), mine = tagsOf(i);
+  let h = T.defs.map((d,n)=>({d,n}))
+    .filter(x => mine.indexOf(x.d) < 0 && (!v || x.d.toLowerCase().indexOf(v) >= 0))
+    .map(x => '<button class="tchip pick" data-n="' + x.n + '" tabindex="-1">' + esc(x.d) + '</button>')
+    .join('');
+  if(v && !T.defs.some(d => d.toLowerCase() === v))
+    h += '<span class="tnew">Enter makes “' + esc(raw) + '”</span>';
+  box.innerHTML = h;
+  box.classList.toggle('hide', !h || document.activeElement !== inp);
+  // mousedown, not click: the box must not blur (and hide these) before the pick lands
+  box.querySelectorAll('.pick').forEach(b => { b.onmousedown = e => {
+    e.preventDefault(); tagAdd(i, T.defs[+b.dataset.n]); redrawTags(i, true); }; });
+}
+function redrawTags(i, focus){
+  const row = $('#tagrow');
+  if(!row) return;
+  row.innerHTML = tagRowInner(i);
+  wireTags(i);
+  if(focus) $('#tagin').focus();
+}
+function wireTags(i){
+  const row = $('#tagrow'), inp = $('#tagin');
+  if(!row || !inp) return;
+  row.querySelectorAll('.tx').forEach(b => b.onclick = ()=>{
+    tagDrop(i, tagsOf(i)[+b.dataset.drop]); redrawTags(i, false); });
+  inp.onfocus = ()=> paintSug(i);
+  inp.oninput = ()=> paintSug(i);
+  inp.onblur = ()=> { const b = $('#tsug'); if(b) b.classList.add('hide'); };
+  inp.onkeydown = e => {
+    if(e.key === 'Enter'){
+      e.preventDefault();
+      if(!inp.value.trim()){ inp.blur(); return; }
+      tagAdd(i, inp.value); redrawTags(i, true);
+    } else if(e.key === 'Escape'){ inp.value = ''; inp.blur(); }
+    else if(e.key === 'Backspace' && !inp.value && tagsOf(i).length){
+      tagDrop(i, tagsOf(i).slice(-1)[0]); redrawTags(i, true);
+    }
+  };
+}
+
 function buildQ(i, picked, fresh, en){
   const q = D.questions[i];
   const answered = picked !== undefined;
@@ -1831,10 +2142,12 @@ function buildQ(i, picked, fresh, en){
   // The counter sits top-left above the question, the way the notebook does it, rather than
   // up in the bar — it belongs with the thing it counts. On a second pass it counts the
   // second pass, so four wrong answers read as "1 / 4" and not as a broken 16.
-  let h = '<div class="qhead' + en + '"><div class="qcol">'
+  let h = (D.tags ? '<div class="tagrow no-read-aloud" id="tagrow">' + tagRowInner(i) + '</div>' : '')
+        + '<div class="qhead' + en + '"><div class="qcol">'
         + '<p class="meta no-read-aloud"><span class="num">' + (pos+1) + ' / '
         + act.length + '</span>'
         + (S.phase===2 ? '<span class="dot">·</span><span>2nd pass</span>' : '')
+        + (D.tags && S.tagf ? '<span class="dot">·</span><span>only ' + esc(S.tagf) + '</span>' : '')
         // THE CLEAN-UP PASS SAYS SO. Without this the jump from question 43 back to question
         // 10 reads as the paper having lost his place, which is how he read it.
         + (recycling && S.phase!==2
@@ -1933,6 +2246,9 @@ let justAnswered = null;
 
 function question(fresh){
   const i = S.i, q = D.questions[i], picked = pick(i);
+  // THE CLOCK MOVES WITH HIM. Re-rendering the same question is harmless: timeOn() banks
+  // what is owed and carries on against the same qid.
+  timeOn(q.qid);
   const answered = picked !== undefined;
   const act = runList();
   const pos = act.indexOf(i);
@@ -2027,6 +2343,7 @@ function question(fresh){
   $('#star').onclick = ()=> toggleStar(i);
   $('#qmark').onclick = ()=> toggleUnsure(i);
   $('#dots').onclick = e => { e.stopPropagation(); openMenu(); };
+  if(D.tags) wireTags(i);
 
   // The hint lives in the footer and OUTSIDE #quizview, so re-rendering the question never
   // touches it — and nothing above the options ever changes height.
@@ -2517,19 +2834,32 @@ function openMenu(){
   m.className = 'menu';
   // The clock's only other way in. `w` is not written anywhere else on the page, and a key
   // nothing announces is a key he has to remember he asked for.
-  m.innerHTML = '<button id="skipq">Skip this question</button>'
+  m.innerHTML = '<button id="skipq">Skip this question  ( x )</button>'
               // The reader's own two entries. Space and `v` are written nowhere else on the
               // page, and a key nothing announces is a key he has to remember he asked for.
               + '<button id="readtog">' + (sayOn ? 'Stop' : 'Start') + ' read-aloud  ( space )</button>'
               + '<button id="voiceset">Voice, speed and pauses…</button>'
-              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>';
+              + '<button id="clocktog">' + (clockOn ? 'Hide' : 'Show') + ' time  ( w )</button>'
+              // EVERY KEY, WRITTEN DOWN ONCE (10-12). He could not find Redo or remember its key.
+              + '<div class="keys"><kbd>x</kbd><span>Skip</span><kbd>u</kbd><span>Redo your answer</span>'
+              + '<kbd>h</kbd><span>Hint, when the question has one</span>'
+              + '<kbd>s</kbd><span>Star</span><kbd>/</kbd><span>No idea</span>'
+              + '<kbd>r</kbd><span>Research</span><kbd>f</kbd><span>Fix this question</span>'
+              + '<kbd>t</kbd><span>Reflection</span>'
+              + (D.tags ? '<kbd>l</kbd><span>Tag</span>' : '')
+              + '<kbd>↵</kbd><span>Next</span><kbd>←</kbd><span>Back</span></div>';
   host.appendChild(m);
   m.querySelector('#clocktog').onclick = ()=>{ toggleClock(); closeMenu(); };
   m.querySelector('#readtog').onclick = ()=>{ closeMenu(); sayOn ? sayOff() : sayToggle(); };
   m.querySelector('#voiceset').onclick = ()=>{ closeMenu(); openVset(); };
-  m.querySelector('#skipq').onclick = ()=>{
+  m.querySelector('#skipq').onclick = ()=>{ closeMenu(); skipQuestion(); };
+  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
+}
+/* One path for skipping, whether it came from the menu or from `x` (10-12, his ask: a key
+   *"rather than going into the top bar and then pressing skip"*). */
+function skipQuestion(){
     const list = runList(), pos = list.indexOf(S.i);
-    if(list.length <= 1) return closeMenu();        // never skip the last one standing
+    if(list.length <= 1) return;                    // never skip the last one standing
     const sec = bucketOf(S.i);
     S.skipped[qk(S.i)] = true;
     delete S.answers[qk(S.i)];
@@ -2543,7 +2873,6 @@ function openMenu(){
     // have handed him an end card with a question still owed.
     const filled = promoteReserve(sec) >= 0;
     const wasLast = !filled && pos === list.length - 1;
-    closeMenu();
     syncTabs();
     if(wasLast){ finish(); return; }
     // After the removal the list has shrunk, so the item now AT `pos` is the one that
@@ -2552,8 +2881,6 @@ function openMenu(){
     S.hintOpen = false;
     lastShown = -1;
     save(); question(); window.scrollTo(0,0);
-  };
-  setTimeout(()=> document.addEventListener('click', closeMenu, {once:true}), 0);
 }
 function closeMenu(){ const m = document.querySelector('.menu'); if(m) m.remove(); }
 
@@ -2612,6 +2939,7 @@ function group(act, keyOf, head, label){
 let pickSel = null;
 
 function picker(){
+  timeOn(null);
   const p = paperStat();
   if(!pickSel) pickSel = p.left.map(s => s.sec);          // default: what is still outstanding
   const chosen = p.secs.filter(s => pickSel.indexOf(s.sec) >= 0);
@@ -2707,7 +3035,143 @@ function beginSitting(secs){
   save(); draw(); window.scrollTo(0,0);
 }
 
+/* ---- MOMENTUM — the pace half of the end card (08-21, his ask) ------------------------
+   *"once I'm done with the quiz, the same screen that shows the right and wrong answers, I
+   can also see a breakdown of momentum… ranked by correct versus incorrect, and then also
+   time spent. Maybe that'll help me determine a goal and a time per question."*
+
+   THREE THINGS IN ONE BLOCK, because they answer three different questions:
+
+   • THE STRIP is the paper in the order he sat it — where he slowed down, and whether the
+     slow ones cluster at the end (tiring) or the start (warming up). It is the only thing
+     anywhere on this page that is in time order; every other table is sorted by something.
+   • THE TWO MEDIANS are the comparison worth having: how long the ones he got right took
+     against the ones he got wrong. MEDIAN AND NOT MEAN — one question he walked away from
+     mid-paper drags an average off the map, and that is exactly the question a page that
+     only banks visible time is most likely to have.
+   • THE RANKING is what to look at next: slowest first, each one marked, so a slow ✕ sits
+     at the top of the list on its own.
+
+   THE GOAL IS HIS OWN NUMBER, NOT ONE INVENTED HERE — the median of the questions he got
+   RIGHT, rounded to five seconds. A pace he has already answered correctly at is the only
+   pace this page has any business suggesting.
+
+   IT PRINTS NOTHING UNLESS THE QUESTIONS WERE ACTUALLY TIMED. Every attempt saved before
+   today has an empty `qms`, so the block is absent on those rather than reporting a paper
+   of zeroes — the same rule the clock already uses for `ms:0` in the copy markdown. */
+const MOM_CAP = 14, MOM_SHOW = 10;
+let momAll = false;
+function qms(i){ return (S.qms || {})[qk(i)] || 0; }
+function median(a){
+  if(!a.length) return 0;
+  const s = a.slice().sort((x,y)=>x-y), h = s.length >> 1;
+  return s.length % 2 ? s[h] : Math.round((s[h-1] + s[h]) / 2);
+}
+/* What to call a question in one line. The topic tag when the quiz carries one — it is
+   already the name he thinks of it by, and it is what the topics table above uses — and the
+   stem itself when it does not. Through a div because a stem can carry math markup. */
+function momLabel(i){
+  const q = D.questions[i];
+  if(q.topic) return q.topic;
+  const d = document.createElement('div');
+  d.innerHTML = q.q || '';
+  const t = (d.textContent || '').trim();
+  return t.length > 70 ? t.slice(0, 69).trim() + '…' : t;
+}
+function momentum(){
+  const act = active(S), timed = act.filter(i => qms(i) > 0);
+  // One timed question is not a pace, and two is the least that can have a shape.
+  if(timed.length < 2) return '';
+  const rows = timed.map(i => ({i:i, ms:qms(i), ok:finalRight(i), n:act.indexOf(i)+1}));
+  const all = rows.map(r=>r.ms);
+  const max = Math.max.apply(null, all), med = median(all);
+  const okMs = rows.filter(r=>r.ok).map(r=>r.ms);
+  const noMs = rows.filter(r=>!r.ok).map(r=>r.ms);
+
+  let h = '<div class="topics mom"><h3>Momentum</h3>';
+
+  /* THE STRIP IS `aria-hidden` AND `.no-read-aloud`. It is a picture of the list printed
+     underneath it, so a page reader that walked it would read the same paper twice. */
+  h += '<div class="strip no-read-aloud" aria-hidden="true">';
+  h += '<i class="med" style="bottom:' + (max ? med/max*100 : 0) + '%"></i>';
+  rows.forEach(r=>{
+    // A floor of 4%, so a five-second question is a visible mark and not a gap in the row.
+    const pc = Math.max(4, max ? r.ms/max*100 : 0);
+    h += '<i class="sb ' + (r.ok ? 'r' : 'w') + '" style="height:' + pc + '%" title="'
+       + esc(r.n + ' · ' + (r.ok ? 'right' : 'wrong') + ' · ' + fmtMs(r.ms)) + '"></i>';
+  });
+  h += '</div>';
+  h += '<p class="momax no-read-aloud"><span>first</span>'
+     + '<span>median ' + fmtMs(med) + '</span><span>last</span></p>';
+
+  h += '<p class="mline">Median <b>' + fmtMs(med) + '</b> a question'
+     + (okMs.length ? ' · right ones <b>' + fmtMs(median(okMs)) + '</b>' : '')
+     + (noMs.length ? ' · wrong ones <b>' + fmtMs(median(noMs)) + '</b>' : '')
+     + ' · slowest <b>' + fmtMs(max) + '</b></p>';
+
+  /* A QUIZ SHOWS EVERY QUESTION AND A 40-QUESTION EXAM DOES NOT (not without asking).
+     Ranked slowest-first, the rows he needs are the ones at the top; forty of them would
+     bury the tables underneath in a list he scrolls past. `momAll` is a plain module-level
+     flag like `clockOn` — the end card opens short every time, and expanding it is one
+     click that does not survive the page. */
+  const rank = rows.slice().sort((a,b)=> b.ms - a.ms);
+  const shown = (momAll || rank.length <= MOM_CAP) ? rank : rank.slice(0, MOM_SHOW);
+  shown.forEach(r=>{
+    h += '<div class="mrow"><span class="mg">' + (r.ok ? G_OK : G_NO) + '</span>'
+       + '<span class="mn">' + r.n + '</span>'
+       + '<span class="mlab">' + esc(momLabel(r.i)) + '</span>'
+       + '<span class="mt">' + fmtMs(r.ms) + '</span>'
+       + '<span class="tbar"><i class="' + (r.ok ? '' : 'w') + '" style="width:'
+       + (max ? r.ms/max*100 : 0) + '%"></i></span></div>';
+  });
+
+  if(shown.length < rank.length)
+    h += '<p class="note mmore"><button class="link" id="momall">Show all '
+       + rank.length + ' questions</button></p>';
+
+  const base = okMs.length ? median(okMs) : med;
+  const goal = Math.max(5000, Math.round(base/5000)*5000);
+  h += '<p class="mgoal">Your own pace on the ones you got right, to the nearest five '
+     + 'seconds: <b>' + fmtMs(goal) + '</b> a question — <b>' + fmtMs(goal*act.length)
+     + '</b> for a paper this size.</p>';
+  return h + '</div>';
+}
+
+/* THE TAGS ON THE END CARD: how each group went, and a way to sit one group alone. A tag run
+   is a fresh attempt on only those questions (the finished one goes into history first, as a
+   Retake does); Retake, or "every question" here, goes back to the whole paper. Not offered
+   on a sectioned paper, whose picker already owns which questions a sitting holds. */
+function tagTable(){
+  if(!D.tags || !T.defs.length) return '';
+  const all = D.questions.map((_,i)=>i).filter(i => onPaper(S, i));
+  let h = '';
+  T.defs.forEach((d,n)=>{
+    const qs = all.filter(i => hasTag(i, d));
+    if(!qs.length) return;
+    const sat = qs.filter(i => ans(i) !== undefined || ans2(i) !== undefined);
+    const ok = sat.filter(i => finalRight(i)).length;
+    h += '<div class="tagline"><span class="tchip">' + esc(d) + '</span><span class="tn">'
+       + (sat.length ? ok + ' / ' + sat.length + ' right' : qs.length + ' question' + (qs.length>1?'s':''))
+       + '</span>' + (D.parts ? '' : '<button class="link" data-tagrun="' + n + '">Test only these</button>')
+       + '</div>';
+  });
+  if(!h && !S.tagf) return '';
+  if(S.tagf) h += '<p class="note">This run was only “' + esc(S.tagf) + '”. '
+                + '<button class="link" id="tagall">Back to every question</button></p>';
+  return '<div class="tagtable"><h3>By tag</h3>' + h + '</div>';
+}
+function startRun(tag){
+  if(S.done) S.history.push({at:S.at, score:score(S), total:active(S).length, ms:S.ms,
+                             tag:S.tagf || undefined});
+  const hist = S.history, skipped = S.skipped, starred = S.starred, unsure = S.unsure;
+  S = blank(); S.history = hist; S.skipped = skipped; S.starred = starred; S.unsure = unsure;
+  if(tag) S.tagf = tag;
+  pickSel = null; lastShown = -1;
+  save(); syncTabs(); renderScore(); draw(); window.scrollTo(0,0);
+}
+
 function end(){
+  timeOn(null);
   const act = active(S), n = score(S), t = act.length;
   const pct = t ? Math.round(n/t*100) : 0;
   const red = redeemed().length;
@@ -2721,6 +3185,10 @@ function end(){
         // grayscale-safe hatch and would make the one number he reads harder to read; the
         // count says it in words instead.
         + (red ? '<span>+<b>'+red+'</b> on the second pass</span>' : '') + '</p>';
+
+  // BEFORE the topic tables and after the score: it is about this sitting, the way the score
+  // is, where everything below it is about the material.
+  h += momentum();
 
   const by = {};
   act.forEach(i=>{
@@ -2783,6 +3251,7 @@ function end(){
             + 'every one is done; sitting one again replaces its score.</p>';
   }
 
+  h += tagTable();
   const nskip = Object.keys(S.skipped||{}).length;
   if(nskip) h += '<p class="note">'+nskip+' question'+(nskip>1?'s':'')+' skipped · '
               + '<button class="link" id="unskip">put them back</button></p>';
@@ -2793,6 +3262,12 @@ function end(){
   $('#quizview').innerHTML = h;
   const u = $('#unskip');
   if(u) u.onclick = ()=>{ S.skipped = {}; save(); end(); };
+  document.querySelectorAll('[data-tagrun]').forEach(b =>
+    b.onclick = ()=> startRun(T.defs[+b.dataset.tagrun]));
+  const tall = $('#tagall');
+  if(tall) tall.onclick = ()=> startRun(null);
+  const ma = $('#momall');
+  if(ma) ma.onclick = ()=>{ momAll = true; end(); };
   const m = $('#more');
   if(m) m.onclick = ()=>{ S.only = null; S.done = false; S.reviewing = false;
                           pickSel = null; save(); draw(); window.scrollTo(0,0); };
@@ -2827,6 +3302,7 @@ function itemHTML(i, n){
   const q = D.questions[i], first = ans(i), second = ans2(i);
   let h = '<div class="item">';
   if(q.topic) h += '<span class="tag">'+esc(q.topic)+'</span>';
+  if(D.tags) tagsOf(i).forEach(t => { h += '<span class="tchip sm">'+esc(t)+'</span>'; });
   h += '<p class="qq">'+(n===undefined?'':(n+1)+'. ')+esc(q.q)+'</p>'
      + '<p class="rline"><span class="g">'+G_OK+'</span><span>'+esc(q.options[q.correct])+'</span></p>';
   if(!firstRight(i)){
@@ -2843,11 +3319,26 @@ function itemHTML(i, n){
   return h + '</div>';
 }
 
+let revByTag = false;
 function review(){
+  timeOn(null);
+  const act = active(S), canSort = D.tags && T.defs.length;
   let h = '<div class="rev"><h3>Every question</h3>';
-  active(S).forEach((i,n)=>{ h += itemHTML(i, n); });
+  if(canSort) h += '<p class="note" style="margin:0 0 6px"><button class="link" id="revsort">'
+                 + (revByTag ? 'Sort in order' : 'Sort by tag') + '</button></p>';
+  if(canSort && revByTag){
+    // a question with two tags is listed under both; the untagged ones come last
+    T.defs.concat(['']).forEach(d=>{
+      const qs = act.filter(i => d ? hasTag(i, d) : !tagsOf(i).length);
+      if(!qs.length) return;
+      h += '<h3 class="tgroup">' + (d ? esc(d) : 'No tag') + ' · ' + qs.length + '</h3>';
+      qs.forEach(i => { h += itemHTML(i, act.indexOf(i)); });
+    });
+  } else act.forEach((i,n)=>{ h += itemHTML(i, n); });
   h += '</div>';
   $('#quizview').innerHTML = h;
+  const rs = $('#revsort');
+  if(rs) rs.onclick = ()=>{ revByTag = !revByTag; review(); };
   $('#band').classList.add('off');
   showResearch(false);
   $('#footer').classList.remove('hide');
@@ -3020,12 +3511,29 @@ function paintClock(){
   // not start counting from the moment he looked.
   el.textContent = fmtMs(S.ms);
 }
+/* ---- WHERE THE SECOND WENT (08-21) ---------------------------------------------------
+   The same delta that goes into `S.ms` goes into `S.qms[qid]`, so the total and the
+   per-question times are banked from ONE measurement and can never disagree with each other.
+
+   `qAt` IS THE QUESTION ON SCREEN AND NOTHING ELSE. The end card, the picker, the review
+   list and every other tab set it to null, so twenty minutes spent reading his own study
+   sheet is never filed under whichever question happened to be open last — the number the
+   momentum block reports is time spent on the question, not time the tab was alive. */
+let qAt = null;
+function bankMs(now){
+  const on = !S.done && !document.hidden;
+  if(tickAt && on){
+    const d = now - tickAt;
+    S.ms += d;
+    if(qAt) S.qms[qAt] = (S.qms[qAt] || 0) + d;
+  }
+  tickAt = on ? now : null;
+}
+/* Every renderer calls this, and it flushes BEFORE the switch: without the flush, up to a
+   second of question 3 would be banked against question 2. */
+function timeOn(id){ bankMs(Date.now()); qAt = id || null; }
 function tick(){
-  const now = Date.now();
-  if(!S.done && !document.hidden){
-    if(tickAt) S.ms += now - tickAt;
-    tickAt = now;
-  }else tickAt = null;
+  bankMs(Date.now());
   paintClock();
   // A WRITE A SECOND WOULD BE A WRITE A SECOND. Every answer already saves, and this only has
   // to cover the case of a tab closed mid-question — 15 seconds is the most that can cost.
@@ -4137,6 +4645,10 @@ document.addEventListener('keydown', e=>{
   // `w` FOR WATCH — the clock in the bar, off by default. Past G like every other command
   // key here, so it can never be an option letter.
   if(e.key === 'w' || e.key === 'W'){ toggleClock(); return; }
+  // `x` SKIPS, `l` (label) PUTS THE CARET IN THE TAG BOX. Both past G, so never an option key.
+  if(e.key === 'x' || e.key === 'X'){ e.preventDefault(); skipQuestion(); return; }
+  if((e.key === 'l' || e.key === 'L') && D.tags){
+    const ti = $('#tagin'); if(ti){ e.preventDefault(); ti.focus(); } return; }
   if(e.key === '/' || e.key === '?'){ e.preventDefault(); toggleUnsure(S.i); return; }
   /* THE KEY NAMES A POSITION ON SCREEN, not an option. `2` and `B` mean the second card he
      can see, which is the only thing either of them could mean to him — after a Redo has
