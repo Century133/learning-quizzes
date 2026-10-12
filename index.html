@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="color-scheme" content="dark">
+<meta name="robots" content="noindex,nofollow">
 <meta name="theme-color" content="#131314">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <title>My quizzes</title>
@@ -322,6 +323,32 @@ kbd{font:inherit;font-size:.78rem;line-height:1;padding:2px 5px;border:1px solid
  border-radius:999px;cursor:pointer;flex:0 0 auto;user-select:none;-webkit-user-select:none}
 .qmark:hover{background:var(--surface);color:var(--text)}
 .qmark.on{color:var(--text);border-color:var(--accent);background:var(--surface-hi)}
+
+/* ---- tags (10-12): his own labels on a question, kept per quiz ---- */
+.tagrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 14px}
+.tchip{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:.78rem;
+ color:var(--text);background:var(--surface-hi);border:1px solid var(--line);
+ border-radius:6px;padding:2px 8px;line-height:1.5}
+.tchip.sm{font-size:.7rem;margin:0 6px 9px 0}
+button.tchip{cursor:pointer}
+button.tchip:hover{border-color:var(--muted)}
+.tx{background:none;border:0;color:var(--muted);font:inherit;padding:0;cursor:pointer;line-height:1}
+.tx:hover{color:var(--text)}
+.tagin{flex:1 1 140px;min-width:120px;background:none;border:0;outline:0;color:var(--text);
+ font:inherit;font-size:.82rem;padding:3px 2px}
+.tagin::placeholder{color:var(--muted);opacity:.75}
+.tsug{flex:1 0 100%;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.tnew{color:var(--muted);font-size:.76rem}
+.tagtable{margin:26px 0 0;text-align:left}
+.tagtable h3{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+ font-weight:500;margin:0 0 6px}
+.tagline{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line);
+ font-size:.88rem}
+.tagline .tn{flex:1;color:var(--muted);font-variant-numeric:tabular-nums}
+.tgroup{margin-top:30px}
+.menu .keys{border-top:1px solid var(--line);margin:5px 0 0;padding:8px 10px 4px;
+ display:grid;grid-template-columns:auto 1fr;gap:5px 10px;font-size:.78rem;color:var(--muted);
+ align-items:center}
 
 /* ---- the ⋮ menu ---- */
 .more{position:relative;flex:0 0 auto}
@@ -686,13 +713,32 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
 }
 
 
-.head{padding:56px 0 34px}
+.head{padding:56px 0 22px}
 .head h1{font-size:2rem;font-weight:400;letter-spacing:-.02em;margin:0}
 .head p{color:var(--muted);margin:8px 0 0}
-.book{margin:0 0 40px}
-.book h2{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 30px}
+.chip{background:none;border:1px solid var(--line);border-radius:999px;color:var(--muted);
+ font:inherit;font-size:.84rem;padding:5px 13px;cursor:pointer}
+.chip.on{color:var(--text);border-color:var(--text)}
+.chip.gap{margin-left:auto}
+.bar2{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 18px;
+ color:var(--muted);font-size:.84rem}
+.bar2 span{margin-right:2px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;margin:0 0 34px}
+.tile{display:flex;flex-direction:column;gap:6px;text-align:left;background:var(--surface);
+ border:1px solid var(--line);border-radius:14px;padding:16px 16px 14px;color:var(--text);
+ font:inherit;cursor:pointer;min-height:118px}
+.tile:hover{border-color:var(--muted)}
+.tile.on{border-color:var(--text);background:var(--surface-hi)}
+.tile.drag,.row.drag{opacity:.35}
+.tile .tk{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.tile b{font-size:1.08rem;font-weight:500;letter-spacing:-.01em;flex:1}
+.tile .ts{font-size:.8rem;color:var(--muted);font-variant-numeric:tabular-nums}
+.tile .tb{height:4px;border-radius:999px;background:var(--line);overflow:hidden}
+.tile .tb i{display:block;height:100%;background:var(--text)}
+.detail h2{font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
  font-weight:500;margin:0 0 4px}
-.row{display:flex;align-items:center;gap:16px;padding:16px 0;
+.row{display:flex;align-items:center;gap:16px;padding:14px 0;
  border-top:1px solid var(--line);text-decoration:none;color:inherit}
 .row:hover .nm{color:var(--accent)}
 .nm{flex:1;font-size:1.02rem}
@@ -706,8 +752,9 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
 .empty{color:var(--muted);padding:30px 0}
 .foot{color:var(--muted);font-size:.85rem;padding:10px 0 60px;border-top:1px solid var(--line)}
 @media (max-width:640px){
-  .head{padding:34px 0 24px}
+  .head{padding:34px 0 18px}
   .mini{display:none}
+  .grid{grid-template-columns:repeat(2,1fr)}
   .row{gap:12px}
 }
 
@@ -719,57 +766,214 @@ button.pill.go{background:var(--accent);color:#0b0b0c;border-color:var(--accent)
     <h1>My quizzes</h1>
     <p id="tally"></p>
   </div>
-  <div id="list"></div>
-  <p class="foot">Scores are saved in this browser. A quiz taken on your phone keeps its
-  own history there.</p>
+  <div class="chips" id="chips"></div>
+  <div class="bar2" id="modes"></div>
+  <div class="grid" id="grid"></div>
+  <div class="detail" id="list"></div>
+  <p class="foot">Drag a tile or a quiz to reorder. Scores and the order are saved in this
+  browser. A quiz taken on your phone keeps its own history there.</p>
 </main>
 <script id="manifest" type="application/json">[{"id": "psp-3-6", "title": "3.6 How to Feel Better: Coping With Negative Emotions", "subtitle": "Chapter 3 · Social Affect", "book": "PSP", "url": "q/psp-3-6.html", "total": 14}, {"id": "ap2e-9-4", "title": "9.4 Synovial Joints", "subtitle": "Chapter 9 · Joints", "book": "A&P 2e", "url": "q/ap2e-9-4.html", "total": 16}, {"id": "ap2e-9-5", "title": "9.5 Types of Body Movements", "subtitle": "Chapter 9 · Joints", "book": "A&P 2e", "url": "q/ap2e-9-5.html", "total": 16}, {"id": "psp-6-2", "title": "6.2 Inferring Dispositions Using Causal Attribution", "subtitle": "Chapter 6 · Perceiving Others", "book": "PSP", "url": "q/psp-6-2.html", "total": 10}, {"id": "ap2e-8-2", "title": "8.2 Bones of the Upper Limb", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "url": "q/ap2e-8-2.html", "total": 16}, {"id": "ap2e-8-3", "title": "8.3 The Pelvic Girdle and Pelvis", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "url": "q/ap2e-8-3.html", "total": 16}, {"id": "ap2e-8-4", "title": "8.4 Bones of the Lower Limb", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "url": "q/ap2e-8-4.html", "total": 16}, {"id": "ap2e-8-1", "title": "8.1 The Pectoral Girdle", "subtitle": "Chapter 8 · The Appendicular Skeleton", "book": "A&P 2e", "url": "q/ap2e-8-1.html", "total": 16}, {"id": "psp-3-3", "title": "3.3 Emotions, Stress, and Well-Being", "subtitle": "Chapter 3 · Social Affect", "book": "PSP", "url": "q/psp-3-3.html", "total": 12}, {"id": "el-6-1", "title": "6.1 Syntactic knowledge and grammaticality judgements", "subtitle": "Chapter 6 · Syntax", "book": "EL", "url": "q/el-6-1.html", "total": 12}, {"id": "el-6-2", "title": "6.2 Word order", "subtitle": "Chapter 6 · Syntax", "book": "EL", "url": "q/el-6-2.html", "total": 16}, {"id": "el-6-3", "title": "6.3 Structure within the sentence: Phrases, heads, and selection", "subtitle": "Chapter 6 · Syntax", "book": "EL", "url": "q/el-6-3.html", "total": 12}, {"id": "el-ch6-6-1_6-2_6-3", "title": "Ch6 Exam · 6.1–6.3", "subtitle": "Syntax", "book": "EL", "url": "q/el-ch6-6-1_6-2_6-3.html", "total": 30}, {"id": "psp-5-1", "title": "5.1 Exploring Attitudes", "subtitle": "Chapter 5 · Attitudes, Behavior, and Persuasion", "book": "PSP", "url": "q/psp-5-1.html", "total": 12}, {"id": "psp-6-3", "title": "6.3 Individual and Cultural Differences in Person Perception", "subtitle": "Chapter 6 · Perceiving Others", "book": "PSP", "url": "q/psp-6-3.html", "total": 12}, {"id": "psp-5-2", "title": "5.2 Changing Attitudes Through Persuasion", "subtitle": "Chapter 5 · Attitudes, Behavior, and Persuasion", "book": "PSP", "url": "q/psp-5-2.html", "total": 13}, {"id": "psp-5-3", "title": "5.3 Changing Attitudes by Changing Behavior 1. Outline the principles of self-perception and explain how they can account for the influences of behavior on attitude.", "subtitle": "Chapter 5 · Attitudes, Behavior, and Persuasion", "book": "PSP", "url": "q/psp-5-3.html", "total": 12}, {"id": "ap2e-10-1", "title": "10.1 Overview of Muscle Tissues", "subtitle": "Chapter 10 · Muscle Tissue", "book": "A&P 2e", "url": "q/ap2e-10-1.html", "total": 10}, {"id": "ap2e-10-2", "title": "10.2 Skeletal Muscle", "subtitle": "Chapter 10 · Muscle Tissue", "book": "A&P 2e", "url": "q/ap2e-10-2.html", "total": 16}, {"id": "el-8-1", "title": "8.1 At-issue vs. non-at-issue meaning", "subtitle": "Chapter 8 · Pragmatics", "book": "EL", "url": "q/el-8-1.html", "total": 10}, {"id": "el-8-4", "title": "8.4 Conversational implicatures", "subtitle": "Chapter 8 · Pragmatics", "book": "EL", "url": "q/el-8-4.html", "total": 10}, {"id": "el-8-7", "title": "8.7 Violating vs. flouting a maxim", "subtitle": "Chapter 8 · Pragmatics", "book": "EL", "url": "q/el-8-7.html", "total": 10}, {"id": "el-ch8-8-1_8-4", "title": "Ch8 Exam · 8.1, 8.4", "subtitle": "Pragmatics", "book": "EL", "url": "q/el-ch8-8-1_8-4.html", "total": 32}, {"id": "el-ch8-8-1_8-4_8-7", "title": "Ch8 Exam · 8.1, 8.4, 8.7", "subtitle": "Pragmatics", "book": "EL", "url": "q/el-ch8-8-1_8-4_8-7.html", "total": 42}, {"id": "psp-ch5-5-1_5-2_5-3", "title": "Ch5 Exam · 5.1–5.3", "subtitle": "Attitudes, Behavior, and Persuasion", "book": "PSP", "url": "q/psp-ch5-5-1_5-2_5-3.html", "total": 42}, {"id": "ap2e-ch9-9-4_9-5", "title": "Ch9 Exam · 9.4–9.5", "subtitle": "Joints", "book": "A&P 2e", "url": "q/ap2e-ch9-9-4_9-5.html", "total": 32}, {"id": "ap2e-ch10-10-1_10-2", "title": "Ch10 Exam · 10.1–10.2", "subtitle": "Muscle Tissue", "book": "A&P 2e", "url": "q/ap2e-ch10-10-1_10-2.html", "total": 32}, {"id": "ap2e-ch9-9-4_9-5-parts", "title": "Ch9 Exam · 9.4–9.5 · by subchapter", "subtitle": "Joints", "book": "A&P 2e", "url": "q/ap2e-ch9-9-4_9-5-parts.html", "total": 32}, {"id": "psp-ch6-6-2_6-3", "title": "Ch6 Exam · 6.2–6.3", "subtitle": "Perceiving Others", "book": "PSP", "url": "q/psp-ch6-6-2_6-3.html", "total": 32}, {"id": "psp-ch6-6-2_6-3-v2", "title": "Ch6 Exam · 6.2–6.3", "subtitle": "Perceiving Others", "book": "PSP", "url": "q/psp-ch6-6-2_6-3-v2.html", "total": 36}, {"id": "ap2e-ch8-8-1_8-2_8-3_8-4", "title": "Ch8 Exam · 8.1–8.4", "subtitle": "The Appendicular Skeleton", "book": "A&P 2e", "url": "q/ap2e-ch8-8-1_8-2_8-3_8-4.html", "total": 48}, {"id": "ap2e-ch9-9-1_9-2_9-3_9-4_9-5", "title": "Ch9 Exam · 9.1–9.5", "subtitle": "Joints", "book": "A&P 2e", "url": "q/ap2e-ch9-9-1_9-2_9-3_9-4_9-5.html", "total": 50}, {"id": "ap2e-10-4", "title": "10.4 Nervous System Control of Muscle Tension", "subtitle": "Chapter 10 · Muscle Tissue", "book": "A&P 2e", "url": "q/ap2e-10-4.html", "total": 14}, {"id": "ap2e-10-5", "title": "10.5 Types of Muscle Fibers", "subtitle": "Chapter 10 · Muscle Tissue", "book": "A&P 2e", "url": "q/ap2e-10-5.html", "total": 10}, {"id": "ap2e-10-6", "title": "10.6 Exercise and Muscle Performance", "subtitle": "Chapter 10 · Muscle Tissue", "book": "A&P 2e", "url": "q/ap2e-10-6.html", "total": 11}, {"id": "psp-7-1", "title": "7.1 The Many Varieties of Conformity", "subtitle": "Chapter 7 · Influencing and Conforming", "book": "PSP", "url": "q/psp-7-1.html", "total": 12}, {"id": "psp-7-2", "title": "7.2 Obedience, Power, and Leadership", "subtitle": "Chapter 7 · Influencing and Conforming", "book": "PSP", "url": "q/psp-7-2.html", "total": 16}, {"id": "ap2e-11-1", "title": "11.1 Interactions of Skeletal Muscles, Their Fascicle Arrangement, and Their Lever Systems", "subtitle": "Chapter 11 · The Muscular System", "book": "A&P 2e", "url": "q/ap2e-11-1.html", "total": 16}, {"id": "ap2e-11-2", "title": "11.2 Naming Skeletal Muscles", "subtitle": "Chapter 11 · The Muscular System", "book": "A&P 2e", "url": "q/ap2e-11-2.html", "total": 16}, {"id": "psp-7-3", "title": "7.3 Person, Gender, and Cultural Differences in Conformity", "subtitle": "Chapter 7 · Influencing and Conforming", "book": "PSP", "url": "q/psp-7-3.html", "total": 15}, {"id": "ap2e-11-3", "title": "11.3 Axial Muscles of the Head, Neck, and Back", "subtitle": "Chapter 11 · The Muscular System", "book": "A&P 2e", "url": "q/ap2e-11-3.html", "total": 16}, {"id": "ap2e-11-4", "title": "11.4 Axial Muscles of the Abdominal Wall and Thorax", "subtitle": "Chapter 11 · The Muscular System", "book": "A&P 2e", "url": "q/ap2e-11-4.html", "total": 16}, {"id": "psp-8-1", "title": "8.1 Initial Attraction", "subtitle": "Chapter 8 · Liking and Loving", "book": "PSP", "url": "q/psp-8-1.html", "total": 14}, {"id": "ap2e-11-5", "title": "11.5 Muscles of the Pectoral Girdle and Upper Limbs", "subtitle": "Chapter 11 · The Muscular System", "book": "A&P 2e", "url": "q/ap2e-11-5.html", "total": 16}, {"id": "psp-8-4", "title": "8.4 Close Relationships: Liking and Loving Over the Long Term", "subtitle": "Chapter 8 · Liking and Loving", "book": "PSP", "url": "q/psp-8-4.html", "total": 12}, {"id": "ap2e-ch10-10-4_10-6", "title": "Ch10 Exam · 10.4, 10.6", "subtitle": "Muscle Tissue", "book": "A&P 2e", "url": "q/ap2e-ch10-10-4_10-6.html", "total": 36}, {"id": "psp-ch7-7-1_7-2_7-3", "title": "Ch7 Exam · 7.1–7.3", "subtitle": "Influencing and Conforming", "book": "PSP", "url": "q/psp-ch7-7-1_7-2_7-3.html", "total": 48}, {"id": "ap2e-ch11-11-1_11-2_11-3_11-4_11-5", "title": "Ch11 Exam · 11.1–11.5", "subtitle": "The Muscular System", "book": "A&P 2e", "url": "q/ap2e-ch11-11-1_11-2_11-3_11-4_11-5.html", "total": 50}, {"id": "psp-ch8-8-1_8-4", "title": "Ch8 Exam · 8.1, 8.4", "subtitle": "Liking and Loving", "book": "PSP", "url": "q/psp-ch8-8-1_8-4.html", "total": 36}, {"id": "bmgt221-1-1", "title": "1.1 Cost Classifications for Assigning Costs to Cost Objects", "subtitle": "Chapter 1 · Managerial Accounting and Cost Concepts", "book": "BMGT221", "url": "q/bmgt221-1-1.html", "total": 10}, {"id": "bmgt301-ch1-1-1-course-1-1_9-9-cour", "title": "Ch1 Exam · 1.1", "subtitle": "Setting the Stage- Technology and the Modern Enterprise", "book": "BMGT301", "url": "q/bmgt301-ch1-1-1-course-1-1_9-9-cour.html", "total": 18}, {"id": "bmgt301-course-exam-1-1_9-9-course", "title": "Course exam · 1.1–1.1", "subtitle": "BMGT301", "book": "BMGT301", "url": "q/bmgt301-course-exam-1-1_9-9-course.html", "total": 18}, {"id": "bmgt301-ch1-1-1_1-2-course-1-1_1-2_3-1-", "title": "Ch1 Exam · 1.1–1.2", "subtitle": "Setting the Stage- Technology and the Modern Enterprise", "book": "BMGT301", "url": "q/bmgt301-ch1-1-1_1-2-course-1-1_1-2_3-1-.html", "total": 32}, {"id": "bmgt301-ch3-3-1-course-1-1_1-2_3-1-", "title": "Ch3 Exam · 3.1", "subtitle": "Zara- Fast Fashion from Savvy Systems", "book": "BMGT301", "url": "q/bmgt301-ch3-3-1-course-1-1_1-2_3-1-.html", "total": 18}, {"id": "bmgt301-course-exam-1-1_1-2_3-1-course", "title": "Course exam · 1.1–3.1", "subtitle": "BMGT301", "book": "BMGT301", "url": "q/bmgt301-course-exam-1-1_1-2_3-1-course.html", "total": 50}, {"id": "bmgt301-ch1-1-3-course-1-3_3-2-cour", "title": "Ch1 Exam · 1.3", "subtitle": "Setting the Stage- Technology and the Modern Enterprise", "book": "BMGT301", "url": "q/bmgt301-ch1-1-3-course-1-3_3-2-cour.html", "total": 18}, {"id": "bmgt301-ch3-3-2-course-1-3_3-2-cour", "title": "Ch3 Exam · 3.2", "subtitle": "Zara- Fast Fashion from Savvy Systems", "book": "BMGT301", "url": "q/bmgt301-ch3-3-2-course-1-3_3-2-cour.html", "total": 18}, {"id": "bmgt301-course-exam-1-3_3-2-course", "title": "Course exam · 1.3–3.2", "subtitle": "BMGT301", "book": "BMGT301", "url": "q/bmgt301-course-exam-1-3_3-2-course.html", "total": 36}, {"id": "bmgt301-1-1", "title": "1.1 Tech's Tectonic Shift: Radically Changing Business Landscapes", "subtitle": "Chapter 1 · Setting the Stage: Technology and the Modern Enterprise", "book": "BMGT301", "url": "q/bmgt301-1-1.html", "total": 10}, {"id": "bmgt301-1-3", "title": "1.3 Geek Up—Tech Is Everywhere and You'll Need It to Thrive", "subtitle": "Chapter 1 · Setting the Stage: Technology and the Modern Enterprise", "book": "BMGT301", "url": "q/bmgt301-1-3.html", "total": 12}, {"id": "bmgt301-exam-1-2026-09-20-223758", "title": "BMGT301 — Exam 1", "subtitle": "30 questions · pasted material", "book": "BMGT301", "url": "q/bmgt301-exam-1-2026-09-20-223758.html", "total": 30}, {"id": "bmgt301-exam-1-2026-09-20-224435", "title": "BMGT301 — Exam 1", "subtitle": "30 questions · pasted material", "book": "BMGT301", "url": "q/bmgt301-exam-1-2026-09-20-224435.html", "total": 30}, {"id": "bmgt301-exam-1-2026-09-20-230552", "title": "BMGT301 — Exam 1", "subtitle": "30 questions · pasted material", "book": "BMGT301", "url": "q/bmgt301-exam-1-2026-09-20-230552.html", "total": 30}, {"id": "bmgt221-module-ch03-2026-09-26-141958", "title": "BMGT221 — Chapter 3 module exam", "subtitle": "5 questions · chapter 3 (Job-Order Costing: Cost Flows and External Reporting) · from the slides", "book": "BMGT221", "url": "q/bmgt221-module-ch03-2026-09-26-141958.html", "total": 5}, {"id": "bmgt221-module-ch03-2026-09-26-142456", "title": "BMGT221 — Chapter 3 module exam", "subtitle": "20 questions · chapter 3 (Job-Order Costing: Cost Flows and External Reporting) · from the slides", "book": "BMGT221", "url": "q/bmgt221-module-ch03-2026-09-26-142456.html", "total": 20}, {"id": "bmgt221-module-ch01-2026-09-26-142920", "title": "BMGT221 — Chapter 1 module exam", "subtitle": "28 questions · chapter 1 (Managerial Accounting and Cost Concepts) · from the slides", "book": "BMGT221", "url": "q/bmgt221-module-ch01-2026-09-26-142920.html", "total": 28}, {"id": "math240-sections-1-7-1-9-practice-exam-2026-09-26-143108", "title": "MATH240 — Sections 1.7–1.9 practice exam", "subtitle": "19 questions · §1.7, §1.8, §1.9 · bounded by the textbook", "book": "MATH240", "url": "q/math240-sections-1-7-1-9-practice-exam-2026-09-26-143108.html", "total": 19}, {"id": "bmgt221-module-ch02-2026-09-26-143244", "title": "BMGT221 — Chapter 2 module exam", "subtitle": "22 questions · chapter 2 (Job-Order Costing: Calculating Unit Product Costs) · from the slides", "book": "BMGT221", "url": "q/bmgt221-module-ch02-2026-09-26-143244.html", "total": 22}, {"id": "bmgt221-chapter-5-module-exam-2026-09-26-143756", "title": "BMGT221 — Chapter 5 module exam", "subtitle": "25 multiple choice + 7 written · chapter 5 (Cost-Volume-Profit) · from the slides", "book": "BMGT221", "url": "q/bmgt221-chapter-5-module-exam-2026-09-26-143756.html", "total": 25}, {"id": "bmgt221-exam-1-master-exam-2026-09-26-144038", "title": "BMGT221 — Exam 1 master exam", "subtitle": "127 multiple choice + 15 written · Exam 1 · every module so far", "book": "BMGT221", "url": "q/bmgt221-exam-1-master-exam-2026-09-26-144038.html", "total": 127}, {"id": "math240-exam-1-practice-exam-1-1-3-3-2026-09-26-144550", "title": "MATH240 — Exam 1 practice exam (1.1–3.3)", "subtitle": "47 questions · §1.1, §1.2, §1.3, §1.4, §1.5, §1.7, §1.8, §1.9, §2.1, §2.2, §2.3, §3.1, §3.2, §3.3 · bounded by the textbook", "book": "MATH240", "url": "q/math240-exam-1-practice-exam-1-1-3-3-2026-09-26-144550.html", "total": 47}, {"id": "math240-sections-1-7-1-9-practice-exam-2026-09-26-145332", "title": "MATH240 — Sections 1.7–1.9 practice exam", "subtitle": "19 multiple choice + 3 written · §1.7, §1.8, §1.9 · bounded by the textbook", "book": "MATH240", "url": "q/math240-sections-1-7-1-9-practice-exam-2026-09-26-145332.html", "total": 19}, {"id": "math240-exam-1-practice-exam-1-1-3-3-2026-09-26-145357", "title": "MATH240 — Exam 1 practice exam (1.1–3.3)", "subtitle": "47 multiple choice + 15 written · every section before Exam 1 · bounded by the textbook", "book": "MATH240", "url": "q/math240-exam-1-practice-exam-1-1-3-3-2026-09-26-145357.html", "total": 47}, {"id": "bmgt340-chapter-1-module-exam-2026-09-26-145509", "title": "BMGT340 — Chapter 1 module exam", "subtitle": "15 multiple choice + 5 written · chapter 1 (Corporate Finance and the Financial Manager) · from the slides", "book": "BMGT340", "url": "q/bmgt340-chapter-1-module-exam-2026-09-26-145509.html", "total": 15}, {"id": "bmgt340-chapter-3-module-exam-2026-09-26-145723", "title": "BMGT340 — Chapter 3 module exam", "subtitle": "14 multiple choice + 4 written · chapter 3 (Time Value of Money: An Introduction) · from the slides", "book": "BMGT340", "url": "q/bmgt340-chapter-3-module-exam-2026-09-26-145723.html", "total": 14}, {"id": "bmgt301-chapter-5-module-exam-2026-09-26-150034", "title": "BMGT301 — Chapter 5 module exam", "subtitle": "27 multiple choice + 10 written · chapter 5 (Netflix: Sustaining Leadership in an Epic Shift from Atoms to Bits) · from the slides", "book": "BMGT301", "url": "q/bmgt301-chapter-5-module-exam-2026-09-26-150034.html", "total": 27}, {"id": "bmgt340-chapter-4-module-exam-2026-09-26-150132", "title": "BMGT340 — Chapter 4 module exam", "subtitle": "29 multiple choice + 7 written · chapter 4 (Time Value of Money: Valuing Cash Flow Streams) · from the slides", "book": "BMGT340", "url": "q/bmgt340-chapter-4-module-exam-2026-09-26-150132.html", "total": 29}, {"id": "bmgt340-chapter-5-module-exam-2026-09-26-150453", "title": "BMGT340 — Chapter 5 module exam", "subtitle": "7 multiple choice + 2 written · chapter 5 (Interest Rates) · from the slides", "book": "BMGT340", "url": "q/bmgt340-chapter-5-module-exam-2026-09-26-150453.html", "total": 7}, {"id": "bmgt340-exam-1-master-exam-2026-09-26-150531", "title": "BMGT340 — Exam 1 master exam", "subtitle": "72 multiple choice + 20 written · Exam 1 · every module so far", "book": "BMGT340", "url": "q/bmgt340-exam-1-master-exam-2026-09-26-150531.html", "total": 72}, {"id": "bmgt301-chapter-2-module-exam-2026-09-29-115704", "title": "BMGT301 — Chapter 2 module exam", "subtitle": "11 multiple choice + 5 written · chapter 2 (Zara: Fast Fashion from Savvy Systems) · from the slides", "book": "BMGT301", "url": "q/bmgt301-chapter-2-module-exam-2026-09-29-115704.html", "total": 11}, {"id": "bmgt301-chapter-2-module-exam-2026-09-29-134513", "title": "BMGT301 — Chapter 2 module exam", "subtitle": "7 multiple choice + 3 written · chapter 2 (Zara: Fast Fashion from Savvy Systems) · from the slides", "book": "BMGT301", "url": "q/bmgt301-chapter-2-module-exam-2026-09-29-134513.html", "total": 7}, {"id": "bmgt301-chapter-14-module-exam-2026-09-29-134621", "title": "BMGT301 — Chapter 14 module exam", "subtitle": "5 multiple choice + 3 written · chapter 14 (Rent the Runway: Entrepreneurs Expanding an Industry by Blending Tech with Fashion) · from the slides", "book": "BMGT301", "url": "q/bmgt301-chapter-14-module-exam-2026-09-29-134621.html", "total": 5}, {"id": "math240-chapter-3-module-exam-2026-09-30-121159", "title": "MATH240 — Chapter 3 module exam", "subtitle": "6 multiple choice + 3 written · chapter 3 (Determinants) · from the slides", "book": "MATH240", "url": "q/math240-chapter-3-module-exam-2026-09-30-121159.html", "total": 6}, {"id": "bmgt301-chapter-14-module-exam-2026-10-01-103557", "title": "BMGT301 — Chapter 14 module exam", "subtitle": "11 multiple choice + 5 written · chapter 14 (Rent the Runway: Entrepreneurs Expanding an Industry by Blending Tech with Fashion) · from the slides", "book": "BMGT301", "url": "q/bmgt301-chapter-14-module-exam-2026-10-01-103557.html", "total": 11}, {"id": "bmgt301-chapter-5-module-exam-2026-10-01-110803", "title": "BMGT301 — Chapter 5 module exam", "subtitle": "34 multiple choice + 12 written · chapter 5 (Netflix: Sustaining Leadership in an Epic Shift from Atoms to Bits) · from the slides", "book": "BMGT301", "url": "q/bmgt301-chapter-5-module-exam-2026-10-01-110803.html", "total": 34}, {"id": "bmgt301-chapter-14-module-exam-2026-10-01-112124", "title": "BMGT301 — Chapter 14 module exam", "subtitle": "17 multiple choice + 7 written · chapter 14 (Rent the Runway: Entrepreneurs Expanding an Industry by Blending Tech with Fashion) · from the slides", "book": "BMGT301", "url": "q/bmgt301-chapter-14-module-exam-2026-10-01-112124.html", "total": 17}, {"id": "bmgt301-deck-chapter-14-rent-the-runway-2026-10-01-113324", "title": "BMGT301 — Chapter 14 Rent - the runway", "subtitle": "32 multiple choice + 8 written · in slide order · sit only the parts class reached", "book": "BMGT301", "url": "q/bmgt301-deck-chapter-14-rent-the-runway-2026-10-01-113324.html", "total": 32}, {"id": "bmgt301-deck-excel-lookup-functions-2026-10-01-115952", "title": "BMGT301 — Excel -  Lookup Functions", "subtitle": "7 multiple choice + 2 written · in slide order · sit only the parts class reached", "book": "BMGT301", "url": "q/bmgt301-deck-excel-lookup-functions-2026-10-01-115952.html", "total": 7}, {"id": "bmgt301-chapter-14-module-exam-2026-10-01-115954", "title": "BMGT301 — Chapter 14 module exam", "subtitle": "24 multiple choice + 9 written · chapter 14 (Rent the Runway: Entrepreneurs Expanding an Industry by Blending Tech with Fashion) · from the slides", "book": "BMGT301", "url": "q/bmgt301-chapter-14-module-exam-2026-10-01-115954.html", "total": 24}, {"id": "bmgt221-deck-chapter-06-pre-class-2026-10-01-165205", "title": "BMGT221 — Chapter 06 (Pre-Class)", "subtitle": "25 multiple choice + 8 written · in slide order · sit only the parts class reached", "book": "BMGT221", "url": "q/bmgt221-deck-chapter-06-pre-class-2026-10-01-165205.html", "total": 25}, {"id": "bmgt221-chapter-6-module-exam-2026-10-01-165207", "title": "BMGT221 — Chapter 6 module exam", "subtitle": "25 multiple choice + 8 written · chapter 6 (Variable Costing and Segment Reporting) · from the slides", "book": "BMGT221", "url": "q/bmgt221-chapter-6-module-exam-2026-10-01-165207.html", "total": 25}, {"id": "bmgt221-deck-chapter-06-mc-practice-solved-2026-10-01-181827", "title": "BMGT221 — Chapter 06 - MC Practice (Solved)", "subtitle": "6 multiple choice + 1 written · in slide order · sit only the parts class reached", "book": "BMGT221", "url": "q/bmgt221-deck-chapter-06-mc-practice-solved-2026-10-01-181827.html", "total": 6}, {"id": "bmgt221-chapter-6-module-exam-2026-10-01-181829", "title": "BMGT221 — Chapter 6 module exam", "subtitle": "31 multiple choice + 9 written · chapter 6 (Variable Costing and Segment Reporting) · from the slides", "book": "BMGT221", "url": "q/bmgt221-chapter-6-module-exam-2026-10-01-181829.html", "total": 31}, {"id": "bmgt221-deck-chapter-08-pre-class-2026-10-08-171950", "title": "BMGT221 — Chapter 08 (Pre-Class)", "subtitle": "30 multiple choice + 8 written · in slide order · sit only the parts class reached", "book": "BMGT221", "url": "q/bmgt221-deck-chapter-08-pre-class-2026-10-08-171950.html", "total": 30}, {"id": "bmgt221-chapter-8-module-exam-2026-10-08-171953", "title": "BMGT221 — Chapter 8 module exam", "subtitle": "30 multiple choice + 8 written · chapter 8 (Master Budgeting) · from the slides", "book": "BMGT221", "url": "q/bmgt221-chapter-8-module-exam-2026-10-08-171953.html", "total": 30}, {"id": "oneoffs-1-1", "title": "1.1 The Stoics Are Wrong · Philosophize This #237", "subtitle": "Chapter 1 · 2026", "book": "One-offs", "url": "q/oneoffs-1-1.html", "total": 10}, {"id": "oneoffs-1-2-highlights", "title": "The Art of War · Sun Tzu (Giles) · highlights", "subtitle": "Only what I highlighted · 920 passages", "book": "One-offs", "url": "q/oneoffs-1-2-highlights.html", "total": 23}, {"id": "oneoffs-1-2", "title": "1.2 The Art of War · Sun Tzu (Giles)", "subtitle": "Chapter 1 · 2026", "book": "One-offs", "url": "q/oneoffs-1-2.html", "total": 23}]</script>
+<script id="sealed" type="text/plain">SqRLXEhVxFXQ_gE-.ml0ItaBjkb_QOvVd0_b9DditQVsPiG8luX0SczMIgVeo7tvsBzUbwLcFXbtEiyGxnMhB0NW8CZEajHZDKZ9IBEG08p4mUauE3Kc99UAAqom4_CmmSPluHn6ak-kVtnYqV0euC1h16FjUa1mSdZYUSVr7o9cZ1pNt_khZiZf9z3-6YsHfW1DR1oP9yytuZa9CR2uxlCZmyljF0l2uWXY0gt81uh1XLo_YrEa3v3odkdrhJTiOTpEGEvNX6gBEPAwW6BEkW6v3XNZvEs8Y758pS3q3fZ7Uvo-B94ZAKGUeaCCxsTAkxC1i1Ww</script>
 <script>
-const M = JSON.parse(document.getElementById('manifest').textContent);
+function lqB(s){ s = s.replace(/-/g,'+').replace(/_/g,'/'); while(s.length % 4) s += '=';
+  return Uint8Array.from(atob(s), c => c.charCodeAt(0)); }
+function lqKey(){
+  const m = /[#&]k=([A-Za-z0-9_-]{40,})/.exec(location.hash);
+  if(m){ try{ localStorage.setItem('lq:key', m[1]); }catch(e){}
+         history.replaceState(null, '', location.pathname + location.search); }
+  try{ return localStorage.getItem('lq:key') || ''; }catch(e){ return ''; }
+}
+// The link opened in a tab already on this page is a hash change, which does not reload.
+addEventListener('hashchange', ()=>{ if(/[#&]k=/.test(location.hash)) location.reload(); });
+async function lqOpen(sealed){
+  const k = lqKey();
+  if(!k || !sealed) return null;
+  try{
+    const p = sealed.split('.');
+    const ck = await crypto.subtle.importKey('raw', lqB(k), 'AES-GCM', false, ['decrypt']);
+    const out = await crypto.subtle.decrypt({name:'AES-GCM', iv:lqB(p[0])}, ck, lqB(p[1]));
+    return new TextDecoder().decode(out);
+  }catch(e){ return null; }
+}
+
+
+/* THE HUB (10-12, his ask): every quiz and exam, grouped by class / job / book, filtered by
+   kind, reordered by dragging, opened and shut. What he arranged lives in `lq:hub` in this
+   browser, the same way every score does. The page is drawn ONCE and filters only hide, so a
+   drag with a filter on still saves the whole order. */
+/* PRIVATE ROWS (10-12) arrive sealed and are opened only in a browser holding his key; without
+   it this page is exactly the public list. Everything below waits on that one decrypt. */
+(async()=>{
+let M = JSON.parse(document.getElementById('manifest').textContent);
+try{ const extra = await lqOpen(document.getElementById('sealed').textContent.trim());
+     if(extra) M = JSON.parse(extra).concat(M); }catch(e){}
 const esc = t => { const d=document.createElement('div'); d.textContent=t==null?'':t; return d.innerHTML; };
+const HKEY = 'lq:hub';
+const HDEF = {mode:'collection', groups:[], rows:{}, kind:'All', fresh:false, open:{}};
+let H = (function(){ try{ return Object.assign({}, HDEF, JSON.parse(localStorage.getItem(HKEY) || '{}')); }
+                     catch(e){ return Object.assign({}, HDEF); } })();
+if(!H.open) H.open = {};
+function hput(){ try{ localStorage.setItem(HKEY, JSON.stringify(H)); }catch(e){} }
 
 function state(id){
   try{ return JSON.parse(localStorage.getItem('lq:'+id) || 'null'); }catch(e){ return null; }
 }
 function when(iso){
   if(!iso) return '';
-  const d = new Date(iso);
-  return d.toLocaleDateString(undefined,{month:'short',day:'numeric'});
+  return new Date(iso).toLocaleDateString(undefined,{month:'short',day:'numeric'});
+}
+function kindOf(q){
+  if(q.kind) return q.kind;
+  if(/^job-/.test(q.id) || q.book === 'Job Search') return 'Job';
+  if(/^[A-Z]{3,4}\s?\d{3}/.test(q.book || '')) return 'Class';
+  if(q.book === 'One-offs') return 'One-off';
+  return 'Book';
+}
+function groupOf(q){
+  return q.group || (kindOf(q) === 'Job' ? q.title.replace(/\s+quiz.*$/i, '') : q.book) || 'Other';
+}
+function byOrder(keys, saved){
+  const at = k => { const n = (saved || []).indexOf(k); return n < 0 ? 1e9 : n; };
+  return keys.map((k,n)=>({k,n})).sort((a,b)=> (at(a.k) - at(b.k)) || (a.n - b.n)).map(x=>x.k);
+}
+const plural = {Class:'Classes', Job:'Jobs', Book:'Books', 'One-off':'One-offs'};
+
+/* Everything known about one quiz in this browser, worked out once. */
+const I = M.map(q => {
+  const s = state(q.id), done = !!(s && s.done);
+  const t = done && s.meta && s.meta.total ? s.meta.total : q.total;
+  const n = done ? (s.meta ? s.meta.score : 0) : 0;
+  const going = !done && !!s && Object.keys(s.answers||{}).length > 0;
+  const hist = (s && s.history) || [], tries = hist.length + (done ? 1 : 0);
+  const best = hist.concat(done ? [{score:n, total:t}] : [])
+                   .reduce((m,a)=> (a.total && (!m || a.score/a.total > m.score/m.total)) ? a : m, null);
+  const last = hist[hist.length-1];
+  let sub = q.subtitle || '';
+  if(done) sub = when(s.at) + (tries > 1 ? ' · ' + tries + ' attempts · best ' + best.score + '/' + best.total : '')
+               + (s.tagf ? ' · only ' + s.tagf : '') + (sub ? ' · ' + sub : '');
+  else if(going) sub = Object.keys(s.answers).length + ' of ' + q.total + ' answered'
+               + (last ? ' · last ' + last.score + '/' + last.total : '') + (sub ? ' · ' + sub : '');
+  else if(last) sub = 'Last ' + last.score + '/' + last.total + ' on ' + when(last.at) + (sub ? ' · ' + sub : '');
+  const touched = Math.max(s && s.at ? +new Date(s.at) : 0, going ? Date.now() : 0);
+  return {q, done, going, n, t, sub, touched, kind: kindOf(q), group: groupOf(q),
+          status: done ? 'Done' : going ? 'In progress' : 'Not taken'};
+});
+document.getElementById('tally').textContent = I.length
+  ? I.filter(x=>x.done).length + ' of ' + I.length + ' taken in this browser' : '';
+
+const grid = document.getElementById('grid'), list = document.getElementById('list');
+const MODES = [['collection','Collection'], ['database','Database'], ['status','Status']];
+let G = {}, names = [];
+
+function draw(){
+  const keyOf = H.mode === 'database' ? (x => plural[x.kind]) : H.mode === 'status' ? (x => x.status)
+                                                                                   : (x => x.group);
+  G = {};
+  I.forEach(x => {
+    if(H.kind !== 'All' && x.kind !== H.kind) return;
+    if(H.fresh && x.done) return;
+    (G[keyOf(x)] = G[keyOf(x)] || []).push(x);
+  });
+  names = Object.keys(G);
+  if(H.mode === 'collection') names = byOrder(names, H.groups);
+  if(H.mode === 'status') names = ['In progress','Not taken','Done'].filter(n => G[n]);
+  // the open tile: the one he chose, else the one he used last, else the first
+  let open = H.open[H.mode];
+  if(names.indexOf(open) < 0){
+    open = names.slice().sort((a,b)=> Math.max.apply(0, G[b].map(x=>x.touched))
+                                    - Math.max.apply(0, G[a].map(x=>x.touched)))[0];
+  }
+  let h = '';
+  names.forEach(g => {
+    const xs = G[g], dn = xs.filter(x=>x.done);
+    const avg = dn.length ? Math.round(dn.reduce((a,x)=> a + (x.t ? x.n/x.t : 0), 0) / dn.length * 100) : null;
+    const going = xs.filter(x=>x.going).length;
+    h += '<button class="tile' + (g === open ? ' on' : '') + '" data-g="' + esc(g) + '"'
+       + (H.mode === 'collection' ? ' draggable="true"' : '') + '>'
+       + '<span class="tk">' + (H.mode === 'collection' ? xs[0].kind : xs.length + ' quizzes') + '</span>'
+       + '<b>' + esc(g) + '</b>'
+       + '<span class="ts">' + dn.length + ' of ' + xs.length + ' taken'
+       + (avg !== null ? ' · avg ' + avg + '%' : '') + (going ? ' · ' + going + ' open' : '') + '</span>'
+       + '<span class="tb"><i style="width:' + (dn.length/xs.length*100) + '%"></i></span></button>';
+  });
+  grid.innerHTML = h;
+  grid.querySelectorAll('.tile').forEach(t => t.onclick = ()=>{
+    H.open[H.mode] = t.dataset.g; hput(); draw(); });
+
+  h = '';
+  if(open){
+    const xs = G[open], by = {}; xs.forEach(x => by[x.q.id] = x);
+    const ids = H.mode === 'collection' ? byOrder(Object.keys(by), H.rows[open]) : Object.keys(by);
+    h = '<h2>' + esc(open) + '</h2>';
+    ids.forEach(id => {
+      const x = by[id], q = x.q;
+      const sub = (H.mode !== 'collection' ? x.group + (x.sub ? ' · ' : '') : '') + x.sub;
+      h += '<a class="row"' + (H.mode === 'collection' ? ' draggable="true"' : '') + ' data-id="' + esc(id)
+         + '" href="' + q.url + '">'
+         + '<span class="nm">' + esc(q.title) + (sub ? '<small>' + esc(sub) + '</small>' : '') + '</span>'
+         + (x.done ? '<span class="mini"><i style="width:' + (x.t ? x.n/x.t*100 : 0) + '%"></i></span>' : '')
+         + '<span class="badge ' + (x.done ? 'done' : 'none') + '">'
+         + (x.done ? x.n + ' / ' + x.t : x.status) + '</span></a>';
+    });
+  }
+  list.dataset.g = open || '';
+  list.innerHTML = h || '<p class="empty">Nothing here.</p>';
+  document.querySelectorAll('#chips .chip').forEach(c =>
+    c.classList.toggle('on', c.dataset.k ? c.dataset.k === H.kind : H.fresh));
+  document.querySelectorAll('#modes .chip').forEach(c => c.classList.toggle('on', c.dataset.m === H.mode));
 }
 
-const books = {};
-M.forEach(q => { (books[q.book] = books[q.book] || []).push(q); });
-
-let taken = 0, total = 0;
-let h = '';
-Object.keys(books).forEach(b => {
-  h += '<div class="book"><h2>' + esc(b) + '</h2>';
-  books[b].forEach(q => {
-    const s = state(q.id);
-    const done = s && s.done;
-    const n = done ? (s.meta ? s.meta.score : 0) : 0;
-    const t = q.total;
-    if(done) taken++;
-    total++;
-    const tries = s && s.history ? s.history.length + (done ? 1 : 0) : 0;
-    let sub = q.subtitle || '';
-    if(done){
-      sub = when(s.at) + (tries > 1 ? ' · ' + tries + ' attempts' : '') + (sub ? ' · ' + sub : '');
-    } else if(s && Object.keys(s.answers||{}).length){
-      sub = 'In progress — ' + Object.keys(s.answers).length + ' of ' + t + (sub ? ' · ' + sub : '');
-    }
-    h += '<a class="row" href="' + q.url + '">'
-       + '<span class="nm">' + esc(q.title) + (sub ? '<small>' + esc(sub) + '</small>' : '') + '</span>'
-       + (done ? '<span class="mini"><i style="width:' + (n/t*100) + '%"></i></span>' : '')
-       + '<span class="badge ' + (done ? 'done' : 'none') + '">'
-       + (done ? n + ' / ' + t : 'Not taken') + '</span></a>';
-  });
-  h += '</div>';
+const kinds = ['Class','Job','Book','One-off'].filter(k => I.some(x => x.kind === k));
+if(H.kind !== 'All' && kinds.indexOf(H.kind) < 0) H.kind = 'All';
+document.getElementById('chips').innerHTML =
+  ['All'].concat(kinds).map(k => '<button class="chip" data-k="' + k + '">' + (plural[k] || k) + '</button>').join('')
+  + '<button class="chip gap" id="fresh">Not taken yet</button>';
+document.getElementById('modes').innerHTML = '<span>Group by</span>'
+  + MODES.map(m => '<button class="chip" data-m="' + m[0] + '">' + m[1] + '</button>').join('');
+document.querySelectorAll('#chips .chip').forEach(c => c.onclick = ()=>{
+  if(c.dataset.k) H.kind = c.dataset.k; else H.fresh = !H.fresh;
+  hput(); draw();
 });
+document.querySelectorAll('#modes .chip').forEach(c => c.onclick = ()=>{ H.mode = c.dataset.m; hput(); draw(); });
+draw();
 
-document.getElementById('list').innerHTML = h || '<p class="empty">Nothing built yet.</p>';
-document.getElementById('tally').textContent =
-  total ? taken + ' of ' + total + ' taken in this browser' : '';
+/* ---- drag to reorder (Collection view): tiles in the grid, quizzes in the open list.
+   A filter may be hiding some, so what is on screen goes first and the rest keep their place
+   behind it. ---- */
+let dragEl = null;
+const merge = (seen, old) => seen.concat((old || []).filter(k => seen.indexOf(k) < 0));
+function saveOrder(){
+  H.groups = merge([].map.call(grid.querySelectorAll('.tile'), t => t.dataset.g), H.groups);
+  const g = list.dataset.g;
+  if(g) H.rows[g] = merge([].map.call(list.querySelectorAll('.row'), r => r.dataset.id), H.rows[g]);
+  hput();
+}
+[[grid, '.tile'], [list, '.row']].forEach(pair => {
+  const box = pair[0], sel = pair[1];
+  box.addEventListener('dragstart', e => {
+    dragEl = (H.mode === 'collection' && e.target.closest) ? e.target.closest(sel) : null;
+    if(!dragEl) return;
+    dragEl.classList.add('drag');
+    e.dataTransfer.effectAllowed = 'move';
+    try{ e.dataTransfer.setData('text/plain', ''); }catch(x){}
+  });
+  box.addEventListener('dragover', e => {
+    if(!dragEl || dragEl.parentNode !== box) return;
+    e.preventDefault();
+    const over = e.target.closest && e.target.closest(sel);
+    if(!over || over === dragEl) return;
+    const r = over.getBoundingClientRect();
+    const before = sel === '.tile' ? e.clientX < r.left + r.width/2 : e.clientY < r.top + r.height/2;
+    box.insertBefore(dragEl, before ? over : over.nextSibling);
+  });
+  box.addEventListener('drop', e => e.preventDefault());
+  box.addEventListener('dragend', ()=>{
+    if(!dragEl) return;
+    dragEl.classList.remove('drag'); dragEl = null; saveOrder();
+  });
+});
+})();
 </script>
 </body>
 </html>
