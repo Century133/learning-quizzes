@@ -784,46 +784,6 @@
   "total": 23
  },
  {
-  "id": "bmgt301-deck-p6-loan-and-lease-analytics-solution-formulas-2026-10-13-145956",
-  "title": "BMGT301 — P6 Loan and Lease Analytics - Solution (formulas)",
-  "subtitle": "9 multiple choice + 3 written · in slide order · sit only the parts class reached",
-  "book": "BMGT301",
-  "url": "q/bmgt301-deck-p6-loan-and-lease-analytics-solution-formulas-2026-10-13-145956.html",
-  "total": 9
- },
- {
-  "id": "bmgt301-chapter-14-module-exam-2026-10-13-145958",
-  "title": "BMGT301 — Chapter 14 module exam",
-  "subtitle": "33 multiple choice + 12 written · chapter 14 (Rent the Runway: Entrepreneurs Expanding an Industry by Blending Tech with Fashion) · from the slides",
-  "book": "BMGT301",
-  "url": "q/bmgt301-chapter-14-module-exam-2026-10-13-145958.html",
-  "total": 33
- },
- {
-  "id": "bmgt301-deck-p6-investment-analytics-solution-formulas-2026-10-13-150600",
-  "title": "BMGT301 — P6 Investment Analytics - Solution (formulas)",
-  "subtitle": "4 multiple choice + 2 written · in slide order · sit only the parts class reached",
-  "book": "BMGT301",
-  "url": "q/bmgt301-deck-p6-investment-analytics-solution-formulas-2026-10-13-150600.html",
-  "total": 4
- },
- {
-  "id": "bmgt301-chapter-14-module-exam-2026-10-13-150601",
-  "title": "BMGT301 — Chapter 14 module exam",
-  "subtitle": "37 multiple choice + 14 written · chapter 14 (Rent the Runway: Entrepreneurs Expanding an Industry by Blending Tech with Fashion) · from the slides",
-  "book": "BMGT301",
-  "url": "q/bmgt301-chapter-14-module-exam-2026-10-13-150601.html",
-  "total": 37
- },
- {
-  "id": "bmgt301-deck-p7-lookup-solutions-formulas-2026-10-13-151130",
-  "title": "BMGT301 — P7 Lookup Solutions (formulas)",
-  "subtitle": "16 multiple choice + 5 written · in slide order · sit only the parts class reached",
-  "book": "BMGT301",
-  "url": "q/bmgt301-deck-p7-lookup-solutions-formulas-2026-10-13-151130.html",
-  "total": 16
- },
- {
   "id": "bmgt301-chapter-14-module-exam-2026-10-13-151132",
   "title": "BMGT301 — Chapter 14 module exam",
   "subtitle": "53 multiple choice + 19 written · chapter 14 (Rent the Runway: Entrepreneurs Expanding an Industry by Blending Tech with Fashion) · from the slides",
@@ -832,116 +792,12 @@
   "total": 53
  },
  {
-  "id": "bmgt301-deck-excel-logical-functions-2026-10-13-151825",
-  "title": "BMGT301 — Excel - Logical Functions",
-  "subtitle": "6 multiple choice + 1 written · in slide order · sit only the parts class reached",
-  "book": "BMGT301",
-  "url": "q/bmgt301-deck-excel-logical-functions-2026-10-13-151825.html",
-  "total": 6
- },
- {
-  "id": "bmgt301-deck-bmgt-excel-project-4-narrative-2026-10-13-151945",
-  "title": "BMGT301 — BMGT_Excel Project_4_Narrative",
-  "subtitle": "18 multiple choice + 8 written · in slide order · sit only the parts class reached",
-  "book": "BMGT301",
-  "url": "q/bmgt301-deck-bmgt-excel-project-4-narrative-2026-10-13-151945.html",
-  "total": 18
- },
- {
-  "id": "bmgt301-deck-excel-statistical-if-ifs-functions-2026-10-13-152128",
-  "title": "BMGT301 — Excel - Statistical IF-IFS Functions",
-  "subtitle": "12 multiple choice + 3 written · in slide order · sit only the parts class reached",
-  "book": "BMGT301",
-  "url": "q/bmgt301-deck-excel-statistical-if-ifs-functions-2026-10-13-152128.html",
-  "total": 12
- },
- {
-  "id": "bmgt301-deck-chapter-8-amazon-2026-10-13-152532",
-  "title": "BMGT301 — Chapter 8 Amazon",
-  "subtitle": "29 multiple choice + 10 written · in slide order · sit only the parts class reached",
-  "book": "BMGT301",
-  "url": "q/bmgt301-deck-chapter-8-amazon-2026-10-13-152532.html",
-  "total": 29
- },
- {
-  "id": "bmgt301-deck-p8-sales-data-logical-solution-formulas-2026-10-13-152651",
-  "title": "BMGT301 — P8 Sales Data - Logical Solution (formulas)",
-  "subtitle": "8 multiple choice + 3 written · in slide order · sit only the parts class reached",
-  "book": "BMGT301",
-  "url": "q/bmgt301-deck-p8-sales-data-logical-solution-formulas-2026-10-13-152651.html",
-  "total": 8
- },
- {
-  "id": "bmgt301-chapter-8-module-exam-2026-10-13-171254",
-  "title": "BMGT301 — Chapter 8 module exam",
-  "subtitle": "73 multiple choice + 25 written · chapter 8 (Amazon: An Empire Stretching from Cardboard Box to Kindle to Cloud) · from the slides",
-  "book": "BMGT301",
-  "url": "q/bmgt301-chapter-8-module-exam-2026-10-13-171254.html",
-  "total": 73
- },
- {
-  "id": "bmgt301-deck-p9-advanced-sum-functions-solution-formulas-2026-10-13-171907",
-  "title": "BMGT301 — P9 Advanced SUM functions solution (formulas)",
-  "subtitle": "6 multiple choice + 2 written · in slide order · sit only the parts class reached",
-  "book": "BMGT301",
-  "url": "q/bmgt301-deck-p9-advanced-sum-functions-solution-formulas-2026-10-13-171907.html",
-  "total": 6
- },
- {
-  "id": "bmgt301-chapter-8-module-exam-2026-10-13-171909",
-  "title": "BMGT301 — Chapter 8 module exam",
-  "subtitle": "79 multiple choice + 27 written · chapter 8 (Amazon: An Empire Stretching from Cardboard Box to Kindle to Cloud) · from the slides",
-  "book": "BMGT301",
-  "url": "q/bmgt301-chapter-8-module-exam-2026-10-13-171909.html",
-  "total": 79
- },
- {
-  "id": "bmgt301-deck-p9-inventory-management-solutions-formulas-2026-10-13-173324",
-  "title": "BMGT301 — P9 Inventory management solutions (formulas)",
-  "subtitle": "6 multiple choice + 2 written · in slide order · sit only the parts class reached",
-  "book": "BMGT301",
-  "url": "q/bmgt301-deck-p9-inventory-management-solutions-formulas-2026-10-13-173324.html",
-  "total": 6
- },
- {
   "id": "bmgt301-chapter-8-module-exam-2026-10-13-173326",
   "title": "BMGT301 — Chapter 8 module exam",
   "subtitle": "85 multiple choice + 29 written · chapter 8 (Amazon: An Empire Stretching from Cardboard Box to Kindle to Cloud) · from the slides",
   "book": "BMGT301",
   "url": "q/bmgt301-chapter-8-module-exam-2026-10-13-173326.html",
   "total": 85
- },
- {
-  "id": "bmgt301-unit-t5-2026-10-13-180256",
-  "title": "BMGT301 — T5 · Rent the Runway",
-  "subtitle": "32 multiple choice + 8 written · from 1 file in Gemini · sit any part",
-  "book": "BMGT301",
-  "url": "q/bmgt301-unit-t5-2026-10-13-180256.html",
-  "total": 32
- },
- {
-  "id": "bmgt301-unit-t6-2026-10-13-180258",
-  "title": "BMGT301 — T6 · Amazon: An Emperor of E-Commerce",
-  "subtitle": "29 multiple choice + 10 written · from 1 file in Gemini · sit any part",
-  "book": "BMGT301",
-  "url": "q/bmgt301-unit-t6-2026-10-13-180258.html",
-  "total": 29
- },
- {
-  "id": "bmgt301-unit-p7-2026-10-13-180433",
-  "title": "BMGT301 — P7 · Lookup Functions",
-  "subtitle": "25 multiple choice + 7 written · from 2 files in Gemini · sit any part",
-  "book": "BMGT301",
-  "url": "q/bmgt301-unit-p7-2026-10-13-180433.html",
-  "total": 25
- },
- {
-  "id": "bmgt301-unit-p8-2026-10-13-180531",
-  "title": "BMGT301 — P8 · Logical Functions",
-  "subtitle": "17 multiple choice + 3 written · from 2 files in Gemini · sit any part",
-  "book": "BMGT301",
-  "url": "q/bmgt301-unit-p8-2026-10-13-180531.html",
-  "total": 17
  },
  {
   "id": "bmgt301-unit-t5-2026-10-13-182449",
@@ -960,30 +816,6 @@
   "total": 21
  },
  {
-  "id": "bmgt301-unit-p7-2026-10-13-182454",
-  "title": "BMGT301 — P7 · Lookup Functions",
-  "subtitle": "18 multiple choice + 7 written · from 2 files in Gemini · sit any part",
-  "book": "BMGT301",
-  "url": "q/bmgt301-unit-p7-2026-10-13-182454.html",
-  "total": 18
- },
- {
-  "id": "bmgt301-unit-p8-2026-10-13-182458",
-  "title": "BMGT301 — P8 · Logical Functions",
-  "subtitle": "15 multiple choice + 3 written · from 2 files in Gemini · sit any part",
-  "book": "BMGT301",
-  "url": "q/bmgt301-unit-p8-2026-10-13-182458.html",
-  "total": 15
- },
- {
-  "id": "bmgt301-unit-t4-2026-10-13-182507",
-  "title": "BMGT301 — T4 · Netflix Leveraging Technology",
-  "subtitle": "9 multiple choice + 4 written · from 2 files in Gemini · sit any part",
-  "book": "BMGT301",
-  "url": "q/bmgt301-unit-t4-2026-10-13-182507.html",
-  "total": 9
- },
- {
   "id": "bmgt301-unit-t4-2026-10-13-183330",
   "title": "BMGT301 — T4 · Netflix Leveraging Technology",
   "subtitle": "43 multiple choice + 16 written · from 2 files in Gemini · sit any part",
@@ -992,28 +824,12 @@
   "total": 43
  },
  {
-  "id": "bmgt301-unit-p5-2026-10-13-183608",
-  "title": "BMGT301 — P5 · Mathematical, Text, Date and Nested Functions",
-  "subtitle": "60 multiple choice + 8 written · from 4 files in Gemini · sit any part",
-  "book": "BMGT301",
-  "url": "q/bmgt301-unit-p5-2026-10-13-183608.html",
-  "total": 60
- },
- {
   "id": "bmgt301-unit-p5-2026-10-13-183644",
   "title": "BMGT301 — P5 · Mathematical, Text, Date and Nested Functions",
   "subtitle": "52 multiple choice + 14 written · from 4 files in Gemini · sit any part",
   "book": "BMGT301",
   "url": "q/bmgt301-unit-p5-2026-10-13-183644.html",
   "total": 52
- },
- {
-  "id": "bmgt301-unit-p6-2026-10-13-184028",
-  "title": "BMGT301 — P6 · Financial Functions",
-  "subtitle": "29 multiple choice + 9 written · from 3 files in Gemini · sit any part",
-  "book": "BMGT301",
-  "url": "q/bmgt301-unit-p6-2026-10-13-184028.html",
-  "total": 29
  },
  {
   "id": "bmgt301-unit-p6-2026-10-13-184051",
